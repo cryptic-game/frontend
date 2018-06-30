@@ -1,4 +1,4 @@
-# Das Browsergames "Cryptic"
+# Das Browsergame "Cryptic"
 
 Hier wird das Spiel entwickelt. Wer bei der Entwicklung dieser Website mitwirken will sollte sich per Discord bei USE-TO (*Head of Development*, Discord: USE-TO#3627)
 oder FelixRewer (*Head of Frontend Development*, Discord: Felix#9050) melden und
@@ -51,7 +51,6 @@ welcher über [http://localhost:4200](http://localhost:4200) zu erreichen ist.
 Nach Installation der Programme sollte man ein Terminal / Kommandozeilenfenster öffnen, in den
 heruntergeladenen Ordner navigieren und dort `npm install` ausführen. Dieser Vorgang kann
 einige Zeit in Anspruch nehmen.
-Für das Accountmanagement wird außerdem ein zusätzliches Modul benötigt: `npm i ts-clipboard`.
 
 Nach Abschluss des Befehls muss in dem selben Ordner `ng serve` ausgeführt werden, um einen
 Developmentserver zu starten, welcher über [http://localhost:4200](http://localhost:4200) erreicht werden kann.
