@@ -114,12 +114,12 @@ Ende-zu-Ende Tests können über den Befehl `ng e2e` mittels des Tools [Protract
 
 Ein Einstieg in GitLab ist [hier](https://docs.google.com/document/d/1RHV6_kIPBn8KJtgoa5gXSHeQnF6EHVKDrMESMgIEvLg/) zu finden.
 
-Ein Bot erstellt zu jedem Redmine-Ticket ein passendes GitLab Issue.
+Solbald man ein Redmine-Ticket annimmt, bekommt man Developer-Rechte.
 
-Es sollte eigentlich immer auf neuen Branches entwickelt werden. Also einfach einen Branch erstellen, dessen Name das Format
-`<GitLab Name>-<Branch an dem gearbeitet wird>-<Ticket nummer/was gearbeitet wird (Optional)>`
-(z.B. `FelixRewer-Loginbranch-#265` oder `USE-TO-Master`) hat. Diese Branches werden dann später in den jeweiligen
-Branch per Request gemerged.
+Es soll immer auf neuen Branches entwickelt werden. Also einfach einen Branch erstellen, dessen Name das Format
+`<Ticketnummer>-<Ticket>-<Branch an dem gearbeitet wird/Tagret-Branch>`
+(z.B. `216-README.md überarbeiten-Master`) hat. Diese Branches werden dann später in den jeweiligen
+Target-Branch per Request gemerged.
 
 ### Pipeline
 
