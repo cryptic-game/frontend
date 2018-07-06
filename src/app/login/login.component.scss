@@ -1,0 +1,128 @@
+$background-color: #2b2b2b;
+$field-background-color: #3c3c3c;
+$secondary-color: #045d6a;
+$important-color: #27c211;
+$input-border-radius: 12px;
+
+#login-form {
+  width: 20em;
+  height: 18em;
+  padding: 2em 2em;
+  text-align: center;
+  background-color: $background-color;
+  border-radius: 20px;
+  font-family: Lato, sans-serif;
+}
+
+#login-title {
+  letter-spacing: 2pt;
+  text-align: left;
+  margin-bottom: 1em;
+  color: white;
+}
+
+#login-table {
+  width: 100%;
+  height: 75%;
+}
+
+#username, #password {
+  text-align: center;
+  font-style: italic;
+  height: 2.25em;
+  width: 100%;
+  background-color: $field-background-color;
+  border-radius: $input-border-radius;
+  border: none;
+  font-size: 1.25em;
+  color: white;
+  outline: none;
+}
+
+#login-button {
+  width: 5em;
+  height: 2.25em;
+
+  border: 4px solid $secondary-color;
+  border-radius: $input-border-radius;
+  color: white;
+  background-color: transparent;
+
+  font-size: 1.25em;
+  outline: none;
+
+  cursor: pointer;
+}
+
+#keep-logged-in-label {
+  color: white;
+
+  font-size: 1.1em;
+}
+
+
+.checkbox-container {
+  display: block;
+  position: relative;
+  padding-left: 20px;
+  //margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  user-select: none;
+
+  // Hide the browser's default checkbox
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  // Create a custom checkbox
+  .checkmark {
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    border-radius: 5px;
+    background-color: $field-background-color;
+  }
+
+
+  :hover input ~ .checkmark {
+    // background-color: ;
+  }
+
+
+  input:checked ~ .checkmark {
+    // background-color: ;
+  }
+
+  // Create the checkmark/indicator (hidden when not checked)
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  // Show the checkmark when checked
+  input:checked ~ .checkmark:after {
+    display: block;
+  }
+
+  // Checkmark/indicator style
+  .checkmark:after {
+    left: 7px;
+    top: 3px;
+    width: 4px;
+    height: 9px;
+    border: solid $important-color;
+    border-width: 0 2.5px 2.5px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+}
+
+
+
