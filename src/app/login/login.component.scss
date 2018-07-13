@@ -3,6 +3,14 @@ $field-background-color: #3c3c3c;
 $secondary-color: #045d6a;
 $important-color: #27c211;
 $input-border-radius: 12px;
+#body {
+  width: 100%;
+  height: 100%;
+  background-color: #333333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 #login-form {
   width: 20em;
@@ -26,8 +34,9 @@ $input-border-radius: 12px;
   height: 75%;
 }
 
-#username, #password {
-  text-align: center;
+#username,
+#password {
+  padding-left: 10px;
   font-style: italic;
   height: 2.25em;
   width: 100%;
@@ -42,42 +51,32 @@ $input-border-radius: 12px;
 #login-button {
   width: 5em;
   height: 2.25em;
-
   border: 4px solid $secondary-color;
   border-radius: $input-border-radius;
   color: white;
   background-color: transparent;
-
   font-size: 1.25em;
   outline: none;
-
   cursor: pointer;
 }
 
 #keep-logged-in-label {
   color: white;
-
   font-size: 1.1em;
 }
-
 
 .checkbox-container {
   display: block;
   position: relative;
-  padding-left: 20px;
-  //margin-bottom: 12px;
+  padding-left: 20px; //margin-bottom: 12px;
   cursor: pointer;
   font-size: 22px;
-  user-select: none;
-
-  // Hide the browser's default checkbox
+  user-select: none; // Hide the browser's default checkbox
   input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
-  }
-
-  // Create a custom checkbox
+  } // Create a custom checkbox
   .checkmark {
     position: absolute;
     top: 1px;
@@ -87,30 +86,20 @@ $input-border-radius: 12px;
     border-radius: 5px;
     background-color: $field-background-color;
   }
-
-
-  :hover input ~ .checkmark {
+  :hover input~.checkmark {
     // background-color: ;
   }
-
-
-  input:checked ~ .checkmark {
+  input:checked~.checkmark {
     // background-color: ;
-  }
-
-  // Create the checkmark/indicator (hidden when not checked)
+  } // Create the checkmark/indicator (hidden when not checked)
   .checkmark:after {
     content: "";
     position: absolute;
     display: none;
-  }
-
-  // Show the checkmark when checked
-  input:checked ~ .checkmark:after {
+  } // Show the checkmark when checked
+  input:checked~.checkmark:after {
     display: block;
-  }
-
-  // Checkmark/indicator style
+  } // Checkmark/indicator style
   .checkmark:after {
     left: 7px;
     top: 3px;
@@ -123,6 +112,3 @@ $input-border-radius: 12px;
     transform: rotate(45deg);
   }
 }
-
-
-
