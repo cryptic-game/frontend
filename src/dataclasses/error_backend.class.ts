@@ -7,10 +7,10 @@ export class ErrorBackend {
     this.msg = Msg;
   }
 
-  public getName(): string {
+  public getTitle(): string {
     return this.title;
   }
-  public getEmail(): string {
+  public getMsg(): string {
     return this.msg;
   }
   public setTitle(Title: string): void {
