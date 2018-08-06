@@ -6,7 +6,8 @@ import { LoginComponent } from './login/login.component';
 import { DesktopComponent } from './desktop/desktop.component';
 import { DesktopMenuComponent } from './desktop/desktop-menu/desktop-menu.component';
 import { DesktopStartmenuComponent } from './desktop/desktop-startmenu/desktop-startmenu.component';
-import { KontextmenuComponent } from './desktop/kontextmenu/kontextmenu.component';
+import { DesktopSurfaceComponent } from './desktop/desktop-surface/desktop-surface.component';
+import { ContextMenuComponent } from './desktop/context-menu/context-menu.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { KontextmenuComponent } from './desktop/kontextmenu/kontextmenu.componen
     DesktopComponent,
     DesktopMenuComponent,
     DesktopStartmenuComponent,
-    KontextmenuComponent
+    DesktopSurfaceComponent,
+    ContextMenuComponent
   ],
   imports: [BrowserModule],
   providers: [],
