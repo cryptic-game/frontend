@@ -1,21 +1,21 @@
 <div id="body">
-  <form id="login-form" (submit)="$event.preventDefault()">
+  <form id="login-form" (submit)="$event.preventDefault(); performLogin(usernameField.value, passwordField.value, keepLoggedIn.checked)">
     <h1 id="login-title">LOGIN</h1>
     <table id="login-table">
       <tr>
         <td colspan="2">
-          <input type="text" id="username" name="username" placeholder="Username or Email address">
+          <input type="text" #usernameField id="username" name="username" placeholder="Username or Email address">
         </td>
       </tr>
       <tr>
         <td colspan="2">
-          <input type="password" id="password" name="password" placeholder="Type in password">
+          <input type="password" #passwordField id="password" name="password" placeholder="Type in password">
         </td>
       </tr>
       <tr>
         <td>
           <label id="keep-logged-in-label" class="checkbox-container">
-            <input type="checkbox" id="keep-logged-in" name="keep-logged-in">
+            <input type="checkbox" #keepLoggedIn id="keep-logged-in" name="keep-logged-in">
             <span class="checkmark"></span>
             Keep me logged in
           </label>

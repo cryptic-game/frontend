@@ -8,6 +8,8 @@ import {DesktopMenuComponent} from './desktop/desktop-menu/desktop-menu.componen
 import {DesktopStartmenuComponent} from './desktop/desktop-startmenu/desktop-startmenu.component';
 import {KontextmenuComponent} from './desktop/kontextmenu/kontextmenu.component';
 import {DesktopSurfaceComponent} from './desktop/desktop-surface/desktop-surface.component';
+import {HttpClientModule} from '@angular/common/http';
+import {LoginService} from './login/login.service';
 
 @NgModule({
   declarations: [
@@ -20,9 +22,12 @@ import {DesktopSurfaceComponent} from './desktop/desktop-surface/desktop-surface
     DesktopSurfaceComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    LoginService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
