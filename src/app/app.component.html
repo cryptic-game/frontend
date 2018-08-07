@@ -1,4 +1,4 @@
-<app-login></app-login>
+<app-login *ngIf="!loggedIn" (done)="loginDone()"></app-login>
 <!--The content below is only a placeholder and can be replaced.->
 <div style="text-align:center">
   <h1>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {LoginService} from './login.service';
 
 @Component({
@@ -7,6 +7,9 @@ import {LoginService} from './login.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  @ViewChild('loginButton') loginButton: ElementRef;
+  @Output() done: EventEmitter<any> = new EventEmitter();
+  formHiding = false;
 
   constructor(private loginService: LoginService) { }
 
@@ -14,6 +17,7 @@ export class LoginComponent implements OnInit {
   }
 
   performLogin(username: string, password: string, keepLoggedIn: boolean) {
+
     this.loginService.login(username, password).subscribe(data => {
       const token = data['token'];
       if (keepLoggedIn) {
@@ -21,8 +25,15 @@ export class LoginComponent implements OnInit {
       } else {
         sessionStorage.setItem('token', token);
       }
+
+      this.formHiding = true;
+
+      setTimeout(() => this.done.emit(), 500);
     }, error => {
       console.log(error);
+
+      this.loginButton.nativeElement.disabled = true;
+      setTimeout(() => this.loginButton.nativeElement.disabled = false, 500);
     });
   }
 

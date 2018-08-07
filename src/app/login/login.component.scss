@@ -73,6 +73,12 @@ $input-border-radius: 12px;
   }
 }
 
+// TODO: better animation
+#login-button:disabled {
+  transition: border 500ms;
+  border-color: #ff281c;
+}
+
 #keep-logged-in-label {
   color: white;
   font-size: 1.1em;
