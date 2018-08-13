@@ -1,6 +1,8 @@
+import { ProgramLinkageBackend } from './../../../dataclasses/programlinkagebackend.class';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Position } from './../../../dataclasses/position.class';
 import { ProgramLinkage } from './../../../dataclasses/programlinkage.class';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-desktop-surface',
@@ -8,6 +10,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./desktop-surface.component.scss']
 })
 export class DesktopSurfaceComponent implements OnInit {
+  constructor(private http: HttpClient) {}
+
   position: Position = new Position(100, 100);
   linkage: ProgramLinkage = new ProgramLinkage(
     'Nemo',
@@ -16,17 +20,42 @@ export class DesktopSurfaceComponent implements OnInit {
     this.position
   );
   linkage2: ProgramLinkage = new ProgramLinkage(
-    'a',
-    'b',
-    'c',
-    new Position(100, 100)
+    'Lol',
+    'icon',
+    'ssss',
+    new Position(200, 200)
   );
+
+  imageBase64: string;
 
   dragEl: HTMLElement;
   dragElPosition: Position;
 
   ngOnInit(): void {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Token: '9e12f3c5a6484d589f477d38c44927f8'
+      })
+    };
+
+    this.http
+      .post<Array<ProgramLinkageBackend>>(
+        'https://api.dev.cryptic-game.net/shortcut/list',
+        null,
+        httpOptions
+      )
+      .subscribe(data => {
+        const linkage: ProgramLinkage = new ProgramLinkage(
+          data[0].name,
+          undefined,
+          data[0].name,
+          data[0].position
+        );
+
+        console.log(linkage);
+      });
     this.setLinkage(this.linkage);
+    this.setLinkage(this.linkage2);
   }
 
   setLinkage(linkage: ProgramLinkage): void {
@@ -43,7 +72,7 @@ export class DesktopSurfaceComponent implements OnInit {
     </div>`;
 
     const linkageAlias = document.getElementById(linkage.getProgram());
-    const linkageImg = document.getElementById('img');
+    const linkageImg = linkageAlias.children.item(0) as HTMLElement;
 
     linkageAlias.style.left = `${linkage.getPosition().getX()}px`;
     linkageAlias.style.top = `${linkage.getPosition().getY()}px`;
@@ -73,7 +102,7 @@ export class DesktopSurfaceComponent implements OnInit {
       this.dragEl.style.backgroundColor = 'rgba(0, 0, 0, 0.45)';
       this.dragEl.style.boxShadow = 'inset 0px 0px 2px 2px rgba(0, 0, 0, 0.45)';
       this.dragEl.style.borderRadius = '10px';
-      linkageAlias.style.color = '#ddd';
+      this.dragEl.style.color = '#ddd';
 
       this.dragElPosition = new Position(e.offsetX, e.offsetY);
     });

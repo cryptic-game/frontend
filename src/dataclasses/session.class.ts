@@ -3,7 +3,7 @@ export class Session {
   private create_date: Date;
   private expire_date: Date;
 
-  constructor(Token: string, CreateDate: Date, ExpireDate: Date){
+  constructor(Token: string, CreateDate: Date, ExpireDate: Date) {
     this.token = Token;
     this.create_date = CreateDate;
     this.expire_date = ExpireDate;
