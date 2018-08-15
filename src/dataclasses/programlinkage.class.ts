@@ -1,11 +1,16 @@
-import {Position} from './position.class';
+import { Position } from './position.class';
 
 export class ProgramLinkage {
   private displayname: string;
   private icon: string;
   private program: string;
   private position: Position;
-  constructor(DisplayName: string, Icon: string, Program: string, position: Position){
+  constructor(
+    DisplayName: string,
+    Icon: string,
+    Program: string,
+    position: Position
+  ) {
     this.displayname = DisplayName;
     this.icon = Icon;
     this.program = Program;
