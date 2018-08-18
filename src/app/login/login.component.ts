@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   }
 
   performLogin(username: string, password: string, keepLoggedIn: boolean) {
-    this.loginService.login(username, password).subscribe(
+    this.loginService.login(username, password, keepLoggedIn).subscribe(
       data => {
         const error = data['error'];
         if (error === undefined) {
