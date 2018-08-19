@@ -6,8 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'app';
-  loggedIn = false;
+  loggedIn = localStorage.getItem('token') !== null;
 
   loginDone() {
     this.loggedIn = true;
