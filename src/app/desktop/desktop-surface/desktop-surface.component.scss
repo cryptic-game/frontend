@@ -1,9 +1,11 @@
-#desktop-surface-background {
+#desktop-surface {
   width: 100%;
-  height: 100%;
+  height: 94.5%;
   background: url("../../../assets/img/desktop/desktop-surface-background.png") center no-repeat;
   background-size: cover;
   box-sizing: content-box;
+  position: relative;
+  overflow: hidden;
 }
 
 .linkage {
@@ -19,6 +21,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 10px;
+  text-shadow: 1.5px 1.5px rgba(0, 0, 0, 0.2);
 }
 
 .linkage img {
@@ -31,4 +34,6 @@
   background-color: rgba(0, 0, 0, 0.45);
   box-shadow: inset 0px 0px 2px 2px rgba(0, 0, 0, 0.45);
   color: #ddd;
+  text-shadow: none;
 }
+

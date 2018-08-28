@@ -2,7 +2,13 @@ import { ProgramLinkageBackend } from './../../../dataclasses/programlinkageback
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Position } from './../../../dataclasses/position.class';
 import { ProgramLinkage } from './../../../dataclasses/programlinkage.class';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Renderer2,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
 
 @Component({
   selector: 'app-desktop-surface',
@@ -10,7 +16,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./desktop-surface.component.scss']
 })
 export class DesktopSurfaceComponent implements OnInit {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private renderer: Renderer2) {}
+
+  @ViewChild('surface')
+  surface: ElementRef;
 
   linkages: Array<ProgramLinkage> = new Array(); // array for all linkages on the desktop
 
@@ -20,25 +29,26 @@ export class DesktopSurfaceComponent implements OnInit {
   token: string =
     sessionStorage.getItem('token') || localStorage.getItem('token');
 
-  ngOnInit(): void {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Token: this.token
-      })
-    };
+  url = 'https://api.dev.cryptic-game.net';
+  httpOptions = {
+    headers: new HttpHeaders({
+      Token: this.token
+    })
+  };
 
+  ngOnInit(): void {
     this.http
       .post<Array<ProgramLinkageBackend>>(
-        'https://api.dev.cryptic-game.net/shortcut/list',
+        `${this.url}/shortcut/list`,
         null,
-        httpOptions
+        this.httpOptions
       )
       .subscribe(data => {
         data.filter(el => el.on_surface).forEach(el => {
           const position = new Position(el.position.x, el.position.y);
           const linkage = new ProgramLinkage(
             el.name,
-            `./assets/img/desktop/icons/${el.image}.svg`,
+            el.image,
             el.name,
             position
           );
@@ -51,17 +61,41 @@ export class DesktopSurfaceComponent implements OnInit {
   mousedown(e: MouseEvent): void {
     this.drag = e.target as HTMLElement;
     this.position = new Position(e.offsetX, e.offsetY);
+
+    Array.from(this.surface.nativeElement.children).forEach(el =>
+      this.renderer.setStyle(el, 'zIndex', '0')
+    );
+    this.renderer.setStyle(this.drag, 'zIndex', '1');
   }
 
   mouseup(e: MouseEvent): void {
+    const data = new FormData();
+    data.append('image', this.drag.querySelector('img').getAttribute('src'));
+    data.append('name', this.drag.innerText);
+    data.append('position_x', (e.pageX - this.position.getX()).toString());
+    data.append('position_y', (e.pageY - this.position.getY()).toString());
+    data.append('on_surface', 'true');
+
+    this.http
+      .post(`${this.url}/shortcut/update`, data, this.httpOptions)
+      .subscribe();
+
     this.drag = undefined;
     this.position = undefined;
   }
 
   mousemove(e: MouseEvent): void {
     if (this.drag) {
-      this.drag.style.left = `${e.pageX - this.position.getX()}px`;
-      this.drag.style.top = `${e.pageY - this.position.getY()}px`;
+      this.renderer.setStyle(
+        this.drag,
+        'top',
+        `${e.pageY - this.position.getY()}px`
+      );
+      this.renderer.setStyle(
+        this.drag,
+        'left',
+        `${e.pageX - this.position.getX()}px`
+      );
     }
   }
 

@@ -1,5 +1,6 @@
-<div id="desktop-surface-background" (mousemove)="this.mousemove($event)">
-  <div *ngFor="let linkage of linkages" (mousedown)="this.mousedown($event)" (mouseup)="this.mouseup($event)" class="linkage">
+<div id="desktop-surface" (mousemove)="this.mousemove($event)" #surface>
+  <div *ngFor="let linkage of linkages" (mousedown)="this.mousedown($event)" (mouseup)="this.mouseup($event)" [ngStyle]="{'top.px': linkage.getPosition().getY(), 'left.px': linkage.getPosition().getX()}"
+    class="linkage">
     <!-- TODO: Display linkages with position -->
     <img src="{{linkage.getIcon()}}" /> {{linkage.getDisplayName()}}
   </div>
