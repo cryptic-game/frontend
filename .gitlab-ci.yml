@@ -1,0 +1,49 @@
+image: node:latest
+
+cache:
+  key: ${CI_COMMIT_REF_NAME}
+  untracked: true
+  paths:
+    - node_modules/
+
+stages:
+  - build
+  - test
+  - deploy
+
+before_script:
+  - node -v && npm -v
+  - npm install
+
+build:
+  stage: build
+  script:
+    - npm run-script build
+  artifacts:
+    name: "CP-Website_${CI_COMMIT_REF_NAME}"
+    expire_in: 3 days
+    paths:
+      - dist/
+
+test:
+  stage: test
+  script:
+    - ./node_modules/@angular/cli/bin/ng test --single-run=true --browser PhantomJS --watch=false
+
+deploy:
+  stage: deploy
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh && chmod 770 ~/.ssh
+    - eval $(ssh-agent -s)
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - ssh-add <(echo "$PRODUCTION_PRIVATE_KEY")
+    - apt-get update && apt-get install -y rsync
+  script:
+    - ssh deployer@dev-frontend "mkdir -p ~/web_temp"
+    - rsync -rav -e ssh --exclude='.git/' --exclude='.gitlab-ci.yml' --delete-excluded ./ deployer@dev-frontend:~/web_temp
+    - ssh deployer@dev-frontend "cp -r /usr/share/nginx/html ~/OLD && rm -rf /usr/share/nginx/html/*"
+    - ssh deployer@dev-frontend "mv ~/web_temp/dist/* /usr/share/nginx/html"
+    - ssh deployer@dev-frontend "rm -rf ~/web_temp"
+  only:
+    - /^production$/
