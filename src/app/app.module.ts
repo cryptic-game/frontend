@@ -9,7 +9,7 @@ import { DesktopMenuComponent } from './desktop/desktop-menu/desktop-menu.compon
 import { DesktopStartmenuComponent } from './desktop/desktop-startmenu/desktop-startmenu.component';
 import { ContextMenuComponent } from './desktop/context-menu/context-menu.component';
 import { DesktopSurfaceComponent } from './desktop/desktop-surface/desktop-surface.component';
-import { LoginService } from './login/login.service';
+import {SignUpComponent} from './sign-up/sign-up.component';
 
 @NgModule({
   declarations: [
@@ -19,10 +19,11 @@ import { LoginService } from './login/login.service';
     DesktopMenuComponent,
     DesktopStartmenuComponent,
     ContextMenuComponent,
-    DesktopSurfaceComponent
+    DesktopSurfaceComponent,
+    SignUpComponent
   ],
   imports: [BrowserModule, HttpClientModule],
-  providers: [LoginService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
