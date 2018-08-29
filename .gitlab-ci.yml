@@ -43,7 +43,7 @@ deploy:
     - ssh deployer@dev-frontend "mkdir -p ~/web_temp"
     - rsync -rav -e ssh --exclude='.git/' --exclude='.gitlab-ci.yml' --delete-excluded ./ deployer@dev-frontend:~/web_temp
     - ssh deployer@dev-frontend "cp -r /usr/share/nginx/html ~/OLD && rm -rf /usr/share/nginx/html/*"
-    - ssh deployer@dev-frontend "mv ~/web_temp/dist/* /usr/share/nginx/html"
+    - ssh deployer@dev-frontend "mv ~/web_temp/dist/frontend/* /usr/share/nginx/html"
     - ssh deployer@dev-frontend "rm -rf ~/web_temp"
   only:
     - /^development$/
