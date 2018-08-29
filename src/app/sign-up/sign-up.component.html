@@ -1,0 +1,45 @@
+<div id="body">
+  <div id="form-container">
+    <form #signupForm id="signup-form"
+          (submit)="$event.preventDefault(); performSignup(usernameField.value, emailField.value, passwordField.value)">
+      <h1 id="signup-title">SIGNUP</h1>
+      <table id="signup-table">
+        <tr>
+          <td colspan="2">
+            <input type="text" #usernameField id="username" name="username" placeholder="Username" required>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <input type="email" #emailField id="email" name="email" placeholder="Email Address" required>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <input type="password" (keyup)="validatePassword(passwordField.value)" #passwordField id="password"
+                   name="password" placeholder="Type in password" required>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <input type="password" (keyup)="validatePassword(passwordField.value)" #passwordConfirm
+                   id="password-confirm" name="password-confirm" placeholder="Type in the password again" required>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <label id="errorText">{{errorText}}</label>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: left;">
+            <a routerLink="login" id="login-link">Already have an account?</a>
+          </td>
+          <td style="text-align: right;">
+            <input type="submit" #submitButton id="submit-button" value="Sign up">
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</div>
