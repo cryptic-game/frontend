@@ -46,4 +46,4 @@ deploy:
     - ssh deployer@dev-frontend "mv ~/web_temp/dist/* /usr/share/nginx/html"
     - ssh deployer@dev-frontend "rm -rf ~/web_temp"
   only:
-    - /^production$/
+    - /^development$/
