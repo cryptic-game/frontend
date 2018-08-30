@@ -11,11 +11,14 @@ import {ContextMenuComponent} from './desktop/context-menu/context-menu.componen
 import {DesktopSurfaceComponent} from './desktop/desktop-surface/desktop-surface.component';
 import {SignUpComponent} from './sign-up/sign-up.component';
 import {RouterModule, Routes} from '@angular/router';
+import {DesktopGuard} from './desktop/desktop.guard';
+import {LoginGuard} from './login/login.guard';
+import {SignUpGuard} from './sign-up/sign-up.guard';
 
 const routes: Routes = [
-  {path: '', component: DesktopComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'signup', component: SignUpComponent},
+  {path: '', component: DesktopComponent, canActivate: [DesktopGuard]},
+  {path: 'login', component: LoginComponent, canActivate: [LoginGuard]},
+  {path: 'signup', component: SignUpComponent, canActivate: [SignUpGuard]},
   {path: '**', redirectTo: '/'}
 ];
 
