@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {SignUpService} from './sign-up.service';
 
 @Component({
@@ -10,7 +10,6 @@ export class SignUpComponent implements OnInit {
   @ViewChild('submitButton') loginButton: ElementRef;
   @ViewChild('passwordField') passwordField: ElementRef;
   @ViewChild('passwordConfirm') passwordConfirmField: ElementRef;
-  @Output() done: EventEmitter<any> = new EventEmitter();
   errorText: string;
 
   constructor(private signUpService: SignUpService) {
@@ -37,7 +36,7 @@ export class SignUpComponent implements OnInit {
     this.signUpService.signUp(username, email, password).subscribe(data => {
         const error = data['error'];
         if (error === undefined) {
-          // TODO: navigate to login
+          // TODO: navigate to /login
         } else {
           this.errorText = data['error'];
         }

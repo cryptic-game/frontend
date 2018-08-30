@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {LoginService} from './login.service';
 
 @Component({
@@ -7,10 +7,7 @@ import {LoginService} from './login.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('loginButton')
-  loginButton: ElementRef;
-  @Output()
-  done: EventEmitter<any> = new EventEmitter();
+  @ViewChild('loginButton') loginButton: ElementRef;
   formHiding = false;
 
   constructor(private loginService: LoginService) {
@@ -34,7 +31,8 @@ export class LoginComponent implements OnInit {
 
           this.formHiding = true;
 
-          setTimeout(() => this.done.emit(), 500);
+          setTimeout(() => {/* TODO: navigate to / */
+          }, 500);
 
         } else {
 
