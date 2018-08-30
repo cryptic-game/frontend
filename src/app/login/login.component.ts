@@ -1,5 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {LoginService} from './login.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,7 @@ export class LoginComponent implements OnInit {
   @ViewChild('loginButton') loginButton: ElementRef;
   formHiding = false;
 
-  constructor(private loginService: LoginService) {
+  constructor(private loginService: LoginService, private router: Router) {
   }
 
   ngOnInit() {
@@ -31,8 +32,7 @@ export class LoginComponent implements OnInit {
 
           this.formHiding = true;
 
-          setTimeout(() => {/* TODO: navigate to / */
-          }, 500);
+          setTimeout(() => this.router.navigateByUrl('/'), 500);
 
         } else {
 

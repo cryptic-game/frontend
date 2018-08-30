@@ -1,5 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {SignUpService} from './sign-up.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
@@ -12,7 +13,7 @@ export class SignUpComponent implements OnInit {
   @ViewChild('passwordConfirm') passwordConfirmField: ElementRef;
   errorText: string;
 
-  constructor(private signUpService: SignUpService) {
+  constructor(private signUpService: SignUpService, private router: Router) {
   }
 
   ngOnInit() {
@@ -36,7 +37,7 @@ export class SignUpComponent implements OnInit {
     this.signUpService.signUp(username, email, password).subscribe(data => {
         const error = data['error'];
         if (error === undefined) {
-          // TODO: navigate to /login
+          this.router.navigateByUrl('/login');
         } else {
           this.errorText = data['error'];
         }
