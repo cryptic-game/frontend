@@ -6,6 +6,8 @@ describe('ContextMenuComponent', () => {
   let component: ContextMenuComponent;
   let fixture: ComponentFixture<ContextMenuComponent>;
 
+  localStorage.setItem('token', '');
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ContextMenuComponent ]

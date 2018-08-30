@@ -1,16 +1,22 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DesktopComponent } from './desktop.component';
+import {DesktopComponent} from './desktop.component';
+import {DesktopSurfaceComponent} from './desktop-surface/desktop-surface.component';
+import {DesktopMenuComponent} from './desktop-menu/desktop-menu.component';
+import {HttpClientModule} from '@angular/common/http';
 
 describe('DesktopComponent', () => {
   let component: DesktopComponent;
   let fixture: ComponentFixture<DesktopComponent>;
 
+  localStorage.setItem('token', '');
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DesktopComponent ]
+      imports: [HttpClientModule],
+      declarations: [DesktopComponent, DesktopSurfaceComponent, DesktopMenuComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

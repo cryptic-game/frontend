@@ -1,14 +1,8 @@
-import { ProgramLinkageBackend } from './../../../dataclasses/programlinkagebackend.class';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Position } from './../../../dataclasses/position.class';
-import { ProgramLinkage } from './../../../dataclasses/programlinkage.class';
-import {
-  Component,
-  OnInit,
-  Renderer2,
-  ElementRef,
-  ViewChild
-} from '@angular/core';
+import {ProgramLinkageBackend} from '../../../dataclasses/programlinkagebackend.class';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Position} from '../../../dataclasses/position.class';
+import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {ProgramLinkage} from '../../../dataclasses/programlinkage.class';
 
 @Component({
   selector: 'app-desktop-surface',
@@ -21,7 +15,7 @@ export class DesktopSurfaceComponent implements OnInit {
   @ViewChild('surface')
   surface: ElementRef;
 
-  linkages: Array<ProgramLinkage> = new Array(); // array for all linkages on the desktop
+  linkages: Array<ProgramLinkage> = []; // array for all linkages on the desktop
 
   drag: HTMLElement; // the dragged element
   position: Position; // position of this.drag
