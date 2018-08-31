@@ -86,11 +86,11 @@ $input-border-radius: 12px;
 #login-link {
   color: white;
   margin-left: 2px;
-  font-size: 0.8em;
+  font-size: 0.9em;
   text-decoration: none;
   cursor: pointer;
 
-  &:active {
+  &:hover {
     text-decoration: underline;
   }
 

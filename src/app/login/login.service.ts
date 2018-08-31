@@ -6,7 +6,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 })
 export class LoginService {
 
-  loginURL = 'http://localhost:1234/session/login';
+  loginURL = 'https://api.dev.cryptic-game.net/session/login';
 
   constructor(private http: HttpClient) {
   }
