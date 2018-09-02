@@ -10,7 +10,10 @@ import {ProgramLinkage} from '../../../dataclasses/programlinkage.class';
   styleUrls: ['./desktop-surface.component.scss']
 })
 export class DesktopSurfaceComponent implements OnInit {
-  constructor(private http: HttpClient, private renderer: Renderer2) {}
+  constructor(
+    private renderer: Renderer2,
+    private programService: ProgramService
+  ) {}
 
   @ViewChild('surface')
   surface: ElementRef;
@@ -23,33 +26,20 @@ export class DesktopSurfaceComponent implements OnInit {
   token: string =
     sessionStorage.getItem('token') || localStorage.getItem('token');
 
-  url = 'https://api.dev.cryptic-game.net';
-  httpOptions = {
-    headers: new HttpHeaders({
-      Token: this.token
-    })
-  };
-
   ngOnInit(): void {
-    this.http
-      .post<Array<ProgramLinkageBackend>>(
-        `${this.url}/shortcut/list`,
-        null,
-        this.httpOptions
-      )
-      .subscribe(data => {
-        data.filter(el => el.on_surface).forEach(el => {
-          const position = new Position(el.position.x, el.position.y);
-          const linkage = new ProgramLinkage(
-            el.name,
-            el.image,
-            el.name,
-            position
-          );
+    this.programService.list(this.token).subscribe(data => {
+      data.filter(el => el.on_surface).forEach(el => {
+        const position = new Position(el.position.x, el.position.y);
+        const linkage = new ProgramLinkage(
+          el.name,
+          el.image,
+          el.name,
+          position
+        );
 
-          this.linkages.push(linkage);
-        });
+        this.linkages.push(linkage);
       });
+    });
   }
 
   mousedown(e: MouseEvent): void {
@@ -70,9 +60,7 @@ export class DesktopSurfaceComponent implements OnInit {
     data.append('position_y', (e.pageY - this.position.getY()).toString());
     data.append('on_surface', 'true');
 
-    this.http
-      .post(`${this.url}/shortcut/update`, data, this.httpOptions)
-      .subscribe();
+    this.programService.update(this.token, data).subscribe();
 
     this.drag = undefined;
     this.position = undefined;
