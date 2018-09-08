@@ -1,8 +1,7 @@
-import {ProgramLinkageBackend} from '../../../dataclasses/programlinkagebackend.class';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Position} from '../../../dataclasses/position.class';
 import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {ProgramLinkage} from '../../../dataclasses/programlinkage.class';
+import {ProgramService} from '../program.service';
 
 @Component({
   selector: 'app-desktop-surface',
