@@ -5,12 +5,16 @@ import {DesktopComponent} from './desktop/desktop.component';
 import {DesktopSurfaceComponent} from './desktop/desktop-surface/desktop-surface.component';
 import {DesktopMenuComponent} from './desktop/desktop-menu/desktop-menu.component';
 import {HttpClientModule} from '@angular/common/http';
+import {RouterTestingModule} from '@angular/router/testing';
+import {FormsModule} from '@angular/forms';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule
+        HttpClientModule,
+        RouterTestingModule,
+        FormsModule
       ],
       declarations: [
         AppComponent,
