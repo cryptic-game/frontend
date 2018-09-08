@@ -1,5 +1,6 @@
-import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {LoginService} from './login.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -7,13 +8,10 @@ import {LoginService} from './login.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('loginButton')
-  loginButton: ElementRef;
-  @Output()
-  done: EventEmitter<any> = new EventEmitter();
+  @ViewChild('loginButton') loginButton: ElementRef;
   formHiding = false;
 
-  constructor(private loginService: LoginService) {
+  constructor(private loginService: LoginService, private router: Router) {
   }
 
   ngOnInit() {
@@ -34,7 +32,7 @@ export class LoginComponent implements OnInit {
 
           this.formHiding = true;
 
-          setTimeout(() => this.done.emit(), 500);
+          setTimeout(() => this.router.navigateByUrl('/'), 500);
 
         } else {
 

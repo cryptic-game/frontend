@@ -14,15 +14,13 @@ $input-border-radius: 12px;
 }
 
 #form-container {
-  width: 25em;
-  height: 22em;
   background-color: $background-color;
   border-radius: 20px;
 }
 
 #login-form {
   height: 80%;
-  padding: 2em 2em;
+  padding: 2em 2em 1.5em 2em;
   text-align: center;
   font-family: Lato, sans-serif;
 }
@@ -35,8 +33,8 @@ $input-border-radius: 12px;
 }
 
 #login-table {
-  width: 100%;
-  height: 75%;
+  width: 20em;
+  height: 13em;
 }
 
 #username,
@@ -138,5 +136,26 @@ $input-border-radius: 12px;
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
+  }
+}
+
+#signup-link-container {
+  text-align: center;
+  border-top: 2px solid $field-background-color;
+  margin-top: 0.5em;
+  padding-top: 1em;
+
+  span {
+    color: white;
+    font-family: Lato, sans-serif;
+
+    a {
+      color: $secondary-color;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
   }
 }
