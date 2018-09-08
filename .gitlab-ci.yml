@@ -20,7 +20,7 @@ build:
   script:
     - npm run-script build
   artifacts:
-    name: "CP-Website_${CI_COMMIT_REF_NAME}"
+    name: "CP-Frontend_${CI_COMMIT_REF_NAME}"
     expire_in: 3 days
     paths:
       - dist/
@@ -28,7 +28,7 @@ build:
 test:
   stage: test
   script:
-    - ./node_modules/@angular/cli/bin/ng test --single-run=true --browser PhantomJS --watch=false
+  - ./node_modules/@angular/cli/bin/ng test --browsers PhantomJS --watch=false
 
 deploy:
   stage: deploy

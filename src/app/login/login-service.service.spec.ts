@@ -1,10 +1,12 @@
-import { TestBed, inject } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
-import { LoginService } from './login.service';
+import {LoginService} from './login.service';
+import {HttpClientModule} from '@angular/common/http';
 
 describe('LoginService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientModule],
       providers: [LoginService]
     });
   });

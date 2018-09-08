@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { ProgramLinkageBackend } from './../../dataclasses/programlinkagebackend.class';
+import {ProgramLinkageBackend} from '../../dataclasses/programlinkagebackend.class';
 
 @Injectable({
   providedIn: 'root'

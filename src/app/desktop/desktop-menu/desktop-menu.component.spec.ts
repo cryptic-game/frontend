@@ -6,6 +6,8 @@ describe('DesktopMenuComponent', () => {
   let component: DesktopMenuComponent;
   let fixture: ComponentFixture<DesktopMenuComponent>;
 
+  localStorage.setItem('token', '');
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ DesktopMenuComponent ]

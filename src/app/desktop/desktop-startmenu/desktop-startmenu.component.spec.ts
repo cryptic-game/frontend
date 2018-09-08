@@ -6,6 +6,8 @@ describe('DesktopStartmenuComponent', () => {
   let component: DesktopStartmenuComponent;
   let fixture: ComponentFixture<DesktopStartmenuComponent>;
 
+  localStorage.setItem('token', '');
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ DesktopStartmenuComponent ]
