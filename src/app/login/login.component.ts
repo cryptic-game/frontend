@@ -35,8 +35,7 @@ export class LoginComponent implements OnInit {
 
         } else {
 
-          // this.errorText = error;
-          console.log('Login error: ' + error);
+          this.errorText = error;
           this.loginButton.nativeElement.disabled = true;
           setTimeout(
             () => (this.loginButton.nativeElement.disabled = false),
