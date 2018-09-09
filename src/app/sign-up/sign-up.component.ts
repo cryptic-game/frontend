@@ -12,6 +12,7 @@ export class SignUpComponent implements OnInit {
   @ViewChild('passwordField') passwordField: ElementRef;
   @ViewChild('passwordConfirm') passwordConfirmField: ElementRef;
   errorText: string;
+  model = {username: '', email: '', password: '', passwordConfirm: ''};
 
   constructor(private signUpService: SignUpService, private router: Router) {
   }
@@ -19,22 +20,9 @@ export class SignUpComponent implements OnInit {
   ngOnInit() {
   }
 
-  validatePassword(password) {
-    if (password.length <= 4) {
-      this.passwordField.nativeElement.setCustomValidity('Password is too short');
-    } else {
-      this.passwordField.nativeElement.setCustomValidity('');
-    }
 
-    if (password !== this.passwordConfirmField.nativeElement.value) {
-      this.passwordConfirmField.nativeElement.setCustomValidity('Passwords do not match');
-    } else {
-      this.passwordConfirmField.nativeElement.setCustomValidity('');
-    }
-  }
-
-  performSignup(username: string, email: string, password: string) {
-    this.signUpService.signUp(username, email, password).subscribe(data => {
+  performSignup() {
+    this.signUpService.signUp(this.model.username, this.model.email, this.model.password).subscribe(data => {
         const error = data['error'];
         if (error === undefined) {
           this.router.navigateByUrl('/login');

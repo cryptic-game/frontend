@@ -14,6 +14,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {DesktopGuard} from './desktop/desktop.guard';
 import {LoginGuard} from './login/login.guard';
 import {SignUpGuard} from './sign-up/sign-up.guard';
+import {FormsModule} from '@angular/forms';
+import {PasswordConfirmValidatorDirective} from './sign-up/password-confirm-validator.directive';
 
 const routes: Routes = [
   {path: '', component: DesktopComponent, canActivate: [DesktopGuard]},
@@ -31,9 +33,10 @@ const routes: Routes = [
     DesktopStartmenuComponent,
     ContextMenuComponent,
     DesktopSurfaceComponent,
-    SignUpComponent
+    SignUpComponent,
+    PasswordConfirmValidatorDirective
   ],
-  imports: [RouterModule.forRoot(routes), BrowserModule, HttpClientModule],
+  imports: [RouterModule.forRoot(routes), BrowserModule, HttpClientModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent]
 })
