@@ -19,7 +19,6 @@ $input-border-radius: 12px;
 }
 
 #login-form {
-  height: 80%;
   padding: 2em 2em 1.5em 2em;
   text-align: center;
   font-family: Lato, sans-serif;
@@ -65,6 +64,8 @@ $input-border-radius: 12px;
   font-size: 1.25em;
   outline: none;
   cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 
   &:hover {
     background-color: lighten($background-color, 1%);
@@ -157,5 +158,32 @@ $input-border-radius: 12px;
     a:hover {
       text-decoration: underline;
     }
+  }
+}
+
+.errorText {
+  color: red;
+}
+
+@media screen and (max-width: 650px) {
+  #login-title {
+    margin-top: 0;
+  }
+
+  #form-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  #login-table {
+    width: 100%;
+    height: 15em;
+  }
+}
+
+@media screen and (max-height: 420px) {
+  #login-table {
+    height: 50vh;
   }
 }
