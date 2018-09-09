@@ -67,6 +67,8 @@ $input-border-radius: 12px;
   outline: none;
   cursor: pointer;
   text-align: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 
   &:hover {
     background-color: lighten($background-color, 1%);
@@ -79,7 +81,7 @@ $input-border-radius: 12px;
   border-color: #ff281c;
 }
 
-#errorText {
+.errorText {
   color: red;
 }
 
@@ -110,12 +112,15 @@ $input-border-radius: 12px;
     border-radius: 0;
   }
 
-  #signup-form {
-    height: 80%;
-  }
-
   #signup-table {
-    height: 80%;
     width: 100%;
+    height: 22em;
   }
 }
+
+@media screen and (max-height: 480px) {
+  #signup-table {
+    height: 60vh;
+  }
+}
+

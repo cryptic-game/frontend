@@ -1,34 +1,69 @@
 <div id="body">
   <div id="form-container">
-    <form #signupForm id="signup-form"
-          (submit)="$event.preventDefault(); performSignup(usernameField.value, emailField.value, passwordField.value)">
+    <form #signupForm="ngForm" id="signup-form"
+          (ngSubmit)="performSignup()">
       <h1 id="signup-title">SIGNUP</h1>
       <table id="signup-table">
         <tr>
           <td colspan="2">
-            <input type="text" #usernameField id="username" name="username" placeholder="Username" required>
+            <input type="text" [(ngModel)]="model.username" #usernameField="ngModel" id="username" name="username"
+                   placeholder="Username" minlength="4"
+                   required>
+            <div class="errorText" *ngIf="usernameField.invalid && (usernameField.dirty || usernameField.touched)">
+              <div *ngIf="usernameField['errors'].required">
+                Username is required.
+              </div>
+              <div *ngIf="usernameField['errors'].minlength">
+                Username must be at least 4 characters long.
+              </div>
+            </div>
           </td>
         </tr>
         <tr>
           <td colspan="2">
-            <input type="email" #emailField id="email" name="email" placeholder="Email Address" required>
+            <input type="email" [(ngModel)]="model.email" #emailField="ngModel" id="email" name="email"
+                   placeholder="Email Address" required email>
+            <div class="errorText" *ngIf="emailField.invalid && (emailField.dirty || emailField.touched)">
+              <div *ngIf="emailField['errors'].required">
+                Email is required.
+              </div>
+              <div *ngIf="emailField['errors'].email">
+                Email is invalid.
+              </div>
+            </div>
           </td>
         </tr>
         <tr>
           <td colspan="2">
-            <input type="password" (keyup)="validatePassword(passwordField.value)" #passwordField id="password"
-                   name="password" placeholder="Type in password" required>
+            <input type="password" [(ngModel)]="model.password" #passwordField="ngModel" id="password"
+                   name="password" placeholder="Type in password" required minlength="4">
+            <div class="errorText" *ngIf="passwordField.invalid && (passwordField.dirty || passwordField.touched)">
+              <div *ngIf="passwordField['errors'].required">
+                Password is required.
+              </div>
+              <div *ngIf="passwordField['errors'].minlength">
+                Password must be at least 4 characters long.
+              </div>
+            </div>
           </td>
         </tr>
         <tr>
           <td colspan="2">
-            <input type="password" (keyup)="validatePassword(passwordField.value)" #passwordConfirm
-                   id="password-confirm" name="password-confirm" placeholder="Type in the password again" required>
+            <input type="password" [(ngModel)]="model.passwordConfirm" appPasswordMatch #passwordConfirm="ngModel"
+                   id="password-confirm" name="password-confirm" placeholder="Confirm your password" required>
+            <div class="errorText"
+                 *ngIf="passwordConfirm.invalid && (passwordConfirm.dirty || passwordConfirm.touched)">
+              <div *ngIf="passwordConfirm['errors'].required || passwordConfirm['errors'].notMatching">
+                Passwords don't match.
+              </div>
+            </div>
           </td>
         </tr>
-        <tr>
+        <tr *ngIf="errorText">
           <td colspan="2">
-            <label id="errorText">{{errorText}}</label>
+            <div class="errorText">
+              {{errorText}}
+            </div>
           </td>
         </tr>
         <tr>
@@ -36,7 +71,7 @@
             <a routerLink="/login" id="login-link">Already have an account?</a>
           </td>
           <td style="text-align: right;">
-            <input type="submit" #submitButton id="submit-button" value="Sign up">
+            <input [disabled]="signupForm.form.invalid" type="submit" #submitButton id="submit-button" value="Sign up">
           </td>
         </tr>
       </table>
