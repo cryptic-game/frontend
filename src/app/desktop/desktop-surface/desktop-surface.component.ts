@@ -1,7 +1,7 @@
-import {Position} from '../../../dataclasses/position.class';
-import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {ProgramLinkage} from '../../../dataclasses/programlinkage.class';
-import {ProgramService} from '../program.service';
+import { Position } from '../../../dataclasses/position.class';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ProgramLinkage } from '../../../dataclasses/programlinkage.class';
+import { ProgramService } from '../program.service';
 
 @Component({
   selector: 'app-desktop-surface',
@@ -9,10 +9,7 @@ import {ProgramService} from '../program.service';
   styleUrls: ['./desktop-surface.component.scss']
 })
 export class DesktopSurfaceComponent implements OnInit {
-  constructor(
-    private renderer: Renderer2,
-    private programService: ProgramService
-  ) {}
+  constructor(private programService: ProgramService) {}
 
   @ViewChild('surface')
   surface: ElementRef;
@@ -20,7 +17,8 @@ export class DesktopSurfaceComponent implements OnInit {
   linkages: Array<ProgramLinkage> = []; // array for all linkages on the desktop
 
   drag: HTMLElement; // the dragged element
-  position: Position; // position of this.drag
+  index: number; // index of the dragged element
+  position: Position; // position of the dragged element
 
   token: string =
     sessionStorage.getItem('token') || localStorage.getItem('token');
@@ -41,42 +39,38 @@ export class DesktopSurfaceComponent implements OnInit {
     });
   }
 
-  mousedown(e: MouseEvent): void {
-    this.drag = e.target as HTMLElement;
+  mousedown(e: MouseEvent, i: number): void {
+    this.index = i;
     this.position = new Position(e.offsetX, e.offsetY);
 
-    Array.from(this.surface.nativeElement.children).forEach(el =>
-      this.renderer.setStyle(el, 'zIndex', '0')
-    );
-    this.renderer.setStyle(this.drag, 'zIndex', '1');
+    this.linkages.forEach(el => {
+      el.getPosition().setZ(0);
+    });
+    this.linkages[this.index].getPosition().setZ(1);
   }
 
   mouseup(e: MouseEvent): void {
     const data = new FormData();
-    data.append('image', this.drag.querySelector('img').getAttribute('src'));
-    data.append('name', this.drag.innerText);
+    data.append('image', this.linkages[this.index].getIcon());
+    data.append('name', this.linkages[this.index].getDisplayName());
     data.append('position_x', (e.pageX - this.position.getX()).toString());
     data.append('position_y', (e.pageY - this.position.getY()).toString());
     data.append('on_surface', 'true');
 
     this.programService.update(this.token, data).subscribe();
 
-    this.drag = undefined;
+    this.index = undefined;
     this.position = undefined;
   }
 
   mousemove(e: MouseEvent): void {
-    if (this.drag) {
-      this.renderer.setStyle(
-        this.drag,
-        'top',
-        `${e.pageY - this.position.getY()}px`
-      );
-      this.renderer.setStyle(
-        this.drag,
-        'left',
-        `${e.pageX - this.position.getX()}px`
-      );
+    if (this.index !== undefined) {
+      this.linkages[this.index]
+        .getPosition()
+        .setX(e.pageX - this.position.getX());
+      this.linkages[this.index]
+        .getPosition()
+        .setY(e.pageY - this.position.getY());
     }
   }
 

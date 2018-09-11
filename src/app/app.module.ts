@@ -16,6 +16,8 @@ import {LoginGuard} from './login/login.guard';
 import {SignUpGuard} from './sign-up/sign-up.guard';
 import {FormsModule} from '@angular/forms';
 import {PasswordConfirmValidatorDirective} from './sign-up/password-confirm-validator.directive';
+import { PXtoViewWidthPipe } from './pxto-view-width.pipe';
+import { PXtoViewHeightPipe } from './pxto-view-height.pipe';
 
 const routes: Routes = [
   {path: '', component: DesktopComponent, canActivate: [DesktopGuard]},
@@ -34,7 +36,9 @@ const routes: Routes = [
     ContextMenuComponent,
     DesktopSurfaceComponent,
     SignUpComponent,
-    PasswordConfirmValidatorDirective
+    PasswordConfirmValidatorDirective,
+    PXtoViewWidthPipe,
+    PXtoViewHeightPipe
   ],
   imports: [RouterModule.forRoot(routes), BrowserModule, HttpClientModule, FormsModule],
   providers: [],

@@ -1,7 +1,6 @@
 <div id="desktop-surface" (mousemove)="this.mousemove($event)" #surface>
-  <div *ngFor="let linkage of linkages" (mousedown)="this.mousedown($event)" (mouseup)="this.mouseup($event)" [ngStyle]="{'top.px': linkage.getPosition().getY(), 'left.px': linkage.getPosition().getX()}"
+  <div *ngFor="let linkage of linkages; index as index" (mousedown)="this.mousedown($event, index)" (mouseup)="this.mouseup($event)" [ngStyle]="{'top.vh': linkage.getPosition().getY() | px2vh, 'left.vw': linkage.getPosition().getX() | px2vw, 'z-index': linkage.getPosition().getZ()}"
     class="linkage">
-    <!-- TODO: Display linkages with position -->
     <img src="{{linkage.getIcon()}}" /> {{linkage.getDisplayName()}}
   </div>
 </div>

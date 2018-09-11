@@ -1,10 +1,12 @@
 export class Position {
   private x: number;
   private y: number;
+  private z: number;
 
-  constructor(X: number, Y: number) {
+  constructor(X: number, Y: number, Z?: number) {
     this.x = X;
     this.y = Y;
+    this.z = Z || 0;
   }
 
   public getX(): number {
@@ -13,10 +15,16 @@ export class Position {
   public getY(): number {
     return this.y;
   }
+  public getZ(): number {
+    return this.z;
+  }
   public setX(X: number): void {
     this.x = X;
   }
   public setY(Y: number): void {
     this.y = Y;
+  }
+  public setZ(Z: number): void {
+    this.z = Z;
   }
 }
