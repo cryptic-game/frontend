@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class PXtoViewHeightPipe implements PipeTransform {
 
   transform(value: number): number {
-    return value * (100 / document.documentElement.clientHeightc);
+    return value * (100 / document.documentElement.clientHeight);
   }
 
 }
