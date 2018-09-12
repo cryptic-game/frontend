@@ -1,7 +1,8 @@
-<div id="desktop-surface" (mousemove)="this.mousemove($event)" #surface>
+<div id="desktop-surface" (mousemove)="this.mousemove($event)" (contextmenu)="contextmenu.showContextMenu($event)" (click)="contextmenu.hideContextMenu()" #surface>
   <div *ngFor="let linkage of linkages" (mousedown)="this.mousedown($event)" (mouseup)="this.mouseup($event)" [ngStyle]="{'top.px': linkage.getPosition().getY(), 'left.px': linkage.getPosition().getX()}"
     class="linkage">
     <!-- TODO: Display linkages with position -->
     <img src="{{linkage.getIcon()}}" /> {{linkage.getDisplayName()}}
   </div>
+  <app-context-menu #contextmenu [hidden]="!contextmenu.contextMenu"></app-context-menu>
 </div>
