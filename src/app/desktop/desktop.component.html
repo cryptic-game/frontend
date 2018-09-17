@@ -1,2 +1,9 @@
-<app-desktop-surface></app-desktop-surface>
+<div id="desktop-surface" (mousemove)="mousemove($event)" (contextmenu)="showContextMenu($event)"
+  #surface>
+  <div *ngFor="let linkage of linkages; index as i" (mousedown)="mousedown($event, i)" (mouseup)="mouseup($event)" [ngStyle]="{'left.vw': linkage.getPosition().getX() | px2vw, 'top.vh': linkage.getPosition().getY() | px2vh }"
+    class="linkage">
+    <img src="{{linkage.getIcon()}}" /> {{linkage.getDisplayName()}}
+  </div>
+  <app-context-menu #contextmenu [position]="contextMenuPosition" (mouseout)="hideContextMenu()" *ngIf="contextMenu"></app-context-menu>
+</div>
 <app-desktop-menu></app-desktop-menu>
