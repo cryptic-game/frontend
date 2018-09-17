@@ -7,24 +7,22 @@ import { Position } from '../../../dataclasses/position.class';
   styleUrls: ['./context-menu.component.scss']
 })
 export class ContextMenuComponent implements OnInit {
+  contextMenu = false;
 
-  contextMenu: boolean = false;
-
-  @Input() 
+  @Input()
   contextMenuPosition: Position;
 
-  @Input() 
+  @Input()
   contextMenuTarget: EventTarget;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   showContextMenu(e: MouseEvent) {
-    console.log("rightClick");
+    console.log('rightClick');
 
-    this.contextMenuPosition = new Position(e.x, e.y);
+    this.contextMenuPosition = new Position(e.offsetX, e.offsetY);
     this.contextMenuTarget = e.target;
     this.contextMenu = true;
 
@@ -34,7 +32,7 @@ export class ContextMenuComponent implements OnInit {
   }
 
   hideContextMenu() {
-    console.log("hide");
+    console.log('hide');
 
     this.contextMenuPosition = null;
     this.contextMenuTarget = null;
@@ -42,5 +40,4 @@ export class ContextMenuComponent implements OnInit {
 
     console.log(this.contextMenu);
   }
-
 }
