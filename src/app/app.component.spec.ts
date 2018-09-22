@@ -2,7 +2,6 @@ import {async, TestBed} from '@angular/core/testing';
 import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
 import {DesktopComponent} from './desktop/desktop.component';
-import {DesktopSurfaceComponent} from './desktop/desktop-surface/desktop-surface.component';
 import {DesktopMenuComponent} from './desktop/desktop-menu/desktop-menu.component';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -20,7 +19,6 @@ describe('AppComponent', () => {
         AppComponent,
         LoginComponent,
         DesktopComponent,
-        DesktopSurfaceComponent,
         DesktopMenuComponent
       ],
     }).compileComponents();
