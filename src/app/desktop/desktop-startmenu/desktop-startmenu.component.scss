@@ -1,0 +1,54 @@
+#startmenu {
+  width: 30vw;
+  height: 70vh;
+  position: absolute;
+  bottom: 5.5%;
+  padding: 10px;
+  background-color: #555;
+  color: #ffffff;
+
+  img {
+    width: 36px;
+    height: 36px;
+  }
+
+  #user {
+    height: 30%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 80%;
+      height: 80%;
+    }
+  }
+
+  #programs {
+    width: 100%;
+    height: calc(64.5% - 2px);
+    border-bottom: 1px solid white;
+    border-top: 1px solid white;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    padding: 2.5px;
+
+    #linkages {
+      overflow-y: scroll;
+    }
+  }
+
+  .button {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  #logout {
+    height: 5.5%;
+  }
+}

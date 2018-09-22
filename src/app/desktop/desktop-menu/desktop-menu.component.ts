@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-desktop-menu',
@@ -6,10 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./desktop-menu.component.scss']
 })
 export class DesktopMenuComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
+  @Output()
+  startmenu = new EventEmitter();
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

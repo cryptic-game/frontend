@@ -11,6 +11,8 @@ import { ProgramService } from './program.service';
 export class DesktopComponent implements OnInit {
   constructor(private programService: ProgramService) {}
 
+  startMenu = false;
+
   contextMenu = false;
   contextMenuPosition = new Position(0, 0);
   contextMenuTarget: EventTarget;
@@ -18,7 +20,7 @@ export class DesktopComponent implements OnInit {
   @ViewChild('surface')
   surface: ElementRef;
 
-  linkages: Array<ProgramLinkage> = []; // array for all linkages on the desktop
+  linkages: ProgramLinkage[] = []; // array for all linkages on the desktop
 
   drag: HTMLElement; // the dragged element
   index: number; // index of the dragged element
@@ -29,12 +31,13 @@ export class DesktopComponent implements OnInit {
 
   ngOnInit(): void {
     this.programService.list(this.token).subscribe(data => {
-      data.filter(el => el.on_surface).forEach(el => {
+      data.forEach(el => {
         const position = new Position(el.position.x, el.position.y);
         const linkage = new ProgramLinkage(
           el.name,
           el.image,
           el.name,
+          el.on_surface,
           position
         );
 
@@ -43,15 +46,27 @@ export class DesktopComponent implements OnInit {
     });
   }
 
+  onDesktop(): ProgramLinkage[] {
+    return this.linkages.filter(item => item.onDesktop());
+  }
+
+  toggleStartMenu(): void {
+    this.startMenu = !this.startMenu;
+  }
+
+  hideStartMenu(): void {
+    this.startMenu = false;
+  }
+
   showContextMenu(e: MouseEvent): boolean {
-    this.contextMenuPosition = new Position(e.offsetX, e.offsetY);
+    this.contextMenuPosition = new Position(e.pageX, e.pageY);
     this.contextMenuTarget = e.target;
     this.contextMenu = true;
 
     return false;
   }
 
-  hideContextMenu() {
+  hideContextMenu(): void {
     this.contextMenu = false;
   }
 

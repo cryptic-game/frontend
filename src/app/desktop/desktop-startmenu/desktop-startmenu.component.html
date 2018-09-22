@@ -1,3 +1,13 @@
-<p>
-  desktop-startmenu works!
-</p>
+<div id="startmenu">
+  <div id="user">
+    <img src="../../../assets/img/desktop/user.svg">
+    {{ user.getName() }}
+  </div>
+  <div id="programs">
+    <div id="linkages">
+      <span class="button" *ngFor="let linkage of search(searchTerm)"><img [src]="linkage.getIcon()" />{{linkage.getDisplayName()}}</span>
+    </div>
+    <input [(ngModel)]="searchTerm">
+  </div>
+  <span class="button" id="logout" (click)="userService.logout(token)"><img src="../../../assets/img/desktop/logoutbutton.svg" />Logout</span>
+</div>

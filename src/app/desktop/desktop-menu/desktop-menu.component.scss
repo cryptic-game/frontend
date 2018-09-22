@@ -1,5 +1,27 @@
 #desktop-menu {
-    width: 100%;
-    height: 5.5%;
-    background-color: #555;
+  width: 100%;
+  height: 5.5%;
+  background-color: #555;
+}
+
+#startbutton {
+
+  &,
+  img {
+    height: 100%;
+  }
+
+  background: transparent;
+  border: none;
+  outline: none;
+  transition: transform 0.5s;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+
+  &:active {
+    transition: transform 0.2s;
+    transform: scale(1.05);
+  }
 }

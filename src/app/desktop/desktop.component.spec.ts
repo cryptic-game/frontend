@@ -1,9 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {DesktopComponent} from './desktop.component';
-import {DesktopSurfaceComponent} from './desktop-surface/desktop-surface.component';
-import {DesktopMenuComponent} from './desktop-menu/desktop-menu.component';
-import {HttpClientModule} from '@angular/common/http';
+import { DesktopComponent } from './desktop.component';
+import { DesktopMenuComponent } from './desktop-menu/desktop-menu.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('DesktopComponent', () => {
   let component: DesktopComponent;
@@ -14,9 +13,8 @@ describe('DesktopComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
-      declarations: [DesktopComponent, DesktopSurfaceComponent, DesktopMenuComponent]
-    })
-      .compileComponents();
+      declarations: [DesktopComponent, DesktopMenuComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
