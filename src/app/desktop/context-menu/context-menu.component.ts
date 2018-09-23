@@ -9,8 +9,7 @@ import { Position } from '../../../dataclasses/position.class';
 export class ContextMenuComponent implements OnInit {
   constructor() {}
 
-  @Input('position')
-  position;
+  @Input('position') position: Position = new Position(0, 0);
 
   ngOnInit() {}
 }
