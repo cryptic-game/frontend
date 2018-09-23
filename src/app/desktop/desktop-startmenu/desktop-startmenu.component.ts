@@ -15,7 +15,7 @@ export class DesktopStartmenuComponent implements OnInit {
 
   @Input() linkages: Array<ProgramLinkage> = [];
 
-  @Input() target: EventTarget;
+  @Input() target;
 
   searchTerm = '';
 
