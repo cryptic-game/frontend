@@ -1,8 +1,8 @@
-import { Account } from './../../../dataclasses/account.class';
-import { UserService } from './../user.service';
-import { Component, OnInit, Input } from '@angular/core';
+import {Account} from '../../../dataclasses/account.class';
+import {UserService} from '../user.service';
+import {Component, Input, OnInit} from '@angular/core';
 
-import { ProgramLinkage } from '../../../dataclasses/programlinkage.class';
+import {ProgramLinkage} from '../../../dataclasses/programlinkage.class';
 
 @Component({
   selector: 'app-desktop-startmenu',
@@ -10,13 +10,12 @@ import { ProgramLinkage } from '../../../dataclasses/programlinkage.class';
   styleUrls: ['./desktop-startmenu.component.scss']
 })
 export class DesktopStartmenuComponent implements OnInit {
-  constructor(public userService: UserService) {}
+  constructor(public userService: UserService) {
+  }
 
-  @Input()
-  linkages: Array<ProgramLinkage>;
+  @Input() linkages: Array<ProgramLinkage> = [];
 
-  @Input()
-  target: EventTarget;
+  @Input() target: EventTarget;
 
   searchTerm = '';
 
@@ -29,8 +28,12 @@ export class DesktopStartmenuComponent implements OnInit {
 
   ngOnInit() {
     this.userService.owner(this.token).subscribe(data => {
-      this.user.setName(data.owner.username);
-      this.user.setEmail(data.owner.email);
+      if (data['error'] !== undefined) {
+        console.log(data['error']);
+      } else {
+        this.user.setName(data.owner.username);
+        this.user.setEmail(data.owner.email);
+      }
     });
   }
 
