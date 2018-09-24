@@ -37,7 +37,15 @@
     padding: 2.5px;
 
     #linkages {
-      overflow-y: scroll;
+      height: 100%;
+      overflow-y: scroll,
+        -moz-scrollbars-none;
+      -ms-overflow-style: none;
+
+      &::vertical,
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
 
