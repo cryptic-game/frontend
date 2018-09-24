@@ -6,6 +6,10 @@ import {DesktopMenuComponent} from './desktop/desktop-menu/desktop-menu.componen
 import {HttpClientModule} from '@angular/common/http';
 import {RouterTestingModule} from '@angular/router/testing';
 import {FormsModule} from '@angular/forms';
+import {PXtoViewWidthPipe} from './pxto-view-width.pipe';
+import {PXtoViewHeightPipe} from './pxto-view-height.pipe';
+import {ContextMenuComponent} from './desktop/context-menu/context-menu.component';
+import {DesktopStartmenuComponent} from './desktop/desktop-startmenu/desktop-startmenu.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -19,7 +23,11 @@ describe('AppComponent', () => {
         AppComponent,
         LoginComponent,
         DesktopComponent,
-        DesktopMenuComponent
+        DesktopMenuComponent,
+        DesktopStartmenuComponent,
+        PXtoViewWidthPipe,
+        PXtoViewHeightPipe,
+        ContextMenuComponent
       ],
     }).compileComponents();
   }));
