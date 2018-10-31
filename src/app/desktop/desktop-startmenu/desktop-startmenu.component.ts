@@ -1,8 +1,8 @@
-import {Account} from '../../../dataclasses/account.class';
-import {UserService} from '../user.service';
-import {Component, Input, OnInit} from '@angular/core';
+import { Account } from '../../../dataclasses/account.class';
+import { UserService } from '../user.service';
+import { Component, Input, OnInit } from '@angular/core';
 
-import {ProgramLinkage} from '../../../dataclasses/programlinkage.class';
+import { Program } from '../../../dataclasses/program.class';
 
 @Component({
   selector: 'app-desktop-startmenu',
@@ -10,24 +10,22 @@ import {ProgramLinkage} from '../../../dataclasses/programlinkage.class';
   styleUrls: ['./desktop-startmenu.component.scss']
 })
 export class DesktopStartmenuComponent implements OnInit {
-  constructor(public userService: UserService) {
-  }
+  constructor(public userService: UserService) {}
 
-  @Input() linkages: Array<ProgramLinkage> = [];
+  @Input()
+  linkages: Program[] = [];
 
-  @Input() target;
+  @Input()
+  target;
 
   searchTerm = '';
 
-  url = 'https://api.dev.cryptic-game.net';
-
-  token: string =
-    sessionStorage.getItem('token') || localStorage.getItem('token');
+  token: string = localStorage.getItem('token');
 
   user: Account = new Account('', '');
 
   ngOnInit() {
-    this.userService.owner(this.token).subscribe(data => {
+    this.userService.owner(this.token).subscribe((data: any) => {
       if (data['error'] !== undefined) {
         console.log(data['error']);
       } else {

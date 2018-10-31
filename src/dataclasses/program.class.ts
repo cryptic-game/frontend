@@ -1,6 +1,6 @@
 import { Position } from './position.class';
 
-export class ProgramLinkage {
+export class Program {
   private displayname: string;
   private icon: string;
   private program: string;
@@ -9,13 +9,13 @@ export class ProgramLinkage {
   constructor(
     DisplayName: string,
     Icon: string,
-    Program: string,
+    ProgramName: string,
     Desktop: boolean,
     position: Position
   ) {
     this.displayname = DisplayName;
     this.icon = Icon;
-    this.program = Program;
+    this.program = ProgramName;
     this.desktop = Desktop;
     this.position = position;
   }
@@ -40,8 +40,8 @@ export class ProgramLinkage {
   public setIcon(Icon: string): void {
     this.icon = Icon;
   }
-  public setProgram(Program: string): void {
-    this.program = Program;
+  public setProgram(ProgramName: string): void {
+    this.program = ProgramName;
   }
   public switchDesktop(): void {
     this.desktop = !this.desktop;

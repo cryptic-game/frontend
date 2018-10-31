@@ -1,36 +1,39 @@
+import { Position } from 'src/dataclasses/position.class';
+import { Program } from '../../dataclasses/program.class';
 import { Injectable } from '@angular/core';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
-import {ProgramLinkageBackend} from '../../dataclasses/programlinkagebackend.class';
+import { desktop } from '../../assets/desktop/desktop';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProgramService {
-  constructor(private http: HttpClient) {}
+  list() {
+    if (!localStorage.getItem('desktop')) {
+      localStorage.setItem('desktop', btoa(JSON.stringify(desktop)));
+    }
 
-  url = 'https://api.dev.cryptic-game.net';
+    const programs: Program[] = [];
+    Object.values(
+      JSON.parse(atob(localStorage.getItem('desktop')))['programs']
+    ).forEach((el: any) => {
+      const program: Program = new Program(
+        el.displayname,
+        el.icon,
+        el.program,
+        el.desktop,
+        new Position(el.position.x, el.position.y, el.position.z)
+      );
+      programs.push(program);
+    });
 
-  list(token) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Token: token
-      })
-    };
-
-    return this.http.post<Array<ProgramLinkageBackend>>(
-      `${this.url}/shortcut/list`,
-      null,
-      httpOptions
-    );
+    return programs;
   }
 
-  update(token, data) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Token: token
-      })
-    };
+  update(data: Program) {
+    const desktop = JSON.parse(atob(localStorage.getItem('desktop')));
+    const programs = desktop['programs'];
+    programs[data.getDisplayName()] = data;
 
-    return this.http.post(`${this.url}/shortcut/update`, data, httpOptions);
+    localStorage.setItem('desktop', btoa(JSON.stringify(desktop)));
   }
 }

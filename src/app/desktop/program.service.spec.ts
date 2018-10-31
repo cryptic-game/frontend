@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { ProgramService } from './program.service';
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ProgramService', () => {
   beforeEach(() => {
@@ -11,7 +11,10 @@ describe('ProgramService', () => {
     });
   });
 
-  it('should be created', inject([ProgramService], (service: ProgramService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', inject(
+    [ProgramService],
+    (service: ProgramService) => {
+      expect(service).toBeTruthy();
+    }
+  ));
 });

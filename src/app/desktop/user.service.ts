@@ -1,5 +1,5 @@
-import { OwnerBackend } from './../../dataclasses/accountbackend.class';
-import { SessionBackend } from './../../dataclasses/sessionbackend.class';
+import { Account } from './../../dataclasses/account.class';
+import { Session } from './../../dataclasses/session.class';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class UserService {
   constructor(private http: HttpClient, private router: Router) {}
 
-  url = 'https://api.dev.cryptic-game.net';
+  logoutURL = 'https://api.dev.cryptic-game.net';
 
   logout(token) {
     const httpOptions = {
@@ -20,11 +20,11 @@ export class UserService {
     };
 
     this.http
-      .post(`${this.url}/session/logout`, null, httpOptions)
+      .delete(this.logoutURL, httpOptions)
       .subscribe(data => console.log(data));
 
-    sessionStorage.removeItem('token');
     localStorage.removeItem('token');
+    localStorage.removeItem('desktop');
 
     this.router.navigate(['login']);
   }
@@ -36,11 +36,7 @@ export class UserService {
       })
     };
 
-    return this.http.post<SessionBackend[]>(
-      `${this.url}/session/list`,
-      null,
-      httpOptions
-    );
+    return this.http.post('', null, httpOptions);
   }
 
   owner(token) {
@@ -50,10 +46,6 @@ export class UserService {
       })
     };
 
-    return this.http.post<OwnerBackend>(
-      `${this.url}/session/owner`,
-      null,
-      httpOptions
-    );
+    return this.http.post('', null, httpOptions);
   }
 }

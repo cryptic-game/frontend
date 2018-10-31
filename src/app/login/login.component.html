@@ -6,10 +6,8 @@
         <tr>
           <td colspan="2">
             <input type="text" [(ngModel)]="model.username" #usernameField="ngModel" id="username" name="username"
-                   placeholder="Username or Email address"
-                   required>
-            <div class="errorText"
-                 *ngIf="usernameField.invalid && (usernameField.dirty || usernameField.touched) && usernameField['errors'].required">
+              placeholder="Username or Email address" required>
+            <div class="errorText" *ngIf="usernameField.invalid && (usernameField.dirty || usernameField.touched) && usernameField['errors'].required">
               Username is required
             </div>
           </td>
@@ -17,9 +15,8 @@
         <tr>
           <td colspan="2">
             <input type="password" [(ngModel)]="model.password" #passwordField="ngModel" id="password" name="password"
-                   placeholder="Type in password" required>
-            <div class="errorText"
-                 *ngIf="passwordField.invalid && (passwordField.dirty || passwordField.touched) && passwordField['errors'].required">
+              placeholder="Type in password" required>
+            <div class="errorText" *ngIf="passwordField.invalid && (passwordField.dirty || passwordField.touched) && passwordField['errors'].required">
               Password is required.
             </div>
           </td>
@@ -32,14 +29,6 @@
           </td>
         </tr>
         <tr>
-          <td>
-            <label id="keep-logged-in-label" class="checkbox-container">
-              <input type="checkbox" [(ngModel)]="model.keepLoggedIn" #keepLoggedIn="ngModel" id="keep-logged-in"
-                     name="keep-logged-in">
-              <span class="checkmark"></span>
-              Keep me logged in
-            </label>
-          </td>
           <td style="text-align: right;">
             <input type="submit" #loginButton [disabled]="loginForm.form.invalid" id="login-button" value="Login">
           </td>

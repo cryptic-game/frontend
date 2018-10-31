@@ -1,6 +1,6 @@
 import { Position } from '../../dataclasses/position.class';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ProgramLinkage } from '../../dataclasses/programlinkage.class';
+import { Program } from '../../dataclasses/program.class';
 import { ProgramService } from './program.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class DesktopComponent implements OnInit {
   @ViewChild('surface')
   surface: ElementRef;
 
-  linkages: ProgramLinkage[] = []; // array for all linkages on the desktop
+  linkages: Program[] = []; // array for all linkages on the desktop
 
   drag: HTMLElement; // the dragged element
   index: number; // index of the dragged element
@@ -30,23 +30,10 @@ export class DesktopComponent implements OnInit {
     sessionStorage.getItem('token') || localStorage.getItem('token');
 
   ngOnInit(): void {
-    this.programService.list(this.token).subscribe(data => {
-      data.forEach(el => {
-        const position = new Position(el.position.x, el.position.y);
-        const linkage = new ProgramLinkage(
-          el.name,
-          el.image,
-          el.name,
-          el.on_surface,
-          position
-        );
-
-        this.linkages.push(linkage);
-      });
-    });
+    this.linkages = this.programService.list();
   }
 
-  onDesktop(): ProgramLinkage[] {
+  onDesktop(): Program[] {
     return this.linkages.filter(item => item.onDesktop());
   }
 
@@ -81,14 +68,7 @@ export class DesktopComponent implements OnInit {
   }
 
   mouseup(e: MouseEvent): void {
-    const data = new FormData();
-    data.append('image', this.linkages[this.index].getIcon());
-    data.append('name', this.linkages[this.index].getDisplayName());
-    data.append('position_x', (e.pageX - this.position.getX()).toString());
-    data.append('position_y', (e.pageY - this.position.getY()).toString());
-    data.append('on_surface', 'true');
-
-    this.programService.update(this.token, data).subscribe();
+    this.programService.update(this.linkages[this.index]);
 
     this.index = undefined;
     this.position = undefined;
