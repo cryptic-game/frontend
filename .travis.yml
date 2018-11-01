@@ -1,3 +1,4 @@
+sudo: required
 language: node_js
 node_js:
   - '10'
@@ -14,8 +15,17 @@ jobs:
     - stage: prod
       script: 'ng build --prod'
     - stage: test
+      addons:
+        apt:
+          sources:
+            - google-chrome
+          packages:
+            - google-chrome-stable
+      before_script:
+        - export DISPLAY=:99.0
+        - sh -e /etc/init.d/xvfb start
       script:
-        - 'ng test'
+        - 'ng test --browsers PhantomJS --watch=false'
         - 'ng e2e'
 stages:
   - build

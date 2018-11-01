@@ -1,4 +1,4 @@
-# The Browsergame "Cryptic"
+[![Build Status](https://travis-ci.org/cryptic-game/frontend.svg?branch=master)](https://travis-ci.org/cryptic-game/frontend)
 
 This is the official frontend of Cryptic.
 
