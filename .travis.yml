@@ -6,17 +6,8 @@ cache:
   directories:
     - ~/.npm
     - node_modules
-addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
 install:
   - npm install
-before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
 jobs:
   include:
     - stage: build
@@ -24,6 +15,15 @@ jobs:
     - stage: prod
       script: 'ng build --prod'
     - stage: test
+      addons:
+        apt:
+          sources:
+            - google-chrome
+          packages:
+            - google-chrome-stable
+      before_script:
+        - export DISPLAY=:99.0
+        - sh -e /etc/init.d/xvfb start
       script:
         - 'ng test --browsers PhantomJS --watch=false'
         - 'ng e2e'
