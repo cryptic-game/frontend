@@ -1,7 +1,8 @@
-import { Program } from './../../dataclasses/program.class';
+import { Program } from '../../dataclasses/program.class';
 import { Position } from 'src/dataclasses/position.class';
 
-export const Desktop = {
+export const desktopDefinition = {
+  username: localStorage.getItem('username'),
   programs: {
     Browser: new Program(
       'Browser',
