@@ -6,7 +6,7 @@ export class Position {
   constructor(X: number, Y: number, Z?: number) {
     this.x = X;
     this.y = Y;
-    this.z = Z || 0;
+    this.z = Z;
   }
 
   public getX(): number {
