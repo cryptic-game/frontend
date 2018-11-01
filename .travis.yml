@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+  - '10'
+cache:
+  directories:
+    - ~/.npm
+    - node_modules
+install:
+  - npm install
+
+jobs:
+  include:
+    - stage: build
+      script: 'ng build'
+    - stage: prod
+      script: 'ng build --prod'
+    - stage: test
+      script:
+        - 'ng test'
+        - 'ng e2e'
+
+stages:
+  - build
+  - prod
+  - test
