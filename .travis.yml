@@ -7,7 +7,6 @@ cache:
     - node_modules
 install:
   - npm install
-
 jobs:
   include:
     - stage: build
@@ -18,7 +17,6 @@ jobs:
       script:
         - 'ng test'
         - 'ng e2e'
-
 stages:
   - build
   - prod
