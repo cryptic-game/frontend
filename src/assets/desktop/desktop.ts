@@ -1,7 +1,7 @@
 import { Program } from './../../dataclasses/program.class';
 import { Position } from 'src/dataclasses/position.class';
 
-export const desktop = {
+export const Desktop = {
   programs: {
     Browser: new Program(
       'Browser',

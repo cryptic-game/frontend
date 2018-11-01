@@ -1,0 +1,18 @@
+{
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.acceptSuggestionOnEnter": "off"
+  },
+  "[json], [yaml]": {
+    "editor.tabSize": 2
+  },
+  "files.autoSave": "onWindowChange",
+  "files.encoding": "utf8",
+  "editor.formatOnSave": true,
+  "prettier.singleQuote": true,
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.tabSize": 4,
+  "npm.autoDetect": "off",
+  "typescript.tsc.autoDetect": "off",
+  "tslint.enable": false
+}

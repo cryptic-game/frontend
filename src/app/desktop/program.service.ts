@@ -1,7 +1,7 @@
 import { Position } from 'src/dataclasses/position.class';
 import { Program } from '../../dataclasses/program.class';
 import { Injectable } from '@angular/core';
-import { desktop } from '../../assets/desktop/desktop';
+import { Desktop } from '../../assets/desktop/desktop';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import { desktop } from '../../assets/desktop/desktop';
 export class ProgramService {
   list() {
     if (!localStorage.getItem('desktop')) {
-      localStorage.setItem('desktop', btoa(JSON.stringify(desktop)));
+      localStorage.setItem('desktop', btoa(JSON.stringify(Desktop)));
     }
 
     const programs: Program[] = [];
@@ -31,7 +31,9 @@ export class ProgramService {
 
   update(data: Program) {
     const desktop = JSON.parse(atob(localStorage.getItem('desktop')));
-    const programs = desktop['programs'];
+    const programs = JSON.parse(atob(localStorage.getItem('desktop')))[
+      'programs'
+    ];
     programs[data.getDisplayName()] = data;
 
     localStorage.setItem('desktop', btoa(JSON.stringify(desktop)));
