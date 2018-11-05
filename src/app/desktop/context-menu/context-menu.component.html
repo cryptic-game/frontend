@@ -1,3 +1,3 @@
-<p id="context-menu" [ngStyle]="{ 'left.vw': this.position.getX(), 'top.vh': this.position.getY()}">
+<p id="context-menu" [ngStyle]="{ 'left.vw': this.position.getX() | px2vw, 'top.vh': this.position.getY() | px2vh}">
   context-menu works!
 </p>
