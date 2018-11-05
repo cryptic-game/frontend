@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class UserService {
   constructor(private http: HttpClient, private router: Router) {}
 
-  logoutURL = 'https://api.dev.cryptic-game.net';
+  url = 'https://user.api.cryptic-game.net/auth';
 
   logout(token) {
     const httpOptions = {
@@ -20,7 +20,7 @@ export class UserService {
     };
 
     this.http
-      .delete(this.logoutURL, httpOptions)
+      .delete(this.url, httpOptions)
       .subscribe(data => console.log(data));
 
     localStorage.removeItem('token');

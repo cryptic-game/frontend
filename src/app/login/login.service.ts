@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class LoginService {
-  url = 'https://user.api.cryptic-game.net/auth/';
+  url = 'https://user.api.cryptic-game.net/auth';
 
   constructor(private http: HttpClient) {}
 
