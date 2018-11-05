@@ -1,4 +1,4 @@
-import { Position } from 'src/dataclasses/position.class';
+import { Position } from '../../dataclasses/position.class';
 import { Program } from '../../dataclasses/program.class';
 import { Injectable } from '@angular/core';
 import { desktopDefinition } from '../../assets/desktop/definition';
