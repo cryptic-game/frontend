@@ -1,11 +1,11 @@
 <div id="desktop-surface" (mousemove)="mousemove($event)" (contextmenu)="showContextMenu($event)" #surface>
-  <div *ngFor="let linkage of onDesktop(); index as i" (mousedown)="mousedown($event, i)" (contextmenu)="mouseup($event)"
-    (mouseup)="mouseup($event)" [ngStyle]="{'left.vw': linkage.getPosition().getX() | px2vw, 'top.vh': linkage.getPosition().getY() | px2vh, 'z-index': linkage.getPosition().getZ() }"
+  <div *ngFor="let linkage of onDesktop(); index as i" (mousedown)="mousedown($event, i)" (mouseup)="mouseup($event)"
+    [ngStyle]="{'left.vw': linkage.getPosition().getX() | px2vw, 'top.vh': linkage.getPosition().getY() | px2vh, 'z-index': linkage.getPosition().getZ() }"
     class="linkage">
     <img [src]="linkage.getIcon()" />
-    <span>{{linkage.getDisplayName()}}</span>
+    {{linkage.getDisplayName()}}
   </div>
-  <app-context-menu #contextmenu [position]="contextMenuPosition" (mouseleave)="hideContextMenu()" *ngIf="contextMenu"></app-context-menu>
+  <app-context-menu *ngIf="contextMenu" #contextmenu [position]="contextMenuPosition" (mouseleave)="hideContextMenu()"></app-context-menu>
 </div>
 <app-desktop-startmenu *ngIf="startMenu" [linkages]="linkages" [target]="contextMenuTarget" (mouseleave)="hideStartMenu()"></app-desktop-startmenu>
 <app-desktop-menu (startmenu)="toggleStartMenu()"></app-desktop-menu>

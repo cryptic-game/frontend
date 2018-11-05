@@ -10,11 +10,14 @@
   box-sizing: content-box;
   position: relative;
   overflow: hidden;
+  z-index: 0;
 }
 
 #startmenu {
-  z-index: 100;
+  z-index: 1;
 }
+
+
 
 .linkage {
   color: white;
@@ -39,6 +42,6 @@
 
   &:active img {
     background-color: rgba(0, 0, 0, 0.45);
-    box-shadow: inset 0px 0px 2px 2px rgba(0, 0, 0, 0.45);
+    box-shadow: inset 0px 0px 1.5px 1.5px rgba(0, 0, 0, 0.45);
   }
 }
