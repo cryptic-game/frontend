@@ -10,13 +10,14 @@ export class SignUpService {
   constructor(private http: HttpClient) {}
 
   signUp(username: string, email: string, password: string) {
-    const data = new FormData();
-    data.append('username', username);
-    data.append('email', email);
-    data.append('password', password);
+    const data = JSON.stringify({
+      username,
+      email,
+      password
+    });
 
     return this.http.put(this.url, data, {
-      headers: new HttpHeaders({ enctype: 'multipart/form-data' })
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
   }
 }
