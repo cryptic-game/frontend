@@ -1,0 +1,9 @@
+# this docker-compose.yml is for developmental purposes only
+version: '3.1'
+services:
+  f_frontend:
+    container_name: cryptic_dev_frontend_1
+    restart: always
+    build: .
+    ports:
+        - "8050:80"
