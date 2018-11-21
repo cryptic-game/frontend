@@ -50,6 +50,8 @@ export class DesktopComponent implements OnInit {
     this.contextMenuTarget = e.target;
     this.contextMenu = true;
 
+    this.mouseup();
+
     return false;
   }
 
@@ -67,7 +69,7 @@ export class DesktopComponent implements OnInit {
     this.linkages[this.index].getPosition().setZ(1);
   }
 
-  mouseup(e: MouseEvent): void {
+  mouseup(): void {
     this.programService.update(this.linkages[this.index]);
 
     this.index = undefined;

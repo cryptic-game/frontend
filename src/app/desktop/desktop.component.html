@@ -1,5 +1,5 @@
 <div id="desktop-surface" (mousemove)="mousemove($event)" (contextmenu)="showContextMenu($event)" #surface>
-  <div *ngFor="let linkage of onDesktop(); index as i" (mousedown)="mousedown($event, i)" (mouseup)="mouseup($event)"
+  <div *ngFor="let linkage of onDesktop(); index as i" (mousedown)="mousedown($event, i)" (mouseup)="mouseup()"
     [ngStyle]="{'left.vw': linkage.getPosition().getX() | px2vw, 'top.vh': linkage.getPosition().getY() | px2vh, 'z-index': linkage.getPosition().getZ() }"
     class="linkage">
     <img [src]="linkage.getIcon()" />
