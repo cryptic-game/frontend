@@ -70,7 +70,9 @@ export class DesktopComponent implements OnInit {
   }
 
   mouseup(): void {
-    this.programService.update(this.linkages[this.index]);
+    if (this.index !== undefined) {
+      this.programService.update(this.linkages[this.index]);
+    }
 
     this.index = undefined;
     this.position = undefined;
