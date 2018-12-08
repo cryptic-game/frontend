@@ -1,0 +1,22 @@
+<div class="window" (mousedown)="windowManager.focusWindow(windowManager.findWindow(position))" [style.display]="position.minimized ? 'none' : 'flex'" [class.active]="position.active" [class.maximized]="position.maximized" [style.width.px]="position.width" [style.height.px]="position.height">
+  <div class="window-header" (dblclick)="maximize()" (mousedown)="$event.toElement.closest('.window-icons') || startDragging($event)" (mouseup)="dragging = false;">
+    <img class="window-icon" draggable="false" alt="" [src]="icon" width="30px" height="30px"/>
+    <span class="window-title">{{title}}</span>
+    <div class="window-icons">
+      <svg class="minimize-icon" width="20" height="20" (click)="minimize()">
+        <line x1="2" y1="15" x2="18" y2="15" stroke="white" stroke-width="2"></line>
+      </svg>
+      <svg class="maximize-icon" width="20" height="20" (click)="maximize()">
+        <rect x="2" y="2" width="16" height="16" fill="transparent" stroke="white" stroke-width="2"></rect>
+      </svg>
+      <svg class="close-icon" width="20" height="20" (click)="close()">
+        <line x1="2" y1="2"  x2="18" y2="18" stroke="white" stroke-width="2"></line>
+        <line x1="18" y1="2"  x2="2" y2="18" stroke="white" stroke-width="2"></line>
+      </svg>
+    </div>
+  </div>
+
+  <div class="window-content">
+    <ng-content></ng-content>
+  </div>
+</div>
