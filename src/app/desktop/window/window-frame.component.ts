@@ -15,10 +15,15 @@ export class WindowFrameComponent implements OnInit {
   @Input() icon: string;
   @Input() position: WindowPosition;
   dragging = false;
-  dragStartPos: [number, number] = [0, 0];
+  dragStartWindowPos: [number, number] = [0, 0];
   dragStart: [number, number] = [0, 0];
+  resizing = false;
+  resizeDirection = 0;
+  resizeStartSize: [number, number] = [0, 0];
+  cursor = 'auto';
 
-  constructor(protected windowManager: WindowManagerService) { }
+  constructor(protected windowManager: WindowManagerService) {
+  }
 
   ngOnInit() {
   }
@@ -30,24 +35,87 @@ export class WindowFrameComponent implements OnInit {
   startDragging(event: MouseEvent) {
     this.dragging = true;
     this.dragStart = [event.clientX, event.clientY];
-    this.dragStartPos = [this.position.x, this.position.y];
+    this.dragStartWindowPos = [this.position.x, this.position.y];
+  }
+
+  checkResizingStart(event: MouseEvent) {
+    if (this.dragging || this.position.maximized) {
+      return;
+    }
+
+    const top = event.offsetY < 10;
+    const left = event.offsetX < 10;
+    const bottom = event.offsetY > this.position.height - 10;
+    const right = event.offsetX > this.position.width - 10;
+
+    if (!(top || left || bottom || right)) {
+      return;
+    }
+
+    this.resizing = true;
+    this.resizeStartSize = [this.position.width, this.position.height];
+    this.dragStart = [event.clientX, event.clientY];
+    this.dragStartWindowPos = [this.position.x, this.position.y];
+
+    if (top && left) {
+      this.resizeDirection = 7;
+    } else if (top && right) {
+      this.resizeDirection = 8;
+    } else if (bottom && left) {
+      this.resizeDirection = 6;
+    } else if (bottom && right) {
+      this.resizeDirection = 5;
+    } else if (top) {
+      this.resizeDirection = 4;
+    } else if (left) {
+      this.resizeDirection = 3;
+    } else if (bottom) {
+      this.resizeDirection = 2;
+    } else if (right) {
+      this.resizeDirection = 1;
+    }
+
   }
 
   @HostListener('document:mousemove', ['$event'])
   mouseMove(event: MouseEvent) {
-    if (!this.dragging || event.buttons !== 1) {
-      return;
-    }
-    if (this.position.maximized) {
-      this.dragStartPos[0] = event.clientX - this.position.width / 2;
-      this.dragStartPos[1] = event.clientY - 15;
-      this.position.maximized = false;
-    }
+    if (event.buttons === 1) {
+      if (this.dragging) {
+        if (this.position.maximized) {
+          this.dragStartWindowPos[0] = event.clientX - this.position.width / 2;
+          this.dragStartWindowPos[1] = event.clientY - 15;
+          this.position.maximized = false;
+        }
 
-    this.position.x = Math.min(Math.max(0, this.dragStartPos[0] + event.clientX - this.dragStart[0]),
-      window.innerWidth - this.position.width / 2);
-    this.position.y = Math.min(Math.max(0, this.dragStartPos[1] + event.clientY - this.dragStart[1]),
-      window.innerHeight - this.position.height / 2);
+        this.position.x = Math.min(Math.max(0, this.dragStartWindowPos[0] + event.clientX - this.dragStart[0]),
+          window.innerWidth - this.position.width / 2);
+        this.position.y = Math.min(Math.max(0, this.dragStartWindowPos[1] + event.clientY - this.dragStart[1]),
+          window.innerHeight - this.position.height / 2);
+      } else if (this.resizing) {
+        /**
+         *7  4  8
+         *3     1
+         *6  2  5
+         */
+        if (this.resizeDirection === 1 || this.resizeDirection === 5 || this.resizeDirection === 8) {
+          console.log(this.resizeStartSize, this.position.width);
+          this.position.width = Math.max(this.resizeStartSize[0] + event.clientX - this.dragStart[0], 300);
+        }
+        if (this.resizeDirection === 2 || this.resizeDirection === 5 || this.resizeDirection === 6) {
+          this.position.height = Math.max(this.resizeStartSize[1] + event.clientY - this.dragStart[1], 150);
+        }
+        if (this.resizeDirection === 3 || this.resizeDirection === 6 || this.resizeDirection === 7) {
+          const add = event.clientX - this.dragStart[0];
+          this.position.x = Math.max(this.dragStartWindowPos[0] + add, 0);
+          this.position.width = Math.max(this.resizeStartSize[0] - add, 300);
+        }
+        if (this.resizeDirection === 4 || this.resizeDirection === 7 || this.resizeDirection === 8) {
+          const add = event.clientY - this.dragStart[1];
+          this.position.y = Math.max(this.dragStartWindowPos[1] + add, 0);
+          this.position.height = Math.max(this.resizeStartSize[1] - add, 150);
+        }
+      }
+    }
   }
 
   minimize() {
