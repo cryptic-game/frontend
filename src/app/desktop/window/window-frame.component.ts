@@ -77,6 +77,37 @@ export class WindowFrameComponent implements OnInit {
 
   }
 
+  checkResizeCursor(event: MouseEvent) {
+    if (this.dragging || this.position.maximized || this.resizing) {
+      return;
+    }
+
+    const top = event.offsetY < 10;
+    const left = event.offsetX < 10;
+    const bottom = event.offsetY > this.position.height - 10;
+    const right = event.offsetX > this.position.width - 10;
+
+    if ((top && left)) {
+      this.cursor = 'nw-resize';
+    } else if (top && right) {
+      this.cursor = 'ne-resize';
+    } else if (bottom && left) {
+      this.cursor = 'sw-resize';
+    } else if (bottom && right) {
+      this.cursor = 'se-resize';
+    } else if (top) {
+      this.cursor = 'n-resize';
+    } else if (left) {
+      this.cursor = 'w-resize';
+    } else if (bottom) {
+      this.cursor = 's-resize';
+    } else if (right) {
+      this.cursor = 'e-resize';
+    } else {
+      this.cursor = 'auto';
+    }
+  }
+
   @HostListener('document:mousemove', ['$event'])
   mouseMove(event: MouseEvent) {
     if (event.buttons === 1) {
