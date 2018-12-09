@@ -1,4 +1,4 @@
-import {Component, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, Input, OnInit} from '@angular/core';
 import {WindowManagerService} from '../window-manager/window-manager.service';
 import {WindowPosition} from './window';
 
@@ -8,8 +8,6 @@ import {WindowPosition} from './window';
   styleUrls: ['./window-frame.component.scss']
 })
 export class WindowFrameComponent implements OnInit {
-
-  @ViewChild('window') windowDiv;
 
   @Input() title: string;
   @Input() icon: string;
