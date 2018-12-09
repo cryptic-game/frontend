@@ -7,6 +7,7 @@ import {Window, WindowPosition} from '../window/window';
 export class WindowManagerService {
   windows: Window[] = [];
   activeWindow: Window;
+  cursorWindow: Window = null;
 
   constructor() {
   }
@@ -60,6 +61,20 @@ export class WindowManagerService {
     if (this.activeWindow) {
       this.activeWindow.position.active = false;
       this.activeWindow = null;
+    }
+  }
+
+  setCursor(fromWindow: Window, cursor: string) {
+    if (this.cursorWindow === null && cursor !== '') {
+      this.cursorWindow = fromWindow;
+    }
+
+    if (this.cursorWindow === fromWindow && cursor === '') {
+      this.cursorWindow = null;
+    }
+
+    if ((this.cursorWindow === null || this.cursorWindow === fromWindow) && document.body.style.cursor !== cursor) {
+      document.body.style.cursor = cursor;
     }
   }
 
