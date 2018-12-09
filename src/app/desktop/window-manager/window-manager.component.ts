@@ -9,7 +9,8 @@ import {TestWindowComponent} from '../windows/test-window/test-window.component'
 })
 export class WindowManagerComponent implements OnInit {
 
-  constructor(protected windowManager: WindowManagerService) { }
+  constructor(public windowManager: WindowManagerService) {
+  }
 
   ngOnInit() {
     this.windowManager.openWindow(new TestWindowComponent());

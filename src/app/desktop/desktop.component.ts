@@ -10,7 +10,8 @@ import {WindowManagerService} from './window-manager/window-manager.service';
   styleUrls: ['./desktop.component.scss']
 })
 export class DesktopComponent implements OnInit {
-  constructor(private programService: ProgramService, protected windowManager: WindowManagerService) {}
+  constructor(private programService: ProgramService, public windowManager: WindowManagerService) {
+  }
 
   startMenu = false;
 

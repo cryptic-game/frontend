@@ -20,7 +20,7 @@ export class WindowFrameComponent implements OnInit {
   resizeStartSize: [number, number] = [0, 0];
   cursor = 'auto';
 
-  constructor(protected windowManager: WindowManagerService) {
+  constructor(public windowManager: WindowManagerService) {
   }
 
   ngOnInit() {
