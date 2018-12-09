@@ -135,12 +135,14 @@ export class WindowFrameComponent implements OnInit {
         }
         if (this.resizeDirection === 3 || this.resizeDirection === 6 || this.resizeDirection === 7) {
           const add = event.clientX - this.dragStart[0];
-          this.position.x = Math.max(this.dragStartWindowPos[0] + add, 0);
+          this.position.x = Math.min(Math.max(this.dragStartWindowPos[0] + add, 0),
+            this.dragStartWindowPos[0] + this.resizeStartSize[0] - 300);
           this.position.width = Math.max(this.resizeStartSize[0] - add, 300);
         }
         if (this.resizeDirection === 4 || this.resizeDirection === 7 || this.resizeDirection === 8) {
           const add = event.clientY - this.dragStart[1];
-          this.position.y = Math.max(this.dragStartWindowPos[1] + add, 0);
+          this.position.y = Math.min(Math.max(this.dragStartWindowPos[1] + add, 0),
+            this.dragStartWindowPos[1] + this.resizeStartSize[1] - 150);
           this.position.height = Math.max(this.resizeStartSize[1] - add, 150);
         }
       }
