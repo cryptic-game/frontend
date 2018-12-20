@@ -1,6 +1,6 @@
 import {Type} from '@angular/core';
 
-export abstract class Window {
+export abstract class WindowDelegate {
   title: string;
   icon: string;
   type: Type<any>;

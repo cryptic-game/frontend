@@ -1,10 +1,12 @@
-<div class="window" (mousedown)="windowManager.focusWindow(windowManager.findWindow(position));"
-     (document:mouseup)="resizing = false;" [style.display]="position.minimized ? 'none' : 'flex'"
-     [class.active]="position.active" [class.maximized]="position.maximized" [style.width.px]="position.width"
-     [style.height.px]="position.height">
-  <div class="window-header" (dblclick)="maximize()" (mousedown)="$event.toElement.closest('.window-icons') || startDragging($event)" (mouseup)="dragging = false;">
-    <img class="window-icon" draggable="false" alt="" [src]="icon" width="30px" height="30px"/>
-    <span class="window-title">{{title}}</span>
+<div class="window" (mousedown)="windowManager.focusWindow(windowManager.findWindow(delegate.position));"
+     (document:mouseup)="resizing = false;" [style.display]="delegate.position.minimized ? 'none' : 'flex'"
+     [class.active]="delegate.position.active" [class.maximized]="delegate.position.maximized"
+     [style.width.px]="delegate.position.width"
+     [style.height.px]="delegate.position.height">
+  <div class="window-header" (dblclick)="maximize()"
+       (mousedown)="$event.target.closest('.window-icons') || startDragging($event)" (mouseup)="dragging = false;">
+    <img class="window-icon" draggable="false" alt="" [src]="delegate.icon" width="30px" height="30px"/>
+    <span class="window-title">{{delegate.title}}</span>
     <div class="window-icons">
       <svg class="minimize-icon" width="20" height="20" (click)="minimize()">
         <line x1="2" y1="15" x2="18" y2="15" stroke="white" stroke-width="2"></line>

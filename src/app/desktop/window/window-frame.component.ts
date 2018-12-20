@@ -1,6 +1,6 @@
 import {Component, HostListener, Input, OnInit} from '@angular/core';
 import {WindowManagerService} from '../window-manager/window-manager.service';
-import {WindowPosition} from './window';
+import {WindowDelegate} from './window-delegate.class';
 
 @Component({
   selector: 'app-window-frame',
@@ -11,9 +11,7 @@ export class WindowFrameComponent implements OnInit {
   static minWidth = 300;
   static minHeight = 150;
 
-  @Input() title: string;
-  @Input() icon: string;
-  @Input() position: WindowPosition;
+  @Input() delegate: WindowDelegate;
   dragging = false;
   dragStartWindowPos: [number, number] = [0, 0];
   dragStartPos: [number, number] = [0, 0];
@@ -28,29 +26,33 @@ export class WindowFrameComponent implements OnInit {
   }
 
   close() {
-    this.windowManager.closeWindow(this.windowManager.windows.find(win => win.position === this.position));
+    this.windowManager.closeWindow(this.windowManager.windows.find(win => win.position === this.delegate.position));
   }
 
   startDragging(event: MouseEvent) {
     this.dragging = true;
     this.dragStartPos = [event.clientX, event.clientY];
-    this.dragStartWindowPos = [this.position.x, this.position.y];
+    this.dragStartWindowPos = [this.delegate.position.x, this.delegate.position.y];
   }
 
   checkResizeDirection(clientX, clientY, target: Element) {
-    if (this.dragging || this.position.maximized || this.resizing) {
+    if (target === undefined) {
+      return 0;
+    }
+
+    if (this.dragging || this.delegate.position.maximized || this.resizing) {
       return 0;
     }
 
     if (!(target.id === 'desktop-surface' || (target.closest('app-window-frame') && window.document.defaultView
-      .getComputedStyle(target.closest('app-window-frame')).zIndex === this.position.zIndex.toString()))) {
+      .getComputedStyle(target.closest('app-window-frame')).zIndex === this.delegate.position.zIndex.toString()))) {
       return 0;
     }
 
-    const offsetX = clientX - this.position.x;
-    const offsetY = clientY - this.position.y;
+    const offsetX = clientX - this.delegate.position.x;
+    const offsetY = clientY - this.delegate.position.y;
 
-    if (offsetX < -5 || offsetY < -5 || offsetX > this.position.width + 7 || offsetY > this.position.height + 7) {
+    if (offsetX < -5 || offsetY < -5 || offsetX > this.delegate.position.width + 7 || offsetY > this.delegate.position.height + 7) {
       return 0;
     }
 
@@ -60,8 +62,8 @@ export class WindowFrameComponent implements OnInit {
 
     const top = absOffsetY < 5;
     const left = absOffsetX < 5;
-    const bottom = absOffsetY > this.position.height - 5;
-    const right = absOffsetX > this.position.width - 5;
+    const bottom = absOffsetY > this.delegate.position.height - 5;
+    const right = absOffsetX > this.delegate.position.width - 5;
 
     if (!(top || left || bottom || right)) {
       return 0;
@@ -83,10 +85,10 @@ export class WindowFrameComponent implements OnInit {
     this.resizeDirection = this.checkResizeDirection(event.clientX, event.clientY, event.toElement);
     if (this.resizeDirection !== 0) {
       this.resizing = true;
-      this.dragStartWindowPos = [this.position.x, this.position.y];
+      this.dragStartWindowPos = [this.delegate.position.x, this.delegate.position.y];
       this.dragStartPos = [event.clientX, event.clientY];
-      this.resizeStartSize = [this.position.width, this.position.height];
-      this.windowManager.focusWindow(this.windowManager.findWindow(this.position));
+      this.resizeStartSize = [this.delegate.position.width, this.delegate.position.height];
+      this.windowManager.focusWindow(this.windowManager.findWindow(this.delegate.position));
     }
   }
 
@@ -111,7 +113,7 @@ export class WindowFrameComponent implements OnInit {
   }
 
   setCursor(cursor) {
-    this.windowManager.setCursor(this.windowManager.findWindow(this.position), cursor);
+    this.windowManager.setCursor(this.windowManager.findWindow(this.delegate.position), cursor);
   }
 
   @HostListener('document:mousemove', ['$event'])
@@ -119,16 +121,16 @@ export class WindowFrameComponent implements OnInit {
     this.checkResizeCursor(event);
     if (event.buttons === 1) {
       if (this.dragging) {
-        if (this.position.maximized) {
-          this.dragStartWindowPos[0] = event.clientX - this.position.width / 2;
+        if (this.delegate.position.maximized) {
+          this.dragStartWindowPos[0] = event.clientX - this.delegate.position.width / 2;
           this.dragStartWindowPos[1] = event.clientY - 15;
-          this.position.maximized = false;
+          this.delegate.position.maximized = false;
         }
 
-        this.position.x = Math.min(Math.max(0, this.dragStartWindowPos[0] + event.clientX - this.dragStartPos[0]),
-          window.innerWidth - this.position.width / 2);
-        this.position.y = Math.min(Math.max(0, this.dragStartWindowPos[1] + event.clientY - this.dragStartPos[1]),
-          window.innerHeight - this.position.height / 2);
+        this.delegate.position.x = Math.min(Math.max(0, this.dragStartWindowPos[0] + event.clientX - this.dragStartPos[0]),
+          window.innerWidth - this.delegate.position.width / 2);
+        this.delegate.position.y = Math.min(Math.max(0, this.dragStartWindowPos[1] + event.clientY - this.dragStartPos[1]),
+          window.innerHeight - this.delegate.position.height / 2);
       } else if (this.resizing) {
         /**
          *7  4  8
@@ -136,22 +138,24 @@ export class WindowFrameComponent implements OnInit {
          *6  2  5
          */
         if (this.resizeDirection === 1 || this.resizeDirection === 5 || this.resizeDirection === 8) {
-          this.position.width = Math.max(this.resizeStartSize[0] + event.clientX - this.dragStartPos[0], WindowFrameComponent.minWidth);
+          this.delegate.position.width = Math.max(this.resizeStartSize[0] + event.clientX - this.dragStartPos[0],
+            WindowFrameComponent.minWidth);
         }
         if (this.resizeDirection === 2 || this.resizeDirection === 5 || this.resizeDirection === 6) {
-          this.position.height = Math.max(this.resizeStartSize[1] + event.clientY - this.dragStartPos[1], WindowFrameComponent.minHeight);
+          this.delegate.position.height = Math.max(this.resizeStartSize[1] + event.clientY - this.dragStartPos[1],
+            WindowFrameComponent.minHeight);
         }
         if (this.resizeDirection === 3 || this.resizeDirection === 6 || this.resizeDirection === 7) {
           const add = event.clientX - this.dragStartPos[0];
-          this.position.x = Math.min(Math.max(this.dragStartWindowPos[0] + add, 0),
+          this.delegate.position.x = Math.min(Math.max(this.dragStartWindowPos[0] + add, 0),
             this.dragStartWindowPos[0] + this.resizeStartSize[0] - WindowFrameComponent.minWidth);
-          this.position.width = Math.max(this.resizeStartSize[0] - add, WindowFrameComponent.minWidth);
+          this.delegate.position.width = Math.max(this.resizeStartSize[0] - add, WindowFrameComponent.minWidth);
         }
         if (this.resizeDirection === 4 || this.resizeDirection === 7 || this.resizeDirection === 8) {
           const add = event.clientY - this.dragStartPos[1];
-          this.position.y = Math.min(Math.max(this.dragStartWindowPos[1] + add, 0),
+          this.delegate.position.y = Math.min(Math.max(this.dragStartWindowPos[1] + add, 0),
             this.dragStartWindowPos[1] + this.resizeStartSize[1] - WindowFrameComponent.minHeight);
-          this.position.height = Math.max(this.resizeStartSize[1] - add, WindowFrameComponent.minHeight);
+          this.delegate.position.height = Math.max(this.resizeStartSize[1] - add, WindowFrameComponent.minHeight);
         }
       }
     }
@@ -159,11 +163,11 @@ export class WindowFrameComponent implements OnInit {
 
   minimize() {
     this.windowManager.unfocus();
-    this.position.minimized = true;
+    this.delegate.position.minimized = true;
   }
 
   maximize() {
-    this.position.maximized = !this.position.maximized;
+    this.delegate.position.maximized = !this.delegate.position.maximized;
   }
 
 }

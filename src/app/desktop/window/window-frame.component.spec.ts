@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {WindowFrameComponent} from './window-frame.component';
-import {Window} from './window';
+import {WindowDelegate} from './window-delegate.class';
 
 describe('WindowFrameComponent', () => {
   let component: WindowFrameComponent;
@@ -17,9 +17,10 @@ describe('WindowFrameComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(WindowFrameComponent);
     component = fixture.componentInstance;
-    component.position = Object.assign({}, Window.prototype.position);
-    component.title = 'Test';
-    component.icon = '';
+    component.delegate = new class extends WindowDelegate {
+      title = 'Test';
+      icon = '';
+    };
     fixture.detectChanges();
   });
 

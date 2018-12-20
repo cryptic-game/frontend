@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
-import {Window, WindowPosition} from '../window/window';
+import {WindowDelegate, WindowPosition} from '../window/window-delegate.class';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WindowManagerService {
-  windows: Window[] = [];
-  activeWindow: Window;
-  cursorWindow: Window = null;
+  windows: WindowDelegate[] = [];
+  activeWindow: WindowDelegate;
+  cursorWindow: WindowDelegate = null;
 
   constructor() {
   }
@@ -16,7 +16,7 @@ export class WindowManagerService {
     return this.windows.find(win => win.position === position);
   }
 
-  openWindow(win: Window) {
+  openWindow(win: WindowDelegate) {
     this.windows.push(win);
     if (this.activeWindow) {
       this.activeWindow.position.active = false;
@@ -42,12 +42,12 @@ export class WindowManagerService {
     this.activeWindow.position.active = true;
   }
 
-  closeWindow(window: Window) {
+  closeWindow(window: WindowDelegate) {
     this.windows.splice(this.windows.findIndex(win => win === window), 1);
     this.sortWindows();
   }
 
-  focusWindow(window: Window) {
+  focusWindow(window: WindowDelegate) {
     window.position.active = true;
     if (this.activeWindow === window) {
       return;
@@ -64,7 +64,7 @@ export class WindowManagerService {
     }
   }
 
-  setCursor(fromWindow: Window, cursor: string) {
+  setCursor(fromWindow: WindowDelegate, cursor: string) {
     if (this.cursorWindow === null && cursor !== '') {
       this.cursorWindow = fromWindow;
     }
