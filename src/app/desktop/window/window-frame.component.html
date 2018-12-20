@@ -1,4 +1,4 @@
-<div class="window" (mousedown)="windowManager.focusWindow(windowManager.findWindow(delegate.position));"
+<div class="window" (mousedown)="windowManager.focusWindow(delegate);"
      (document:mouseup)="resizing = false;" [style.display]="delegate.position.minimized ? 'none' : 'flex'"
      [class.active]="delegate.position.active" [class.maximized]="delegate.position.maximized"
      [style.width.px]="delegate.position.width"

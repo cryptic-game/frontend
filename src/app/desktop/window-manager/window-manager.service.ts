@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {WindowDelegate, WindowPosition} from '../window/window-delegate.class';
+import {WindowDelegate} from '../window/window-delegate.class';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +10,6 @@ export class WindowManagerService {
   cursorWindow: WindowDelegate = null;
 
   constructor() {
-  }
-
-  findWindow(position: WindowPosition) {
-    return this.windows.find(win => win.position === position);
   }
 
   openWindow(win: WindowDelegate) {

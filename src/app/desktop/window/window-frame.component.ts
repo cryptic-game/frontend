@@ -88,7 +88,7 @@ export class WindowFrameComponent implements OnInit {
       this.dragStartWindowPos = [this.delegate.position.x, this.delegate.position.y];
       this.dragStartPos = [event.clientX, event.clientY];
       this.resizeStartSize = [this.delegate.position.width, this.delegate.position.height];
-      this.windowManager.focusWindow(this.windowManager.findWindow(this.delegate.position));
+      this.windowManager.focusWindow(this.delegate);
     }
   }
 
@@ -113,7 +113,7 @@ export class WindowFrameComponent implements OnInit {
   }
 
   setCursor(cursor) {
-    this.windowManager.setCursor(this.windowManager.findWindow(this.delegate.position), cursor);
+    this.windowManager.setCursor(this.delegate, cursor);
   }
 
   @HostListener('document:mousemove', ['$event'])
