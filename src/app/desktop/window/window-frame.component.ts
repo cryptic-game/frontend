@@ -82,7 +82,7 @@ export class WindowFrameComponent implements OnInit {
 
   @HostListener('document:mousedown', ['$event'])
   checkResizingStart(event: MouseEvent) {
-    this.resizeDirection = this.checkResizeDirection(event.clientX, event.clientY, event.toElement);
+    this.resizeDirection = this.checkResizeDirection(event.clientX, event.clientY, event.target as Element);
     if (this.resizeDirection !== 0) {
       this.resizing = true;
       this.dragStartWindowPos = [this.delegate.position.x, this.delegate.position.y];
@@ -97,7 +97,7 @@ export class WindowFrameComponent implements OnInit {
       return;
     }
 
-    const direction = this.checkResizeDirection(event.clientX, event.clientY, event.toElement);
+    const direction = this.checkResizeDirection(event.clientX, event.clientY, event.target as Element);
 
     this.setCursor({
       7: 'nw-resize',
