@@ -1,4 +1,6 @@
 #desktop-menu {
+  display: flex;
+  align-items: center;
   width: 100%;
   height: 5.5%;
   background-color: #555;
@@ -33,11 +35,13 @@
 }
 
 #tasks {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  padding-top: 4px;
 
   .task-icon {
-    width: 30px;
-    height: 30px;
+    height: 2.5em;
+    margin-left: 10px;
 
     transition: transform 0.5s;
 
