@@ -1,12 +1,20 @@
+$active-window-color: #646464;
+$inactive-window-color: #737373;
+
 .window {
   display: flex;
   flex-direction: column;
-  border-radius: 2px;
-  border: 3px solid #646464;
+  border-radius: 3px;
+  border: 3px solid $inactive-window-color;
   user-select: none;
 
   &.active {
-    box-shadow: 1px 1px 1.5px 0.5px #616161;
+    border: 3px solid $active-window-color;
+    box-shadow: 1px 1px 1px 0.1px #616161;
+
+    .window-header {
+      background-color: $active-window-color;
+    }
   }
 
   &.maximized {
@@ -20,7 +28,7 @@
 .window-header {
   display: flex;
   flex-direction: row;
-  background-color: #646464;
+  background-color: $inactive-window-color;
   user-select: none;
   height: 35px;
   align-items: center;
@@ -47,6 +55,12 @@
       &:active {
         background-color: #616161;
         box-shadow: 0 0 4px 3px #616161;
+      }
+    }
+
+    .close-icon {
+      &:hover {
+        stroke: #ff3333;
       }
     }
   }
