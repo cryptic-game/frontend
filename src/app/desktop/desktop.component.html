@@ -9,4 +9,4 @@
   <app-context-menu *ngIf="contextMenu" #contextmenu [position]="contextMenuPosition" (mouseleave)="hideContextMenu()"></app-context-menu>
 </div>
 <app-desktop-startmenu *ngIf="startMenu" [linkages]="linkages" [target]="contextMenuTarget" (mouseleave)="hideStartMenu()"></app-desktop-startmenu>
-<app-desktop-menu (startmenu)="toggleStartMenu()"></app-desktop-menu>
+<app-desktop-menu (startMenu)="toggleStartMenu()"></app-desktop-menu>

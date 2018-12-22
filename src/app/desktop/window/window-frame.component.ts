@@ -26,7 +26,7 @@ export class WindowFrameComponent implements OnInit {
   }
 
   close() {
-    this.windowManager.closeWindow(this.windowManager.windows.find(win => win.position === this.delegate.position));
+    this.windowManager.closeWindow(this.delegate);
   }
 
   startDragging(event: MouseEvent) {

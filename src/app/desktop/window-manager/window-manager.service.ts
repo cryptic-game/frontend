@@ -6,6 +6,7 @@ import {WindowDelegate} from '../window/window-delegate.class';
 })
 export class WindowManagerService {
   windows: WindowDelegate[] = [];
+  taskList: WindowDelegate[] = [];
   activeWindow: WindowDelegate;
   cursorWindow: WindowDelegate = null;
 
@@ -14,6 +15,7 @@ export class WindowManagerService {
 
   openWindow(win: WindowDelegate) {
     this.windows.push(win);
+    this.taskList.push(win);
     if (this.activeWindow) {
       this.activeWindow.position.active = false;
       win.position.zIndex = this.activeWindow.position.zIndex + 1;
@@ -40,6 +42,7 @@ export class WindowManagerService {
 
   closeWindow(window: WindowDelegate) {
     this.windows.splice(this.windows.findIndex(win => win === window), 1);
+    this.taskList.splice(this.taskList.findIndex(win => win === window), 1);
     this.sortWindows();
   }
 
@@ -57,6 +60,17 @@ export class WindowManagerService {
     if (this.activeWindow) {
       this.activeWindow.position.active = false;
       this.activeWindow = null;
+    }
+  }
+
+  toggleMinimize(window: WindowDelegate) {
+    window.position.minimized = !window.position.minimized;
+    if (window.position.minimized) {
+      window.position.zIndex = -1;
+      this.sortWindows();
+      this.focusWindow(this.windows[this.windows.length - 1]);
+    } else {
+      this.focusWindow(window);
     }
   }
 
