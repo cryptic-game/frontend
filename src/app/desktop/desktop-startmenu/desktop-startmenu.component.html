@@ -1,13 +1,15 @@
 <div id="startmenu">
   <div id="user">
-    <img src="../../../assets/desktop/img/user.svg">
-    {{ user.getName() }}
+    <img src="../../../assets/desktop/img/user.svg" alt="">
+    {{user.name}}
   </div>
   <div id="programs">
     <div id="linkages">
-      <span class="button" *ngFor="let linkage of search(searchTerm)"><img [src]="linkage.getIcon()" />{{linkage.getDisplayName()}}</span>
+      <span class="button" *ngFor="let linkage of search(searchTerm)"><img
+        [src]="linkage.icon" alt=""/>{{linkage.displayName}}</span>
     </div>
     <input [(ngModel)]="searchTerm">
   </div>
-  <span class="button" id="logout" (click)="userService.logout(token)"><img src="../../../assets/desktop/img/logoutbutton.svg" />Logout</span>
+  <span class="button" id="logout" (click)="userService.logout(token)"><img
+    src="../../../assets/desktop/img/logoutbutton.svg" alt=""/>Logout</span>
 </div>

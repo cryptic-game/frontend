@@ -1,5 +1,5 @@
-import { Program } from '../../dataclasses/program.class';
-import { Position } from '../../dataclasses/position.class';
+import {Program} from '../../dataclasses/program';
+import {Position} from '../../dataclasses/position';
 
 export const desktopDefinition = {
   username: localStorage.getItem('username'),

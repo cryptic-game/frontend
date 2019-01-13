@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Position } from '../../../dataclasses/position.class';
+import {Position} from '../../../dataclasses/position';
 
 @Component({
   selector: 'app-context-menu',

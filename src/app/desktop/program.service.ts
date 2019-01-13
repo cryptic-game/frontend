@@ -1,5 +1,5 @@
-import { Position } from '../../dataclasses/position.class';
-import { Program } from '../../dataclasses/program.class';
+import {Position} from '../../dataclasses/position';
+import {Program} from '../../dataclasses/program';
 import { Injectable } from '@angular/core';
 import { desktopDefinition } from '../../assets/desktop/definition';
 
@@ -20,7 +20,7 @@ export class ProgramService {
         el.displayname,
         el.icon,
         el.program,
-        el.desktop,
+        el.onDesktop,
         new Position(el.position.x, el.position.y, el.position.z)
       );
       programs.push(program);
@@ -32,7 +32,7 @@ export class ProgramService {
   update(data: Program) {
     const desktop = JSON.parse(atob(localStorage.getItem('desktop')));
     const programs = desktop['programs'];
-    programs[data.getDisplayName()] = data;
+    programs[data.displayName] = data;
 
     localStorage.setItem('desktop', btoa(JSON.stringify(desktop)));
   }
