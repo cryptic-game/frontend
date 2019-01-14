@@ -1,0 +1,10 @@
+<div class="window-container">
+    <div *ngFor="let window of windowManager.windows">
+      <app-window-frame [delegate]="window" style="position: absolute;"
+                        [style.left.px]="window.position.maximized ? 0 : window.position.x"
+                        [style.top.px]="window.position.maximized ? 0 : window.position.y"
+                        [style.z-index]="window.position.zIndex">
+          <ng-container [ngComponentOutlet]="window.type"></ng-container>
+        </app-window-frame>
+    </div>
+</div>

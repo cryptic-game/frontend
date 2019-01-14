@@ -2,6 +2,7 @@ import { Position } from '../../dataclasses/position.class';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Program } from '../../dataclasses/program.class';
 import { ProgramService } from './program.service';
+import {WindowManagerService} from './window-manager/window-manager.service';
 
 @Component({
   selector: 'app-desktop',
@@ -9,7 +10,8 @@ import { ProgramService } from './program.service';
   styleUrls: ['./desktop.component.scss']
 })
 export class DesktopComponent implements OnInit {
-  constructor(private programService: ProgramService) {}
+  constructor(private programService: ProgramService, public windowManager: WindowManagerService) {
+  }
 
   startMenu = false;
 

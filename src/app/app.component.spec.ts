@@ -10,6 +10,8 @@ import {PXtoViewWidthPipe} from './pxto-view-width.pipe';
 import {PXtoViewHeightPipe} from './pxto-view-height.pipe';
 import {ContextMenuComponent} from './desktop/context-menu/context-menu.component';
 import {DesktopStartmenuComponent} from './desktop/desktop-startmenu/desktop-startmenu.component';
+import {WindowManagerComponent} from './desktop/window-manager/window-manager.component';
+import {WindowFrameComponent} from './desktop/window/window-frame.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -27,7 +29,9 @@ describe('AppComponent', () => {
         DesktopStartmenuComponent,
         PXtoViewWidthPipe,
         PXtoViewHeightPipe,
-        ContextMenuComponent
+        ContextMenuComponent,
+        WindowManagerComponent,
+        WindowFrameComponent
       ],
     }).compileComponents();
   }));

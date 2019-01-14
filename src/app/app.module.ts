@@ -17,6 +17,9 @@ import { FormsModule } from '@angular/forms';
 import { PasswordConfirmValidatorDirective } from './sign-up/password-confirm-validator.directive';
 import { PXtoViewWidthPipe } from './pxto-view-width.pipe';
 import { PXtoViewHeightPipe } from './pxto-view-height.pipe';
+import { WindowFrameComponent } from './desktop/window/window-frame.component';
+import { WindowManagerComponent } from './desktop/window-manager/window-manager.component';
+import { TestWindowComponent } from './desktop/windows/test-window/test-window.component';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -36,7 +39,10 @@ const routes: Routes = [
     SignUpComponent,
     PasswordConfirmValidatorDirective,
     PXtoViewWidthPipe,
-    PXtoViewHeightPipe
+    PXtoViewHeightPipe,
+    WindowFrameComponent,
+    WindowManagerComponent,
+    TestWindowComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -45,6 +51,7 @@ const routes: Routes = [
     FormsModule
   ],
   providers: [],
+  entryComponents: [TestWindowComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

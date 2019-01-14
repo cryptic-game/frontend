@@ -1,8 +1,6 @@
-import { Program } from './../../dataclasses/program.class';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { LoginService } from './login.service';
 import { Router } from '@angular/router';
-import { Position } from 'src/dataclasses/position.class';
 
 @Component({
   selector: 'app-login',
