@@ -1,6 +1,7 @@
 <div id="desktop-surface" (mousedown)="$event.target === surface && windowManager.unfocus()"
      (mousemove)="mousemove($event)" (contextmenu)="showContextMenu($event)" #surface>
   <div *ngFor="let linkage of onDesktop(); index as i" (mousedown)="mousedown($event, i)" (mouseup)="mouseup()"
+       (dblclick)="openProgramWindow(linkage)"
        [ngStyle]="{'left.vw': linkage.position.x | px2vw, 'top.vh': linkage.position.y | px2vh, 'z-index': linkage.position.z }"
        class="linkage">
     <img [src]="linkage.icon" alt=""/>
@@ -10,6 +11,6 @@
   <app-context-menu *ngIf="contextMenu" #contextmenu [position]="contextMenuPosition"
                     (mouseleave)="hideContextMenu()"></app-context-menu>
 </div>
-<app-desktop-startmenu *ngIf="startMenu" [linkages]="linkages" [target]="contextMenuTarget"
+<app-desktop-startmenu *ngIf="startMenu" [parent]="this" [target]="contextMenuTarget"
                        (mouseleave)="hideStartMenu()"></app-desktop-startmenu>
 <app-desktop-menu (startMenu)="toggleStartMenu()"></app-desktop-menu>

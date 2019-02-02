@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {WindowManagerService} from '../window-manager/window-manager.service';
-import {WindowDelegate} from '../window/window-delegate.class';
+import {WindowDelegate} from '../window/window-delegate';
 
 @Component({
   selector: 'app-desktop-menu',

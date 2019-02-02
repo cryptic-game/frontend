@@ -1,8 +1,7 @@
 import {Account} from '../../../dataclasses/account';
 import {UserService} from '../user.service';
 import {Component, Input, OnInit} from '@angular/core';
-
-import {Program} from '../../../dataclasses/program';
+import {DesktopComponent} from '../desktop.component';
 
 @Component({
   selector: 'app-desktop-startmenu',
@@ -13,11 +12,9 @@ export class DesktopStartmenuComponent implements OnInit {
   constructor(public userService: UserService) {
   }
 
-  @Input()
-  linkages: Program[] = [];
+  @Input() parent: DesktopComponent;
 
-  @Input()
-  target;
+  @Input() target;
 
   searchTerm = '';
 
@@ -37,12 +34,11 @@ export class DesktopStartmenuComponent implements OnInit {
   }
 
   search(term: string) {
-    return this.linkages.filter(item =>
-      item
-        .displayName
-        .trim()
-        .toLowerCase()
-        .match(term.trim().toLowerCase())
+    return this.parent.linkages.filter(item => item
+      .displayName
+      .trim()
+      .toLowerCase()
+      .match(term.trim().toLowerCase())
     );
   }
 }

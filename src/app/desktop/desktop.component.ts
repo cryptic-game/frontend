@@ -61,6 +61,10 @@ export class DesktopComponent implements OnInit {
     this.contextMenu = false;
   }
 
+  openProgramWindow(program: Program): void {
+    this.windowManager.openWindow(program.newWindow());
+  }
+
   mousedown(e: MouseEvent, i: number): void {
     this.index = i;
     this.position = new Position(e.offsetX, e.offsetY);
@@ -73,7 +77,7 @@ export class DesktopComponent implements OnInit {
 
   mouseup(): void {
     if (this.index !== undefined) {
-      this.programService.update(this.linkages[this.index]);
+      this.programService.update();
     }
 
     this.index = undefined;
