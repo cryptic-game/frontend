@@ -20,6 +20,7 @@ import { PXtoViewHeightPipe } from './pxto-view-height.pipe';
 import { WindowFrameComponent } from './desktop/window/window-frame.component';
 import { WindowManagerComponent } from './desktop/window-manager/window-manager.component';
 import { TestWindowComponent } from './desktop/windows/test-window/test-window.component';
+import {TerminalComponent} from './desktop/windows/terminal/terminal.component';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -42,7 +43,8 @@ const routes: Routes = [
     PXtoViewHeightPipe,
     WindowFrameComponent,
     WindowManagerComponent,
-    TestWindowComponent
+    TestWindowComponent,
+    TerminalComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -51,7 +53,7 @@ const routes: Routes = [
     FormsModule
   ],
   providers: [],
-  entryComponents: [TestWindowComponent],
+  entryComponents: [TestWindowComponent, TerminalComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

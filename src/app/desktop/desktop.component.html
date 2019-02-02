@@ -3,10 +3,7 @@
   <div *ngFor="let linkage of onDesktop(); index as i" (mousedown)="mousedown($event, i)" (mouseup)="mouseup()"
        (dblclick)="openProgramWindow(linkage)"
        [ngStyle]="{'left.vw': linkage.position.x | px2vw, 'top.vh': linkage.position.y | px2vh, 'z-index': linkage.position.z }"
-       class="linkage">
-    <img [src]="linkage.icon" alt=""/>
-    {{linkage.displayName}}
-  </div>
+       class="linkage"><img [src]="linkage.icon" alt=""/>{{linkage.displayName}}</div>
   <app-window-manager></app-window-manager>
   <app-context-menu *ngIf="contextMenu" #contextmenu [position]="contextMenuPosition"
                     (mouseleave)="hideContextMenu()"></app-context-menu>
