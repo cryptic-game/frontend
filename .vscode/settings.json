@@ -11,8 +11,9 @@
   "editor.formatOnSave": true,
   "prettier.singleQuote": true,
   "editor.suggestOnTriggerCharacters": true,
-  "editor.tabSize": 4,
+  "editor.tabSize": 2,
   "npm.autoDetect": "off",
   "typescript.tsc.autoDetect": "off",
-  "tslint.enable": false
+  "tslint.enable": false,
+  "editor.detectIndentation": false
 }
