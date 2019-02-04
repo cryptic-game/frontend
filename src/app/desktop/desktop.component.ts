@@ -1,8 +1,8 @@
-import {Position} from '../../dataclasses/position';
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Program} from '../../dataclasses/program';
-import {ProgramService} from './program.service';
-import {WindowManagerService} from './window-manager/window-manager.service';
+import { Position } from '../../dataclasses/position';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Program } from '../../dataclasses/program';
+import { ProgramService } from './program.service';
+import { WindowManagerService } from './window-manager/window-manager.service';
 
 @Component({
   selector: 'app-desktop',
@@ -10,8 +10,10 @@ import {WindowManagerService} from './window-manager/window-manager.service';
   styleUrls: ['./desktop.component.scss']
 })
 export class DesktopComponent implements OnInit {
-  constructor(private programService: ProgramService, public windowManager: WindowManagerService) {
-  }
+  constructor(
+    private programService: ProgramService,
+    public windowManager: WindowManagerService
+  ) {}
 
   startMenu = false;
 
@@ -63,6 +65,12 @@ export class DesktopComponent implements OnInit {
 
   openProgramWindow(program: Program): void {
     this.windowManager.openWindow(program.newWindow());
+  }
+
+  checkWindowUnfocus(event: MouseEvent): void {
+    if ((event.target as Element) === this.surface.nativeElement) {
+      this.windowManager.unfocus();
+    }
   }
 
   mousedown(e: MouseEvent, i: number): void {
