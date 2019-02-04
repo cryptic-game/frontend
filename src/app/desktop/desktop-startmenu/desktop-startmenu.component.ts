@@ -1,8 +1,7 @@
-import { Account } from '../../../dataclasses/account.class';
-import { UserService } from '../user.service';
-import { Component, Input, OnInit } from '@angular/core';
-
-import { Program } from '../../../dataclasses/program.class';
+import {Account} from '../../../dataclasses/account';
+import {UserService} from '../user.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {DesktopComponent} from '../desktop.component';
 
 @Component({
   selector: 'app-desktop-startmenu',
@@ -10,38 +9,36 @@ import { Program } from '../../../dataclasses/program.class';
   styleUrls: ['./desktop-startmenu.component.scss']
 })
 export class DesktopStartmenuComponent implements OnInit {
-  constructor(public userService: UserService) {}
+  constructor(public userService: UserService) {
+  }
 
-  @Input()
-  linkages: Program[] = [];
+  @Input() parent: DesktopComponent;
 
-  @Input()
-  target;
+  @Input() target;
 
   searchTerm = '';
 
   token: string = localStorage.getItem('token');
 
-  user: Account = new Account('', '');
+  user: Account = {name: '', email: ''};
 
   ngOnInit() {
     this.userService.owner(this.token).subscribe((data: any) => {
       if (data['error'] !== undefined) {
         console.log(data['error']);
       } else {
-        this.user.setName(data.owner.username);
-        this.user.setEmail(data.owner.email);
+        this.user.name = data.owner.username;
+        this.user.email = data.owner.email;
       }
     });
   }
 
   search(term: string) {
-    return this.linkages.filter(item =>
-      item
-        .getDisplayName()
-        .trim()
-        .toLowerCase()
-        .match(term.trim().toLowerCase())
+    return this.parent.linkages.filter(item => item
+      .displayName
+      .trim()
+      .toLowerCase()
+      .match(term.trim().toLowerCase())
     );
   }
 }

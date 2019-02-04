@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {WindowFrameComponent} from './window-frame.component';
-import {WindowDelegate} from './window-delegate.class';
+import {WindowDelegate} from './window-delegate';
 
 describe('WindowFrameComponent', () => {
   let component: WindowFrameComponent;

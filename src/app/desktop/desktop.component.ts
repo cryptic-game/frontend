@@ -1,7 +1,7 @@
-import { Position } from '../../dataclasses/position.class';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Program } from '../../dataclasses/program.class';
-import { ProgramService } from './program.service';
+import {Position} from '../../dataclasses/position';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Program} from '../../dataclasses/program';
+import {ProgramService} from './program.service';
 import {WindowManagerService} from './window-manager/window-manager.service';
 
 @Component({
@@ -36,7 +36,7 @@ export class DesktopComponent implements OnInit {
   }
 
   onDesktop(): Program[] {
-    return this.linkages.filter(item => item.onDesktop());
+    return this.linkages.filter(item => item.onDesktop);
   }
 
   toggleStartMenu(): void {
@@ -61,19 +61,23 @@ export class DesktopComponent implements OnInit {
     this.contextMenu = false;
   }
 
+  openProgramWindow(program: Program): void {
+    this.windowManager.openWindow(program.newWindow());
+  }
+
   mousedown(e: MouseEvent, i: number): void {
     this.index = i;
     this.position = new Position(e.offsetX, e.offsetY);
 
     this.linkages.forEach(el => {
-      el.getPosition().setZ(0);
+      el.position.z = 0;
     });
-    this.linkages[this.index].getPosition().setZ(1);
+    this.linkages[this.index].position.z = 1;
   }
 
   mouseup(): void {
     if (this.index !== undefined) {
-      this.programService.update(this.linkages[this.index]);
+      this.programService.update();
     }
 
     this.index = undefined;
@@ -82,12 +86,8 @@ export class DesktopComponent implements OnInit {
 
   mousemove(e: MouseEvent): void {
     if (this.index !== undefined) {
-      this.linkages[this.index]
-        .getPosition()
-        .setX(e.pageX - this.position.getX());
-      this.linkages[this.index]
-        .getPosition()
-        .setY(e.pageY - this.position.getY());
+      this.linkages[this.index].position.x = e.pageX - this.position.x;
+      this.linkages[this.index].position.y = e.pageY - this.position.y;
     }
   }
 }

@@ -6,7 +6,6 @@ $inactive-window-color: #737373;
   flex-direction: column;
   border-radius: 3px;
   border: 3px solid $inactive-window-color;
-  user-select: none;
 
   &.active {
     border: 3px solid $active-window-color;
@@ -71,5 +70,4 @@ $inactive-window-color: #737373;
   flex-direction: row;
   width: 100%;
   height: 100%;
-  user-select: none;
 }
