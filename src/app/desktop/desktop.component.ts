@@ -65,6 +65,12 @@ export class DesktopComponent implements OnInit {
     this.windowManager.openWindow(program.newWindow());
   }
 
+  checkWindowUnfocus(event: MouseEvent): void {
+    if (event.target as Element === this.surface.nativeElement) {
+      this.windowManager.unfocus();
+    }
+  }
+
   mousedown(e: MouseEvent, i: number): void {
     this.index = i;
     this.position = new Position(e.offsetX, e.offsetY);
