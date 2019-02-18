@@ -6,7 +6,7 @@
         <tr>
           <td colspan="2">
             <input type="text" [(ngModel)]="model.username" #usernameField="ngModel" id="username" name="username"
-              placeholder="Username or Email address" required>
+              placeholder="Username" required>
             <div class="errorText" *ngIf="usernameField.invalid && (usernameField.dirty || usernameField.touched) && usernameField['errors'].required">
               Username is required
             </div>
