@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,9 +8,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class SignUpService {
   url = 'https://user.api.cryptic-game.net/auth';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  signUp(username: string, email: string, password: string) {
+  signUp(username: string, email: string, password: string): Observable<SignupResponse> {
     const data = JSON.stringify({
       username,
       email,
@@ -20,4 +21,9 @@ export class SignUpService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
   }
+}
+
+class SignupResponse {
+  message?: string;
+  ok?: boolean;
 }
