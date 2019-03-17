@@ -1,11 +1,13 @@
+import {TerminalAPI} from './terminal-api';
+
 export class TerminalPrograms {
   static programs = {
-    'ping': (args: string[], output: (html: string) => void) => {
+    'ping': (args: string[], terminal: TerminalAPI) => {
       console.log('hi');
-      output('pong');
+      terminal.output('pong');
     },
-    'echo': (args: string[], output: (html: string) => void) => {
-      output(args.join(' '));
+    'echo': (args: string[], terminal: TerminalAPI) => {
+      terminal.output(args.join(' '));
     }
   };
 }

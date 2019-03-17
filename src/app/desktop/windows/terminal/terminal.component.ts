@@ -1,13 +1,15 @@
 import {Component, ElementRef, OnInit, Type, ViewChild} from '@angular/core';
 import {WindowDelegate} from '../../window/window-delegate';
 import {TerminalPrograms} from './terminal-programs';
+import {TerminalAPI} from './terminal-api';
+import {WindowManagerService} from '../../window-manager/window-manager.service';
 
 @Component({
   selector: 'app-terminal',
   templateUrl: './terminal.component.html',
   styleUrls: ['./terminal.component.scss']
 })
-export class TerminalComponent extends WindowDelegate implements OnInit {
+export class TerminalComponent extends WindowDelegate implements OnInit, TerminalAPI {
 
   @ViewChild('history') history: ElementRef;
   @ViewChild('prompt') prompt: ElementRef;
@@ -17,7 +19,7 @@ export class TerminalComponent extends WindowDelegate implements OnInit {
   icon = 'assets/desktop/img/terminal.svg';
   type: Type<any> = TerminalComponent;
 
-  constructor() {
+  constructor(private windowManager: WindowManagerService) {
     super();
   }
 
@@ -25,11 +27,23 @@ export class TerminalComponent extends WindowDelegate implements OnInit {
   }
 
   output(html: string) {
-    (this.history.nativeElement as HTMLElement).insertAdjacentHTML('beforeend', html + '<br>');
+    this.outputRaw(html + '<br>');
+  }
+
+  outputRaw(html: string) {
+    (this.history.nativeElement as HTMLElement).insertAdjacentHTML('beforeend', html);
+  }
+
+  outputText(text: string) {
+    (this.history.nativeElement as HTMLElement).insertAdjacentText('beforeend', text);
   }
 
   outputNode(node: Node) {
     (this.history.nativeElement as HTMLElement).appendChild(node);
+  }
+
+  closeTerminal() {
+    this.windowManager.closeWindow(this);
   }
 
   promptKeyPressed(event: KeyboardEvent, content: string) {
@@ -52,7 +66,7 @@ export class TerminalComponent extends WindowDelegate implements OnInit {
     }
     const args = command_.slice(1);
     if (TerminalPrograms.programs.hasOwnProperty(command_[0].toLowerCase())) {
-      TerminalPrograms.programs[command_[0].toLowerCase()](args, this.output.bind(this));
+      TerminalPrograms.programs[command_[0].toLowerCase()](args, this);
     } else {
       this.output('Command could not be found.');
     }
