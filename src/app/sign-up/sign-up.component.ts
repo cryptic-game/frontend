@@ -22,14 +22,13 @@ export class SignUpComponent implements OnInit {
 
 
   performSignup() {
-    this.signUpService.signUp(this.model.username, this.model.email, this.model.password).subscribe(data => {
-        const error = data['error'];
-        if (error === undefined) {
-          this.router.navigateByUrl('/login');
+    this.signUpService.signUp(this.model.username, this.model.email, this.model.password).subscribe(
+      data => {
+        if (data['ok'] === true) {
+          this.router.navigateByUrl('/login').then().catch();
         } else {
-          this.errorText = data['error'];
+          console.log(data);
         }
-
       },
       error => {
         console.log(error);

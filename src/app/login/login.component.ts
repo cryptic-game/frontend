@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { LoginService } from './login.service';
-import { Router } from '@angular/router';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {LoginService} from './login.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,22 +11,23 @@ export class LoginComponent implements OnInit {
   @ViewChild('loginButton')
   loginButton: ElementRef;
   errorText = '';
-  model = { username: '', password: '' };
+  model = {username: '', password: ''};
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(private loginService: LoginService, private router: Router) {
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   performLogin() {
     this.loginService.login(this.model.username, this.model.password).subscribe(
       data => {
-        const error = data['error'];
-        if (error === undefined) {
-          localStorage.setItem('token', data['token']);
+        const token = data['token'];
+        if (token !== undefined) {
+          localStorage.setItem('token', token);
 
           setTimeout(() => this.router.navigateByUrl('/'), 500);
         } else {
-          this.errorText = error;
           this.loginButton.nativeElement.disabled = true;
           setTimeout(
             () => (this.loginButton.nativeElement.disabled = false),
@@ -35,8 +36,7 @@ export class LoginComponent implements OnInit {
         }
       },
       error => {
-        console.log(error);
-
+        this.errorText = error.error['message'];
         this.loginButton.nativeElement.disabled = true;
         setTimeout(
           () => (this.loginButton.nativeElement.disabled = false),
