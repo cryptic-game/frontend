@@ -1,5 +1,6 @@
 import {Component, ElementRef, OnInit, Type, ViewChild} from '@angular/core';
 import {WindowDelegate} from '../../window/window-delegate';
+import {TerminalPrograms} from './terminal-programs';
 
 @Component({
   selector: 'app-terminal',
@@ -13,7 +14,7 @@ export class TerminalComponent extends WindowDelegate implements OnInit {
   @ViewChild('cmdLine') cmdLine: ElementRef;
 
   title = 'Terminal';
-  icon = 'assets/desktop/img/';
+  icon = 'assets/desktop/img/terminal.svg';
   type: Type<any> = TerminalComponent;
 
   constructor() {
@@ -45,7 +46,16 @@ export class TerminalComponent extends WindowDelegate implements OnInit {
   }
 
   execute(command: string) {
-
+    const command_ = command.split(' ');
+    if (command_.length === 0) {
+      return;
+    }
+    const args = command_.slice(1);
+    if (TerminalPrograms.programs.hasOwnProperty(command_[0].toLowerCase())) {
+      TerminalPrograms.programs[command_[0].toLowerCase()](args, this.output.bind(this));
+    } else {
+      this.output('Command could not be found.');
+    }
   }
 
   focusContentEditable(el: HTMLElement) {

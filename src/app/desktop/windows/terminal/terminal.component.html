@@ -4,9 +4,8 @@
     <output #history></output>
     <div id="input-line">
       <div #prompt class="prompt" style="width: 120px;">Chaozz@Home-Desk:</div>
-      <div class="cmdline" #cmdLine contenteditable="true" (keypress)="promptKeyPressed($event, cmdLine.innerText)">
-        default console text
-      </div>
+      <div class="cmdline" #cmdLine contenteditable="true"
+           (keypress)="promptKeyPressed($event, cmdLine.innerText)"></div>
     </div>
   </div>
 </div>
