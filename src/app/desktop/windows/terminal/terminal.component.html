@@ -1,6 +1,12 @@
-<div id="terminal-container">
+<div id="terminal-container" #terminalContainer
+     (click)="$event.target === terminalContainer ? focusContentEditable(cmdLine) : true">
   <div id="terminal-window">
-    <span style="width: 120px;">Chaozz@Home-Desk: </span>
-    <div contenteditable style="background-color: green;">default console text</div>
+    <output #history></output>
+    <div id="input-line">
+      <div #prompt class="prompt" style="width: 120px;">Chaozz@Home-Desk:</div>
+      <div class="cmdline" #cmdLine contenteditable="true" (keypress)="promptKeyPressed($event, cmdLine.innerText)">
+        default console text
+      </div>
+    </div>
   </div>
 </div>
