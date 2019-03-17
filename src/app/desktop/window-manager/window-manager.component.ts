@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { WindowManagerService } from './window-manager.service';
-import { TerminalComponent } from '../windows/terminal/terminal.component';
+import {Component, OnInit} from '@angular/core';
+import {WindowManagerService} from './window-manager.service';
 
 @Component({
   selector: 'app-window-manager',
@@ -11,6 +10,5 @@ export class WindowManagerComponent implements OnInit {
   constructor(public windowManager: WindowManagerService) {}
 
   ngOnInit() {
-    this.windowManager.openWindow(new TerminalComponent());
   }
 }

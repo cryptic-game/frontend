@@ -1,8 +1,8 @@
 import {Component, ElementRef, OnInit, Type, ViewChild} from '@angular/core';
 import {WindowDelegate} from '../../window/window-delegate';
-import {TerminalPrograms} from './terminal-programs';
 import {TerminalAPI} from './terminal-api';
 import {WindowManagerService} from '../../window-manager/window-manager.service';
+import {TerminalCommandsService} from './terminal-commands.service';
 
 @Component({
   selector: 'app-terminal',
@@ -19,12 +19,46 @@ export class TerminalComponent extends WindowDelegate implements OnInit, Termina
   icon = 'assets/desktop/img/terminal.svg';
   type: Type<any> = TerminalComponent;
 
-  constructor(private windowManager: WindowManagerService) {
+  promptText = 'Chaozz@Home-Desk:';
+
+  constructor(private windowManager: WindowManagerService, private commandsService: TerminalCommandsService) {
     super();
   }
 
   ngOnInit() {
   }
+
+  promptKeyPressed(event: KeyboardEvent, content: string) {
+    if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+      event.preventDefault();
+      this.outputNode((this.prompt.nativeElement as HTMLElement).cloneNode(true));
+      const historyCmdLine = (this.cmdLine.nativeElement as HTMLElement).cloneNode(true);
+      (historyCmdLine as HTMLElement).removeAttribute('contenteditable');
+      this.outputNode(historyCmdLine);
+      this.outputNode(document.createElement('br'));
+      this.cmdLine.nativeElement.innerText = '';
+      this.execute(content);
+    }
+  }
+
+  execute(command: string) {
+    const command_ = command.split(' ');
+    if (command_.length === 0) {
+      return;
+    }
+    this.commandsService.execute(command_[0], command_.slice(1), this);
+  }
+
+  focusContentEditable(el: HTMLElement) {
+    el.focus();
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
 
   output(html: string) {
     this.outputRaw(html + '<br>');
@@ -46,40 +80,12 @@ export class TerminalComponent extends WindowDelegate implements OnInit, Termina
     this.windowManager.closeWindow(this);
   }
 
-  promptKeyPressed(event: KeyboardEvent, content: string) {
-    if (event.code === 'Enter' || event.code === 'NumpadEnter') {
-      event.preventDefault();
-      this.outputNode((this.prompt.nativeElement as HTMLElement).cloneNode(true));
-      const historyCmdLine = (this.cmdLine.nativeElement as HTMLElement).cloneNode(true);
-      (historyCmdLine as HTMLElement).removeAttribute('contenteditable');
-      this.outputNode(historyCmdLine);
-      this.outputNode(document.createElement('br'));
-      this.cmdLine.nativeElement.innerText = '';
-      this.execute(content);
-    }
+  changePrompt(text: string) {
+    this.promptText = text;
   }
 
-  execute(command: string) {
-    const command_ = command.split(' ');
-    if (command_.length === 0) {
-      return;
-    }
-    const args = command_.slice(1);
-    if (TerminalPrograms.programs.hasOwnProperty(command_[0].toLowerCase())) {
-      TerminalPrograms.programs[command_[0].toLowerCase()](args, this);
-    } else {
-      this.output('Command could not be found.');
-    }
-  }
-
-  focusContentEditable(el: HTMLElement) {
-    el.focus();
-    const range = document.createRange();
-    range.selectNodeContents(el);
-    range.collapse(false);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
+  resetPrompt() {
+    // TODO
   }
 
 }
