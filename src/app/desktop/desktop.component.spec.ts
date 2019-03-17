@@ -12,6 +12,7 @@ import {WindowManagerComponent} from './window-manager/window-manager.component'
 import {WindowFrameComponent} from './window/window-frame.component';
 import {TestWindowComponent} from './windows/test-window/test-window.component';
 import {NgModule} from '@angular/core';
+import {TerminalComponent} from './windows/terminal/terminal.component';
 
 describe('DesktopComponent', () => {
   let component: DesktopComponent;
@@ -49,8 +50,8 @@ describe('DesktopComponent', () => {
 
 
 @NgModule({
-  declarations: [TestWindowComponent],
-  entryComponents: [TestWindowComponent]
+  declarations: [TestWindowComponent, TerminalComponent],
+  entryComponents: [TestWindowComponent, TerminalComponent]
 })
 class EntryComponentsTestModule {
 }
