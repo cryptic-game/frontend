@@ -41,11 +41,11 @@ The title should have the following format:
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
 <!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
 
-- [ ] I refrenced the according Issue
+- [ ] I referenced the according Issue
   - [ ] I created an Issue
   - [ ] I put a link in the Section [Related Issue](#related-issue)
 - [ ] I tested my code with multiple browsers
-- [ ] I follewed the [Angular style guide](https://angular.io/guide/styleguide)
+- [ ] I followed the [Angular style guide](https://angular.io/guide/styleguide)
 - [ ] My commit messages are good and understandable
 
 ### Optional
