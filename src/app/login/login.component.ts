@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   performLogin() {
     this.loginService.login(this.model.username, this.model.password).subscribe(
       data => {
-        const token = data['token'];
+        const token = data.token;
         if (token !== undefined) {
           localStorage.setItem('token', token);
 
@@ -36,7 +36,13 @@ export class LoginComponent implements OnInit {
         }
       },
       error => {
-        this.errorText = error.error['message'];
+        if (error.error !== undefined && error.error['message'] !== undefined) {
+          this.errorText = error.error['message'];
+        } else {
+          console.log(error);
+          this.errorText = 'An error has occurred';
+        }
+
         this.loginButton.nativeElement.disabled = true;
         setTimeout(
           () => (this.loginButton.nativeElement.disabled = false),

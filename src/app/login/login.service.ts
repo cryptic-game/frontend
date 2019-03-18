@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class LoginService {
 
   constructor(private http: HttpClient) {}
 
-  login(username, password) {
+  login(username, password): Observable<LoginResponse> {
     const data = JSON.stringify({
       username,
       password
@@ -19,4 +20,9 @@ export class LoginService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
   }
+}
+
+class LoginResponse {
+  message?: string;
+  token?: string;
 }
