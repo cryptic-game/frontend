@@ -10,10 +10,10 @@
 }
 
 #terminal-window {
-  padding: 5px;
+  padding: 1%;
 
   font-family: 'Lucida Console', Arial, Helvetica, sans-serif;
-  font-size: 8pt;
+  font-size: 1.2rem;
   color: white;
 
   display: flex;
@@ -27,10 +27,12 @@
   display: inline-block;
   user-select: none;
   color: green;
+  margin-right: 1%;
+  float: left;
 }
 
 .cmdline {
-  display: inline;
+  float: left;
   outline: none !important;
   white-space: nowrap;
 }

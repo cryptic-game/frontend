@@ -32,7 +32,7 @@ export const desktopDefinition = {
       'terminal',
       programWindows['terminal'],
       'Terminal',
-      '',
+      '../../assets/desktop/img/terminal.svg',
       true,
       new Position(20, 170, 2)
     )
