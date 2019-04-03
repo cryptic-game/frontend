@@ -33,6 +33,8 @@ export class DesktopComponent implements OnInit {
   token: string =
     sessionStorage.getItem('token') || localStorage.getItem('token');
 
+  username: string = localStorage.getItem('username');
+
   ngOnInit(): void {
     this.linkages = this.programService.list();
   }

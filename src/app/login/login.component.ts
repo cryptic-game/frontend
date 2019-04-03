@@ -22,9 +22,8 @@ export class LoginComponent implements OnInit {
   performLogin() {
     this.loginService.login(this.model.username, this.model.password).subscribe(
       data => {
-        const token = data.token;
-        if (token !== undefined) {
-          localStorage.setItem('token', token);
+        if (data.result === true) {
+          localStorage.setItem('username', this.model.username);
 
           setTimeout(() => this.router.navigateByUrl('/'), 500);
         } else {

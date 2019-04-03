@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import { CLIENT } from "../websocket.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,19 +13,17 @@ export class SignUpService {
   }
 
   signUp(username: string, email: string, password: string): Observable<SignUpResponse> {
-    const data = JSON.stringify({
-      username,
-      email,
-      password
-    });
+    const data = {
+      "action": "register",
+      "name": username,
+      "password": password
+    };
 
-    return this.http.put(this.url, data, {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    });
+    return CLIENT.request(data);
   }
 }
 
 class SignUpResponse {
-  message?: string;
-  ok?: boolean;
+  error?: string;
+  result?: boolean;
 }

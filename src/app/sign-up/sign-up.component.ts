@@ -25,7 +25,7 @@ export class SignUpComponent implements OnInit {
   performSignup() {
     this.signUpService.signUp(this.model.username, this.model.email, this.model.password).subscribe(
       data => {
-        if (data.ok === true) {
+        if (data.result === true) {
           this.router.navigateByUrl('/login').then().catch();
         } else {
           console.log(data);

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Observable, Subject } from "rxjs/Rx";
+import { CLIENT } from "./websocket.service";
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  loggedIn = (sessionStorage.getItem('token') || localStorage.getItem('token')) !== null;
+  loggedIn = false;
+
+  constructor() {
+    CLIENT.request({"action": "status"}).subscribe(json => {
+      console.log(json);
+    });
+  }
 }
