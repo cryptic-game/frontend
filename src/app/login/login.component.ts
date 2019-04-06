@@ -25,7 +25,10 @@ export class LoginComponent implements OnInit {
         if (data.token !== null) {
           localStorage.setItem('token', data.token);
 
-          this.router.navigateByUrl('/').then().catch();
+          setTimeout(
+            () => (this.router.navigateByUrl('/')),
+            500
+          );
         } else {
           this.loginButton.nativeElement.disabled = true;
           setTimeout(
