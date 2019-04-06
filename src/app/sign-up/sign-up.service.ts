@@ -16,6 +16,7 @@ export class SignUpService {
     const data = {
       "action": "register",
       "name": username,
+      "mail": email,
       "password": password
     };
 
@@ -25,5 +26,6 @@ export class SignUpService {
 
 class SignUpResponse {
   error?: string;
-  result?: boolean;
+  name?: string;
+  token?: string;
 }

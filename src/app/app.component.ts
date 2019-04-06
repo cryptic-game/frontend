@@ -11,8 +11,9 @@ export class AppComponent {
   loggedIn = false;
 
   constructor() {
-    CLIENT.request({"action": "status"}).subscribe(json => {
-      console.log(json);
-    });
+  }
+
+  ngOnDestroy() {
+    CLIENT.close();
   }
 }

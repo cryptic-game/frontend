@@ -24,5 +24,6 @@ export class LoginService {
 
 class LoginResponse {
   error?: string;
-  result?: boolean;
+  name?: string;
+  token?: string;
 }

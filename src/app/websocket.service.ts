@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
 import { first } from 'rxjs/operators';
 
-const URL: string = "ws://127.0.0.1:80/";
+const URL: string = "ws://127.0.0.1:2000/";
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +13,6 @@ export class WebsocketService {
 
   constructor() {
       this.socket = webSocket(URL);
-      this.socket.next({
-        "action": "status",
-      });
-
       this.socket.subscribe(
             (message) => this.receive(message),
             (error) => console.error(error));
@@ -27,12 +23,16 @@ export class WebsocketService {
   }
 
   private receive(json) {
-    console.log(json);
+    // for debug purpose
   }
 
   public request(json) {
     this.send(json);
     return this.socket.pipe(first());
+  }
+
+  public close() {
+    this.socket.complete();
   }
 
 }
