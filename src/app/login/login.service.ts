@@ -7,8 +7,6 @@ import { CLIENT } from "../websocket.service";
   providedIn: 'root'
 })
 export class LoginService {
-  url = 'https://user.api.cryptic-game.net/auth';
-
   constructor(private http: HttpClient) {}
 
   login(username, password): Observable<LoginResponse> {

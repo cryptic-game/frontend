@@ -26,9 +26,8 @@ export class SignUpComponent implements OnInit {
     this.signUpService.signUp(this.model.username, this.model.email, this.model.password).subscribe(
       data => {
         if (data.token !== null) {
-          sessionStorage.setItem('token', data.token);
-          localStorage.setItem('username', data.name);
-
+          localStorage.setItem('token', data.token);
+          
           this.router.navigateByUrl('/').then().catch();
         } else {
           console.log(data);

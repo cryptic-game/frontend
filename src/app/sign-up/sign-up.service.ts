@@ -7,7 +7,6 @@ import { CLIENT } from "../websocket.service";
   providedIn: 'root'
 })
 export class SignUpService {
-  url = 'https://user.api.cryptic-game.net/auth';
 
   constructor(private http: HttpClient) {
   }
@@ -22,6 +21,7 @@ export class SignUpService {
 
     return CLIENT.request(data);
   }
+  
 }
 
 class SignUpResponse {

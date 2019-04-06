@@ -11,7 +11,7 @@ export class DesktopGuard implements CanActivate {
   }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    if (sessionStorage.getItem('token') === null) {
+    if (localStorage.getItem('token') === null) {
       this.router.navigateByUrl('/login');
       return false;
     }
@@ -22,13 +22,13 @@ export class DesktopGuard implements CanActivate {
       if(response.error != null) {
         CLIENT.request({
           "action": "session",
-          "token": sessionStorage.getItem('token')
+          "token": localStorage.getItem('token')
         }).subscribe(response2 => {
           if(response2.error != null) {
             this.router.navigateByUrl('/login');
             return false;
           } else {
-            sessionStorage.setItem('token', response2.token);
+            localStorage.setItem('token', response2.token);
             CLIENT.request({
               "action": "info"
             }).subscribe(response => {

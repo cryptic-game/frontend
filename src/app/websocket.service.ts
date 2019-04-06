@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
 import { first } from 'rxjs/operators';
 
-const URL: string = "ws://127.0.0.1:2000/";
+const URL: string = "wss://ws.cryptic-game.net/";
 
 @Injectable({
   providedIn: 'root'

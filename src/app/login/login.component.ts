@@ -23,8 +23,7 @@ export class LoginComponent implements OnInit {
     this.loginService.login(this.model.username, this.model.password).subscribe(
       data => {
         if (data.token !== null) {
-          sessionStorage.setItem('token', data.token);
-          localStorage.setItem('username', data.name);
+          localStorage.setItem('token', data.token);
 
           this.router.navigateByUrl('/').then().catch();
         } else {

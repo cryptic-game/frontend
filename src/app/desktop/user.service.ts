@@ -8,8 +8,6 @@ import { Router } from '@angular/router';
 export class UserService {
   constructor(private http: HttpClient, private router: Router) {}
 
-  url = 'https://user.api.cryptic-game.net/auth';
-
   logout(token) {
     const httpOptions = {
       headers: new HttpHeaders({
