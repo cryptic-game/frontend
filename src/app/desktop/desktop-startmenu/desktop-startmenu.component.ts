@@ -18,19 +18,15 @@ export class DesktopStartmenuComponent implements OnInit {
 
   searchTerm = '';
 
-  token: string = localStorage.getItem('token');
+  token: string = sessionStorage.getItem('token');
 
-  user: Account = {name: '', email: ''};
+  user: Account = {name: '', email: '', created: 0, last: 0};
 
   ngOnInit() {
-    this.userService.owner(this.token).subscribe((data: any) => {
-      if (data['error'] !== undefined) {
-        console.log(data['error']);
-      } else {
-        this.user.name = data.owner.username;
-        this.user.email = data.owner.email;
-      }
-    });
+    this.user.name = localStorage.getItem('username');
+    this.user.email = localStorage.getItem('email');
+    this.user.created = parseInt(localStorage.getItem('created'));
+    this.user.last = parseInt(localStorage.getItem('last'));
   }
 
   search(term: string) {

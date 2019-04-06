@@ -22,11 +22,10 @@ export class LoginComponent implements OnInit {
   performLogin() {
     this.loginService.login(this.model.username, this.model.password).subscribe(
       data => {
-        const token = data.token;
-        if (token !== undefined) {
-          localStorage.setItem('token', token);
+        if (data.token !== null) {
+          localStorage.setItem('token', data.token);
 
-          setTimeout(() => this.router.navigateByUrl('/'), 500);
+          this.router.navigateByUrl('/').then().catch();
         } else {
           this.loginButton.nativeElement.disabled = true;
           setTimeout(
