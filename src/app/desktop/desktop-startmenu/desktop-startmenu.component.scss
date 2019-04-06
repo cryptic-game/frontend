@@ -1,40 +1,37 @@
 #startmenu {
-  width: 30vw;
-  height: 70vh;
+  width: 30%;
+  height: 65%;
   position: absolute;
-  bottom: 5.5%;
-  padding: 10px;
-  background-color: #555;
-  color: #ffffff;
+  bottom: 0%;
+  padding: 1.5%;
+  padding-bottom: 5.5%;
+  background-color: #424242;
+  color: #FAFAFA;
+  box-shadow: 0 0 38px rgba(0,0,0,0.30), 0 0 12px rgba(0,0,0,0.22);
 
   img {
-    width: 36px;
-    height: 36px;
+    height: auto;
+    width: 7.5%;
   }
 
   #user {
-    height: 30%;
+    height: 10%;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
-    align-items: center;
-
-    img {
-      width: 80%;
-      height: 80%;
-    }
+    align-items: left;
+    font-size: 2rem;
+    margin-bottom: 10%;
   }
 
   #programs {
     width: 100%;
     height: calc(64.5% - 2px);
-    border-bottom: 1px solid white;
-    border-top: 1px solid white;
 
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
-    padding: 2.5px;
+    padding: 1%;
 
     #linkages {
       height: 100%;
@@ -49,6 +46,12 @@
     }
   }
 
+  .search {
+    width: 95%;
+    padding: 1%;
+    border: none;
+  }
+
   .button {
     height: 36px;
     display: flex;
@@ -58,5 +61,9 @@
 
   #logout {
     height: 5.5%;
+  }
+
+  input {
+    width: 100%;
   }
 }

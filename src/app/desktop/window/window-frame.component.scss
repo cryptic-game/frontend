@@ -1,15 +1,16 @@
-$active-window-color: #646464;
-$inactive-window-color: #737373;
+$active-window-color: #424242;
+$inactive-window-color: #212121;
 
 .window {
   display: flex;
   flex-direction: column;
-  border-radius: 3px;
-  border: 3px solid $inactive-window-color;
+  box-shadow: 0 2px 2px rgba(0,0,0,0.16), 0 2px 2px rgba(0,0,0,0.23);
+  /*border-radius: 3px;*/
+/*  border: 3px solid $inactive-window-color;*/
 
   &.active {
-    border: 3px solid $active-window-color;
-    box-shadow: 1px 1px 1px 0.1px #616161;
+    /*border: 3px solid $active-window-color;*/
+    /*box-shadow: 1px 1px 1px 0.1px #616161;*/
 
     .window-header {
       background-color: $active-window-color;
@@ -25,16 +26,13 @@ $inactive-window-color: #737373;
 }
 
 .window-header {
+  padding: 1%;
   display: flex;
   flex-direction: row;
   background-color: $inactive-window-color;
   user-select: none;
-  height: 35px;
+  height: 2rem;
   align-items: center;
-
-  .window-icon {
-    padding-bottom: 1px;
-  }
 
   .window-title {
     padding-bottom: 3px;

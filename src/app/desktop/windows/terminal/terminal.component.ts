@@ -19,7 +19,7 @@ export class TerminalComponent extends WindowDelegate implements OnInit, Termina
   icon = 'assets/desktop/img/terminal.svg';
   type: Type<any> = TerminalComponent;
 
-  promptText = 'Chaozz@Home-Desk:';
+  promptText = localStorage.getItem('username') + '@Home-Desk:';
 
   constructor(private windowManager: WindowManagerService, private commandsService: TerminalCommandsService) {
     super();
@@ -36,7 +36,7 @@ export class TerminalComponent extends WindowDelegate implements OnInit, Termina
       (historyCmdLine as HTMLElement).removeAttribute('contenteditable');
       this.outputNode(historyCmdLine);
       this.outputNode(document.createElement('br'));
-      this.cmdLine.nativeElement.innerText = '';
+      this.cmdLine.nativeElement.value = '';
       this.execute(content);
     }
   }
@@ -48,17 +48,6 @@ export class TerminalComponent extends WindowDelegate implements OnInit, Termina
     }
     this.commandsService.execute(command_[0], command_.slice(1), this);
   }
-
-  focusContentEditable(el: HTMLElement) {
-    el.focus();
-    const range = document.createRange();
-    range.selectNodeContents(el);
-    range.collapse(false);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-
 
   output(html: string) {
     this.outputRaw(html + '<br>');

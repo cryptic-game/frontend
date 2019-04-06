@@ -30,10 +30,11 @@ export class DesktopComponent implements OnInit {
   index: number; // index of the dragged element
   position: Position; // position of the dragged element
 
-  token: string =
-    sessionStorage.getItem('token') || localStorage.getItem('token');
+  token: string = localStorage.getItem('token');
 
   username: string = localStorage.getItem('username');
+
+  devices = [];
 
   ngOnInit(): void {
     this.linkages = this.programService.list();
