@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
 import { first } from 'rxjs/operators';
-
-const URL: string = "ws://127.0.0.1:80/";
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,7 @@ export class WebsocketService {
   }
 
   public init() {
-    this.socket = webSocket(URL);
+    this.socket = webSocket(environment.api);
     this.socket.subscribe(
           (message) => this.receive(message),
           (error) => console.error(error));
