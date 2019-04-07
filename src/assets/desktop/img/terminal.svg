@@ -9,15 +9,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="28.971874mm"
-   height="21.828125mm"
-   viewBox="0 0 28.971874 21.828125"
+   width="127.98267"
+   height="127.98084"
+   viewBox="0 0 33.862079 33.861598"
    version="1.1"
-   id="svg6790"
+   id="svg8"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="Terminal_black.svg">
+   sodipodi:docname="terminal_black.svg">
   <defs
-     id="defs6784" />
+     id="defs2" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.959798"
-     inkscape:cx="5.5408382"
-     inkscape:cy="41.733179"
+     inkscape:zoom="2"
+     inkscape:cx="149.32886"
+     inkscape:cy="79.04214"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -35,13 +35,14 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1680"
-     inkscape:window-height="987"
-     inkscape:window-x="-8"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1672"
      inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     units="px" />
   <metadata
-     id="metadata6787">
+     id="metadata5">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -56,26 +57,31 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-100.41882,-83.490699)">
+     transform="translate(-26.339664,-122.86183)">
     <g
-       transform="matrix(0.26458333,0,0,0.26458333,-1.4986741,9.0104921)"
-       id="g16">
-      <path
-         d="m 401.2,361.5 c -7.4,0 -13.5,-6.1 -13.5,-13.5 v -50.5 c 0,-7.4 6.1,-13.5 13.5,-13.5 h 77.5 c 7.4,0 13.5,6.1 13.5,13.5 V 348 c 0,7.4 -6.1,13.5 -13.5,13.5 z"
-         id="path12"
-         inkscape:connector-curvature="0" />
-      <path
-         d="m 478.7,286.5 c 6.1,0 11,4.9 11,11 V 348 c 0,6.1 -4.9,11 -11,11 h -77.5 c -6.1,0 -11,-4.9 -11,-11 v -50.5 c 0,-6.1 4.9,-11 11,-11 h 77.5 m 0,-5 h -77.5 c -8.8,0 -16,7.2 -16,16 V 348 c 0,8.8 7.2,16 16,16 h 77.5 c 8.8,0 16,-7.2 16,-16 v -50.5 c 0,-8.8 -7.1,-16 -16,-16 z"
-         id="path14"
-         inkscape:connector-curvature="0"
-         style="fill:#f2f2f2" />
+       transform="matrix(1.1700913,0,0,1.55,-91.159532,-6.5207502)"
+       id="layer1-8"
+       inkscape:label="Ebene 1">
+      <g
+         id="g16"
+         transform="matrix(0.26458333,0,0,0.26458333,-1.4986741,9.0104921)">
+        <path
+           inkscape:connector-curvature="0"
+           id="path12"
+           d="m 401.2,361.5 c -7.4,0 -13.5,-6.1 -13.5,-13.5 v -50.5 c 0,-7.4 6.1,-13.5 13.5,-13.5 h 77.5 c 7.4,0 13.5,6.1 13.5,13.5 V 348 c 0,7.4 -6.1,13.5 -13.5,13.5 z" />
+        <path
+           style="fill:#575757;fill-opacity:1"
+           inkscape:connector-curvature="0"
+           id="path14"
+           d="m 478.7,286.5 c 6.1,0 11,4.9 11,11 V 348 c 0,6.1 -4.9,11 -11,11 h -77.5 c -6.1,0 -11,-4.9 -11,-11 v -50.5 c 0,-6.1 4.9,-11 11,-11 h 77.5 m 0,-5 h -77.5 c -8.8,0 -16,7.2 -16,16 V 348 c 0,8.8 7.2,16 16,16 h 77.5 c 8.8,0 16,-7.2 16,-16 v -50.5 c 0,-8.8 -7.1,-16 -16,-16 z" />
+      </g>
+      <text
+         id="text20"
+         font-size="32.4272px"
+         transform="scale(1.0318915,0.96909414)"
+         style="font-size:16.44190025px;font-family:HackerArgot;fill:#ffffff;stroke-width:0.50704038"
+         x="99.746834"
+         y="99.208641">&gt;_</text>
     </g>
-    <text
-       y="93.566254"
-       x="100.98916"
-       style="font-size:8.85331535px;font-family:HackerArgot;fill:#ffffff;stroke-width:0.27302128"
-       transform="scale(1.0318915,0.96909414)"
-       font-size="32.4272px"
-       id="text20">&gt;_</text>
   </g>
 </svg>
