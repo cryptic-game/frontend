@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TerminalAPI } from './terminal-api';
-import { CLIENT } from '../../../websocket.service';
+import { WebsocketService } from '../../../websocket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class TerminalCommandsService {
     }
   };
 
-  constructor() {
+  constructor(private websocket: WebsocketService) {
   }
 
   execute(command: string, args: string[], terminal: TerminalAPI) {
@@ -43,7 +43,7 @@ export class TerminalCommandsService {
   hostname(args: string[], terminal: TerminalAPI) {
     if (args.length === 1) {
       const hostname = args[0];
-      CLIENT.ms('device', ['device', 'change_name'], {
+      this.websocket.ms('device', ['device', 'change_name'], {
         device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid,
         name: hostname
       }).subscribe(r => {
@@ -61,7 +61,7 @@ export class TerminalCommandsService {
   }
 
   status(args: string[], terminal: TerminalAPI) {
-    CLIENT.request({
+    this.websocket.request({
       action: 'info'
     }).subscribe(r => {
       terminal.output('online = ' + (r.online - 1));
@@ -69,7 +69,7 @@ export class TerminalCommandsService {
   }
 
   ls(args: string[], terminal: TerminalAPI) {
-    CLIENT.ms('device', ['file', 'all'], {
+    this.websocket.ms('device', ['file', 'all'], {
       device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
     }).subscribe(r => {
       if (r.files != null) {
@@ -84,7 +84,7 @@ export class TerminalCommandsService {
     if (args.length === 1) {
       const name = args[0];
 
-      CLIENT.ms('device', ['file', 'all'], {
+      this.websocket.ms('device', ['file', 'all'], {
         device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
       }).subscribe(r => {
         r.files.forEach(e => {
@@ -112,12 +112,12 @@ export class TerminalCommandsService {
       const src = args[0];
       const dest = args[1];
 
-      CLIENT.ms('device', ['file', 'all'], {
+      this.websocket.ms('device', ['file', 'all'], {
         device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
       }).subscribe(r => {
         r.files.forEach(e => {
           if (e != null && e.filename === src) {
-            CLIENT.ms('device', ['file', 'create'], {
+            this.websocket.ms('device', ['file', 'create'], {
               device_uuid: JSON.parse(sessionStorage.getItem('activeDevice'))
                 .uuid,
               filename: dest,
@@ -143,18 +143,18 @@ export class TerminalCommandsService {
       const src = args[0];
       const dest = args[1];
 
-      CLIENT.ms('device', ['file', 'all'], {
+      this.websocket.ms('device', ['file', 'all'], {
         device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
       }).subscribe(r => {
         r.files.forEach(e => {
           if (e != null && e.filename === src) {
-            CLIENT.ms('device', ['file', 'create'], {
+            this.websocket.ms('device', ['file', 'create'], {
               device_uuid: JSON.parse(sessionStorage.getItem('activeDevice'))
                 .uuid,
               filename: dest,
               content: e.content
             }).subscribe(r2 => {
-              CLIENT.ms('device', ['file', 'delete'], {
+              this.websocket.ms('device', ['file', 'delete'], {
                 device_uuid: JSON.parse(sessionStorage.getItem('activeDevice'))
                   .uuid,
                 file_uuid: e.uuid
@@ -184,7 +184,7 @@ export class TerminalCommandsService {
         content = args.slice(1).join(' ');
       }
 
-      CLIENT.ms('device', ['file', 'create'], {
+      this.websocket.ms('device', ['file', 'create'], {
         device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid,
         filename: filename,
         content: content
@@ -205,12 +205,12 @@ export class TerminalCommandsService {
     if (args.length === 1) {
       const name = args[0];
 
-      CLIENT.ms('device', ['file', 'all'], {
+      this.websocket.ms('device', ['file', 'all'], {
         device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
       }).subscribe(r => {
         r.files.forEach(e => {
           if (e != null && e.filename === name) {
-            CLIENT.ms('device', ['file', 'delete'], {
+            this.websocket.ms('device', ['file', 'delete'], {
               device_uuid: JSON.parse(sessionStorage.getItem('activeDevice'))
                 .uuid,
               file_uuid: e.uuid
@@ -234,7 +234,7 @@ export class TerminalCommandsService {
     if (args.length === 2) {
       const filename = args[1];
       if (args[0] === 'look') {
-        CLIENT.ms('device', ['file', 'all'], {
+        this.websocket.ms('device', ['file', 'all'], {
           device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
         }).subscribe(r => {
           r.files.forEach(e => {
@@ -245,7 +245,7 @@ export class TerminalCommandsService {
                   .split(' ')
                   .splice(1)
                   .join(' ');
-                CLIENT.ms('currency', ['get'], {
+                this.websocket.ms('currency', ['get'], {
                   source_uuid: uuid,
                   key: key
                 }).subscribe(r2 => {
@@ -261,8 +261,8 @@ export class TerminalCommandsService {
         });
         return;
       } else if (args[0] === 'create') {
-        CLIENT.ms('currency', ['create'], {}).subscribe(r => {
-          CLIENT.ms('device', ['file', 'create'], {
+        this.websocket.ms('currency', ['create'], {}).subscribe(r => {
+          this.websocket.ms('device', ['file', 'create'], {
             device_uuid: JSON.parse(sessionStorage.getItem('activeDevice'))
               .uuid,
             filename: filename,

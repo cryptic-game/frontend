@@ -4,7 +4,7 @@ import { Program } from '../../dataclasses/program';
 import { ProgramService } from './program.service';
 import { Router } from '@angular/router';
 import { WindowManagerService } from './window-manager/window-manager.service';
-import { CLIENT } from '../websocket.service';
+import { WebsocketService } from '../websocket.service';
 
 @Component({
   selector: 'app-desktop',
@@ -19,7 +19,6 @@ export class DesktopComponent implements OnInit {
   @ViewChild('surface')
   surface: ElementRef;
   linkages: Program[] = []; // array for all linkages on the desktop
-  drag: HTMLElement; // the dragged element
   index: number; // index of the dragged element
   position: Position; // position of the dragged element
 
@@ -28,24 +27,25 @@ export class DesktopComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private websocket: WebsocketService,
     private programService: ProgramService,
-    public windowManager: WindowManagerService
+    public windowManager: WindowManagerService,
   ) {
   }
 
   ngOnInit(): void {
     this.linkages = this.programService.list();
 
-    CLIENT.request({
+    this.websocket.request({
       action: 'info'
     }).subscribe(response => {
       if (response.error != null) {
-        CLIENT.request({
+        this.websocket.request({
           action: 'session',
           token: localStorage.getItem('token')
         }).subscribe(response2 => {
           if (response2.error != null) {
-            this.router.navigateByUrl('/login');
+            this.router.navigateByUrl('/login').then();
             return false;
           } else {
             localStorage.setItem('token', response2.token);
@@ -59,7 +59,7 @@ export class DesktopComponent implements OnInit {
   }
 
   initData(): void {
-    CLIENT.request({
+    this.websocket.request({
       action: 'info'
     }).subscribe(response => {
       sessionStorage.setItem('username', response.name);
@@ -67,11 +67,11 @@ export class DesktopComponent implements OnInit {
       sessionStorage.setItem('email', response.mail);
       sessionStorage.setItem('created', response.created);
       sessionStorage.setItem('last', response.last);
-      CLIENT.ms('device', ['device', 'all'], {}).subscribe(r => {
+      this.websocket.ms('device', ['device', 'all'], {}).subscribe(r => {
         let devices = r.devices;
 
         if (devices == null || devices.length === 0) {
-          CLIENT.ms('device', ['device', 'create'], {}).subscribe(r2 => {
+          this.websocket.ms('device', ['device', 'create'], {}).subscribe(r2 => {
             devices = [r2];
           });
         }

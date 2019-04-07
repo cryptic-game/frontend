@@ -12,10 +12,14 @@ import { ContextMenuComponent } from './desktop/context-menu/context-menu.compon
 import { DesktopStartmenuComponent } from './desktop/desktop-startmenu/desktop-startmenu.component';
 import { WindowManagerComponent } from './desktop/window-manager/window-manager.component';
 import { WindowFrameComponent } from './desktop/window/window-frame.component';
+import { WebsocketService } from './websocket.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      providers: [
+        WebsocketService
+      ],
       imports: [
         HttpClientModule,
         RouterTestingModule,

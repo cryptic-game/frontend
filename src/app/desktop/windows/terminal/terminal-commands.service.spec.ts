@@ -2,11 +2,12 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { TerminalCommandsService } from './terminal-commands.service';
 import { HttpClientModule } from '@angular/common/http';
+import { WebsocketService } from '../../../websocket.service';
 
 describe('TerminalCommandsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [TerminalCommandsService],
+      providers: [TerminalCommandsService, WebsocketService],
       imports: [HttpClientModule]
     });
   });

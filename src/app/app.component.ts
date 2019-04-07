@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { CLIENT } from './websocket.service';
+import { WebsocketService } from './websocket.service';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +9,10 @@ import { CLIENT } from './websocket.service';
 export class AppComponent implements OnDestroy {
   loggedIn = false;
 
-  constructor() {
+  constructor(private websocket: WebsocketService) {
   }
 
   ngOnDestroy() {
-    CLIENT.close();
+    this.websocket.close();
   }
 }

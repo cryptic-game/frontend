@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CLIENT } from '../websocket.service';
+import { WebsocketService } from '../websocket.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignUpService {
+  constructor(private websocket: WebsocketService) {
+  }
 
   signUp(username: string, email: string, password: string): Observable<SignUpResponse> {
     const data = {
@@ -15,7 +17,7 @@ export class SignUpService {
       'password': password
     };
 
-    return CLIENT.request(data);
+    return this.websocket.request(data);
   }
 
 }

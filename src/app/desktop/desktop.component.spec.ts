@@ -14,6 +14,8 @@ import { WindowFrameComponent } from './window/window-frame.component';
 import { TestWindowComponent } from './windows/test-window/test-window.component';
 import { NgModule } from '@angular/core';
 import { TerminalComponent } from './windows/terminal/terminal.component';
+import { WebsocketService } from '../websocket.service';
+import { ProgramService } from './program.service';
 
 describe('DesktopComponent', () => {
   let component: DesktopComponent;
@@ -24,6 +26,10 @@ describe('DesktopComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      providers: [
+        WebsocketService,
+        ProgramService
+      ],
       imports: [
         HttpClientModule,
         FormsModule,
