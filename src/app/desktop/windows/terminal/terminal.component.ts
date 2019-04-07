@@ -19,13 +19,18 @@ export class TerminalComponent extends WindowDelegate implements OnInit, Termina
   icon = 'assets/desktop/img/terminal.svg';
   type: Type<any> = TerminalComponent;
 
-  promptText = localStorage.getItem('username') + '@Home-Desk:';
+  promptText: string = '';
 
   constructor(private windowManager: WindowManagerService, private commandsService: TerminalCommandsService) {
     super();
   }
 
   ngOnInit() {
+    this.refreshPrompt();
+  }
+
+  refreshPrompt() {
+    this.promptText = sessionStorage.getItem('username') + '@' + JSON.parse(sessionStorage.getItem('activeDevice')).name + ' $';
   }
 
   promptKeyPressed(event: KeyboardEvent, content: string) {
@@ -33,7 +38,6 @@ export class TerminalComponent extends WindowDelegate implements OnInit, Termina
       event.preventDefault();
       this.outputNode((this.prompt.nativeElement as HTMLElement).cloneNode(true));
       const historyCmdLine = (this.cmdLine.nativeElement as HTMLElement).cloneNode(true);
-      (historyCmdLine as HTMLElement).removeAttribute('contenteditable');
       this.outputNode(historyCmdLine);
       this.outputNode(document.createElement('br'));
       this.cmdLine.nativeElement.value = '';
@@ -71,6 +75,10 @@ export class TerminalComponent extends WindowDelegate implements OnInit, Termina
 
   changePrompt(text: string) {
     this.promptText = text;
+  }
+
+  clear() {
+    this.history.nativeElement.value = '';
   }
 
   resetPrompt() {

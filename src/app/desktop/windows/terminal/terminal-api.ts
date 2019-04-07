@@ -39,4 +39,14 @@ export interface TerminalAPI {
    */
   resetPrompt();
 
+  /**
+    * Clears the complete terminal
+    */
+  clear();
+
+  /**
+    * Refresh the prompt
+    */
+  refreshPrompt();
+
 }
