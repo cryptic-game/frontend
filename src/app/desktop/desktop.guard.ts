@@ -16,32 +16,6 @@ export class DesktopGuard implements CanActivate {
       return false;
     }
 
-    CLIENT.request({
-      "action": "info"
-    }).subscribe(response => {
-      if(response.error != null) {
-        CLIENT.request({
-          "action": "session",
-          "token": localStorage.getItem('token')
-        }).subscribe(response2 => {
-          if(response2.error != null) {
-            this.router.navigateByUrl('/login');
-            return false;
-          } else {
-            localStorage.setItem('token', response2.token);
-            CLIENT.request({
-              "action": "info"
-            }).subscribe(response => {
-              localStorage.setItem('username', response.name);
-              localStorage.setItem('email', response.mail);
-              localStorage.setItem('created', response.created);
-              localStorage.setItem('last', response.last);
-            });
-          }
-        });
-      }
-    });
-
     return true;
   }
 }

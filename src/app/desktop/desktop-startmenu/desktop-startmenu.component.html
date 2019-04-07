@@ -1,7 +1,6 @@
 <div id="startmenu">
   <div id="user">
-    <img src="../../../assets/desktop/img/user.svg" alt="">
-    {{user.name}}
+    logged in as {{user.name}}
   </div>
   <div id="programs">
     <div id="linkages">
@@ -10,8 +9,8 @@
         <img [src]="linkage.icon" alt=""/>{{linkage.displayName}}
       </span>
     </div>
-    <input placeholder="Search" [(ngModel)]="searchTerm">
+    <input class="search" placeholder="Search" [(ngModel)]="searchTerm">
   </div>
-  <span class="button" id="logout" (click)="userService.logout(token)"><img
-    src="../../../assets/desktop/img/logoutbutton.svg" alt=""/>Logout</span>
+  <span class="button" id="logout" (click)="userService.logout(token)">
+  <img src="../../../assets/desktop/img/logoutbutton.svg" alt=""/>Logout</span>
 </div>

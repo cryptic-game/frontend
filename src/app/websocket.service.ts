@@ -43,6 +43,16 @@ export class WebsocketService {
     this.init();
   }
 
+  public ms(name, endpoint, data) {
+    let payload = {
+      "ms": name,
+      "endpoint": endpoint,
+      "data": data
+    };
+
+    return this.request(payload);
+  }
+
 }
 
 export const CLIENT: WebsocketService = new WebsocketService();
