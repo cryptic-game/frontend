@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import {Position} from '../../../dataclasses/position';
+import { Component, Input, OnInit } from '@angular/core';
+import { Position } from '../../../dataclasses/position';
 
 @Component({
   selector: 'app-context-menu',
@@ -7,9 +7,11 @@ import {Position} from '../../../dataclasses/position';
   styleUrls: ['./context-menu.component.scss']
 })
 export class ContextMenuComponent implements OnInit {
-  constructor() {}
-
   @Input('position') position: Position = new Position(0, 0);
 
-  ngOnInit() {}
+  constructor() {
+  }
+
+  ngOnInit() {
+  }
 }

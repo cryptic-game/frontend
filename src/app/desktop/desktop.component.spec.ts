@@ -58,4 +58,5 @@ describe('DesktopComponent', () => {
   declarations: [TestWindowComponent, TerminalComponent],
   entryComponents: [TestWindowComponent, TerminalComponent]
 })
-class EntryComponentsTestModule {}
+class EntryComponentsTestModule {
+}

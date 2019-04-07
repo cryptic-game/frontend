@@ -1,5 +1,5 @@
-import {Component, OnInit, Type} from '@angular/core';
-import {WindowDelegate} from '../../window/window-delegate';
+import { Component, OnInit, Type } from '@angular/core';
+import { WindowDelegate } from '../../window/window-delegate';
 
 @Component({
   selector: 'app-test-window',

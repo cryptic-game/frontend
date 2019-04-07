@@ -2,12 +2,11 @@
   width: 30%;
   height: 65%;
   position: absolute;
-  bottom: 0%;
-  padding: 1.5%;
-  padding-bottom: 5.5%;
+  bottom: 0;
+  padding: 1.5% 1.5% 5.5%;
   background-color: #424242;
   color: #FAFAFA;
-  box-shadow: 0 0 38px rgba(0,0,0,0.30), 0 0 12px rgba(0,0,0,0.22);
+  box-shadow: 0 0 38px rgba(0, 0, 0, 0.30), 0 0 12px rgba(0, 0, 0, 0.22);
 
   img {
     height: auto;
@@ -19,7 +18,7 @@
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
-    align-items: left;
+    align-items: normal;  // TODO: Check (left is not accepted)
     font-size: 2rem;
     margin-bottom: 10%;
   }
@@ -35,11 +34,10 @@
 
     #linkages {
       height: 100%;
-      overflow-y: scroll,
-        -moz-scrollbars-none;
+      overflow-y: scroll;
       -ms-overflow-style: none;
 
-      &::vertical,
+      &:vertical,
       &::-webkit-scrollbar {
         display: none;
       }

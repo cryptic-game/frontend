@@ -1,7 +1,7 @@
-import {Position} from '../../dataclasses/position';
-import {Program} from '../../dataclasses/program';
-import {Injectable} from '@angular/core';
-import {desktopDefinition, programWindows} from '../../assets/desktop/definition';
+import { Position } from '../../dataclasses/position';
+import { Program } from '../../dataclasses/program';
+import { Injectable } from '@angular/core';
+import { desktopDefinition, programWindows } from '../../assets/desktop/definition';
 
 @Injectable({
   providedIn: 'root'

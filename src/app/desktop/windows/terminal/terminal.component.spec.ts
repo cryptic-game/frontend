@@ -8,7 +8,7 @@ describe('TerminalComponent', () => {
   let fixture: ComponentFixture<TerminalComponent>;
 
   sessionStorage.setItem('username', '');
-  sessionStorage.setItem('activeDevice', JSON.stringify({ name: '' }));
+  sessionStorage.setItem('activeDevice', JSON.stringify({name: ''}));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

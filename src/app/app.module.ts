@@ -56,4 +56,5 @@ const routes: Routes = [
   entryComponents: [TestWindowComponent, TerminalComponent],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}

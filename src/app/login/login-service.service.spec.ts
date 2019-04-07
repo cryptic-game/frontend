@@ -1,7 +1,7 @@
-import {inject, TestBed} from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
-import {LoginService} from './login.service';
-import {HttpClientModule} from '@angular/common/http';
+import { LoginService } from './login.service';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('LoginService', () => {
   beforeEach(() => {

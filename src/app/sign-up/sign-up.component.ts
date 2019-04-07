@@ -1,6 +1,6 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {SignUpService} from './sign-up.service';
-import {Router} from '@angular/router';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { SignUpService } from './sign-up.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
@@ -12,7 +12,7 @@ export class SignUpComponent implements OnInit {
   @ViewChild('passwordField') passwordField: ElementRef;
   @ViewChild('passwordConfirm') passwordConfirmField: ElementRef;
   errorText: string;
-  model = {username: '', email: '', password: '', passwordConfirm: ''};
+  model = { username: '', email: '', password: '', passwordConfirm: '' };
 
   constructor(private signUpService: SignUpService, private router: Router) {
   }

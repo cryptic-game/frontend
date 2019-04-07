@@ -13,9 +13,11 @@ export class LoginComponent implements OnInit {
   errorText = '';
   model = { username: '', password: '' };
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(private loginService: LoginService, private router: Router) {
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   performLogin() {
     this.loginService.login(this.model.username, this.model.password).subscribe(

@@ -17,16 +17,12 @@ export class WebsocketService {
   public init() {
     this.socket = webSocket(environment.api);
     this.socket.subscribe(
-          (message) => this.receive(message),
-          (error) => console.error(error));
+      (message) => this.receive(message),
+      (error) => console.error(error));
   }
 
   public send(json) {
     this.socket.next(json);
-  }
-
-  private receive(json) {
-    // for debug purpose
   }
 
   public request(json) {
@@ -44,13 +40,17 @@ export class WebsocketService {
   }
 
   public ms(name, endpoint, data) {
-    let payload = {
-      "ms": name,
-      "endpoint": endpoint,
-      "data": data
+    const payload = {
+      'ms': name,
+      'endpoint': endpoint,
+      'data': data
     };
 
     return this.request(payload);
+  }
+
+  private receive(json) {
+    // for debug purpose
   }
 
 }

@@ -12,30 +12,26 @@ import { CLIENT } from '../websocket.service';
   styleUrls: ['./desktop.component.scss']
 })
 export class DesktopComponent implements OnInit {
-  constructor(
-    private router: Router,
-    private programService: ProgramService,
-    public windowManager: WindowManagerService
-  ) {}
-
   startMenu = false;
-
   contextMenu = false;
   contextMenuPosition = new Position(0, 0);
   contextMenuTarget: EventTarget;
-
   @ViewChild('surface')
   surface: ElementRef;
-
   linkages: Program[] = []; // array for all linkages on the desktop
-
   drag: HTMLElement; // the dragged element
   index: number; // index of the dragged element
   position: Position; // position of the dragged element
 
   token: string = localStorage.getItem('token');
-
   username: string = sessionStorage.getItem('username');
+
+  constructor(
+    private router: Router,
+    private programService: ProgramService,
+    public windowManager: WindowManagerService
+  ) {
+  }
 
   ngOnInit(): void {
     this.linkages = this.programService.list();
@@ -74,7 +70,7 @@ export class DesktopComponent implements OnInit {
       CLIENT.ms('device', ['device', 'all'], {}).subscribe(r => {
         let devices = r.devices;
 
-        if (devices == null || devices.length == 0) {
+        if (devices == null || devices.length === 0) {
           CLIENT.ms('device', ['device', 'create'], {}).subscribe(r2 => {
             devices = [r2];
           });

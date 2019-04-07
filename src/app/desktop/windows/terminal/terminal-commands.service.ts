@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TerminalAPI } from './terminal-api';
-import { CLIENT, WebsocketService } from '../../../websocket.service';
+import { CLIENT } from '../../../websocket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,20 +28,21 @@ export class TerminalCommandsService {
     }
   };
 
-  constructor() {}
+  constructor() {
+  }
 
   execute(command: string, args: string[], terminal: TerminalAPI) {
     command = command.toLowerCase();
     if (this.programs.hasOwnProperty(command)) {
       this.programs[command](args, terminal);
-    } else if (command != '') {
+    } else if (command !== '') {
       terminal.output('Command could not be found.');
     }
   }
 
   hostname(args: string[], terminal: TerminalAPI) {
-    if (args.length == 1) {
-      let hostname = args[0];
+    if (args.length === 1) {
+      const hostname = args[0];
       CLIENT.ms('device', ['device', 'change_name'], {
         device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid,
         name: hostname
@@ -50,7 +51,7 @@ export class TerminalCommandsService {
         terminal.refreshPrompt();
       });
 
-      let active = JSON.parse(sessionStorage.getItem('activeDevice'));
+      const active = JSON.parse(sessionStorage.getItem('activeDevice'));
       active['name'] = hostname;
       sessionStorage.setItem('activeDevice', JSON.stringify(active));
       terminal.refreshPrompt();
@@ -80,15 +81,15 @@ export class TerminalCommandsService {
   }
 
   cat(args: string[], terminal: TerminalAPI) {
-    if (args.length == 1) {
-      let name = args[0];
+    if (args.length === 1) {
+      const name = args[0];
 
       CLIENT.ms('device', ['file', 'all'], {
         device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
       }).subscribe(r => {
         r.files.forEach(e => {
           if (e != null && e.filename === name) {
-            if (e.content != '') {
+            if (e.content !== '') {
               terminal.output(e.content);
             }
           }
@@ -107,9 +108,9 @@ export class TerminalCommandsService {
   }
 
   cp(args: string[], terminal: TerminalAPI) {
-    if (args.length == 2) {
-      let src = args[0];
-      let dest = args[1];
+    if (args.length === 2) {
+      const src = args[0];
+      const dest = args[1];
 
       CLIENT.ms('device', ['file', 'all'], {
         device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
@@ -138,9 +139,9 @@ export class TerminalCommandsService {
   }
 
   mv(args: string[], terminal: TerminalAPI) {
-    if (args.length == 2) {
-      let src = args[0];
-      let dest = args[1];
+    if (args.length === 2) {
+      const src = args[0];
+      const dest = args[1];
 
       CLIENT.ms('device', ['file', 'all'], {
         device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
@@ -176,7 +177,7 @@ export class TerminalCommandsService {
 
   touch(args: string[], terminal: TerminalAPI) {
     if (args.length >= 1) {
-      let filename = args[0];
+      const filename = args[0];
       let content = '';
 
       if (args.length > 1) {
@@ -201,8 +202,8 @@ export class TerminalCommandsService {
   }
 
   rm(args: string[], terminal: TerminalAPI) {
-    if (args.length == 1) {
-      let name = args[0];
+    if (args.length === 1) {
+      const name = args[0];
 
       CLIENT.ms('device', ['file', 'all'], {
         device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
@@ -230,17 +231,17 @@ export class TerminalCommandsService {
   }
 
   morphcoin(args: string[], terminal: TerminalAPI) {
-    if (args.length == 2) {
-      let filename = args[1];
+    if (args.length === 2) {
+      const filename = args[1];
       if (args[0] === 'look') {
         CLIENT.ms('device', ['file', 'all'], {
           device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
         }).subscribe(r => {
           r.files.forEach(e => {
             if (e != null && e.filename === name) {
-              if (e.content != '') {
-                let uuid = e.content.split(' ')[0];
-                let key = e.content
+              if (e.content !== '') {
+                const uuid = e.content.split(' ')[0];
+                const key = e.content
                   .split(' ')
                   .splice(1)
                   .join(' ');

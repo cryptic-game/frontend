@@ -1,8 +1,8 @@
 <div id="desktop-menu">
-  <button id="startbutton" (click)="startMenu.emit()"><img src="../../../assets/desktop/img/startbutton.svg" alt=""
-                                                           draggable="false"/></button>
+  <button (click)="startMenu.emit()" id="startbutton"><img alt="" draggable="false"
+                                                           src="../../../assets/desktop/img/startbutton.svg"/></button>
   <div id="tasks">
-    <img class="task-icon" *ngFor="let window of windowManager.taskList" (click)="activateOrMinimize(window)"
-         [src]="window.icon" alt="" draggable="false">
+    <img (click)="activateOrMinimize(window)" *ngFor="let window of windowManager.taskList" [src]="window.icon"
+         alt="" class="task-icon" draggable="false">
   </div>
 </div>

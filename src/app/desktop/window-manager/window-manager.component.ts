@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {WindowManagerService} from './window-manager.service';
+import { Component, OnInit } from '@angular/core';
+import { WindowManagerService } from './window-manager.service';
 
 @Component({
   selector: 'app-window-manager',
@@ -7,7 +7,8 @@ import {WindowManagerService} from './window-manager.service';
   styleUrls: ['./window-manager.component.scss']
 })
 export class WindowManagerComponent implements OnInit {
-  constructor(public windowManager: WindowManagerService) {}
+  constructor(public windowManager: WindowManagerService) {
+  }
 
   ngOnInit() {
   }

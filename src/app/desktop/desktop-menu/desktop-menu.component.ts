@@ -1,6 +1,6 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {WindowManagerService} from '../window-manager/window-manager.service';
-import {WindowDelegate} from '../window/window-delegate';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { WindowManagerService } from '../window-manager/window-manager.service';
+import { WindowDelegate } from '../window/window-delegate';
 
 @Component({
   selector: 'app-desktop-menu',
@@ -8,10 +8,10 @@ import {WindowDelegate} from '../window/window-delegate';
   styleUrls: ['./desktop-menu.component.scss']
 })
 export class DesktopMenuComponent implements OnInit {
+  @Output() startMenu = new EventEmitter();
+
   constructor(public windowManager: WindowManagerService) {
   }
-
-  @Output() startMenu = new EventEmitter();
 
   ngOnInit() {
   }

@@ -1,22 +1,22 @@
-<div class="window" (mousedown)="windowManager.focusWindow(delegate);"
-     (document:mouseup)="resizing = false;" [style.display]="delegate.position.minimized ? 'none' : 'flex'"
+<div (document:mouseup)="resizing = false;" (mousedown)="windowManager.focusWindow(delegate);"
      [class.active]="delegate.position.active" [class.maximized]="delegate.position.maximized"
+     [style.display]="delegate.position.minimized ? 'none' : 'flex'" [style.height.px]="delegate.position.height"
      [style.width.px]="delegate.position.width"
-     [style.height.px]="delegate.position.height">
-  <div class="window-header" (dblclick)="maximize()"
-       (mousedown)="$event.target.closest('.window-icons') || startDragging($event)" (mouseup)="dragging = false;">
-    <img class="window-icon" draggable="false" alt="" [src]="delegate.icon" width="30px" height="30px"/>
+     class="window">
+  <div (dblclick)="maximize()" (mousedown)="$event.target.closest('.window-icons') || startDragging($event)"
+       (mouseup)="dragging = false;" class="window-header">
+    <img [src]="delegate.icon" alt="" class="window-icon" draggable="false" height="30px" width="30px"/>
     <span class="window-title">{{delegate.title}}</span>
     <div class="window-icons">
-      <svg class="minimize-icon" width="20" height="20" stroke="white" (click)="minimize()">
-        <line x1="2" y1="15" x2="18" y2="15" stroke-width="2"></line>
+      <svg (click)="minimize()" class="minimize-icon" height="20" stroke="white" width="20">
+        <line stroke-width="2" x1="2" x2="18" y1="15" y2="15"></line>
       </svg>
-      <svg class="maximize-icon" width="20" height="20" stroke="white" (click)="maximize()">
-        <rect x="2" y="2" width="16" height="16" fill="transparent" stroke-width="2"></rect>
+      <svg (click)="maximize()" class="maximize-icon" height="20" stroke="white" width="20">
+        <rect fill="transparent" height="16" stroke-width="2" width="16" x="2" y="2"></rect>
       </svg>
-      <svg class="close-icon" width="20" height="20" stroke="white" (click)="close()">
-        <line x1="2" y1="2" x2="18" y2="18" stroke-width="2"></line>
-        <line x1="18" y1="2" x2="2" y2="18" stroke-width="2"></line>
+      <svg (click)="close()" class="close-icon" height="20" stroke="white" width="20">
+        <line stroke-width="2" x1="2" x2="18" y1="2" y2="18"></line>
+        <line stroke-width="2" x1="18" x2="2" y1="2" y2="18"></line>
       </svg>
     </div>
   </div>

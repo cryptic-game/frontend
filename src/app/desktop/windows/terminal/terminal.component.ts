@@ -19,7 +19,7 @@ export class TerminalComponent extends WindowDelegate
   icon = 'assets/desktop/img/terminal.svg';
   type: Type<any> = TerminalComponent;
 
-  promptText: string = '';
+  promptText = '';
 
   constructor(
     private windowManager: WindowManagerService,

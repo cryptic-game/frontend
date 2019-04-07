@@ -1,10 +1,11 @@
-<div id="terminal-container" #terminalContainer
-     (click)="$event.target === terminalContainer ? cmdLine.focus() : true">
+<div #terminalContainer (click)="$event.target === terminalContainer ? cmdLine.focus() : true"
+     id="terminal-container">
   <div id="terminal-window">
     <output #history></output>
     <div id="input-line">
       <div #prompt class="prompt">{{promptText}}</div>
-      <input type="text" id="cmdline" #cmdLine autofocus autocomplete="off" (keypress)="promptKeyPressed($event, cmdLine.value)" spellcheck="false">
+      <input #cmdLine (keypress)="promptKeyPressed($event, cmdLine.value)" autocomplete="off" autofocus id="cmdline"
+             spellcheck="false" type="text">
     </div>
   </div>
 </div>
