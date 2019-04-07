@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { CLIENT } from "../websocket.service";
 
@@ -7,9 +6,6 @@ import { CLIENT } from "../websocket.service";
   providedIn: 'root'
 })
 export class SignUpService {
-
-  constructor(private http: HttpClient) {
-  }
 
   signUp(username: string, email: string, password: string): Observable<SignUpResponse> {
     const data = {
@@ -21,7 +17,7 @@ export class SignUpService {
 
     return CLIENT.request(data);
   }
-  
+
 }
 
 class SignUpResponse {

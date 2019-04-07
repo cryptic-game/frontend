@@ -1,7 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {SignUpService} from './sign-up.service';
 import {Router} from '@angular/router';
-import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-sign-up',
@@ -25,7 +24,7 @@ export class SignUpComponent implements OnInit {
   performSignup() {
     this.signUpService.signUp(this.model.username, this.model.email, this.model.password).subscribe(
       data => {
-        if (data.token !== null) {
+        if (data.token != null) {
           localStorage.setItem('token', data.token);
 
           setTimeout(
@@ -42,22 +41,6 @@ export class SignUpComponent implements OnInit {
             500
           );
         }
-      },
-      (error: HttpErrorResponse) => {
-        // error.error refers to the backend response or to the browser's error message, can be undefined
-        if (error.error !== undefined && error.error['message'] !== undefined) {
-          this.errorText = error.error['message'];
-        } else {
-          console.log(error);
-          this.errorText = 'An error has occurred';
-        }
-
-        this.loginButton.nativeElement.disabled = true;
-        setTimeout(
-          () => (this.loginButton.nativeElement.disabled = false),
-          500
-        );
-      }
-    );
+      });
   }
 }

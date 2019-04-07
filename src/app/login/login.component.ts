@@ -31,21 +31,6 @@ export class LoginComponent implements OnInit {
             500
           );
         }
-      },
-      error => {
-        if (error.error !== undefined && error.error['message'] !== undefined) {
-          this.errorText = error.error['message'];
-        } else {
-          console.log(error);
-          this.errorText = 'An error has occurred';
-        }
-
-        this.loginButton.nativeElement.disabled = true;
-        setTimeout(
-          () => (this.loginButton.nativeElement.disabled = false),
-          500
-        );
-      }
-    );
+      });
   }
 }
