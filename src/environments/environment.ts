@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  api: 'ws://127.0.0.1:80/'
+  api: 'wss://ws.cryptic-game.net/'
 };
 
 /*
