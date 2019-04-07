@@ -1,16 +1,16 @@
-import {Component, ElementRef, OnInit, Type, ViewChild} from '@angular/core';
-import {WindowDelegate} from '../../window/window-delegate';
-import {TerminalAPI} from './terminal-api';
-import {WindowManagerService} from '../../window-manager/window-manager.service';
-import {TerminalCommandsService} from './terminal-commands.service';
+import { Component, ElementRef, OnInit, Type, ViewChild } from '@angular/core';
+import { WindowDelegate } from '../../window/window-delegate';
+import { TerminalAPI } from './terminal-api';
+import { WindowManagerService } from '../../window-manager/window-manager.service';
+import { TerminalCommandsService } from './terminal-commands.service';
 
 @Component({
   selector: 'app-terminal',
   templateUrl: './terminal.component.html',
   styleUrls: ['./terminal.component.scss']
 })
-export class TerminalComponent extends WindowDelegate implements OnInit, TerminalAPI {
-
+export class TerminalComponent extends WindowDelegate
+  implements OnInit, TerminalAPI {
   @ViewChild('history') history: ElementRef;
   @ViewChild('prompt') prompt: ElementRef;
   @ViewChild('cmdLine') cmdLine: ElementRef;
@@ -21,7 +21,10 @@ export class TerminalComponent extends WindowDelegate implements OnInit, Termina
 
   promptText: string = '';
 
-  constructor(private windowManager: WindowManagerService, private commandsService: TerminalCommandsService) {
+  constructor(
+    private windowManager: WindowManagerService,
+    private commandsService: TerminalCommandsService
+  ) {
     super();
   }
 
@@ -30,14 +33,21 @@ export class TerminalComponent extends WindowDelegate implements OnInit, Termina
   }
 
   refreshPrompt() {
-    this.promptText = sessionStorage.getItem('username') + '@' + JSON.parse(sessionStorage.getItem('activeDevice')).name + ' $';
+    this.promptText =
+      sessionStorage.getItem('username') +
+      '@' +
+      JSON.parse(sessionStorage.getItem('activeDevice')).name +
+      ' $';
   }
 
   promptKeyPressed(event: KeyboardEvent, content: string) {
     if (event.code === 'Enter' || event.code === 'NumpadEnter') {
       event.preventDefault();
-      this.outputNode((this.prompt.nativeElement as HTMLElement).cloneNode(true));
-      const historyCmdLine = (this.cmdLine.nativeElement as HTMLElement).cloneNode(true);
+      this.outputNode(
+        (this.prompt.nativeElement as HTMLElement).cloneNode(true)
+      );
+      const historyCmdLine = (this.cmdLine
+        .nativeElement as HTMLElement).cloneNode(true);
       this.outputNode(historyCmdLine);
       this.outputNode(document.createElement('br'));
       this.cmdLine.nativeElement.value = '';
@@ -58,11 +68,17 @@ export class TerminalComponent extends WindowDelegate implements OnInit, Termina
   }
 
   outputRaw(html: string) {
-    (this.history.nativeElement as HTMLElement).insertAdjacentHTML('beforeend', html);
+    (this.history.nativeElement as HTMLElement).insertAdjacentHTML(
+      'beforeend',
+      html
+    );
   }
 
   outputText(text: string) {
-    (this.history.nativeElement as HTMLElement).insertAdjacentText('beforeend', text);
+    (this.history.nativeElement as HTMLElement).insertAdjacentText(
+      'beforeend',
+      text
+    );
   }
 
   outputNode(node: Node) {
@@ -84,5 +100,4 @@ export class TerminalComponent extends WindowDelegate implements OnInit, Termina
   resetPrompt() {
     // TODO
   }
-
 }
