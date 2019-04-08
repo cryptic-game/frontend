@@ -1,13 +1,16 @@
 <div id="startmenu">
   <div id="user">
-    <img src="../../../assets/desktop/img/user.svg">
-    {{ user.getName() }}
+    logged in as {{user.name}}
   </div>
   <div id="programs">
     <div id="linkages">
-      <span class="button" *ngFor="let linkage of search(searchTerm)"><img [src]="linkage.getIcon()" />{{linkage.getDisplayName()}}</span>
+      <span (click)="parent.openProgramWindow(linkage); parent.hideStartMenu()" *ngFor="let linkage of search(searchTerm)"
+            class="button">
+        <img [src]="linkage.icon" alt=""/>{{linkage.displayName}}
+      </span>
     </div>
-    <input [(ngModel)]="searchTerm">
+    <input [(ngModel)]="searchTerm" class="search" placeholder="Search">
   </div>
-  <span class="button" id="logout" (click)="userService.logout(token)"><img src="../../../assets/desktop/img/logoutbutton.svg" />Logout</span>
+  <span (click)="userService.logout(token)" class="button" id="logout">
+  <img alt="" src="../../../assets/desktop/img/logoutbutton.svg"/>Logout</span>
 </div>

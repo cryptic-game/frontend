@@ -1,7 +1,7 @@
-import {TestBed, inject} from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
-import {DesktopGuard} from './desktop.guard';
-import {RouterTestingModule} from '@angular/router/testing';
+import { DesktopGuard } from './desktop.guard';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('DesktopGuard', () => {
   beforeEach(() => {

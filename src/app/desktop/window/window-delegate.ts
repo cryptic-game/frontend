@@ -1,4 +1,4 @@
-import {Type} from '@angular/core';
+import { Type } from '@angular/core';
 
 export abstract class WindowDelegate {
   title: string;

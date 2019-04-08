@@ -10,9 +10,9 @@ describe('DesktopMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DesktopMenuComponent ]
+      declarations: [DesktopMenuComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

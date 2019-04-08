@@ -1,51 +1,20 @@
-import { Account } from './../../dataclasses/account.class';
-import { Session } from './../../dataclasses/session.class';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { WebsocketService } from '../websocket.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private http: HttpClient, private router: Router) {}
-
-  url = 'https://user.api.cryptic-game.net/auth';
+  constructor(private websocket: WebsocketService, private router: Router) {
+  }
 
   logout(token) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Token: token
-      })
-    };
+    localStorage.clear();
+    sessionStorage.clear();
 
-    this.http
-      .delete(this.url, httpOptions)
-      .subscribe(data => console.log(data));
-
-    localStorage.removeItem('token');
-    localStorage.removeItem('desktop');
+    this.websocket.reconnect();
 
     this.router.navigate(['login']);
-  }
-
-  list(token) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Token: token
-      })
-    };
-
-    return this.http.post('', null, httpOptions);
-  }
-
-  owner(token) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Token: token
-      })
-    };
-
-    return this.http.post('', null, httpOptions);
   }
 }

@@ -1,8 +1,7 @@
-import { Account } from '../../../dataclasses/account.class';
+import { Account } from '../../../dataclasses/account';
 import { UserService } from '../user.service';
 import { Component, Input, OnInit } from '@angular/core';
-
-import { Program } from '../../../dataclasses/program.class';
+import { DesktopComponent } from '../desktop.component';
 
 @Component({
   selector: 'app-desktop-startmenu',
@@ -10,38 +9,29 @@ import { Program } from '../../../dataclasses/program.class';
   styleUrls: ['./desktop-startmenu.component.scss']
 })
 export class DesktopStartmenuComponent implements OnInit {
-  constructor(public userService: UserService) {}
-
-  @Input()
-  linkages: Program[] = [];
-
-  @Input()
-  target;
+  @Input() parent: DesktopComponent;
+  @Input() target;
 
   searchTerm = '';
+  token: string = sessionStorage.getItem('token');
+  user: Account = {name: '', email: '', created: 0, last: 0};
 
-  token: string = localStorage.getItem('token');
-
-  user: Account = new Account('', '');
+  constructor(public userService: UserService) {
+  }
 
   ngOnInit() {
-    this.userService.owner(this.token).subscribe((data: any) => {
-      if (data['error'] !== undefined) {
-        console.log(data['error']);
-      } else {
-        this.user.setName(data.owner.username);
-        this.user.setEmail(data.owner.email);
-      }
-    });
+    this.user.name = localStorage.getItem('username');
+    this.user.email = localStorage.getItem('email');
+    this.user.created = parseInt(localStorage.getItem('created'), 10);
+    this.user.last = parseInt(localStorage.getItem('last'), 10);
   }
 
   search(term: string) {
-    return this.linkages.filter(item =>
-      item
-        .getDisplayName()
-        .trim()
-        .toLowerCase()
-        .match(term.trim().toLowerCase())
+    return this.parent.linkages.filter(item => item
+      .displayName
+      .trim()
+      .toLowerCase()
+      .match(term.trim().toLowerCase())
     );
   }
 }

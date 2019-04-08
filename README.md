@@ -1,6 +1,9 @@
+# official frontend
+
 [![Build Status](https://travis-ci.org/cryptic-game/frontend.svg?branch=master)](https://travis-ci.org/cryptic-game/frontend)
 
-This is the official frontend of Cryptic.
+This is the official frontend of Cryptic.  
+https://play.cryptic-game.net/
 
 # Advice for Developers
 

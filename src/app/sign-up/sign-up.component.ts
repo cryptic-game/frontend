@@ -1,6 +1,6 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {SignUpService} from './sign-up.service';
-import {Router} from '@angular/router';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { SignUpService } from './sign-up.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
@@ -12,7 +12,7 @@ export class SignUpComponent implements OnInit {
   @ViewChild('passwordField') passwordField: ElementRef;
   @ViewChild('passwordConfirm') passwordConfirmField: ElementRef;
   errorText: string;
-  model = {username: '', email: '', password: '', passwordConfirm: ''};
+  model = { username: '', email: '', password: '', passwordConfirm: '' };
 
   constructor(private signUpService: SignUpService, private router: Router) {
   }
@@ -22,24 +22,25 @@ export class SignUpComponent implements OnInit {
 
 
   performSignup() {
-    this.signUpService.signUp(this.model.username, this.model.email, this.model.password).subscribe(data => {
-        const error = data['error'];
-        if (error === undefined) {
-          this.router.navigateByUrl('/login');
+    this.signUpService.signUp(this.model.username, this.model.email, this.model.password).subscribe(
+      data => {
+        if (data.token != null) {
+          localStorage.setItem('token', data.token);
+
+          setTimeout(
+            () => (this.router.navigateByUrl('/')),
+            500
+          );
         } else {
-          this.errorText = data['error'];
+          console.log(data);
+          this.errorText = 'An error has occurred';
+
+          this.loginButton.nativeElement.disabled = true;
+          setTimeout(
+            () => (this.loginButton.nativeElement.disabled = false),
+            500
+          );
         }
-
-      },
-      error => {
-        console.log(error);
-
-        this.loginButton.nativeElement.disabled = true;
-        setTimeout(
-          () => (this.loginButton.nativeElement.disabled = false),
-          500
-        );
-      }
-    );
+      });
   }
 }

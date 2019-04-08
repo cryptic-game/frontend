@@ -1,8 +1,10 @@
-import { Position } from '../../dataclasses/position.class';
+import { Position } from '../../dataclasses/position';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Program } from '../../dataclasses/program.class';
+import { Program } from '../../dataclasses/program';
 import { ProgramService } from './program.service';
-import {WindowManagerService} from './window-manager/window-manager.service';
+import { Router } from '@angular/router';
+import { WindowManagerService } from './window-manager/window-manager.service';
+import { WebsocketService } from '../websocket.service';
 
 @Component({
   selector: 'app-desktop',
@@ -10,33 +12,78 @@ import {WindowManagerService} from './window-manager/window-manager.service';
   styleUrls: ['./desktop.component.scss']
 })
 export class DesktopComponent implements OnInit {
-  constructor(private programService: ProgramService, public windowManager: WindowManagerService) {
-  }
-
   startMenu = false;
-
   contextMenu = false;
   contextMenuPosition = new Position(0, 0);
   contextMenuTarget: EventTarget;
-
   @ViewChild('surface')
   surface: ElementRef;
-
   linkages: Program[] = []; // array for all linkages on the desktop
-
-  drag: HTMLElement; // the dragged element
   index: number; // index of the dragged element
   position: Position; // position of the dragged element
 
-  token: string =
-    sessionStorage.getItem('token') || localStorage.getItem('token');
+  token: string = localStorage.getItem('token');
+  username: string = sessionStorage.getItem('username');
+
+  constructor(
+    private router: Router,
+    private websocket: WebsocketService,
+    private programService: ProgramService,
+    public windowManager: WindowManagerService,
+  ) {
+  }
 
   ngOnInit(): void {
     this.linkages = this.programService.list();
+
+    this.websocket.request({
+      action: 'info'
+    }).subscribe(response => {
+      if (response.error != null) {
+        this.websocket.request({
+          action: 'session',
+          token: localStorage.getItem('token')
+        }).subscribe(response2 => {
+          if (response2.error != null) {
+            this.router.navigateByUrl('/login').then();
+            return false;
+          } else {
+            localStorage.setItem('token', response2.token);
+            this.initData();
+          }
+        });
+      } else {
+        this.initData();
+      }
+    });
+  }
+
+  initData(): void {
+    this.websocket.request({
+      action: 'info'
+    }).subscribe(response => {
+      sessionStorage.setItem('username', response.name);
+      this.username = response.name;
+      sessionStorage.setItem('email', response.mail);
+      sessionStorage.setItem('created', response.created);
+      sessionStorage.setItem('last', response.last);
+      this.websocket.ms('device', ['device', 'all'], {}).subscribe(r => {
+        let devices = r.devices;
+
+        if (devices == null || devices.length === 0) {
+          this.websocket.ms('device', ['device', 'create'], {}).subscribe(r2 => {
+            devices = [r2];
+          });
+        }
+
+        sessionStorage.setItem('devices', JSON.stringify(devices));
+        sessionStorage.setItem('activeDevice', JSON.stringify(devices[0]));
+      });
+    });
   }
 
   onDesktop(): Program[] {
-    return this.linkages.filter(item => item.onDesktop());
+    return this.linkages.filter(item => item.onDesktop);
   }
 
   toggleStartMenu(): void {
@@ -61,19 +108,29 @@ export class DesktopComponent implements OnInit {
     this.contextMenu = false;
   }
 
+  openProgramWindow(program: Program): void {
+    this.windowManager.openWindow(program.newWindow());
+  }
+
+  checkWindowUnfocus(event: MouseEvent): void {
+    if ((event.target as Element) === this.surface.nativeElement) {
+      this.windowManager.unfocus();
+    }
+  }
+
   mousedown(e: MouseEvent, i: number): void {
     this.index = i;
     this.position = new Position(e.offsetX, e.offsetY);
 
     this.linkages.forEach(el => {
-      el.getPosition().setZ(0);
+      el.position.z = 0;
     });
-    this.linkages[this.index].getPosition().setZ(1);
+    this.linkages[this.index].position.z = 1;
   }
 
   mouseup(): void {
     if (this.index !== undefined) {
-      this.programService.update(this.linkages[this.index]);
+      this.programService.update();
     }
 
     this.index = undefined;
@@ -82,12 +139,8 @@ export class DesktopComponent implements OnInit {
 
   mousemove(e: MouseEvent): void {
     if (this.index !== undefined) {
-      this.linkages[this.index]
-        .getPosition()
-        .setX(e.pageX - this.position.getX());
-      this.linkages[this.index]
-        .getPosition()
-        .setY(e.pageY - this.position.getY());
+      this.linkages[this.index].position.x = e.pageX - this.position.x;
+      this.linkages[this.index].position.y = e.pageY - this.position.y;
     }
   }
 }

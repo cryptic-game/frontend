@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {WindowDelegate} from '../window/window-delegate.class';
+import { Injectable } from '@angular/core';
+import { WindowDelegate } from '../window/window-delegate';
 
 @Injectable({
   providedIn: 'root'

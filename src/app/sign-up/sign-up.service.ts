@@ -1,23 +1,29 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { WebsocketService } from '../websocket.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignUpService {
-  url = 'https://user.api.cryptic-game.net/auth';
-
-  constructor(private http: HttpClient) {}
-
-  signUp(username: string, email: string, password: string) {
-    const data = JSON.stringify({
-      username,
-      email,
-      password
-    });
-
-    return this.http.put(this.url, data, {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    });
+  constructor(private websocket: WebsocketService) {
   }
+
+  signUp(username: string, email: string, password: string): Observable<SignUpResponse> {
+    const data = {
+      'action': 'register',
+      'name': username,
+      'mail': email,
+      'password': password
+    };
+
+    return this.websocket.request(data);
+  }
+
+}
+
+class SignUpResponse {
+  error?: string;
+  name?: string;
+  token?: string;
 }

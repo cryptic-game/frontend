@@ -8,9 +8,9 @@ describe('TestWindowComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TestWindowComponent ]
+      declarations: [TestWindowComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -13,36 +13,26 @@ export class LoginComponent implements OnInit {
   errorText = '';
   model = { username: '', password: '' };
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(private loginService: LoginService, private router: Router) {
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   performLogin() {
     this.loginService.login(this.model.username, this.model.password).subscribe(
       data => {
-        const error = data['error'];
-        if (error === undefined) {
-          localStorage.setItem('token', data['token']);
+        if (data.token != null) {
+          localStorage.setItem('token', data.token);
 
           setTimeout(() => this.router.navigateByUrl('/'), 500);
         } else {
-          this.errorText = error;
           this.loginButton.nativeElement.disabled = true;
           setTimeout(
             () => (this.loginButton.nativeElement.disabled = false),
             500
           );
         }
-      },
-      error => {
-        console.log(error);
-
-        this.loginButton.nativeElement.disabled = true;
-        setTimeout(
-          () => (this.loginButton.nativeElement.disabled = false),
-          500
-        );
-      }
-    );
+      });
   }
 }
