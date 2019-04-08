@@ -16,7 +16,9 @@
   .linkage {
     color: #FAFAFA;
     position: absolute;
-    width: 10%;
+    width: 75px;
+    min-height: 75px;
+    border-radius: 10px;
     height: auto;
     text-align: center;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
@@ -29,13 +31,12 @@
     /*text-shadow: 1px 1px 2px rgb(0, 0, 0);*/
 
     img {
-      border-radius: 10px;
       width: 40px;
       height: 40px;
       pointer-events: none;
     }
 
-    &:active img {
+    &:active {
       background-color: rgba(0, 0, 0, 0.45);
       box-shadow: inset 0 0 1.5px 1.5px rgba(0, 0, 0, 0.45);
     }
