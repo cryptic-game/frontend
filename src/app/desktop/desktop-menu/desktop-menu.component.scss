@@ -17,8 +17,8 @@
   font: inherit;
   cursor: pointer;
   z-index: 100;
+  height: 85%;
 
-  &,
   img {
     height: 100%;
   }
@@ -36,13 +36,20 @@
 }
 
 #tasks {
+  height: 100%;
+  width: 100%;
   display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
   align-items: center;
-  padding-top: 4px;
 
   .task-icon {
-    height: 2.5em;
-    margin-left: 10px;
+    margin-left: 1.5%;
+    height: 65%;
+
+    img {
+      height: 100%;
+    }
 
     transition: transform 0.5s;
 
