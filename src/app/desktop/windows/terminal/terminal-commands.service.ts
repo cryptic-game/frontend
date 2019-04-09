@@ -297,7 +297,6 @@ export class TerminalCommandsService {
               }
             });
           });
-        return;
       } else if (args[0] === 'create') {
         websocket.ms('currency', ['create'], {}).subscribe(r => {
           websocket.ms('device', ['file', 'create'], {
@@ -307,17 +306,17 @@ export class TerminalCommandsService {
             content: r.uuid + ' ' + r.key
           });
         });
-        return;
       }
+    } else {
+      terminal.output(
+        'usage: morphcoin <look|create> <filename>'
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;')
+      );
     }
-    terminal.output(
-      'usage: morphcoin <look|create> <filename>'
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;')
-    );
   }
 
   exit(args: string[], terminal: TerminalAPI, websocket: WebsocketService) {
