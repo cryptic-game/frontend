@@ -11,11 +11,9 @@ import { WebsocketService } from '../../websocket.service';
 export class DesktopMenuComponent implements OnInit {
   @Output() startMenu = new EventEmitter();
 
-  constructor(public windowManager: WindowManagerService, private websocket: WebsocketService) {
-  }
+  constructor(public windowManager: WindowManagerService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   activateOrMinimize(window: WindowDelegate) {
     if (window.position.active || window.position.minimized) {
@@ -24,5 +22,4 @@ export class DesktopMenuComponent implements OnInit {
       this.windowManager.focusWindow(window);
     }
   }
-
 }

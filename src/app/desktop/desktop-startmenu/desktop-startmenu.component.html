@@ -1,16 +1,17 @@
 <div id="startmenu">
-  <div id="user">
-    logged in as {{user.name}}
+  <div id="info">
+    <p id="user">logged in as {{ user.name }}</p>
+    <p id="online">online: {{ websocket.online }}</p>
   </div>
   <div id="programs">
     <div id="linkages">
-      <span (click)="parent.openProgramWindow(linkage); parent.hideStartMenu()" *ngFor="let linkage of search(searchTerm)"
-            class="button">
-        <img [src]="linkage.icon" alt=""/>{{linkage.displayName}}
+      <span (click)="parent.openProgramWindow(linkage); parent.hideStartMenu()"
+        *ngFor="let linkage of search(searchTerm)" class="button">
+        <img [src]="linkage.icon" alt="" />{{linkage.displayName}}
       </span>
     </div>
     <input [(ngModel)]="searchTerm" class="search" placeholder="Search">
   </div>
   <span (click)="userService.logout(token)" class="button" id="logout">
-  <img alt="" src="../../../assets/desktop/img/logoutbutton.svg"/>Logout</span>
+    <img alt="" src="../../../assets/desktop/img/logoutbutton.svg" />Logout</span>
 </div>

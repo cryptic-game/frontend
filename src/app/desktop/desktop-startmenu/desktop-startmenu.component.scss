@@ -13,14 +13,25 @@
     width: 7.5%;
   }
 
-  #user {
-    height: 10%;
+  #info {
+    height: 12%;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
-    align-items: normal;  // TODO: Check (left is not accepted)
-    font-size: 2rem;
+    align-items: normal; // TODO: Check (left is not accepted)
     margin-bottom: 10%;
+
+    #user {
+      font-size: 2rem;
+    }
+
+    #online {
+      font-size: 1rem;
+    }
+
+    p {
+      margin: 0;
+    }
   }
 
   #programs {

@@ -37,7 +37,7 @@
 
 #tasks {
   height: 100%;
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
@@ -45,7 +45,7 @@
 
   .task-icon {
     margin-left: 1.5%;
-    height: 90%;
+    height: 65%;
 
     img {
       height: 100%;
@@ -62,12 +62,4 @@
       transform: scale(1.05);
     }
   }
-}
-
-.info {
-  text-align: center;
-  width: 5%;
-  padding: 2.5%;
-  right: 0;
-  color: #FAFAFA;
 }
