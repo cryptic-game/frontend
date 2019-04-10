@@ -21,7 +21,7 @@ export class TerminalComponent extends WindowDelegate
 
   promptText = '';
 
-  historyList: string[] = [];
+  protocol: string[] = [];
   historyIndex = -1;
 
   constructor(
@@ -48,6 +48,7 @@ export class TerminalComponent extends WindowDelegate
     this.outputNode(document.createTextNode(content));
     this.outputNode(document.createElement('br'));
     this.cmdLine.nativeElement.value = '';
+    this.cmdLine.nativeElement.scrollIntoView();
     this.execute(content);
   }
 
@@ -64,16 +65,17 @@ export class TerminalComponent extends WindowDelegate
   }
 
   previousFromHistory() {
-    if (this.historyIndex < this.historyList.length - 1) {
+    if (this.historyIndex < this.protocol.length - 1) {
       this.historyIndex++;
-      this.cmdLine.nativeElement.value = this.historyList[this.historyIndex];
+      this.cmdLine.nativeElement.value = this.protocol[this.historyIndex];
     }
   }
 
   nextFromHistory() {
     if (this.historyIndex > -1) {
       this.historyIndex--;
-      this.cmdLine.nativeElement.value = this.historyIndex > -1 ? this.historyList[this.historyIndex] : '';
+      this.cmdLine.nativeElement.value =
+        this.historyIndex > -1 ? this.protocol[this.historyIndex] : '';
     }
   }
 
@@ -83,7 +85,7 @@ export class TerminalComponent extends WindowDelegate
       return;
     }
     this.commandsService.execute(command_[0], command_.slice(1), this);
-    command ? this.historyList.unshift(command) : null;
+    command ? this.protocol.unshift(command) : null;
   }
 
   output(html: string) {
