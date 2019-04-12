@@ -11,7 +11,14 @@
   overflow: auto;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 #terminal-window {
+  overflow-y: scroll;
+
+
   padding: 1%;
 
   word-break: break-all;
@@ -21,6 +28,8 @@
 
   display: flex;
   flex-direction: column;
+
+  margin-bottom: 7.5%;
 }
 
 #cmdline {
