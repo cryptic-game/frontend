@@ -20,6 +20,8 @@ export class TerminalCommandsService {
     exit: this.exit,
     quit: this.exit,
     clear: this.clear,
+    history: this.history,
+    pay: this.pay,
     help: (
       args: string[],
       terminal: TerminalAPI,
@@ -48,6 +50,87 @@ export class TerminalCommandsService {
         'Command could not be found.<br/>Type `help` for a list of commands.'
       );
     }
+  }
+
+  pay(args: string[], terminal: TerminalAPI, websocket: WebsocketService) {
+    if(args.length == 3 || args.length == 4) {
+      let filename = args[0];
+      let to = args[1];
+      let amount = args[2];
+      let usage = '';
+
+      if(args.length == 4) {
+        usage = args[3];
+      }
+
+      if(isNaN(parseInt(amount))) {
+        terminal.output('amount is not a number');
+      } else {
+        websocket
+          .ms('device', ['file', 'all'], {
+            device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
+          })
+          .subscribe(r => {
+            r.files.forEach(e => {
+              if (e != null && e.filename == filename) {
+                if (e.content !== '') {
+                  const uuid = e.content.split(' ')[0];
+                  const key = e.content
+                    .split(' ')
+                    .splice(1)
+                    .join(' ');
+                  websocket
+                    .ms('currency', ['get'], {
+                      source_uuid: uuid,
+                      key: key
+                    })
+                    .subscribe(r2 => {
+                      if (r2.error == null) {
+                        websocket
+                          .ms('currency', ['send'], {
+                            source_uuid: uuid,
+                            key: key,
+                            send_amount: parseInt(amount),
+                            destination_uuid: to,
+                            usage: usage
+                          })
+                          .subscribe(r3 => {
+                            if(r3.error == null) {
+                              terminal.output('send ' + amount + ' to ' + to);
+                            } else {
+                              terminal.output(r3.error);
+                            }
+                          }
+                        );
+                      } else {
+                        terminal.output('no valid walletfile');
+                      }
+                    });
+                }
+              }
+            });
+          });
+      }
+    } else {
+      terminal.output(
+        "usage: pay <filename> <to> <amount> [usage]"
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;')
+      );
+    }
+  }
+
+  history(args: string[], terminal: TerminalAPI, websocket: WebsocketService) {
+    let l = terminal.getHistory();
+
+    l.reverse();
+
+    l.forEach(e => {
+      terminal.output(e);
+    });
   }
 
   hostname(args: string[], terminal: TerminalAPI, websocket: WebsocketService) {
@@ -272,7 +355,7 @@ export class TerminalCommandsService {
           })
           .subscribe(r => {
             r.files.forEach(e => {
-              if (e != null && e.filename === name) {
+              if (e != null && e.filename == filename) {
                 if (e.content !== '') {
                   const uuid = e.content.split(' ')[0];
                   const key = e.content
@@ -287,7 +370,7 @@ export class TerminalCommandsService {
                     .subscribe(r2 => {
                       if (r2.error == null) {
                         terminal.output(
-                          r2.wallet_response.amount + ' morphcoin'
+                          r2.success.amount + ' morphcoin'
                         );
                       } else {
                         terminal.output('no valid walletfile');

@@ -49,4 +49,9 @@ export interface TerminalAPI {
    */
   refreshPrompt();
 
+  /**
+   * Get history
+   */
+   getHistory();
+
 }

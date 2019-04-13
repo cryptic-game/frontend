@@ -43,6 +43,10 @@ export class TerminalComponent extends WindowDelegate
       ' $';
   }
 
+  getHistory() {
+    return this.protocol.slice(0);
+  }
+
   enter(content: string) {
     this.outputNode((this.prompt.nativeElement as HTMLElement).cloneNode(true));
     this.outputNode(document.createTextNode(content));
