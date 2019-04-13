@@ -48,8 +48,8 @@ export class TerminalComponent extends WindowDelegate
     this.outputNode(document.createTextNode(content));
     this.outputNode(document.createElement('br'));
     this.cmdLine.nativeElement.value = '';
-    this.cmdLine.nativeElement.scrollIntoView();
     this.execute(content);
+    this.cmdLine.nativeElement.scrollIntoView();
   }
 
   autocomplete(content: string) {
