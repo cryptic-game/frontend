@@ -28,7 +28,7 @@ export class TerminalCommandsService {
 
     // easter egg
     'chaozz': (args: string[], terminal: TerminalAPI) => {
-      terminal.output('"mess with the best, die like the rest :D`" - chaozz');
+      terminal.outputText('"mess with the best, die like the rest :D`" - chaozz');
     }
   };
 
@@ -49,7 +49,7 @@ export class TerminalCommandsService {
   pay(args: string[], terminal: TerminalAPI) {
     if (args.length === 3 || args.length === 4) {
       const filename = args[0];
-      const to = args[1];
+      const receiver = args[1];
       const amount = args[2];
       let usage = '';
 
@@ -58,7 +58,7 @@ export class TerminalCommandsService {
       }
 
       if (isNaN(parseInt(amount, 10))) {
-        terminal.output('amount is not a number');
+        terminal.output('<em>amount</em> is not a number');
       } else {
         this.websocket
           .ms('device', ['file', 'all'], {
@@ -85,14 +85,14 @@ export class TerminalCommandsService {
                             source_uuid: uuid,
                             key: key,
                             send_amount: parseInt(amount, 10),
-                            destination_uuid: to,
+                            destination_uuid: receiver,
                             usage: usage
                           })
                           .subscribe(r3 => {
                               if (r3.error == null) {
-                                terminal.output('send ' + amount + ' to ' + to);
+                                terminal.outputText('send ' + amount + ' to ' + receiver);
                               } else {
-                                terminal.output(r3.error);
+                                terminal.outputText(r3.error);
                               }
                             }
                           );
@@ -106,14 +106,7 @@ export class TerminalCommandsService {
           });
       }
     } else {
-      terminal.output(
-        'usage: pay <filename> <to> <amount> [usage]'
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;')
-      );
+      terminal.outputText('usage: pay <filename> <receiver> <amount> [usage]');
     }
   }
 
@@ -123,7 +116,7 @@ export class TerminalCommandsService {
     l.reverse();
 
     l.forEach(e => {
-      terminal.output(e);
+      terminal.outputText(e);
     });
   }
 
@@ -143,7 +136,7 @@ export class TerminalCommandsService {
       sessionStorage.setItem('activeDevice', JSON.stringify(active));
       terminal.refreshPrompt();
     } else {
-      terminal.output(JSON.parse(sessionStorage.getItem('activeDevice')).name);
+      terminal.outputText(JSON.parse(sessionStorage.getItem('activeDevice')).name);
     }
   }
 
@@ -151,7 +144,7 @@ export class TerminalCommandsService {
     this.websocket.request({
       action: 'info'
     }).subscribe(r => {
-      terminal.output('online = ' + (r.online - 1));
+      terminal.outputText('online = ' + (r.online - 1));
     });
   }
 
@@ -161,7 +154,7 @@ export class TerminalCommandsService {
     }).subscribe(r => {
       if (r.files != null) {
         r.files.forEach(e => {
-          terminal.output(e.filename);
+          terminal.outputText(e.filename);
         });
       }
     });
@@ -177,20 +170,13 @@ export class TerminalCommandsService {
         r.files.forEach(e => {
           if (e != null && e.filename === name) {
             if (e.content !== '') {
-              terminal.output(e.content);
+              terminal.outputText(e.content);
             }
           }
         });
       });
     } else {
-      terminal.output(
-        'usage: cat <filename>'
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;')
-      );
+      terminal.outputText('usage: cat <filename>');
     }
   }
 
@@ -214,14 +200,7 @@ export class TerminalCommandsService {
         });
       });
     } else {
-      terminal.output(
-        'usage: cp <source> <destination>'
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;')
-      );
+      terminal.outputText('usage: cp <source> <destination>');
     }
   }
 
@@ -251,14 +230,7 @@ export class TerminalCommandsService {
         });
       });
     } else {
-      terminal.output(
-        'usage: mv <source> <destination>'
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;')
-      );
+      terminal.outputText('usage: mv <source> <destination>');
     }
   }
 
@@ -277,14 +249,7 @@ export class TerminalCommandsService {
         content: content
       });
     } else {
-      terminal.output(
-        'usage: touch <filename> [content]'
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;')
-      );
+      terminal.outputText('usage: touch <filename> [content]');
     }
   }
 
@@ -306,14 +271,7 @@ export class TerminalCommandsService {
         });
       });
     } else {
-      terminal.output(
-        'usage: rm <filename>'
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;')
-      );
+      terminal.outputText('usage: rm <filename>');
     }
   }
 
@@ -337,9 +295,9 @@ export class TerminalCommandsService {
                   key: key
                 }).subscribe(r2 => {
                   if (r2.error == null) {
-                    terminal.output(r2.wallet_response.amount + ' morphcoin');
+                    terminal.outputText(r2.wallet_response.amount + ' morphcoin');
                   } else {
-                    terminal.output('no valid walletfile');
+                    terminal.outputText('no valid walletfile');
                   }
                 });
               }
@@ -358,14 +316,7 @@ export class TerminalCommandsService {
         });
       }
     } else {
-      terminal.output(
-        'usage: morphcoin <look|create> <filename>'
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;')
-      );
+      terminal.outputText('usage: morphcoin <look|create> <filename>');
     }
   }
 
@@ -381,6 +332,6 @@ export class TerminalCommandsService {
     const commands: string = Object.keys(this.programs)
       .filter(n => !['chaozz', 'help'].includes(n))
       .join('<br />');
-    terminal.output(commands);
+    terminal.outputText(commands);
   }
 }

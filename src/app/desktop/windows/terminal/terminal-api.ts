@@ -29,17 +29,6 @@ export interface TerminalAPI {
   closeTerminal();
 
   /**
-   * Changes the prompt text in the terminal
-   * @param text
-   */
-  changePrompt(text: string);
-
-  /**
-   * Resets the prompt text in the terminal to the default
-   */
-  resetPrompt();
-
-  /**
    * Clears the complete terminal
    */
   clear();
