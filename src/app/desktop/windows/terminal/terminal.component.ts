@@ -89,7 +89,9 @@ export class TerminalComponent extends WindowDelegate
       return;
     }
     this.commandsService.execute(command_[0], command_.slice(1), this);
-    command ? this.protocol.unshift(command) : null;
+    if (command) {
+      this.protocol.unshift(command);
+    }
   }
 
   output(html: string) {
@@ -118,15 +120,8 @@ export class TerminalComponent extends WindowDelegate
     this.windowManager.closeWindow(this);
   }
 
-  changePrompt(text: string) {
-    this.promptText = text;
-  }
-
   clear() {
     this.history.nativeElement.value = '';
   }
 
-  resetPrompt() {
-    // TODO
-  }
 }

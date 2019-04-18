@@ -9,7 +9,7 @@ import { environment } from '../environments/environment';
 export class WebsocketService {
 
   private socket;
-  public online: number = 0;
+  public online = 0;
 
   constructor() {
     this.init();
@@ -23,9 +23,9 @@ export class WebsocketService {
 
     setInterval(() => {
       this.send({
-        "action": "info"
+        'action': 'info'
       });
-    }, 1000*30);
+    }, 1000 * 30);
   }
 
   public send(json) {
@@ -57,8 +57,8 @@ export class WebsocketService {
   }
 
   private receive(json) {
-    if(json["online"] != null) {
-      this.online = json["online"];
+    if (json['online'] != null) {
+      this.online = json['online'];
     }
   }
 
