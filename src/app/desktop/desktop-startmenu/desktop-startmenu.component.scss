@@ -2,11 +2,11 @@
   width: 30%;
   height: 65%;
   position: absolute;
-  bottom: 0;
+  bottom: 5.7%;
   padding: 1.5% 1.5% 5.5%;
-  background-color: #424242;
+  background-color: #1c1c1c;
   color: #FAFAFA;
-  box-shadow: 0 0 38px rgba(0, 0, 0, 0.30), 0 0 12px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.70);
 
   img {
     height: auto;
@@ -36,12 +36,12 @@
 
   #programs {
     width: 100%;
-    height: calc(64.5% - 2px);
+    height: calc(85% - 2px);
 
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
-    padding: 1%;
+    padding: 2%;
 
     #linkages {
       height: 100%;
