@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
 import { first } from 'rxjs/operators';
 import { environment } from '../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class WebsocketService {
     this.socket.next(json);
   }
 
-  public request(json) {
+  public request(json): Observable<any> {
     this.send(json);
     return this.socket.pipe(first());
   }

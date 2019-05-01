@@ -59,9 +59,9 @@ export class TerminalComponent extends WindowDelegate
   autocomplete(content: string) {
     const command: string = content
       ? Object.keys(this.commandsService.programs)
-          .filter(n => !['chaozz'].includes(n))
-          .sort()
-          .find(n => n.startsWith(content))
+        .filter(n => !['chaozz'].includes(n))
+        .sort()
+        .find(n => n.startsWith(content))
       : '';
     this.cmdLine.nativeElement.value = command
       ? command
