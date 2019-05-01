@@ -1,5 +1,7 @@
-$active-window-color: #424242;
-$inactive-window-color: #212121;
+@import "~src/constants";
+
+$active-window-color: #gray;
+$inactive-window-color: #black;
 
 .window {
   display: flex;
