@@ -1,7 +1,7 @@
 @import "~src/constants";
 
-$active-window-color: #gray;
-$inactive-window-color: #black;
+$active-window-color: $gray;
+$inactive-window-color: $black;
 
 .window {
   display: flex;
@@ -28,7 +28,7 @@ $inactive-window-color: #black;
 }
 
 .window-header {
-  padding: 1%;
+  padding: 6px;
   display: flex;
   flex-direction: row;
   background-color: $inactive-window-color;
