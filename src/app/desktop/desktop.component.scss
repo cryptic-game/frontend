@@ -16,6 +16,14 @@
   overflow: hidden;
   z-index: 0;
 
+  #version-info {
+    text-align: right;
+    margin-right: 1em;
+    color: $white;
+    user-select: none;
+    pointer-events: none;
+  }
+
   .linkage {
     color: $white;
     position: absolute;
