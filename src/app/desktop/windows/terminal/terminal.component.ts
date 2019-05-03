@@ -21,6 +21,9 @@ export class TerminalComponent extends WindowDelegate
 
   promptText = '';
 
+  protocol: string[] = [];
+  historyIndex = -1;
+
   constructor(
     private windowManager: WindowManagerService,
     private commandsService: TerminalCommandsService
@@ -40,18 +43,43 @@ export class TerminalComponent extends WindowDelegate
       ' $';
   }
 
-  promptKeyPressed(event: KeyboardEvent, content: string) {
-    if (event.code === 'Enter' || event.code === 'NumpadEnter') {
-      event.preventDefault();
-      this.outputNode(
-        (this.prompt.nativeElement as HTMLElement).cloneNode(true)
-      );
-      const historyCmdLine = (this.cmdLine
-        .nativeElement as HTMLElement).cloneNode(true);
-      this.outputNode(historyCmdLine);
-      this.outputNode(document.createElement('br'));
-      this.cmdLine.nativeElement.value = '';
-      this.execute(content);
+  getHistory() {
+    return this.protocol.slice(0);
+  }
+
+  enter(content: string) {
+    this.outputNode((this.prompt.nativeElement as HTMLElement).cloneNode(true));
+    this.outputNode(document.createTextNode(content));
+    this.outputNode(document.createElement('br'));
+    this.cmdLine.nativeElement.value = '';
+    this.cmdLine.nativeElement.scrollIntoView();
+    this.execute(content);
+  }
+
+  autocomplete(content: string) {
+    const command: string = content
+      ? Object.keys(this.commandsService.programs)
+        .filter(n => !['chaozz'].includes(n))
+        .sort()
+        .find(n => n.startsWith(content))
+      : '';
+    this.cmdLine.nativeElement.value = command
+      ? command
+      : this.cmdLine.nativeElement.value;
+  }
+
+  previousFromHistory() {
+    if (this.historyIndex < this.protocol.length - 1) {
+      this.historyIndex++;
+      this.cmdLine.nativeElement.value = this.protocol[this.historyIndex];
+    }
+  }
+
+  nextFromHistory() {
+    if (this.historyIndex > -1) {
+      this.historyIndex--;
+      this.cmdLine.nativeElement.value =
+        this.historyIndex > -1 ? this.protocol[this.historyIndex] : '';
     }
   }
 
@@ -61,6 +89,9 @@ export class TerminalComponent extends WindowDelegate
       return;
     }
     this.commandsService.execute(command_[0], command_.slice(1), this);
+    if (command) {
+      this.protocol.unshift(command);
+    }
   }
 
   output(html: string) {
@@ -89,15 +120,8 @@ export class TerminalComponent extends WindowDelegate
     this.windowManager.closeWindow(this);
   }
 
-  changePrompt(text: string) {
-    this.promptText = text;
-  }
-
   clear() {
     this.history.nativeElement.value = '';
   }
 
-  resetPrompt() {
-    // TODO
-  }
 }

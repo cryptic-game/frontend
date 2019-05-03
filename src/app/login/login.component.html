@@ -6,7 +6,7 @@
         <tr>
           <td colspan="2">
             <input #usernameField="ngModel" [(ngModel)]="model.username" id="username" name="username" placeholder="Username"
-                   required type="text">
+                   autocomplete="section-login username" required type="text">
             <div *ngIf="usernameField.invalid && (usernameField.dirty || usernameField.touched) && usernameField['errors'].required"
                  class="errorText">
               Username is required
@@ -16,7 +16,7 @@
         <tr>
           <td colspan="2">
             <input #passwordField="ngModel" [(ngModel)]="model.password" id="password" name="password" placeholder="Type in password"
-                   required type="password">
+                   autocomplete="section-login current-password" required type="password">
             <div *ngIf="passwordField.invalid && (passwordField.dirty || passwordField.touched) && passwordField['errors'].required"
                  class="errorText">
               Password is required.

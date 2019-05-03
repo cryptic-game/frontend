@@ -36,29 +36,10 @@ export class DesktopComponent implements OnInit {
   ngOnInit(): void {
     this.linkages = this.programService.list();
 
-    this.websocket.request({
-      action: 'info'
-    }).subscribe(response => {
-      if (response.error != null) {
-        this.websocket.request({
-          action: 'session',
-          token: localStorage.getItem('token')
-        }).subscribe(response2 => {
-          if (response2.error != null) {
-            this.router.navigateByUrl('/login').then();
-            return false;
-          } else {
-            localStorage.setItem('token', response2.token);
-            this.initData();
-          }
-        });
-      } else {
-        this.initData();
-      }
-    });
+    this.initSession();
   }
 
-  initData(): void {
+  initSession(): void {
     this.websocket.request({
       action: 'info'
     }).subscribe(response => {

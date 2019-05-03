@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
 import { first } from 'rxjs/operators';
 import { environment } from '../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ import { environment } from '../environments/environment';
 export class WebsocketService {
 
   private socket;
+  public online = 0;
 
   constructor() {
     this.init();
@@ -19,13 +21,19 @@ export class WebsocketService {
     this.socket.subscribe(
       (message) => this.receive(message),
       (error) => console.error(error));
+
+    setInterval(() => {
+      this.send({
+        'action': 'info'
+      });
+    }, 1000 * 30);
   }
 
   public send(json) {
     this.socket.next(json);
   }
 
-  public request(json) {
+  public request(json): Observable<any> {
     this.send(json);
     return this.socket.pipe(first());
   }
@@ -50,7 +58,9 @@ export class WebsocketService {
   }
 
   private receive(json) {
-    // for debug purpose
+    if (json['online'] != null) {
+      this.online = json['online'];
+    }
   }
 
 }

@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono');
+@import "~src/constants";
+
 
 :host {
   flex-grow: 1;
@@ -11,15 +12,25 @@
   overflow: auto;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 #terminal-window {
+  overflow-y: scroll;
+
+
   padding: 1%;
 
+  word-break: break-all;
   font-family: 'Ubuntu Mono', monospace;
   font-size: 1.2rem;
   color: white;
 
   display: flex;
   flex-direction: column;
+
+  margin-bottom: 7.5%;
 }
 
 #cmdline {
@@ -43,7 +54,7 @@
 .prompt {
   display: inline-block;
   user-select: none;
-  color: #64DD17;
+  color: $green;
   margin-right: 1%;
   float: left;
 }

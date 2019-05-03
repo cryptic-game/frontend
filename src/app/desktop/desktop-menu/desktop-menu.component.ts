@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { WindowManagerService } from '../window-manager/window-manager.service';
 import { WindowDelegate } from '../window/window-delegate';
+import { WebsocketService } from '../../websocket.service';
 
 @Component({
   selector: 'app-desktop-menu',
@@ -10,11 +11,9 @@ import { WindowDelegate } from '../window/window-delegate';
 export class DesktopMenuComponent implements OnInit {
   @Output() startMenu = new EventEmitter();
 
-  constructor(public windowManager: WindowManagerService) {
-  }
+  constructor(public windowManager: WindowManagerService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   activateOrMinimize(window: WindowDelegate) {
     if (window.position.active || window.position.minimized) {
@@ -23,5 +22,4 @@ export class DesktopMenuComponent implements OnInit {
       this.windowManager.focusWindow(window);
     }
   }
-
 }

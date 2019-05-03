@@ -2,6 +2,7 @@ import { Account } from '../../../dataclasses/account';
 import { UserService } from '../user.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { DesktopComponent } from '../desktop.component';
+import { WebsocketService } from 'src/app/websocket.service';
 
 @Component({
   selector: 'app-desktop-startmenu',
@@ -14,24 +15,26 @@ export class DesktopStartmenuComponent implements OnInit {
 
   searchTerm = '';
   token: string = sessionStorage.getItem('token');
-  user: Account = {name: '', email: '', created: 0, last: 0};
+  user: Account = { name: '', email: '', created: 0, last: 0 };
 
-  constructor(public userService: UserService) {
-  }
+  constructor(
+    public userService: UserService,
+    public websocket: WebsocketService
+  ) {}
 
   ngOnInit() {
-    this.user.name = localStorage.getItem('username');
-    this.user.email = localStorage.getItem('email');
-    this.user.created = parseInt(localStorage.getItem('created'), 10);
-    this.user.last = parseInt(localStorage.getItem('last'), 10);
+    this.user.name = sessionStorage.getItem('username');
+    this.user.email = sessionStorage.getItem('email');
+    this.user.created = parseInt(sessionStorage.getItem('created'), 10);
+    this.user.last = parseInt(sessionStorage.getItem('last'), 10);
   }
 
   search(term: string) {
-    return this.parent.linkages.filter(item => item
-      .displayName
-      .trim()
-      .toLowerCase()
-      .match(term.trim().toLowerCase())
+    return this.parent.linkages.filter(item =>
+      item.displayName
+        .trim()
+        .toLowerCase()
+        .match(term.trim().toLowerCase())
     );
   }
 }
