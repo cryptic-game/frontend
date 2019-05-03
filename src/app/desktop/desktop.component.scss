@@ -2,8 +2,7 @@
 
 
 * {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: $default-font;
 }
 
 #desktop-surface {
@@ -16,14 +15,6 @@
   overflow: hidden;
   z-index: 0;
 
-  #version-info {
-    text-align: right;
-    margin-right: 1em;
-    color: $white;
-    user-select: none;
-    pointer-events: none;
-  }
-
   .linkage {
     color: $white;
     position: absolute;
@@ -32,8 +23,7 @@
     border-radius: 10px;
     height: auto;
     text-align: center;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: $default-font;
     user-select: none;
     display: flex;
     flex-direction: column;

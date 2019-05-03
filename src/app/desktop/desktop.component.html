@@ -1,7 +1,6 @@
 <div #surface (contextmenu)="showContextMenu($event)" (mousedown)="checkWindowUnfocus($event)"
      (mousemove)="mousemove($event)"
      id="desktop-surface">
-  <h1 id="version-info">Pre-Alpha 1.0</h1>
   <div (dblclick)="openProgramWindow(linkage)" (mousedown)="mousedown($event, i)" (mouseup)="mouseup()"
        *ngFor="let linkage of onDesktop(); index as i"
        [ngStyle]="{'left.vw': linkage.position.x | px2vw, 'top.vh': linkage.position.y | px2vh, 'z-index': linkage.position.z }"
