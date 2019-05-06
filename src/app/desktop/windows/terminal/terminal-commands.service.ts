@@ -332,6 +332,6 @@ export class TerminalCommandsService {
     const commands: string = Object.keys(this.programs)
       .filter(n => !['chaozz', 'help'].includes(n))
       .join('<br />');
-    terminal.outputText(commands);
+    terminal.output(commands);
   }
 }
