@@ -44,7 +44,7 @@ export class TerminalComponent extends WindowDelegate
   }
 
   getHistory() {
-    return this.protocol.slice(0);
+    return this.protocol;
   }
 
   enter(content: string) {
