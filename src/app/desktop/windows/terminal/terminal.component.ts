@@ -110,6 +110,7 @@ export class TerminalComponent extends WindowDelegate
       'beforeend',
       text
     );
+    this.outputRaw('<br>');
   }
 
   outputNode(node: Node) {
