@@ -27,15 +27,15 @@ export class DesktopGuard implements CanActivate {
     return this.websocket.request({
       'action': 'info'
     }).pipe(mergeMap(infoResponse => {
-      if (infoResponse.error == null) {
+      if (infoResponse['error'] == null) {
         return of(true);
       } else {
         return this.websocket.request({
           'action': 'session',
           'token': localStorage.getItem('token')
         }).pipe(map(sessionResponse => {
-          if (sessionResponse.error == null) {
-            localStorage.setItem('token', sessionResponse.token);
+          if (sessionResponse['error'] == null && sessionResponse['token'] != null) {
+            localStorage.setItem('token', sessionResponse['token']);
             return true;
           } else {
             localStorage.removeItem('token');

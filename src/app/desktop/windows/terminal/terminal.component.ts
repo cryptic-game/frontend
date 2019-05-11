@@ -44,7 +44,7 @@ export class TerminalComponent extends WindowDelegate
   }
 
   getHistory() {
-    return this.protocol.slice(0);
+    return this.protocol;
   }
 
   enter(content: string) {
@@ -52,8 +52,8 @@ export class TerminalComponent extends WindowDelegate
     this.outputNode(document.createTextNode(content));
     this.outputNode(document.createElement('br'));
     this.cmdLine.nativeElement.value = '';
-    this.cmdLine.nativeElement.scrollIntoView();
     this.execute(content);
+    this.cmdLine.nativeElement.scrollIntoView();
   }
 
   autocomplete(content: string) {
@@ -110,6 +110,7 @@ export class TerminalComponent extends WindowDelegate
       'beforeend',
       text
     );
+    this.outputRaw('<br>');
   }
 
   outputNode(node: Node) {
