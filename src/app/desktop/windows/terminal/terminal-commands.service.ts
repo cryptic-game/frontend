@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TerminalAPI } from './terminal-api';
 import { WebsocketService } from '../../../websocket.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -283,7 +284,7 @@ export class TerminalCommandsService {
           device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
         }).subscribe(r => {
           r.files.forEach(e => {
-            if (e != null && e.filename === name) {
+            if (e != null && e.filename === filename) {
               if (e.content !== '') {
                 const uuid = e.content.split(' ')[0];
                 const key = e.content
@@ -316,7 +317,7 @@ export class TerminalCommandsService {
         });
       }
     } else {
-      terminal.outputText('usage: morphcoin <look|create> <filename>');
+      terminal.outputText('usage: morphcoin look|create <filename>');
     }
   }
 
