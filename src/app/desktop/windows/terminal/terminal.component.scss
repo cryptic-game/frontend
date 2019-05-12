@@ -34,6 +34,7 @@
 }
 
 #cmdline {
+  width: 100%;
   padding: 0;
   background: transparent;
   border: none;
@@ -55,7 +56,7 @@
   display: inline-block;
   user-select: none;
   color: $green;
-  margin-right: 1%;
+  margin-right: 8px;
   float: left;
 }
 
