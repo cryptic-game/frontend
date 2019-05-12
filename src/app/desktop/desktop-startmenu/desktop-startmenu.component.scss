@@ -55,8 +55,7 @@
 
     #linkages {
       height: 100%;
-      overflow-y: scroll;
-      -ms-overflow-style: none;
+      overflow-y: auto;
 
       &:vertical,
       &::-webkit-scrollbar {
