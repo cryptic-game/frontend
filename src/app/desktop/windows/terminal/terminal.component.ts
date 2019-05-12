@@ -54,6 +54,7 @@ export class TerminalComponent extends WindowDelegate
     this.cmdLine.nativeElement.value = '';
     this.execute(content);
     this.cmdLine.nativeElement.scrollIntoView();
+    this.historyIndex = -1;
   }
 
   autocomplete(content: string) {
