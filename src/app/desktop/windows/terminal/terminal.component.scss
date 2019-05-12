@@ -33,8 +33,21 @@
   margin-bottom: 7.5%;
 }
 
-#cmdline {
+#input-line {
+  display: flex;
   width: 100%;
+}
+
+.prompt {
+  display: inline-block;
+  user-select: none;
+  color: $green;
+  margin-right: 8px;
+}
+
+#cmdline {
+  flex-grow: 1;
+  width: auto;
   padding: 0;
   background: transparent;
   border: none;
@@ -50,18 +63,4 @@
 
 #cmdline:focus {
   outline: none;
-}
-
-.prompt {
-  display: inline-block;
-  user-select: none;
-  color: $green;
-  margin-right: 8px;
-  float: left;
-}
-
-.cmdline {
-  float: left;
-  outline: none !important;
-  white-space: nowrap;
 }
