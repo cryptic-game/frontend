@@ -85,7 +85,7 @@ export class TerminalComponent extends WindowDelegate
   }
 
   execute(command: string) {
-    const command_ = command.split(' ');
+    const command_ = command.trim().split(' ');
     if (command_.length === 0) {
       return;
     }
