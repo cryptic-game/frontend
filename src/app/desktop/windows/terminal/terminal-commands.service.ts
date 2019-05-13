@@ -283,7 +283,7 @@ export class TerminalCommandsService {
         this.websocket.ms('device', ['file', 'all'], {
           device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid
         }).subscribe(r => {
-          r.files.forEach(e => {
+          for (const e of r.files) {
             if (e != null && e.filename === filename) {
               if (e.content !== '') {
                 const uuid = e.content.split(' ')[0];
@@ -296,16 +296,17 @@ export class TerminalCommandsService {
                   key: key
                 }).subscribe(r2 => {
                   if (r2.error == null) {
-                    terminal.outputText(r2.wallet_response.amount + ' morphcoin');
+                    terminal.outputText(r2.success.amount + ' morphcoin');
                   } else {
-                    terminal.outputText('no valid walletfile');
+                    terminal.outputText('No valid walletfile');
                   }
+                  return;
                 });
               }
             }
-          });
+          }
+          terminal.outputText('That file doesn\'t exist');
         });
-        return;
       } else if (args[0] === 'create') {
         this.websocket.ms('currency', ['create'], {}).subscribe(r => {
           this.websocket.ms('device', ['file', 'create'], {
