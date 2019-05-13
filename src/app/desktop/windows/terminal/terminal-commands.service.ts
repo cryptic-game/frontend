@@ -299,10 +299,13 @@ export class TerminalCommandsService {
                   if (r2.error == null) {
                     terminal.outputText(r2.success.amount + ' morphcoin');
                   } else {
-                    terminal.outputText('No valid walletfile');
+                    terminal.outputText('File is no walletfile');
                   }
-                  return;
                 });
+                return;
+              } else {
+                terminal.outputText('File is no valid walletfile');
+                return;
               }
             }
           }
@@ -310,9 +313,13 @@ export class TerminalCommandsService {
         });
       } else if (args[0] === 'create') {
         this.websocket.ms('currency', ['create'], {}).subscribe(r => {
+          if (r['error'] != null) {
+            terminal.outputText('You already own a wallet');
+            return;
+          }
+
           this.websocket.ms('device', ['file', 'create'], {
-            device_uuid: JSON.parse(sessionStorage.getItem('activeDevice'))
-              .uuid,
+            device_uuid: JSON.parse(sessionStorage.getItem('activeDevice')).uuid,
             filename: filename,
             content: r.uuid + ' ' + r.key
           });
