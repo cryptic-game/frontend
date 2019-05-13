@@ -83,14 +83,15 @@ export class TerminalComponent extends WindowDelegate
     if (this.historyIndex < this.getHistory().length - 1) {
       this.historyIndex++;
       this.cmdLine.nativeElement.value = this.getHistory()[this.historyIndex];
+      this.cmdLine.nativeElement.scrollIntoView();
     }
   }
 
   nextFromHistory() {
     if (this.historyIndex > -1) {
       this.historyIndex--;
-      this.cmdLine.nativeElement.value =
-        this.historyIndex > -1 ? this.getHistory()[this.historyIndex] : '';
+      this.cmdLine.nativeElement.value = this.historyIndex > -1 ? this.getHistory()[this.historyIndex] : '';
+      this.cmdLine.nativeElement.scrollIntoView();
     }
   }
 
