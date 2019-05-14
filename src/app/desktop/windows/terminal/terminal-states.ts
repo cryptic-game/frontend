@@ -431,6 +431,7 @@ export class DefaultTerminalState implements TerminalState {
     } else if (args.length >= 1 && args[0] === 'portscan') {
       if (args.length !== 2) {
         this.terminal.outputText('usage: service portscan <device>');
+        return;
       }
 
       const targetDevice = args[1];
