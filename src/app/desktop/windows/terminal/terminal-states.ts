@@ -168,6 +168,21 @@ export class DefaultTerminalState implements TerminalState {
       }).subscribe(r => {
         r.files.forEach(e => {
           if (e != null && e.filename === name) {
+            if (e.content !== '') {
+              const uuid = e.content.split(' ')[0];
+              const key = e.content.split(' ').splice(1).join(' ');
+              this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(r2 => {
+                if (r2.error == null) {
+                  this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(r3 => {
+                    if (r3.error != null) {
+                      this.terminal.output('<span style="color: red">The wallet couldn\'t be deleted successfully. ' +
+                        'Please report this bug.</span>');
+                    }
+                  });
+                }
+              });
+            }
+
             this.websocket.ms('device', ['file', 'delete'], {
               device_uuid: this.activeDevice['uuid'],
               file_uuid: e.uuid
@@ -260,10 +275,7 @@ export class DefaultTerminalState implements TerminalState {
             if (e != null && e.filename === filename) {
               if (e.content !== '') {
                 const uuid = e.content.split(' ')[0];
-                const key = e.content
-                  .split(' ')
-                  .splice(1)
-                  .join(' ');
+                const key = e.content.split(' ').splice(1).join(' ');
                 this.websocket.ms('currency', ['get'], {
                   source_uuid: uuid,
                   key: key
