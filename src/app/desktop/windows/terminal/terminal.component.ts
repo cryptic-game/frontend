@@ -1,8 +1,9 @@
 import { Component, ElementRef, OnInit, Type, ViewChild } from '@angular/core';
 import { WindowDelegate } from '../../window/window-delegate';
-import { TerminalAPI } from './terminal-api';
+import { TerminalAPI, TerminalState } from './terminal-api';
 import { WindowManagerService } from '../../window-manager/window-manager.service';
-import { TerminalCommandsService } from './terminal-commands.service';
+import { DefaultTerminalState } from './terminal-states';
+import { WebsocketService } from '../../../websocket.service';
 
 @Component({
   selector: 'app-terminal',
@@ -19,32 +20,46 @@ export class TerminalComponent extends WindowDelegate
   icon = 'assets/desktop/img/terminal.svg';
   type: Type<any> = TerminalComponent;
 
+  currentState: TerminalState[] = [];
   promptText = '';
 
-  protocol: string[] = [];
   historyIndex = -1;
 
   constructor(
-    private windowManager: WindowManagerService,
-    private commandsService: TerminalCommandsService
+    private websocket: WebsocketService,
+    private windowManager: WindowManagerService
   ) {
     super();
   }
 
   ngOnInit() {
-    this.refreshPrompt();
+    this.pushState(new DefaultTerminalState(this.websocket, this,
+      JSON.parse(sessionStorage.getItem('activeDevice')), sessionStorage.getItem('username')));
+    this.getState().refreshPrompt();
   }
 
-  refreshPrompt() {
-    this.promptText =
-      sessionStorage.getItem('username') +
-      '@' +
-      JSON.parse(sessionStorage.getItem('activeDevice')).name +
-      ' $';
+  changePrompt(prompt: string) {
+    this.promptText = prompt;
+  }
+
+  pushState(state: TerminalState) {
+    this.currentState.push(state);
+  }
+
+  popState(): TerminalState {
+    const popped = this.currentState.pop();
+    if (this.currentState.length === 0) {
+      this.closeTerminal();
+    }
+    return popped;
+  }
+
+  getState() {
+    return this.currentState[this.currentState.length - 1];
   }
 
   getHistory() {
-    return this.protocol;
+    return this.getState().getHistory();
   }
 
   enter(content: string) {
@@ -54,44 +69,34 @@ export class TerminalComponent extends WindowDelegate
     this.cmdLine.nativeElement.value = '';
     this.execute(content);
     this.cmdLine.nativeElement.scrollIntoView();
+    this.historyIndex = -1;
   }
 
   autocomplete(content: string) {
-    const command: string = content
-      ? Object.keys(this.commandsService.programs)
-        .filter(n => !['chaozz'].includes(n))
-        .sort()
-        .find(n => n.startsWith(content))
-      : '';
-    this.cmdLine.nativeElement.value = command
-      ? command
-      : this.cmdLine.nativeElement.value;
+    const completed = this.getState().autocomplete(content);
+    if (completed) {
+      this.cmdLine.nativeElement.value = completed;
+    }
   }
 
   previousFromHistory() {
-    if (this.historyIndex < this.protocol.length - 1) {
+    if (this.historyIndex < this.getHistory().length - 1) {
       this.historyIndex++;
-      this.cmdLine.nativeElement.value = this.protocol[this.historyIndex];
+      this.cmdLine.nativeElement.value = this.getHistory()[this.historyIndex];
+      this.cmdLine.nativeElement.scrollIntoView();
     }
   }
 
   nextFromHistory() {
     if (this.historyIndex > -1) {
       this.historyIndex--;
-      this.cmdLine.nativeElement.value =
-        this.historyIndex > -1 ? this.protocol[this.historyIndex] : '';
+      this.cmdLine.nativeElement.value = this.historyIndex > -1 ? this.getHistory()[this.historyIndex] : '';
+      this.cmdLine.nativeElement.scrollIntoView();
     }
   }
 
   execute(command: string) {
-    const command_ = command.split(' ');
-    if (command_.length === 0) {
-      return;
-    }
-    this.commandsService.execute(command_[0], command_.slice(1), this);
-    if (command) {
-      this.protocol.unshift(command);
-    }
+    this.getState().execute(command);
   }
 
   output(html: string) {

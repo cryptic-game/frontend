@@ -33,14 +33,22 @@ export interface TerminalAPI {
    */
   clear();
 
-  /**
-   * Refresh the prompt
-   */
+  changePrompt(prompt: string);
+
+  pushState(state: TerminalState);
+
+  popState(): TerminalState;
+}
+
+
+export interface TerminalState {
+  commands: { [name: string]: (args: string[]) => void };
+
+  execute(command: string);
+
+  autocomplete(content: string): string;
+
+  getHistory(): string[];
+
   refreshPrompt();
-
-  /**
-   * Get history
-   */
-   getHistory();
-
 }

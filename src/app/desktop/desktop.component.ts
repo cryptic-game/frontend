@@ -54,11 +54,13 @@ export class DesktopComponent implements OnInit {
         if (devices == null || devices.length === 0) {
           this.websocket.ms('device', ['device', 'create'], {}).subscribe(r2 => {
             devices = [r2];
+            sessionStorage.setItem('devices', JSON.stringify(devices));
+            sessionStorage.setItem('activeDevice', JSON.stringify(devices[0]));
           });
+        } else {
+          sessionStorage.setItem('devices', JSON.stringify(devices));
+          sessionStorage.setItem('activeDevice', JSON.stringify(devices[0]));
         }
-
-        sessionStorage.setItem('devices', JSON.stringify(devices));
-        sessionStorage.setItem('activeDevice', JSON.stringify(devices[0]));
       });
     });
   }

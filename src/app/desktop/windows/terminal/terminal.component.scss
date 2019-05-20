@@ -2,7 +2,7 @@
 
 
 :host {
-  flex-grow: 1;
+  flex-basis: 100%;
 }
 
 #terminal-container {
@@ -17,10 +17,10 @@
 }
 
 #terminal-window {
-  overflow-y: scroll;
+  overflow-y: auto;
 
 
-  padding: 1%;
+  padding: 6px;
 
   word-break: break-all;
   font-family: 'Ubuntu Mono', monospace;
@@ -30,10 +30,24 @@
   display: flex;
   flex-direction: column;
 
-  margin-bottom: 7.5%;
+  margin-bottom: 2em;
+}
+
+#input-line {
+  display: flex;
+  width: 100%;
+}
+
+.prompt {
+  display: inline-block;
+  user-select: none;
+  color: $green;
+  margin-right: 8px;
 }
 
 #cmdline {
+  flex-grow: 1;
+  width: auto;
   padding: 0;
   background: transparent;
   border: none;
@@ -49,18 +63,4 @@
 
 #cmdline:focus {
   outline: none;
-}
-
-.prompt {
-  display: inline-block;
-  user-select: none;
-  color: $green;
-  margin-right: 1%;
-  float: left;
-}
-
-.cmdline {
-  float: left;
-  outline: none !important;
-  white-space: nowrap;
 }
