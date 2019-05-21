@@ -1,6 +1,6 @@
 <div #terminalContainer (click)="$event.target === terminalContainer ? cmdLine.focus() : true" id="terminal-container">
   <div id="terminal-window">
-    <output #history></output>
+    <output #history id="terminal-history"></output>
     <div id="input-line">
       <div #prompt class="prompt">{{promptText}}</div>
       <input #cmdLine

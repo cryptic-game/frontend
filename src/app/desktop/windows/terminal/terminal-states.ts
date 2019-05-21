@@ -24,6 +24,7 @@ export class DefaultTerminalState implements TerminalState {
     'morphcoin': this.morphcoin.bind(this),
     'pay': this.pay.bind(this),
     'service': this.service.bind(this),
+    'spot': this.spot.bind(this),
 
     // easter egg
     'chaozz': () => {
@@ -472,6 +473,48 @@ export class DefaultTerminalState implements TerminalState {
     } else {
       this.terminal.outputText('usage: service create|bruteforce|portscan');
     }
+  }
+
+  spot() {
+    this.websocket.ms('device', ['device', 'spot'], {}).subscribe(random_device => {
+      if (random_device['uuid'] == null) {
+        this.terminal.output('<span class="errorText">An error occurred</span>');
+        return;
+      }
+
+      this.websocket.ms('service', ['list'], { 'device_uuid': this.activeDevice['uuid'] }).subscribe(localServices => {
+        const portScanner = (localServices['services'] || []).filter(service => service.name === 'portscan')[0];
+        if (portScanner == null || portScanner['uuid'] == null) {
+          this.terminal.outputText('\'' + random_device['name'] + '\':');
+          this.terminal.outputRaw('<ul>' +
+            '<li>UUID: ' + random_device['uuid'] + '</li>' +
+            '<li>Powered on: ' + (random_device['powered_on'] ? 'yes' : 'no') + '</li>' +
+            '<li>Services: <em class="errorText"">portscan failed</em></li>' +
+            '</ul>');
+          return;
+        }
+
+        this.websocket.ms('service', ['use'], {
+          'device_uuid': this.activeDevice['uuid'],
+          'service_uuid': portScanner['uuid'], 'target_device': random_device['uuid']
+        }).subscribe(remoteServices => {
+          if (remoteServices == null || remoteServices['services'] == null) {
+            this.terminal.output('<span class="errorText">An error occurred</span>');
+            return;
+          }
+
+          this.terminal.outputText('\'' + random_device['name'] + '\':');
+          this.terminal.outputRaw('<ul>' +
+            '<li>UUID: ' + random_device['uuid'] + '</li>' +
+            '<li>Powered on: ' + (random_device['powered_on'] ? 'yes' : 'no') + '</li>' +
+            '<li>Services:</li>' +
+            '<ul>' +
+            remoteServices['services'].map(service => '<li>' + service['name'] + ' (' + service['uuid'] + ')</li>').join('\n') +
+            '</ul>' +
+            '</ul>');
+        });
+      });
+    });
   }
 
 }
