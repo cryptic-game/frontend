@@ -42,8 +42,6 @@ export interface TerminalAPI {
 
 
 export interface TerminalState {
-  commands: { [name: string]: (args: string[]) => void };
-
   execute(command: string);
 
   autocomplete(content: string): string;

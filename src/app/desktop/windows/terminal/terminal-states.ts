@@ -3,7 +3,52 @@ import { WebsocketService } from '../../../websocket.service';
 import { map } from 'rxjs/operators';
 
 
-export class DefaultTerminalState implements TerminalState {
+export abstract class CommandTerminalState implements TerminalState {
+  abstract commands: { [name: string]: (args: string[]) => void };
+
+  protocol: string[] = [];
+
+  executeCommand(command: string, args: string[]) {
+    command = command.toLowerCase();
+    if (this.commands.hasOwnProperty(command)) {
+      this.commands[command](args);
+    } else if (command !== '') {
+      this.commandNotFound(command);
+    }
+  }
+
+  execute(command: string) {
+    const command_ = command.trim().split(' ');
+    if (command_.length === 0) {
+      return;
+    }
+    this.executeCommand(command_[0], command_.slice(1));
+    if (command) {
+      this.protocol.unshift(command);
+    }
+  }
+
+  abstract commandNotFound(command: string);
+
+  autocomplete(content: string): string {
+    return content
+      ? Object.keys(this.commands)
+        .filter(n => !['chaozz'].includes(n))
+        .sort()
+        .find(n => n.startsWith(content))
+      : '';
+  }
+
+  getHistory(): string[] {
+    return this.protocol;
+  }
+
+  abstract refreshPrompt();
+
+}
+
+
+export class DefaultTerminalState extends CommandTerminalState {
 
   commands = {
     'help': this.help.bind(this),
@@ -32,50 +77,17 @@ export class DefaultTerminalState implements TerminalState {
     }
   };
 
-  protocol: string[] = [];
-
-
   constructor(protected websocket: WebsocketService, protected terminal: TerminalAPI,
               protected activeDevice: object, protected username: string) {
+    super();
   }
 
-  executeCommand(command: string, args: string[]) {
-    command = command.toLowerCase();
-    if (this.commands.hasOwnProperty(command)) {
-      this.commands[command](args, this.terminal);
-    } else if (command !== '') {
-      this.terminal.output(
-        'Command could not be found.<br/>Type `help` for a list of commands.'
-      );
-    }
-  }
-
-  execute(command: string) {
-    const command_ = command.trim().split(' ');
-    if (command_.length === 0) {
-      return;
-    }
-    this.executeCommand(command_[0], command_.slice(1));
-    if (command) {
-      this.protocol.unshift(command);
-    }
-  }
-
-  autocomplete(content: string): string {
-    return content
-      ? Object.keys(this.commands)
-        .filter(n => !['chaozz'].includes(n))
-        .sort()
-        .find(n => n.startsWith(content))
-      : '';
+  commandNotFound(command: string) {
+    this.terminal.output('Command could not be found.<br/>Type `help` for a list of commands.');
   }
 
   refreshPrompt() {
     this.terminal.changePrompt(this.username + '@' + this.activeDevice['name'] + ' $');
-  }
-
-  getHistory(): string[] {
-    return this.protocol;
   }
 
 
