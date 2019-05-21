@@ -430,14 +430,14 @@ export class DefaultTerminalState extends CommandTerminalState {
       }
 
       const [targetDevice, targetService] = args.slice(1);
-      getService('bruteforce').subscribe(bruteforceService => {
-        if (bruteforceService == null) {
+      getService('brute4ce').subscribe(bruteforceService => {
+        if (bruteforceService == null || bruteforceService['uuid'] == null) {
           this.terminal.outputText('You have to create a bruteforce service before you use it');
           return;
         }
 
         this.websocket.ms('service', ['use'], {
-          service_uuid: bruteforceService, device_uuid: activeDevice,
+          service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
           target_device: targetDevice, target_service: targetService
         }).subscribe(useData => {
           if (useData['ok'] === true) {
@@ -461,13 +461,13 @@ export class DefaultTerminalState extends CommandTerminalState {
 
       const targetDevice = args[1];
       getService('portscan').subscribe(portscanService => {
-        if (portscanService == null) {
+        if (portscanService == null || portscanService['uuid'] == null) {
           this.terminal.outputText('You have to create a portscan service before you use it');
           return;
         }
 
         this.websocket.ms('service', ['use'], {
-          service_uuid: portscanService, device_uuid: activeDevice,
+          service_uuid: portscanService['uuid'], device_uuid: activeDevice,
           target_device: targetDevice
         }).subscribe(data => {
           const runningServices = data['services'];
@@ -476,10 +476,13 @@ export class DefaultTerminalState extends CommandTerminalState {
             return;
           }
 
-          this.terminal.outputText('Running services on that device:')
-          (runningServices as any[])
-            .map(service => service['name'] + ' (UUID: ' + service['uuid'] + ' Port: ' + service['running_port'] + ')')
-            .forEach(service => this.terminal.outputText(service));
+          this.terminal.outputText('Open ports on that device:');
+          this.terminal.outputRaw('<ul>' +
+            (runningServices as any[])
+              .map(service =>
+                '<li>' + service['name'] + ' (UUID: <em>' + service['uuid'] + '</em> Port: <em>' + service['running_port'] + '</em>)</li>')
+              .join('\n') +
+            '</ul>');
         });
       });
     } else {
