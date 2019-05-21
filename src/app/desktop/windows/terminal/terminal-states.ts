@@ -102,7 +102,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.websocket.request({
       action: 'info'
     }).subscribe(r => {
-      this.terminal.outputText('online = ' + (r.online - 1));
+      this.terminal.outputText('Online players: ' + r.online);
     });
   }
 
