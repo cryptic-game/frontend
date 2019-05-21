@@ -108,6 +108,7 @@ export class TerminalComponent extends WindowDelegate
       'beforeend',
       html
     );
+    this.cmdLine.nativeElement.scrollIntoView();
   }
 
   outputText(text: string) {
@@ -116,10 +117,12 @@ export class TerminalComponent extends WindowDelegate
       text
     );
     this.outputRaw('<br>');
+    this.cmdLine.nativeElement.scrollIntoView();
   }
 
   outputNode(node: Node) {
     (this.history.nativeElement as HTMLElement).appendChild(node);
+    this.cmdLine.nativeElement.scrollIntoView();
   }
 
   closeTerminal() {
