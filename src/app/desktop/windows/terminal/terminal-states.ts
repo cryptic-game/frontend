@@ -444,6 +444,14 @@ export class DefaultTerminalState extends CommandTerminalState {
             if (useData['access'] == null) {
               this.terminal.outputText('You started a bruteforce attack');
             } else if (useData['access'] === true) {
+              this.websocket.ms('device', ['device', 'info'], {
+                device_uuid: useData['target_device']
+              }).subscribe(infoData => {
+                this.activeDevice = infoData;
+                console.log(this.activeDevice);
+                this.refreshPrompt();
+              });
+
               this.terminal.outputText('Access granted');
             } else {
               this.terminal.outputText('Access denied. The bruteforce attack was not successful');
