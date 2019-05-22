@@ -3,7 +3,52 @@ import { WebsocketService } from '../../../websocket.service';
 import { map } from 'rxjs/operators';
 
 
-export class DefaultTerminalState implements TerminalState {
+export abstract class CommandTerminalState implements TerminalState {
+  abstract commands: { [name: string]: (args: string[]) => void };
+
+  protocol: string[] = [];
+
+  executeCommand(command: string, args: string[]) {
+    command = command.toLowerCase();
+    if (this.commands.hasOwnProperty(command)) {
+      this.commands[command](args);
+    } else if (command !== '') {
+      this.commandNotFound(command);
+    }
+  }
+
+  execute(command: string) {
+    const command_ = command.trim().split(' ');
+    if (command_.length === 0) {
+      return;
+    }
+    this.executeCommand(command_[0], command_.slice(1));
+    if (command) {
+      this.protocol.unshift(command);
+    }
+  }
+
+  abstract commandNotFound(command: string);
+
+  autocomplete(content: string): string {
+    return content
+      ? Object.keys(this.commands)
+        .filter(n => !['chaozz'].includes(n))
+        .sort()
+        .find(n => n.startsWith(content))
+      : '';
+  }
+
+  getHistory(): string[] {
+    return this.protocol;
+  }
+
+  abstract refreshPrompt();
+
+}
+
+
+export class DefaultTerminalState extends CommandTerminalState {
 
   commands = {
     'help': this.help.bind(this),
@@ -24,6 +69,7 @@ export class DefaultTerminalState implements TerminalState {
     'morphcoin': this.morphcoin.bind(this),
     'pay': this.pay.bind(this),
     'service': this.service.bind(this),
+    'spot': this.spot.bind(this),
 
     // easter egg
     'chaozz': () => {
@@ -31,50 +77,17 @@ export class DefaultTerminalState implements TerminalState {
     }
   };
 
-  protocol: string[] = [];
-
-
   constructor(protected websocket: WebsocketService, protected terminal: TerminalAPI,
               protected activeDevice: object, protected username: string) {
+    super();
   }
 
-  executeCommand(command: string, args: string[]) {
-    command = command.toLowerCase();
-    if (this.commands.hasOwnProperty(command)) {
-      this.commands[command](args, this.terminal);
-    } else if (command !== '') {
-      this.terminal.output(
-        'Command could not be found.<br/>Type `help` for a list of commands.'
-      );
-    }
-  }
-
-  execute(command: string) {
-    const command_ = command.trim().split(' ');
-    if (command_.length === 0) {
-      return;
-    }
-    this.executeCommand(command_[0], command_.slice(1));
-    if (command) {
-      this.protocol.unshift(command);
-    }
-  }
-
-  autocomplete(content: string): string {
-    return content
-      ? Object.keys(this.commands)
-        .filter(n => !['chaozz'].includes(n))
-        .sort()
-        .find(n => n.startsWith(content))
-      : '';
+  commandNotFound(command: string) {
+    this.terminal.output('Command could not be found.<br/>Type `help` for a list of commands.');
   }
 
   refreshPrompt() {
     this.terminal.changePrompt(this.username + '@' + this.activeDevice['name'] + ' $');
-  }
-
-  getHistory(): string[] {
-    return this.protocol;
   }
 
 
@@ -89,7 +102,7 @@ export class DefaultTerminalState implements TerminalState {
     this.websocket.request({
       action: 'info'
     }).subscribe(r => {
-      this.terminal.outputText('online = ' + (r.online - 1));
+      this.terminal.outputText('Online players: ' + r.online);
     });
   }
 
@@ -168,6 +181,21 @@ export class DefaultTerminalState implements TerminalState {
       }).subscribe(r => {
         r.files.forEach(e => {
           if (e != null && e.filename === name) {
+            if (e.content !== '') {
+              const uuid = e.content.split(' ')[0];
+              const key = e.content.split(' ').splice(1).join(' ');
+              this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(r2 => {
+                if (r2.error == null) {
+                  this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(r3 => {
+                    if (r3.error != null) {
+                      this.terminal.output('<span style="color: red">The wallet couldn\'t be deleted successfully. ' +
+                        'Please report this bug.</span>');
+                    }
+                  });
+                }
+              });
+            }
+
             this.websocket.ms('device', ['file', 'delete'], {
               device_uuid: this.activeDevice['uuid'],
               file_uuid: e.uuid
@@ -260,10 +288,7 @@ export class DefaultTerminalState implements TerminalState {
             if (e != null && e.filename === filename) {
               if (e.content !== '') {
                 const uuid = e.content.split(' ')[0];
-                const key = e.content
-                  .split(' ')
-                  .splice(1)
-                  .join(' ');
+                const key = e.content.split(' ').splice(1).join(' ');
                 this.websocket.ms('currency', ['get'], {
                   source_uuid: uuid,
                   key: key
@@ -405,20 +430,28 @@ export class DefaultTerminalState implements TerminalState {
       }
 
       const [targetDevice, targetService] = args.slice(1);
-      getService('bruteforce').subscribe(bruteforceService => {
-        if (bruteforceService == null) {
+      getService('brute4ce').subscribe(bruteforceService => {
+        if (bruteforceService == null || bruteforceService['uuid'] == null) {
           this.terminal.outputText('You have to create a bruteforce service before you use it');
           return;
         }
 
         this.websocket.ms('service', ['use'], {
-          service_uuid: bruteforceService, device_uuid: activeDevice,
+          service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
           target_device: targetDevice, target_service: targetService
         }).subscribe(useData => {
           if (useData['ok'] === true) {
             if (useData['access'] == null) {
               this.terminal.outputText('You started a bruteforce attack');
             } else if (useData['access'] === true) {
+              this.websocket.ms('device', ['device', 'info'], {
+                device_uuid: useData['target_device']
+              }).subscribe(infoData => {
+                this.activeDevice = infoData;
+                console.log(this.activeDevice);
+                this.refreshPrompt();
+              });
+
               this.terminal.outputText('Access granted');
             } else {
               this.terminal.outputText('Access denied. The bruteforce attack was not successful');
@@ -436,13 +469,13 @@ export class DefaultTerminalState implements TerminalState {
 
       const targetDevice = args[1];
       getService('portscan').subscribe(portscanService => {
-        if (portscanService == null) {
+        if (portscanService == null || portscanService['uuid'] == null) {
           this.terminal.outputText('You have to create a portscan service before you use it');
           return;
         }
 
         this.websocket.ms('service', ['use'], {
-          service_uuid: portscanService, device_uuid: activeDevice,
+          service_uuid: portscanService['uuid'], device_uuid: activeDevice,
           target_device: targetDevice
         }).subscribe(data => {
           const runningServices = data['services'];
@@ -451,15 +484,60 @@ export class DefaultTerminalState implements TerminalState {
             return;
           }
 
-          this.terminal.outputText('Running services on that device:')
-          (runningServices as any[])
-            .map(service => service['name'] + ' (UUID: ' + service['uuid'] + ' Port: ' + service['running_port'] + ')')
-            .forEach(service => this.terminal.outputText(service));
+          this.terminal.outputText('Open ports on that device:');
+          this.terminal.outputRaw('<ul>' +
+            (runningServices as any[])
+              .map(service =>
+                '<li>' + service['name'] + ' (UUID: <em>' + service['uuid'] + '</em> Port: <em>' + service['running_port'] + '</em>)</li>')
+              .join('\n') +
+            '</ul>');
         });
       });
     } else {
       this.terminal.outputText('usage: service create|bruteforce|portscan');
     }
+  }
+
+  spot() {
+    this.websocket.ms('device', ['device', 'spot'], {}).subscribe(random_device => {
+      if (random_device['uuid'] == null) {
+        this.terminal.output('<span class="errorText">An error occurred</span>');
+        return;
+      }
+
+      this.websocket.ms('service', ['list'], { 'device_uuid': this.activeDevice['uuid'] }).subscribe(localServices => {
+        const portScanner = (localServices['services'] || []).filter(service => service.name === 'portscan')[0];
+        if (portScanner == null || portScanner['uuid'] == null) {
+          this.terminal.outputText('\'' + random_device['name'] + '\':');
+          this.terminal.outputRaw('<ul>' +
+            '<li>UUID: ' + random_device['uuid'] + '</li>' +
+            '<li>Powered on: ' + (random_device['powered_on'] ? 'yes' : 'no') + '</li>' +
+            '<li>Services: <em class="errorText"">portscan failed</em></li>' +
+            '</ul>');
+          return;
+        }
+
+        this.websocket.ms('service', ['use'], {
+          'device_uuid': this.activeDevice['uuid'],
+          'service_uuid': portScanner['uuid'], 'target_device': random_device['uuid']
+        }).subscribe(remoteServices => {
+          if (remoteServices == null || remoteServices['services'] == null) {
+            this.terminal.output('<span class="errorText">An error occurred</span>');
+            return;
+          }
+
+          this.terminal.outputText('\'' + random_device['name'] + '\':');
+          this.terminal.outputRaw('<ul>' +
+            '<li>UUID: ' + random_device['uuid'] + '</li>' +
+            '<li>Powered on: ' + (random_device['powered_on'] ? 'yes' : 'no') + '</li>' +
+            '<li>Services:</li>' +
+            '<ul>' +
+            remoteServices['services'].map(service => '<li>' + service['name'] + ' (' + service['uuid'] + ')</li>').join('\n') +
+            '</ul>' +
+            '</ul>');
+        });
+      });
+    });
   }
 
 }
