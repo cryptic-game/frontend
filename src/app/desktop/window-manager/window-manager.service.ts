@@ -46,6 +46,11 @@ export class WindowManagerService {
     this.sortWindows();
   }
 
+  closeAllWindows() {
+    this.windows = [];
+    this.taskList = [];
+  }
+
   focusWindow(window: WindowDelegate) {
     window.position.active = true;
     if (this.activeWindow === window) {

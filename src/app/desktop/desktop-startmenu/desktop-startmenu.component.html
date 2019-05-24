@@ -15,6 +15,6 @@
     </div>
     <input [(ngModel)]="searchTerm" class="search" placeholder="Search">
   </div>
-  <span (click)="userService.logout(token)" class="button" id="logout">
+  <span (click)="userService.logout(token); parent.windowManager.closeAllWindows()" class="button" id="logout">
     <img src="../../../assets/desktop/img/logoutbutton.svg" alt="" class="icon"/>Logout</span>
 </div>
