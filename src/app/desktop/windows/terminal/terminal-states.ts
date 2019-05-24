@@ -70,6 +70,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     'pay': this.pay.bind(this),
     'service': this.service.bind(this),
     'spot': this.spot.bind(this),
+    'connect': this.connect.bind(this),
 
     // easter egg
     'chaozz': () => {
@@ -98,7 +99,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.terminal.output(commands);
   }
 
-  status(args: string[]) {
+  status() {
     this.websocket.request({
       action: 'info'
     }).subscribe(r => {
@@ -426,7 +427,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       }
 
       const service = args[1];
-      const services = ['brute4ce', 'portscan', 'telnet', 'ssh'];
+      const services = ['brute4ce', 'portscan', 'telnet', 'connect'];
       if (!services.includes(service)) {
         this.terminal.outputText('Unknown service. Available services: ' + services.join(', '));
         return;
@@ -459,14 +460,6 @@ export class DefaultTerminalState extends CommandTerminalState {
             if (useData['access'] == null) {
               this.terminal.outputText('You started a bruteforce attack');
             } else if (useData['access'] === true) {
-              this.websocket.ms('device', ['device', 'info'], {
-                device_uuid: useData['target_device']
-              }).subscribe(infoData => {
-                this.activeDevice = infoData;
-                console.log(this.activeDevice);
-                this.refreshPrompt();
-              });
-
               this.terminal.outputText('Access granted');
             } else {
               this.terminal.outputText('Access denied. The bruteforce attack was not successful');
@@ -551,6 +544,34 @@ export class DefaultTerminalState extends CommandTerminalState {
             '</ul>' +
             '</ul>');
         });
+      });
+    });
+  }
+
+  connect(args: string[]) {
+    if (args.length !== 1) {
+      this.terminal.outputText('usage: connect <device>');
+      return;
+    }
+
+    this.websocket.ms('device', ['device', 'info'], { device_uuid: args[0] }).subscribe(infoData => {
+      if (infoData.error != null) {
+        this.terminal.outputText(infoData.error);
+        return;
+      }
+
+      this.websocket.ms('service', ['part_owner'], { device_uuid: args[0] }).subscribe(partOwnerData => {
+        if (partOwnerData.error != null) {
+          this.terminal.outputText(partOwnerData.error);
+          return;
+        }
+
+        const user_uuid = JSON.parse(sessionStorage.getItem('activeDevice'))['owner'];
+        if (infoData['owner'] === user_uuid || partOwnerData['ok'] === true) {
+          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.terminal, infoData, this.username));
+        } else {
+          this.terminal.outputText('Access denied');
+        }
       });
     });
   }
