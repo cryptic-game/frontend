@@ -186,20 +186,35 @@ export class DefaultTerminalState extends CommandTerminalState {
               const key = e.content.split(' ').splice(1).join(' ');
               this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(r2 => {
                 if (r2.error == null) {
-                  this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(r3 => {
-                    if (r3.error != null) {
-                      this.terminal.output('<span style="color: red">The wallet couldn\'t be deleted successfully. ' +
-                        'Please report this bug.</span>');
-                    }
+                  this.terminal.pushState(new PromptTerminalState(this.terminal,
+                    '<span class="errorText">Are you sure you want to delete your wallet? [yes|no]</span>', answer => {
+                      if (answer) {
+                        this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(r3 => {
+                          if (r3.error == null) {
+                            this.websocket.ms('device', ['file', 'delete'], {
+                              device_uuid: this.activeDevice['uuid'],
+                              file_uuid: e.uuid
+                            });
+                          } else {
+                            this.terminal.output('<span class="errorText"">The wallet couldn\'t be deleted successfully. ' +
+                              'Please report this bug.</span>');
+                          }
+                        });
+                      }
+                    }));
+                } else {
+                  this.websocket.ms('device', ['file', 'delete'], {
+                    device_uuid: this.activeDevice['uuid'],
+                    file_uuid: e.uuid
                   });
                 }
               });
+            } else {
+              this.websocket.ms('device', ['file', 'delete'], {
+                device_uuid: this.activeDevice['uuid'],
+                file_uuid: e.uuid
+              });
             }
-
-            this.websocket.ms('device', ['file', 'delete'], {
-              device_uuid: this.activeDevice['uuid'],
-              file_uuid: e.uuid
-            });
           }
         });
       });
@@ -538,6 +553,33 @@ export class DefaultTerminalState extends CommandTerminalState {
         });
       });
     });
+  }
+
+}
+
+
+export class PromptTerminalState extends CommandTerminalState {
+  commands = {
+    'yes': () => {
+      this.terminal.popState();
+      this.callback(true);
+    },
+    'no': () => {
+      this.terminal.popState();
+      this.callback(false);
+    }
+  };
+
+  constructor(private terminal: TerminalAPI, private prompt: string, private callback: (response: boolean) => void) {
+    super();
+  }
+
+  commandNotFound(command: string) {
+    this.terminal.outputText('\'' + command + '\' is not one of the following: yes, no');
+  }
+
+  refreshPrompt() {
+    this.terminal.changePrompt(this.prompt);
   }
 
 }

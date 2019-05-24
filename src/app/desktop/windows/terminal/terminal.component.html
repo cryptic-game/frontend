@@ -2,13 +2,13 @@
   <div id="terminal-window">
     <output #history id="terminal-history"></output>
     <div id="input-line">
-      <div #prompt class="prompt">{{promptText}}</div>
+      <div #prompt id="prompt" [innerHTML]="promptHtml"></div>
       <input #cmdLine
              (keydown.enter)="$event.preventDefault(); enter(cmdLine.value)"
              (keydown.tab)="$event.preventDefault(); autocomplete(cmdLine.value)"
              (keydown.arrowup)="$event.preventDefault(); previousFromHistory()"
              (keydown.arrowdown)="$event.preventDefault(); nextFromHistory()"
-             autocomplete="off" autofocus
+             autocomplete="off" autofocus size="5"
              id="cmdline" spellcheck="false" type="text">
     </div>
   </div>
