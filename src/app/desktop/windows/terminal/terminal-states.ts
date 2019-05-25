@@ -79,7 +79,7 @@ export class DefaultTerminalState extends CommandTerminalState {
   };
 
   constructor(protected websocket: WebsocketService, protected terminal: TerminalAPI,
-              protected activeDevice: object, protected username: string) {
+              protected activeDevice: object, protected username: string, public color: string = '#64DD17') {
     super();
   }
 
@@ -460,7 +460,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             if (useData['access'] == null) {
               this.terminal.outputText('You started a bruteforce attack');
             } else if (useData['access'] === true) {
-              this.terminal.outputText('Access granted');
+              this.terminal.outputText('Access granted - use `connect <device>`');
             } else {
               this.terminal.outputText('Access denied. The bruteforce attack was not successful');
             }
@@ -568,7 +568,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
         const user_uuid = JSON.parse(sessionStorage.getItem('activeDevice'))['owner'];
         if (infoData['owner'] === user_uuid || partOwnerData['ok'] === true) {
-          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.terminal, infoData, this.username));
+          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.terminal, infoData, this.username, '#DD2C00'));
         } else {
           this.terminal.outputText('Access denied');
         }

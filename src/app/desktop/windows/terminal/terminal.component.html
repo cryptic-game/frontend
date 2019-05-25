@@ -2,7 +2,9 @@
   <div id="terminal-window">
     <output #history id="terminal-history"></output>
     <div id="input-line">
-      <div #prompt id="prompt" [innerHTML]="promptHtml"></div>
+      <div #prompt id="prompt"
+            [style.color]="currentState[currentState.length - 1].color"
+            [innerHTML]="promptHtml"></div>
       <input #cmdLine
              (keydown.enter)="$event.preventDefault(); enter(cmdLine.value)"
              (keydown.tab)="$event.preventDefault(); autocomplete(cmdLine.value)"
