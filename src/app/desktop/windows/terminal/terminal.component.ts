@@ -1,9 +1,10 @@
-import { Component, ElementRef, OnInit, Type, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, SecurityContext, Type, ViewChild } from '@angular/core';
 import { WindowDelegate } from '../../window/window-delegate';
 import { TerminalAPI, TerminalState } from './terminal-api';
 import { WindowManagerService } from '../../window-manager/window-manager.service';
 import { DefaultTerminalState } from './terminal-states';
 import { WebsocketService } from '../../../websocket.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-terminal',
@@ -21,36 +22,44 @@ export class TerminalComponent extends WindowDelegate
   type: Type<any> = TerminalComponent;
 
   currentState: TerminalState[] = [];
-  promptText = '';
+  promptHtml: SafeHtml;
 
   historyIndex = -1;
 
   constructor(
     private websocket: WebsocketService,
-    private windowManager: WindowManagerService
+    private windowManager: WindowManagerService,
+    private domSanitizer: DomSanitizer
   ) {
     super();
   }
 
   ngOnInit() {
-    this.pushState(new DefaultTerminalState(this.websocket, this,
+    this.pushState(new DefaultTerminalState(this.websocket, this.domSanitizer, this,
       JSON.parse(sessionStorage.getItem('activeDevice')), sessionStorage.getItem('username')));
     this.getState().refreshPrompt();
   }
 
-  changePrompt(prompt: string) {
-    this.promptText = prompt;
+  changePrompt(prompt: string | SafeHtml, color: string = '') {
+    if (typeof prompt === 'string') {
+      this.promptHtml = this.domSanitizer.sanitize(SecurityContext.HTML, prompt);
+    } else {
+      this.promptHtml = prompt;
+    }
   }
 
   pushState(state: TerminalState) {
     this.currentState.push(state);
+    state.refreshPrompt();
   }
 
   popState(): TerminalState {
     const popped = this.currentState.pop();
     if (this.currentState.length === 0) {
       this.closeTerminal();
+      return popped;
     }
+    this.getState().refreshPrompt();
     return popped;
   }
 

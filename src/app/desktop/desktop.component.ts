@@ -56,6 +56,9 @@ export class DesktopComponent implements OnInit {
             devices = [r2];
             sessionStorage.setItem('devices', JSON.stringify(devices));
             sessionStorage.setItem('activeDevice', JSON.stringify(devices[0]));
+
+            // just to make the pre-alpha 1.0 full of action
+            this.websocket.ms('service', ['create'], { name: 'ssh', device_uuid: devices[0]['uuid'] });
           });
         } else {
           sessionStorage.setItem('devices', JSON.stringify(devices));

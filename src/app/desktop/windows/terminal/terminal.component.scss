@@ -1,5 +1,6 @@
 @import "~src/constants";
 
+$warningColor: #FF3333;
 
 :host {
   flex-basis: 100%;
@@ -38,11 +39,12 @@
   width: 100%;
 }
 
-.prompt {
+#prompt {
   display: inline-block;
   user-select: none;
   color: $green;
   margin-right: 8px;
+  word-break: break-word;
 }
 
 #cmdline {
@@ -65,6 +67,14 @@
   outline: none;
 }
 
+#terminal-history {
+  word-break: break-word;
+}
+
 #terminal-history /deep/ .errorText {
-  color: #ff3333;
+  color: $warningColor;
+}
+
+#prompt /deep/ .errorText {
+  color: $warningColor;
 }

@@ -1,3 +1,5 @@
+import { SafeHtml } from '@angular/platform-browser';
+
 export interface TerminalAPI {
   /**
    * Outputs html to the terminal (followed by a line break)
@@ -33,7 +35,7 @@ export interface TerminalAPI {
    */
   clear();
 
-  changePrompt(prompt: string);
+  changePrompt(prompt: string | SafeHtml);
 
   pushState(state: TerminalState);
 

@@ -1,6 +1,18 @@
 import { TerminalAPI, TerminalState } from './terminal-api';
 import { WebsocketService } from '../../../websocket.service';
 import { map } from 'rxjs/operators';
+import { DomSanitizer } from '@angular/platform-browser';
+import { SecurityContext } from '@angular/core';
+
+
+function escapeHtml(html) {
+  return html
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
 
 export abstract class CommandTerminalState implements TerminalState {
@@ -70,6 +82,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     'pay': this.pay.bind(this),
     'service': this.service.bind(this),
     'spot': this.spot.bind(this),
+    'connect': this.connect.bind(this),
 
     // easter egg
     'chaozz': () => {
@@ -77,8 +90,8 @@ export class DefaultTerminalState extends CommandTerminalState {
     }
   };
 
-  constructor(protected websocket: WebsocketService, protected terminal: TerminalAPI,
-              protected activeDevice: object, protected username: string) {
+  constructor(protected websocket: WebsocketService, private domSanitizer: DomSanitizer, protected terminal: TerminalAPI,
+              protected activeDevice: object, protected username: string, public promptColor: string = '#64DD17') {
     super();
   }
 
@@ -87,7 +100,10 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
   refreshPrompt() {
-    this.terminal.changePrompt(this.username + '@' + this.activeDevice['name'] + ' $');
+    const color = this.domSanitizer.sanitize(SecurityContext.STYLE, this.promptColor);
+    const prompt = this.domSanitizer.bypassSecurityTrustHtml(
+      `<span style="color: ${color}">${escapeHtml(this.username)}@${escapeHtml(this.activeDevice['name'])} $</span>`);
+    this.terminal.changePrompt(prompt);
   }
 
 
@@ -98,7 +114,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.terminal.output(commands);
   }
 
-  status(args: string[]) {
+  status() {
     this.websocket.request({
       action: 'info'
     }).subscribe(r => {
@@ -186,20 +202,35 @@ export class DefaultTerminalState extends CommandTerminalState {
               const key = e.content.split(' ').splice(1).join(' ');
               this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(r2 => {
                 if (r2.error == null) {
-                  this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(r3 => {
-                    if (r3.error != null) {
-                      this.terminal.output('<span style="color: red">The wallet couldn\'t be deleted successfully. ' +
-                        'Please report this bug.</span>');
-                    }
+                  this.terminal.pushState(new PromptTerminalState(this.terminal,
+                    '<span class="errorText">Are you sure you want to delete your wallet? [yes|no]</span>', answer => {
+                      if (answer) {
+                        this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(r3 => {
+                          if (r3.error == null) {
+                            this.websocket.ms('device', ['file', 'delete'], {
+                              device_uuid: this.activeDevice['uuid'],
+                              file_uuid: e.uuid
+                            });
+                          } else {
+                            this.terminal.output('<span class="errorText"">The wallet couldn\'t be deleted successfully. ' +
+                              'Please report this bug.</span>');
+                          }
+                        });
+                      }
+                    }));
+                } else {
+                  this.websocket.ms('device', ['file', 'delete'], {
+                    device_uuid: this.activeDevice['uuid'],
+                    file_uuid: e.uuid
                   });
                 }
               });
+            } else {
+              this.websocket.ms('device', ['file', 'delete'], {
+                device_uuid: this.activeDevice['uuid'],
+                file_uuid: e.uuid
+              });
             }
-
-            this.websocket.ms('device', ['file', 'delete'], {
-              device_uuid: this.activeDevice['uuid'],
-              file_uuid: e.uuid
-            });
           }
         });
       });
@@ -406,12 +437,12 @@ export class DefaultTerminalState extends CommandTerminalState {
 
     if (args.length >= 1 && args[0].toLowerCase() === 'create') {
       if (args.length !== 2) {
-        this.terminal.outputText('usage: service create <brute4ce|portscan|telnet|ssh>');
+        this.terminal.outputText('usage: service create <bruteforce|portscan|telnet|ssh>');
         return;
       }
 
       const service = args[1];
-      const services = ['brute4ce', 'portscan', 'telnet', 'ssh'];
+      const services = ['bruteforce', 'portscan', 'telnet', 'ssh'];
       if (!services.includes(service)) {
         this.terminal.outputText('Unknown service. Available services: ' + services.join(', '));
         return;
@@ -430,7 +461,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       }
 
       const [targetDevice, targetService] = args.slice(1);
-      getService('brute4ce').subscribe(bruteforceService => {
+      getService('bruteforce').subscribe(bruteforceService => {
         if (bruteforceService == null || bruteforceService['uuid'] == null) {
           this.terminal.outputText('You have to create a bruteforce service before you use it');
           return;
@@ -444,15 +475,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             if (useData['access'] == null) {
               this.terminal.outputText('You started a bruteforce attack');
             } else if (useData['access'] === true) {
-              this.websocket.ms('device', ['device', 'info'], {
-                device_uuid: useData['target_device']
-              }).subscribe(infoData => {
-                this.activeDevice = infoData;
-                console.log(this.activeDevice);
-                this.refreshPrompt();
-              });
-
-              this.terminal.outputText('Access granted');
+              this.terminal.outputText('Access granted - use `connect <device>`');
             } else {
               this.terminal.outputText('Access denied. The bruteforce attack was not successful');
             }
@@ -538,6 +561,62 @@ export class DefaultTerminalState extends CommandTerminalState {
         });
       });
     });
+  }
+
+  connect(args: string[]) {
+    if (args.length !== 1) {
+      this.terminal.outputText('usage: connect <device>');
+      return;
+    }
+
+    this.websocket.ms('device', ['device', 'info'], { device_uuid: args[0] }).subscribe(infoData => {
+      if (infoData.error != null) {
+        this.terminal.outputText(infoData.error);
+        return;
+      }
+
+      this.websocket.ms('service', ['part_owner'], { device_uuid: args[0] }).subscribe(partOwnerData => {
+        if (partOwnerData.error != null) {
+          this.terminal.outputText(partOwnerData.error);
+          return;
+        }
+
+        const user_uuid = JSON.parse(sessionStorage.getItem('activeDevice'))['owner'];
+        if (infoData['owner'] === user_uuid || partOwnerData['ok'] === true) {
+          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.domSanitizer, this.terminal,
+            infoData, this.username, '#DD2C00'));
+        } else {
+          this.terminal.outputText('Access denied');
+        }
+      });
+    });
+  }
+
+}
+
+
+export class PromptTerminalState extends CommandTerminalState {
+  commands = {
+    'yes': () => {
+      this.terminal.popState();
+      this.callback(true);
+    },
+    'no': () => {
+      this.terminal.popState();
+      this.callback(false);
+    }
+  };
+
+  constructor(private terminal: TerminalAPI, private prompt: string, private callback: (response: boolean) => void) {
+    super();
+  }
+
+  commandNotFound(command: string) {
+    this.terminal.outputText('\'' + command + '\' is not one of the following: yes, no');
+  }
+
+  refreshPrompt() {
+    this.terminal.changePrompt(this.prompt);
   }
 
 }
