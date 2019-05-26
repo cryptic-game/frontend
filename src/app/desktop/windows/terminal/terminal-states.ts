@@ -1,6 +1,18 @@
 import { TerminalAPI, TerminalState } from './terminal-api';
 import { WebsocketService } from '../../../websocket.service';
 import { map } from 'rxjs/operators';
+import { DomSanitizer } from '@angular/platform-browser';
+import { SecurityContext } from '@angular/core';
+
+
+function escapeHtml(html) {
+  return html
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
 
 export abstract class CommandTerminalState implements TerminalState {
@@ -78,8 +90,8 @@ export class DefaultTerminalState extends CommandTerminalState {
     }
   };
 
-  constructor(protected websocket: WebsocketService, protected terminal: TerminalAPI,
-              protected activeDevice: object, protected username: string, public color: string = '#64DD17') {
+  constructor(protected websocket: WebsocketService, private domSanitizer: DomSanitizer, protected terminal: TerminalAPI,
+              protected activeDevice: object, protected username: string, public promptColor: string = '#64DD17') {
     super();
   }
 
@@ -88,7 +100,10 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
   refreshPrompt() {
-    this.terminal.changePrompt(this.username + '@' + this.activeDevice['name'] + ' $');
+    const color = this.domSanitizer.sanitize(SecurityContext.STYLE, this.promptColor);
+    const prompt = this.domSanitizer.bypassSecurityTrustHtml(
+      `<span style="color: ${color}">${escapeHtml(this.username)}@${escapeHtml(this.activeDevice['name'])} $</span>`);
+    this.terminal.changePrompt(prompt);
   }
 
 
@@ -568,7 +583,8 @@ export class DefaultTerminalState extends CommandTerminalState {
 
         const user_uuid = JSON.parse(sessionStorage.getItem('activeDevice'))['owner'];
         if (infoData['owner'] === user_uuid || partOwnerData['ok'] === true) {
-          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.terminal, infoData, this.username, '#DD2C00'));
+          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.domSanitizer, this.terminal,
+            infoData, this.username, '#DD2C00'));
         } else {
           this.terminal.outputText('Access denied');
         }

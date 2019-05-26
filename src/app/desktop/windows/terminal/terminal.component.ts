@@ -35,13 +35,17 @@ export class TerminalComponent extends WindowDelegate
   }
 
   ngOnInit() {
-    this.pushState(new DefaultTerminalState(this.websocket, this,
+    this.pushState(new DefaultTerminalState(this.websocket, this.domSanitizer, this,
       JSON.parse(sessionStorage.getItem('activeDevice')), sessionStorage.getItem('username')));
     this.getState().refreshPrompt();
   }
 
-  changePrompt(prompt: string) {
-    this.promptHtml = this.domSanitizer.sanitize(SecurityContext.HTML, prompt);
+  changePrompt(prompt: string | SafeHtml, color: string = '') {
+    if (typeof prompt === 'string') {
+      this.promptHtml = this.domSanitizer.sanitize(SecurityContext.HTML, prompt);
+    } else {
+      this.promptHtml = prompt;
+    }
   }
 
   pushState(state: TerminalState) {
