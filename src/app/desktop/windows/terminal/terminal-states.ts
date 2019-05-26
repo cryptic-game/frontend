@@ -437,12 +437,12 @@ export class DefaultTerminalState extends CommandTerminalState {
 
     if (args.length >= 1 && args[0].toLowerCase() === 'create') {
       if (args.length !== 2) {
-        this.terminal.outputText('usage: service create <brute4ce|portscan|telnet|ssh>');
+        this.terminal.outputText('usage: service create <bruteforce|portscan|telnet|ssh>');
         return;
       }
 
       const service = args[1];
-      const services = ['brute4ce', 'portscan', 'telnet', 'connect'];
+      const services = ['bruteforce', 'portscan', 'telnet', 'ssh'];
       if (!services.includes(service)) {
         this.terminal.outputText('Unknown service. Available services: ' + services.join(', '));
         return;
@@ -461,7 +461,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       }
 
       const [targetDevice, targetService] = args.slice(1);
-      getService('brute4ce').subscribe(bruteforceService => {
+      getService('bruteforce').subscribe(bruteforceService => {
         if (bruteforceService == null || bruteforceService['uuid'] == null) {
           this.terminal.outputText('You have to create a bruteforce service before you use it');
           return;
