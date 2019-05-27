@@ -534,7 +534,6 @@ export class DefaultTerminalState extends CommandTerminalState {
           this.terminal.outputText('\'' + random_device['name'] + '\':');
           this.terminal.outputRaw('<ul>' +
             '<li>UUID: ' + random_device['uuid'] + '</li>' +
-            '<li>Powered on: ' + (random_device['powered_on'] ? 'yes' : 'no') + '</li>' +
             '<li>Services: <em class="errorText"">portscan failed</em></li>' +
             '</ul>');
           return;
@@ -552,7 +551,6 @@ export class DefaultTerminalState extends CommandTerminalState {
           this.terminal.outputText('\'' + random_device['name'] + '\':');
           this.terminal.outputRaw('<ul>' +
             '<li>UUID: ' + random_device['uuid'] + '</li>' +
-            '<li>Powered on: ' + (random_device['powered_on'] ? 'yes' : 'no') + '</li>' +
             '<li>Services:</li>' +
             '<ul>' +
             remoteServices['services'].map(service => '<li>' + service['name'] + ' (' + service['uuid'] + ')</li>').join('\n') +
