@@ -3,7 +3,7 @@
     <app-window-frame [delegate]="window" [style.left.px]="window.position.maximized ? 0 : window.position.x"
                       [style.top.px]="window.position.maximized ? 0 : window.position.y"
                       [style.z-index]="window.position.zIndex"
-                      style="position: absolute;">
+                      style="position: fixed;">
       <ng-container [ngComponentOutlet]="window.type"></ng-container>
     </app-window-frame>
   </div>
