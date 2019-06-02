@@ -1,5 +1,5 @@
 import { Position } from '../../dataclasses/position';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Program } from '../../dataclasses/program';
 import { ProgramService } from './program.service';
 import { Router } from '@angular/router';
@@ -104,7 +104,7 @@ export class DesktopComponent implements OnInit {
     }
   }
 
-  mousedown(e: MouseEvent, i: number): void {
+  linkageMouseDown(e: MouseEvent, i: number): void {
     this.index = i;
     this.position = new Position(e.offsetX, e.offsetY);
 
@@ -114,6 +114,7 @@ export class DesktopComponent implements OnInit {
     this.linkages[this.index].position.z = 1;
   }
 
+  @HostListener('document:mouseup')
   mouseup(): void {
     if (this.index !== undefined) {
       this.programService.update();
