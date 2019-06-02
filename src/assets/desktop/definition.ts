@@ -26,7 +26,7 @@ export const desktopDefinition = {
       'File-Manager',
       '../../assets/desktop/img/filemanager.svg',
       true,
-      new Position(20, 90, 1)
+      new Position(20, 90, 0)
     ),
     new Program(
       'terminal',
@@ -34,7 +34,7 @@ export const desktopDefinition = {
       'Terminal',
       '../../assets/desktop/img/terminal.svg',
       true,
-      new Position(20, 180, 2)
+      new Position(20, 180, 0)
     )
   ]
 };
