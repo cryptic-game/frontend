@@ -128,12 +128,28 @@ export class DefaultTerminalState extends CommandTerminalState {
       this.websocket.ms('device', ['device', 'change_name'], {
         device_uuid: this.activeDevice['uuid'],
         name: hostname
-      }).subscribe(r => {
-        this.activeDevice = r;
-        this.refreshPrompt();
+      }).subscribe(newDevice => {
+        if (newDevice['uuid'] != null && newDevice['name'] != null) {
+          this.activeDevice = newDevice;
+          this.refreshPrompt();
+
+          if (this.activeDevice['uuid'] === JSON.parse(sessionStorage.getItem('activeDevice'))['uuid']) {
+            sessionStorage.setItem('activeDevice', JSON.stringify(newDevice));
+          }
+        }
       });
     } else {
-      this.terminal.outputText(this.activeDevice['name']);
+      this.websocket.ms('device', ['device', 'info'], { device_uuid: this.activeDevice['uuid'] }).subscribe(device => {
+        if (device['uuid'] == null || device['name'] == null) {
+          this.terminal.outputText(this.activeDevice['name']);
+        } else {
+          if (device['name'] !== this.activeDevice['name']) {
+            this.activeDevice = device;
+            this.refreshPrompt();
+          }
+          this.terminal.outputText(device['name']);
+        }
+      });
     }
   }
 
