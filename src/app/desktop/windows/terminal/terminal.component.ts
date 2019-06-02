@@ -40,6 +40,12 @@ export class TerminalComponent extends WindowDelegate
     this.getState().refreshPrompt();
   }
 
+  focusCommandLine() {
+    if (window.getSelection().type !== 'Range') {
+      this.cmdLine.nativeElement.focus();
+    }
+  }
+
   changePrompt(prompt: string | SafeHtml, color: string = '') {
     if (typeof prompt === 'string') {
       this.promptHtml = this.domSanitizer.sanitize(SecurityContext.HTML, prompt);
