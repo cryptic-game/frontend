@@ -178,6 +178,10 @@ export class DefaultTerminalState extends CommandTerminalState {
         device_uuid: this.activeDevice['uuid'],
         filename: filename,
         content: content
+      }).subscribe(r => {
+        if (r.error != null) {
+          this.terminal.outputText('That file already exists');
+        }
       });
     } else {
       this.terminal.outputText('usage: touch <filename> [content]');
@@ -188,9 +192,11 @@ export class DefaultTerminalState extends CommandTerminalState {
     if (args.length === 1) {
       const name = args[0];
 
-      this.websocket.ms('device', ['file', 'all'], {
-        device_uuid: this.activeDevice['uuid']
-      }).subscribe(r => {
+      this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
+        if (r.error != null) {
+          this.terminal.outputText('That file does not exist');
+        }
+
         r.files.forEach(e => {
           if (e != null && e.filename === name) {
             if (e.content !== '') {
@@ -211,11 +217,16 @@ export class DefaultTerminalState extends CommandTerminalState {
       this.websocket.ms('device', ['file', 'all'], {
         device_uuid: this.activeDevice['uuid']
       }).subscribe(r => {
-        r.files.forEach(e => {
-          if (e != null && e.filename === name) {
-            if (e.content !== '') {
-              const uuid = e.content.split(' ')[0];
-              const key = e.content.split(' ').splice(1).join(' ');
+        if (r.files == null) {
+          console.error('Unexpected error');
+          return;
+        }
+
+        for (const file of r.files) {
+          if (file != null && file.filename === name) {
+            if (file.content !== '') {
+              const uuid = file.content.split(' ')[0];
+              const key = file.content.split(' ').splice(1).join(' ');
               this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(r2 => {
                 if (r2.error == null) {
                   this.terminal.pushState(new PromptTerminalState(this.terminal,
@@ -225,7 +236,7 @@ export class DefaultTerminalState extends CommandTerminalState {
                           if (r3.error == null) {
                             this.websocket.ms('device', ['file', 'delete'], {
                               device_uuid: this.activeDevice['uuid'],
-                              file_uuid: e.uuid
+                              file_uuid: file.uuid
                             });
                           } else {
                             this.terminal.output('<span class="errorText"">The wallet couldn\'t be deleted successfully. ' +
@@ -237,18 +248,22 @@ export class DefaultTerminalState extends CommandTerminalState {
                 } else {
                   this.websocket.ms('device', ['file', 'delete'], {
                     device_uuid: this.activeDevice['uuid'],
-                    file_uuid: e.uuid
+                    file_uuid: file.uuid
                   });
                 }
               });
             } else {
               this.websocket.ms('device', ['file', 'delete'], {
                 device_uuid: this.activeDevice['uuid'],
-                file_uuid: e.uuid
+                file_uuid: file.uuid
               });
             }
+
+            return;
           }
-        });
+        }
+
+        this.terminal.outputText('That file does not exist');
       });
     } else {
       this.terminal.outputText('usage: rm <filename>');
@@ -260,18 +275,26 @@ export class DefaultTerminalState extends CommandTerminalState {
       const src = args[0];
       const dest = args[1];
 
-      this.websocket.ms('device', ['file', 'all'], {
-        device_uuid: this.activeDevice['uuid']
-      }).subscribe(r => {
-        r.files.forEach(e => {
-          if (e != null && e.filename === src) {
-            this.websocket.ms('device', ['file', 'create'], {
-              device_uuid: this.activeDevice['uuid'],
-              filename: dest,
-              content: e.content
-            });
+      this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
+        if (r.files != null) {
+          for (const file of r.files) {
+            if (file != null && file.filename === src) {
+              this.websocket.ms('device', ['file', 'create'], {
+                device_uuid: this.activeDevice['uuid'],
+                filename: dest,
+                content: file.content
+              }).subscribe(r2 => {
+                if (r2['error'] != null) {
+                  this.terminal.outputText('The file \'' + dest + '\' already exists');
+                }
+              });
+              return;
+            }
           }
-        });
+          this.terminal.outputText('The file \'' + src + '\' does not exist');
+        } else {
+          console.error('Unexpected error');
+        }
       });
     } else {
       this.terminal.outputText('usage: cp <source> <destination>');
@@ -283,23 +306,31 @@ export class DefaultTerminalState extends CommandTerminalState {
       const src = args[0];
       const dest = args[1];
 
-      this.websocket.ms('device', ['file', 'all'], {
-        device_uuid: this.activeDevice['uuid']
-      }).subscribe(r => {
-        r.files.forEach(e => {
-          if (e != null && e.filename === src) {
-            this.websocket.ms('device', ['file', 'create'], {
-              device_uuid: this.activeDevice['uuid'],
-              filename: dest,
-              content: e.content
-            }).subscribe(r2 => {
-              this.websocket.ms('device', ['file', 'delete'], {
+      this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
+        if (r.files != null) {
+          for (const file of r.files) {
+            if (file != null && file.filename === src) {
+              this.websocket.ms('device', ['file', 'create'], {
                 device_uuid: this.activeDevice['uuid'],
-                file_uuid: e.uuid
+                filename: dest,
+                content: file.content
+              }).subscribe(r2 => {
+                if (r2['error'] == null) {
+                  this.websocket.ms('device', ['file', 'delete'], {
+                    device_uuid: this.activeDevice['uuid'],
+                    file_uuid: file.uuid
+                  });
+                } else {
+                  this.terminal.outputText('The file \'' + dest + '\' already exists');
+                }
               });
-            });
+              return;
+            }
           }
-        });
+          this.terminal.outputText('The file \'' + src + '\' does not exist');
+        } else {
+          console.error('Unexpected error');
+        }
       });
     } else {
       this.terminal.outputText('usage: mv <source> <destination>');
@@ -353,19 +384,35 @@ export class DefaultTerminalState extends CommandTerminalState {
               }
             }
           }
-          this.terminal.outputText('That file doesn\'t exist');
+          this.terminal.outputText('That file does not exist');
         });
       } else if (args[0] === 'create') {
-        this.websocket.ms('currency', ['create'], {}).subscribe(r => {
-          if (r['error'] != null) {
-            this.terminal.outputText('You already own a wallet');
+        this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
+          if (r.files == null) {
+            console.error('Unexpected error');
+            return;
+          }
+          if (r.files.some(file => file != null && file.filename === filename)) {
+            this.terminal.outputText('That file already exists');
             return;
           }
 
-          this.websocket.ms('device', ['file', 'create'], {
-            device_uuid: this.activeDevice['uuid'],
-            filename: filename,
-            content: r.uuid + ' ' + r.key
+          this.websocket.ms('currency', ['create'], {}).subscribe(r2 => {
+            if (r2['error'] != null) {
+              this.terminal.outputText('You already own a wallet');
+              return;
+            }
+
+            this.websocket.ms('device', ['file', 'create'], {
+              device_uuid: this.activeDevice['uuid'],
+              filename: filename,
+              content: r2.uuid + ' ' + r2.key
+            }).subscribe(r3 => {
+              if (r3['error'] != null) {
+                this.terminal.outputText('That file couldn\'t be created. Please note your wallet credentials ' +
+                  'and put them in a new file with \'touch\' or contact the support: \'' + r2.uuid + ' ' + r2.key + '\'');
+              }
+            });
           });
         });
       }
@@ -425,7 +472,7 @@ export class DefaultTerminalState extends CommandTerminalState {
                             }
                           );
                       } else {
-                        this.terminal.output('no valid walletfile');
+                        this.terminal.output('No valid walletfile');
                       }
                     });
                 }
