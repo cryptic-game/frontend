@@ -35,7 +35,7 @@ export interface TerminalAPI {
    */
   clear();
 
-  changePrompt(prompt: string | SafeHtml);
+  changePrompt(prompt: string | SafeHtml, trust?: boolean);
 
   pushState(state: TerminalState);
 

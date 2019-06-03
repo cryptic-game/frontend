@@ -46,7 +46,12 @@ export class TerminalComponent extends WindowDelegate
     }
   }
 
-  changePrompt(prompt: string | SafeHtml, color: string = '') {
+  changePrompt(prompt: string | SafeHtml, trust: boolean = false) {
+    if (trust && typeof prompt === 'string') {
+      this.promptHtml = this.domSanitizer.bypassSecurityTrustHtml(prompt);
+      return;
+    }
+
     if (typeof prompt === 'string') {
       this.promptHtml = this.domSanitizer.sanitize(SecurityContext.HTML, prompt);
     } else {

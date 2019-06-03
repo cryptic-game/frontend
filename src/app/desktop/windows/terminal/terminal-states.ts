@@ -229,7 +229,7 @@ export class DefaultTerminalState extends CommandTerminalState {
               const key = file.content.split(' ').splice(1).join(' ');
               this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(r2 => {
                 if (r2.error == null) {
-                  this.terminal.pushState(new PromptTerminalState(this.terminal,
+                  this.terminal.pushState(new YesNoTerminalState(this.terminal,
                     '<span class="errorText">Are you sure you want to delete your wallet? [yes|no]</span>', answer => {
                       if (answer) {
                         this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(r3 => {
@@ -537,6 +537,11 @@ export class DefaultTerminalState extends CommandTerminalState {
           if (useData['ok'] === true) {
             if (useData['access'] == null) {
               this.terminal.outputText('You started a bruteforce attack');
+              this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
+                if (stop) {
+                  this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
+                }
+              }));
             } else if (useData['access'] === true) {
               this.terminal.outputText('Access granted - use `connect <device>`');
             } else {
@@ -656,8 +661,43 @@ export class DefaultTerminalState extends CommandTerminalState {
 }
 
 
-export class PromptTerminalState extends CommandTerminalState {
-  commands = {
+export abstract class ChoiceTerminalState implements TerminalState {
+  choices: { [choice: string]: () => void };
+
+  protected constructor(protected terminal: TerminalAPI) {
+  }
+
+  execute(command: string) {
+    if (!command) {
+      return;
+    }
+
+    if (this.choices[command]) {
+      this.choices[command]();
+    } else {
+      this.invalidChoice(command);
+    }
+  }
+
+  invalidChoice(choice: string) {
+    this.terminal.outputText('\'' + choice + '\' is not one of the following: ' + Object.keys(this.choices).join(', '));
+  }
+
+  autocomplete(content: string): string {
+    return content ? Object.keys(this.choices).sort().find(choice => choice.startsWith(content)) : '';
+  }
+
+  getHistory(): string[] {
+    return [];
+  }
+
+  abstract refreshPrompt();
+
+}
+
+
+export class YesNoTerminalState extends ChoiceTerminalState {
+  choices = {
     'yes': () => {
       this.terminal.popState();
       this.callback(true);
@@ -668,16 +708,49 @@ export class PromptTerminalState extends CommandTerminalState {
     }
   };
 
-  constructor(private terminal: TerminalAPI, private prompt: string, private callback: (response: boolean) => void) {
-    super();
-  }
-
-  commandNotFound(command: string) {
-    this.terminal.outputText('\'' + command + '\' is not one of the following: yes, no');
+  constructor(terminal: TerminalAPI, private prompt: string, private callback: (response: boolean) => void) {
+    super(terminal);
   }
 
   refreshPrompt() {
     this.terminal.changePrompt(this.prompt);
   }
 
+}
+
+
+export class BruteforceTerminalState extends ChoiceTerminalState {
+  choices = {
+    'stop': () => {
+      clearInterval(this.intervalHandle);
+      this.terminal.popState();
+      this.callback(true);
+    },
+    'exit': () => {
+      clearInterval(this.intervalHandle);
+      this.terminal.popState();
+      this.callback(false);
+    }
+  };
+  time = this.startSeconds;
+  intervalHandle: number;
+
+  constructor(terminal: TerminalAPI,
+              private domSanitizer: DomSanitizer,
+              private callback: (response: boolean) => void,
+              private startSeconds: number = 0) {
+    super(terminal);
+
+    this.intervalHandle = setInterval(() => {
+      this.time += 1;
+      this.refreshPrompt();
+    }, 1000);
+  }
+
+  refreshPrompt() {
+    const minutes = Math.floor(this.time / 60);
+    const seconds = this.time % 60;
+    const prompt = `Bruteforcing ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} [stop/exit] `;
+    this.terminal.changePrompt(`<span style="color: gold">${prompt}</span>`, true);
+  }
 }
