@@ -90,6 +90,37 @@ export class DefaultTerminalState extends CommandTerminalState {
     }
   };
 
+  static promptAppenderListener(evt: MouseEvent) {
+    evt.stopPropagation();
+    const this_ = <HTMLElement>evt.target;
+    const cmdline: HTMLInputElement = this_.closest('#terminal-window').querySelector('#cmdline');
+    if (cmdline.selectionStart != null) {
+      const startPos = cmdline.selectionStart;
+      const addSpace = cmdline.selectionStart === cmdline.value.length;
+      cmdline.value =
+        cmdline.value.substring(0, startPos) +
+        this_.innerText +
+        (addSpace ? ' ' : '') +
+        cmdline.value.substring(cmdline.selectionEnd);
+      cmdline.focus();
+      cmdline.selectionStart = startPos + this_.innerText.length + (addSpace ? 1 : 0);
+      cmdline.selectionEnd = cmdline.selectionStart;
+    } else {
+      cmdline.value += this_.innerText + ' ';
+      cmdline.focus();
+    }
+  }
+
+  static registerPromptAppenders(element: HTMLElement) {
+    element
+      .querySelectorAll('.promptAppender')
+      .forEach(el => el.addEventListener('click', DefaultTerminalState.promptAppenderListener));
+  }
+
+  static promptAppender(value: string): string {
+    return `<span class="promptAppender" style="text-decoration: underline; cursor: pointer;">${escapeHtml(value)}</span>`;
+  }
+
   constructor(protected websocket: WebsocketService, private domSanitizer: DomSanitizer, protected terminal: TerminalAPI,
               protected activeDevice: object, protected username: string, public promptColor: string = '#64DD17') {
     super();
@@ -616,14 +647,19 @@ export class DefaultTerminalState extends CommandTerminalState {
             return;
           }
 
-          this.terminal.outputText('\'' + random_device['name'] + '\':');
-          this.terminal.outputRaw('<ul>' +
-            '<li>UUID: ' + random_device['uuid'] + '</li>' +
+          this.terminal.outputText('\'' + escapeHtml(random_device['name']) + '\':');
+          const list = document.createElement('ul');
+          list.innerHTML = '<ul>' +
+            '<li>UUID: ' + DefaultTerminalState.promptAppender(random_device['uuid']) + '</li>' +
             '<li>Services:</li>' +
             '<ul>' +
-            remoteServices['services'].map(service => '<li>' + service['name'] + ' (' + service['uuid'] + ')</li>').join('\n') +
+            remoteServices['services']
+              .map(service => '<li>' + escapeHtml(service['name']) + ' (' + DefaultTerminalState.promptAppender(service['uuid']) + ')</li>')
+              .join('\n') +
             '</ul>' +
-            '</ul>');
+            '</ul>';
+          this.terminal.outputNode(list);
+          DefaultTerminalState.registerPromptAppenders(list);
         });
       });
     });
