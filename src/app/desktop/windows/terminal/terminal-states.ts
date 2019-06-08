@@ -90,6 +90,37 @@ export class DefaultTerminalState extends CommandTerminalState {
     }
   };
 
+  static promptAppenderListener(evt: MouseEvent) {
+    evt.stopPropagation();
+    const this_ = <HTMLElement>evt.target;
+    const cmdline: HTMLInputElement = this_.closest('#terminal-window').querySelector('#cmdline');
+    if (cmdline.selectionStart != null) {
+      const startPos = cmdline.selectionStart;
+      const addSpace = cmdline.selectionStart === cmdline.value.length;
+      cmdline.value =
+        cmdline.value.substring(0, startPos) +
+        this_.innerText +
+        (addSpace ? ' ' : '') +
+        cmdline.value.substring(cmdline.selectionEnd);
+      cmdline.focus();
+      cmdline.selectionStart = startPos + this_.innerText.length + (addSpace ? 1 : 0);
+      cmdline.selectionEnd = cmdline.selectionStart;
+    } else {
+      cmdline.value += this_.innerText + ' ';
+      cmdline.focus();
+    }
+  }
+
+  static registerPromptAppenders(element: HTMLElement) {
+    element
+      .querySelectorAll('.promptAppender')
+      .forEach(el => el.addEventListener('click', DefaultTerminalState.promptAppenderListener));
+  }
+
+  static promptAppender(value: string): string {
+    return `<span class="promptAppender" style="text-decoration: underline; cursor: pointer;">${escapeHtml(value)}</span>`;
+  }
+
   constructor(protected websocket: WebsocketService, private domSanitizer: DomSanitizer, protected terminal: TerminalAPI,
               protected activeDevice: object, protected username: string, public promptColor: string = '#64DD17') {
     super();
@@ -128,12 +159,28 @@ export class DefaultTerminalState extends CommandTerminalState {
       this.websocket.ms('device', ['device', 'change_name'], {
         device_uuid: this.activeDevice['uuid'],
         name: hostname
-      }).subscribe(r => {
-        this.activeDevice = r;
-        this.refreshPrompt();
+      }).subscribe(newDevice => {
+        if (newDevice['uuid'] != null && newDevice['name'] != null) {
+          this.activeDevice = newDevice;
+          this.refreshPrompt();
+
+          if (this.activeDevice['uuid'] === JSON.parse(sessionStorage.getItem('activeDevice'))['uuid']) {
+            sessionStorage.setItem('activeDevice', JSON.stringify(newDevice));
+          }
+        }
       });
     } else {
-      this.terminal.outputText(this.activeDevice['name']);
+      this.websocket.ms('device', ['device', 'info'], { device_uuid: this.activeDevice['uuid'] }).subscribe(device => {
+        if (device['uuid'] == null || device['name'] == null) {
+          this.terminal.outputText(this.activeDevice['name']);
+        } else {
+          if (device['name'] !== this.activeDevice['name']) {
+            this.activeDevice = device;
+            this.refreshPrompt();
+          }
+          this.terminal.outputText(device['name']);
+        }
+      });
     }
   }
 
@@ -162,6 +209,10 @@ export class DefaultTerminalState extends CommandTerminalState {
         device_uuid: this.activeDevice['uuid'],
         filename: filename,
         content: content
+      }).subscribe(r => {
+        if (r.error != null) {
+          this.terminal.outputText('That file already exists');
+        }
       });
     } else {
       this.terminal.outputText('usage: touch <filename> [content]');
@@ -172,9 +223,11 @@ export class DefaultTerminalState extends CommandTerminalState {
     if (args.length === 1) {
       const name = args[0];
 
-      this.websocket.ms('device', ['file', 'all'], {
-        device_uuid: this.activeDevice['uuid']
-      }).subscribe(r => {
+      this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
+        if (r.error != null) {
+          this.terminal.outputText('That file does not exist');
+        }
+
         r.files.forEach(e => {
           if (e != null && e.filename === name) {
             if (e.content !== '') {
@@ -195,21 +248,26 @@ export class DefaultTerminalState extends CommandTerminalState {
       this.websocket.ms('device', ['file', 'all'], {
         device_uuid: this.activeDevice['uuid']
       }).subscribe(r => {
-        r.files.forEach(e => {
-          if (e != null && e.filename === name) {
-            if (e.content !== '') {
-              const uuid = e.content.split(' ')[0];
-              const key = e.content.split(' ').splice(1).join(' ');
+        if (r.files == null) {
+          console.error('Unexpected error');
+          return;
+        }
+
+        for (const file of r.files) {
+          if (file != null && file.filename === name) {
+            if (file.content !== '') {
+              const uuid = file.content.split(' ')[0];
+              const key = file.content.split(' ').splice(1).join(' ');
               this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(r2 => {
                 if (r2.error == null) {
-                  this.terminal.pushState(new PromptTerminalState(this.terminal,
+                  this.terminal.pushState(new YesNoTerminalState(this.terminal,
                     '<span class="errorText">Are you sure you want to delete your wallet? [yes|no]</span>', answer => {
                       if (answer) {
                         this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(r3 => {
                           if (r3.error == null) {
                             this.websocket.ms('device', ['file', 'delete'], {
                               device_uuid: this.activeDevice['uuid'],
-                              file_uuid: e.uuid
+                              file_uuid: file.uuid
                             });
                           } else {
                             this.terminal.output('<span class="errorText"">The wallet couldn\'t be deleted successfully. ' +
@@ -221,18 +279,22 @@ export class DefaultTerminalState extends CommandTerminalState {
                 } else {
                   this.websocket.ms('device', ['file', 'delete'], {
                     device_uuid: this.activeDevice['uuid'],
-                    file_uuid: e.uuid
+                    file_uuid: file.uuid
                   });
                 }
               });
             } else {
               this.websocket.ms('device', ['file', 'delete'], {
                 device_uuid: this.activeDevice['uuid'],
-                file_uuid: e.uuid
+                file_uuid: file.uuid
               });
             }
+
+            return;
           }
-        });
+        }
+
+        this.terminal.outputText('That file does not exist');
       });
     } else {
       this.terminal.outputText('usage: rm <filename>');
@@ -244,18 +306,26 @@ export class DefaultTerminalState extends CommandTerminalState {
       const src = args[0];
       const dest = args[1];
 
-      this.websocket.ms('device', ['file', 'all'], {
-        device_uuid: this.activeDevice['uuid']
-      }).subscribe(r => {
-        r.files.forEach(e => {
-          if (e != null && e.filename === src) {
-            this.websocket.ms('device', ['file', 'create'], {
-              device_uuid: this.activeDevice['uuid'],
-              filename: dest,
-              content: e.content
-            });
+      this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
+        if (r.files != null) {
+          for (const file of r.files) {
+            if (file != null && file.filename === src) {
+              this.websocket.ms('device', ['file', 'create'], {
+                device_uuid: this.activeDevice['uuid'],
+                filename: dest,
+                content: file.content
+              }).subscribe(r2 => {
+                if (r2['error'] != null) {
+                  this.terminal.outputText('The file \'' + dest + '\' already exists');
+                }
+              });
+              return;
+            }
           }
-        });
+          this.terminal.outputText('The file \'' + src + '\' does not exist');
+        } else {
+          console.error('Unexpected error');
+        }
       });
     } else {
       this.terminal.outputText('usage: cp <source> <destination>');
@@ -267,23 +337,31 @@ export class DefaultTerminalState extends CommandTerminalState {
       const src = args[0];
       const dest = args[1];
 
-      this.websocket.ms('device', ['file', 'all'], {
-        device_uuid: this.activeDevice['uuid']
-      }).subscribe(r => {
-        r.files.forEach(e => {
-          if (e != null && e.filename === src) {
-            this.websocket.ms('device', ['file', 'create'], {
-              device_uuid: this.activeDevice['uuid'],
-              filename: dest,
-              content: e.content
-            }).subscribe(r2 => {
-              this.websocket.ms('device', ['file', 'delete'], {
+      this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
+        if (r.files != null) {
+          for (const file of r.files) {
+            if (file != null && file.filename === src) {
+              this.websocket.ms('device', ['file', 'create'], {
                 device_uuid: this.activeDevice['uuid'],
-                file_uuid: e.uuid
+                filename: dest,
+                content: file.content
+              }).subscribe(r2 => {
+                if (r2['error'] == null) {
+                  this.websocket.ms('device', ['file', 'delete'], {
+                    device_uuid: this.activeDevice['uuid'],
+                    file_uuid: file.uuid
+                  });
+                } else {
+                  this.terminal.outputText('The file \'' + dest + '\' already exists');
+                }
               });
-            });
+              return;
+            }
           }
-        });
+          this.terminal.outputText('The file \'' + src + '\' does not exist');
+        } else {
+          console.error('Unexpected error');
+        }
       });
     } else {
       this.terminal.outputText('usage: mv <source> <destination>');
@@ -337,19 +415,35 @@ export class DefaultTerminalState extends CommandTerminalState {
               }
             }
           }
-          this.terminal.outputText('That file doesn\'t exist');
+          this.terminal.outputText('That file does not exist');
         });
       } else if (args[0] === 'create') {
-        this.websocket.ms('currency', ['create'], {}).subscribe(r => {
-          if (r['error'] != null) {
-            this.terminal.outputText('You already own a wallet');
+        this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
+          if (r.files == null) {
+            console.error('Unexpected error');
+            return;
+          }
+          if (r.files.some(file => file != null && file.filename === filename)) {
+            this.terminal.outputText('That file already exists');
             return;
           }
 
-          this.websocket.ms('device', ['file', 'create'], {
-            device_uuid: this.activeDevice['uuid'],
-            filename: filename,
-            content: r.uuid + ' ' + r.key
+          this.websocket.ms('currency', ['create'], {}).subscribe(r2 => {
+            if (r2['error'] != null) {
+              this.terminal.outputText('You already own a wallet');
+              return;
+            }
+
+            this.websocket.ms('device', ['file', 'create'], {
+              device_uuid: this.activeDevice['uuid'],
+              filename: filename,
+              content: r2.uuid + ' ' + r2.key
+            }).subscribe(r3 => {
+              if (r3['error'] != null) {
+                this.terminal.outputText('That file couldn\'t be created. Please note your wallet credentials ' +
+                  'and put them in a new file with \'touch\' or contact the support: \'' + r2.uuid + ' ' + r2.key + '\'');
+              }
+            });
           });
         });
       }
@@ -409,7 +503,7 @@ export class DefaultTerminalState extends CommandTerminalState {
                             }
                           );
                       } else {
-                        this.terminal.output('no valid walletfile');
+                        this.terminal.output('No valid walletfile');
                       }
                     });
                 }
@@ -474,6 +568,11 @@ export class DefaultTerminalState extends CommandTerminalState {
           if (useData['ok'] === true) {
             if (useData['access'] == null) {
               this.terminal.outputText('You started a bruteforce attack');
+              this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
+                if (stop) {
+                  this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
+                }
+              }));
             } else if (useData['access'] === true) {
               this.terminal.outputText('Access granted - use `connect <device>`');
             } else {
@@ -534,7 +633,6 @@ export class DefaultTerminalState extends CommandTerminalState {
           this.terminal.outputText('\'' + random_device['name'] + '\':');
           this.terminal.outputRaw('<ul>' +
             '<li>UUID: ' + random_device['uuid'] + '</li>' +
-            '<li>Powered on: ' + (random_device['powered_on'] ? 'yes' : 'no') + '</li>' +
             '<li>Services: <em class="errorText"">portscan failed</em></li>' +
             '</ul>');
           return;
@@ -549,15 +647,19 @@ export class DefaultTerminalState extends CommandTerminalState {
             return;
           }
 
-          this.terminal.outputText('\'' + random_device['name'] + '\':');
-          this.terminal.outputRaw('<ul>' +
-            '<li>UUID: ' + random_device['uuid'] + '</li>' +
-            '<li>Powered on: ' + (random_device['powered_on'] ? 'yes' : 'no') + '</li>' +
+          this.terminal.outputText('\'' + escapeHtml(random_device['name']) + '\':');
+          const list = document.createElement('ul');
+          list.innerHTML = '<ul>' +
+            '<li>UUID: ' + DefaultTerminalState.promptAppender(random_device['uuid']) + '</li>' +
             '<li>Services:</li>' +
             '<ul>' +
-            remoteServices['services'].map(service => '<li>' + service['name'] + ' (' + service['uuid'] + ')</li>').join('\n') +
+            remoteServices['services']
+              .map(service => '<li>' + escapeHtml(service['name']) + ' (' + DefaultTerminalState.promptAppender(service['uuid']) + ')</li>')
+              .join('\n') +
             '</ul>' +
-            '</ul>');
+            '</ul>';
+          this.terminal.outputNode(list);
+          DefaultTerminalState.registerPromptAppenders(list);
         });
       });
     });
@@ -595,8 +697,43 @@ export class DefaultTerminalState extends CommandTerminalState {
 }
 
 
-export class PromptTerminalState extends CommandTerminalState {
-  commands = {
+export abstract class ChoiceTerminalState implements TerminalState {
+  choices: { [choice: string]: () => void };
+
+  protected constructor(protected terminal: TerminalAPI) {
+  }
+
+  execute(command: string) {
+    if (!command) {
+      return;
+    }
+
+    if (this.choices[command]) {
+      this.choices[command]();
+    } else {
+      this.invalidChoice(command);
+    }
+  }
+
+  invalidChoice(choice: string) {
+    this.terminal.outputText('\'' + choice + '\' is not one of the following: ' + Object.keys(this.choices).join(', '));
+  }
+
+  autocomplete(content: string): string {
+    return content ? Object.keys(this.choices).sort().find(choice => choice.startsWith(content)) : '';
+  }
+
+  getHistory(): string[] {
+    return [];
+  }
+
+  abstract refreshPrompt();
+
+}
+
+
+export class YesNoTerminalState extends ChoiceTerminalState {
+  choices = {
     'yes': () => {
       this.terminal.popState();
       this.callback(true);
@@ -607,16 +744,49 @@ export class PromptTerminalState extends CommandTerminalState {
     }
   };
 
-  constructor(private terminal: TerminalAPI, private prompt: string, private callback: (response: boolean) => void) {
-    super();
-  }
-
-  commandNotFound(command: string) {
-    this.terminal.outputText('\'' + command + '\' is not one of the following: yes, no');
+  constructor(terminal: TerminalAPI, private prompt: string, private callback: (response: boolean) => void) {
+    super(terminal);
   }
 
   refreshPrompt() {
     this.terminal.changePrompt(this.prompt);
   }
 
+}
+
+
+export class BruteforceTerminalState extends ChoiceTerminalState {
+  choices = {
+    'stop': () => {
+      clearInterval(this.intervalHandle);
+      this.terminal.popState();
+      this.callback(true);
+    },
+    'exit': () => {
+      clearInterval(this.intervalHandle);
+      this.terminal.popState();
+      this.callback(false);
+    }
+  };
+  time = this.startSeconds;
+  intervalHandle;
+
+  constructor(terminal: TerminalAPI,
+              private domSanitizer: DomSanitizer,
+              private callback: (response: boolean) => void,
+              private startSeconds: number = 0) {
+    super(terminal);
+
+    this.intervalHandle = setInterval(() => {
+      this.time += 1;
+      this.refreshPrompt();
+    }, 1000);
+  }
+
+  refreshPrompt() {
+    const minutes = Math.floor(this.time / 60);
+    const seconds = this.time % 60;
+    const prompt = `Bruteforcing ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} [stop/exit] `;
+    this.terminal.changePrompt(`<span style="color: gold">${prompt}</span>`, true);
+  }
 }

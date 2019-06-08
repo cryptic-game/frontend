@@ -40,7 +40,18 @@ export class TerminalComponent extends WindowDelegate
     this.getState().refreshPrompt();
   }
 
-  changePrompt(prompt: string | SafeHtml, color: string = '') {
+  focusCommandLine() {
+    if (window.getSelection().type !== 'Range') {
+      this.cmdLine.nativeElement.focus();
+    }
+  }
+
+  changePrompt(prompt: string | SafeHtml, trust: boolean = false) {
+    if (trust && typeof prompt === 'string') {
+      this.promptHtml = this.domSanitizer.bypassSecurityTrustHtml(prompt);
+      return;
+    }
+
     if (typeof prompt === 'string') {
       this.promptHtml = this.domSanitizer.sanitize(SecurityContext.HTML, prompt);
     } else {

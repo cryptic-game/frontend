@@ -2,7 +2,7 @@
      (mousemove)="mousemove($event)" (click)="hideStartMenu()"
      id="desktop-surface">
   <h1 id="version-info">Pre-Alpha 1.0</h1>
-  <div (dblclick)="openProgramWindow(linkage)" (mousedown)="mousedown($event, i)" (mouseup)="mouseup()"
+  <div (dblclick)="openProgramWindow(linkage)" (mousedown)="linkageMouseDown($event, i)"
        *ngFor="let linkage of onDesktop(); index as i"
        [ngStyle]="{'left.vw': linkage.position.x | px2vw, 'top.vh': linkage.position.y | px2vh, 'z-index': linkage.position.z }"
        class="linkage"><img [src]="linkage.icon" alt=""/>{{linkage.displayName}}</div>
