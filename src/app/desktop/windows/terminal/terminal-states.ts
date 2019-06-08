@@ -769,7 +769,7 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
     }
   };
   time = this.startSeconds;
-  intervalHandle: number;
+  intervalHandle;
 
   constructor(terminal: TerminalAPI,
               private domSanitizer: DomSanitizer,
