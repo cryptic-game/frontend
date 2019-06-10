@@ -32,8 +32,7 @@ export class SignUpComponent implements OnInit {
             500
           );
         } else {
-          console.log(data);
-          this.errorText = 'An error has occurred';
+          this.errorText = data.error;
 
           this.loginButton.nativeElement.disabled = true;
           setTimeout(
