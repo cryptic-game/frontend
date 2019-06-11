@@ -8,9 +8,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./sign-up.component.scss']
 })
 export class SignUpComponent implements OnInit {
-  @ViewChild('submitButton') loginButton: ElementRef;
-  @ViewChild('passwordField') passwordField: ElementRef;
-  @ViewChild('passwordConfirm') passwordConfirmField: ElementRef;
+  @ViewChild('submitButton', { static: false }) loginButton: ElementRef;
+  @ViewChild('passwordField', { static: false }) passwordField: ElementRef;
+  @ViewChild('passwordConfirm', { static: false }) passwordConfirmField: ElementRef;
   errorText: string;
   model = { username: '', email: '', password: '', passwordConfirm: '' };
 

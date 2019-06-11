@@ -71,10 +71,10 @@ $warningColor: #FF3333;
   word-break: break-word;
 }
 
-#terminal-history /deep/ .errorText {
+#terminal-history ::ng-deep .errorText {
   color: $warningColor;
 }
 
-#prompt /deep/ .errorText {
+#prompt ::ng-deep .errorText {
   color: $warningColor;
 }

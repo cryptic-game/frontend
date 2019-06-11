@@ -8,8 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('loginButton')
-  loginButton: ElementRef;
+  @ViewChild('loginButton', { static: false }) loginButton: ElementRef;
   errorText = '';
   model = { username: '', password: '' };
 
