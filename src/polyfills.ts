@@ -18,7 +18,6 @@
  * BROWSER POLYFILLS
  */
 
-import 'core-js/es';
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */

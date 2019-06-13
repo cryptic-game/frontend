@@ -19,11 +19,7 @@ jobs:
       services:
         - xvfb
       addons:
-        apt:
-          sources:
-            - google-chrome
-          packages:
-            - google-chrome-stable
+        chrome: stable
       script:
         - 'ng test --browsers PhantomJS --watch=false'
         - 'ng e2e'
