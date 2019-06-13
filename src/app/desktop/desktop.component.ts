@@ -16,8 +16,7 @@ export class DesktopComponent implements OnInit {
   contextMenu = false;
   contextMenuPosition = new Position(0, 0);
   contextMenuTarget: EventTarget;
-  @ViewChild('surface')
-  surface: ElementRef;
+  @ViewChild('surface', { static: true }) surface: ElementRef;
   linkages: Program[] = []; // array for all linkages on the desktop
   index: number; // index of the dragged element
   position: Position; // position of the dragged element

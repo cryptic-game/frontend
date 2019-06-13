@@ -1,4 +1,4 @@
-FROM node:8-alpine as builder
+FROM node:12-alpine as builder
 
 MAINTAINER faq@cryptic-game.net
 
@@ -15,7 +15,7 @@ COPY . .
 RUN $(npm bin)/ng build --prod --build-optimizer
 
 
-FROM nginx:1.13.3-alpine
+FROM nginx:stable-alpine
 
 EXPOSE 80
 

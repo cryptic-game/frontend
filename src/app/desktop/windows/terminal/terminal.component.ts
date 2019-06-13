@@ -13,9 +13,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class TerminalComponent extends WindowDelegate
   implements OnInit, TerminalAPI {
-  @ViewChild('history') history: ElementRef;
-  @ViewChild('prompt') prompt: ElementRef;
-  @ViewChild('cmdLine') cmdLine: ElementRef;
+  @ViewChild('history', { static: true }) history: ElementRef;
+  @ViewChild('prompt', { static: true }) prompt: ElementRef;
+  @ViewChild('cmdLine', { static: true }) cmdLine: ElementRef;
 
   title = 'Terminal';
   icon = 'assets/desktop/img/terminal.svg';
