@@ -21,7 +21,7 @@ jobs:
       addons:
         chrome: stable
       script:
-        - 'ng test --browsers PhantomJS --watch=false'
+        - 'ng test --browsers ChromeHeadless --watch=false'
         - 'ng e2e'
 stages:
   - build
