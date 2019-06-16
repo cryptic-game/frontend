@@ -167,6 +167,8 @@ export class DefaultTerminalState extends CommandTerminalState {
           if (this.activeDevice['uuid'] === JSON.parse(sessionStorage.getItem('activeDevice'))['uuid']) {
             sessionStorage.setItem('activeDevice', JSON.stringify(newDevice));
           }
+        } else {
+          this.terminal.outputText('The hostname couldn\'t be changed');
         }
       });
     } else {
