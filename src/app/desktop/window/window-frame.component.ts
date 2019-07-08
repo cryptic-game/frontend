@@ -1,6 +1,7 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { WindowManagerService } from '../window-manager/window-manager.service';
 import { WindowDelegate } from './window-delegate';
+import { WindowPlaceDirective } from './window-place.directive';
 
 @Component({
   selector: 'app-window-frame',
@@ -11,6 +12,8 @@ export class WindowFrameComponent implements OnInit {
   static minWidth = 300;
   static minHeight = 150;
 
+  @ViewChild(WindowPlaceDirective, { static: true }) windowPlace: WindowPlaceDirective;
+
   @Input() delegate: WindowDelegate;
   dragging = false;
   dragStartWindowPos: [number, number] = [0, 0];
@@ -19,10 +22,18 @@ export class WindowFrameComponent implements OnInit {
   resizeDirection = 0;
   resizeStartSize: [number, number] = [0, 0];
 
-  constructor(public windowManager: WindowManagerService) {
+  constructor(public windowManager: WindowManagerService, private componentFactoryResolver: ComponentFactoryResolver) {
   }
 
   ngOnInit() {
+    this.loadWindowContent();
+  }
+
+  loadWindowContent() {
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.delegate.type);
+    const componentRef = this.windowPlace.viewContainerRef.createComponent(componentFactory);
+    componentRef.instance.delegate = this.delegate;
+    this.delegate.component = componentRef.instance;
   }
 
   close() {

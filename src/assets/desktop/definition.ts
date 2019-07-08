@@ -1,12 +1,12 @@
 import { Program } from '../../dataclasses/program';
 import { Position } from '../../dataclasses/position';
-import { TestWindowComponent } from '../../app/desktop/windows/test-window/test-window.component';
-import { TerminalComponent } from '../../app/desktop/windows/terminal/terminal.component';
+import { TestWindowDelegate } from '../../app/desktop/windows/test-window/test-window.component';
+import { TerminalWindowDelegate } from '../../app/desktop/windows/terminal/terminal.component';
 
 export const programWindows = {
-  'browser': TestWindowComponent,
-  'fileManager': TestWindowComponent,
-  'terminal': TerminalComponent
+  'browser': TestWindowDelegate,
+  'fileManager': TestWindowDelegate,
+  'terminal': TerminalWindowDelegate
 };
 
 export const desktopDefinition = {
