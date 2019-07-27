@@ -10,8 +10,8 @@ export class StartupAnimationComponent implements OnInit{
     ngOnInit(){
         const tl = anime.timeline()
         const shadow = {size: 0}
-        const circleDOMElement = document.getElementsByClassName("circle")[0]
-        const dropDOMElement = document.getElementsByClassName("drop")[0]
+        const circle = document.getElementsByClassName("circle")[0]
+        const drop = document.getElementsByClassName("drop")[0]
 
         tl.add({
             targets: ".drop-wrapper",
@@ -19,8 +19,8 @@ export class StartupAnimationComponent implements OnInit{
             duration: 2000,
             easing: () => time => (time*3.5)**2,
             complete: () => {
-                dropDOMElement.style.display = "none"
-                circleDOMElement.style.border = "none"
+                drop.style.display = "none"
+                circle.style.border = "none"
             }
         }).add({
             targets: ".drop-wrapper",
@@ -32,7 +32,7 @@ export class StartupAnimationComponent implements OnInit{
             size: 10,
             easing: "easeOutSine",
             duration: 1000,
-            update: () => circleDOMElement.style.boxShadow = `
+            update: () => circle.style.boxShadow = `
                 0 0 ${shadow.size*5}px ${shadow.size/2}px #2ecc71,
                 0 0 ${shadow.size*5}px ${shadow.size/2}px #2ecc71 inset
             `
