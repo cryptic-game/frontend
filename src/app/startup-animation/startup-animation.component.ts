@@ -74,35 +74,35 @@ export class StartupAnimationComponent implements OnInit{
         }
 
         const sleep = (t, state) => {
-            display.innerHTML = descriptions.loadingStates[state-1]
+            display.innerHTML = descriptions.loadingStates[state-1] || "No information provided"
             return new Promise(resolve => setTimeout(resolve, t))
         }
 
         const updatePercentage = (steps, state) => {
             const percentage = state/steps
-            // display.innerHTML = percentage * 100 + "%"
             animations.percentage.seek(animations.percentage.duration * percentage)
-            animations.initSpin(1000*(1/percentage)/steps)
+            animations.initSpin(1000*(1/percentage)/(steps+1))
             animations.spin.play()
         }
 
         const loadData = async () => {
-            // Any kind of operation that may take a while can be called here
+            // Any kind of operation that may take a while / should be included in loading-screen, can be called here
             const steps = 4
             animations.spin.play()
 
+            updatePercentage(steps, 0)
             await sleep(750, 1)
+
             updatePercentage(steps, 1)
-
             await sleep(500, 2)
+
             updatePercentage(steps, 2)
-
             await sleep(250, 3)
+
             updatePercentage(steps, 3)
-
             await sleep(500, 4)
-            updatePercentage(steps, 4)
 
+            updatePercentage(steps, 4)
             return Promise.resolve()
         }
 
