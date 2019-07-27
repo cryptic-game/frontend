@@ -83,6 +83,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     'service': this.service.bind(this),
     'spot': this.spot.bind(this),
     'connect': this.connect.bind(this),
+    'network': this.network.bind(this),
 
     // easter egg
     'chaozz': () => {
@@ -694,6 +695,57 @@ export class DefaultTerminalState extends CommandTerminalState {
         }
       });
     });
+  }
+
+  network(args: string[]) {
+    if(args.length == 1) {
+      if(args[0] === 'public') {
+        this.websocket.ms('network', ['public'], {}).subscribe(publicData => {
+          const networks = publicData['networks'];
+
+          if(networks != null) {
+            this.terminal.outputText('Found ' + networks.length + ' public networks: ');
+            this.terminal.outputText('');
+
+            networks.forEach(network => {
+              this.terminal.outputText(network['name']);
+            });
+          } else {
+            this.terminal.outputText('No public networks found!');
+          }
+        });
+
+        return;
+      }
+    } else if(args.length == 3) {
+      if(args[0] === 'create') {
+        const name = args[1];
+        const mode = args[2].toLowerCase();
+
+        if(mode === 'private' || mode === 'public') {
+          const data = {
+            'hidden': mode === 'private',
+            'name': name,
+            'device': this.activeDevice['uuid']
+          }
+
+          console.log(data);
+
+          this.websocket.ms('network', ['create'], data).subscribe(createData => {
+            this.terminal.outputText('Name: ' + createData['name']);
+            this.terminal.outputText('Visibility: ' + (createData['hidden'] ? 'private' : 'public'));
+          });
+        } else {
+          this.terminal.outputText('Please use public or private as mode.');
+        }
+
+        return;
+      }
+    }
+
+    this.terminal.outputText('usage of the network command');
+    this.terminal.outputText('network public   # show all public networks');
+    this.terminal.outputText('network create <name> <private|public>   # create a network');
   }
 
 }
