@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core"
+import { Component, ViewChild, ElementRef, OnInit } from "@angular/core"
 import anime from "animejs"
 
 @Component({
@@ -7,11 +7,14 @@ import anime from "animejs"
     styleUrls: ["./startup-animation.component.scss"]
 })
 export class StartupAnimationComponent implements OnInit{
+    @ViewChild("circle", {static: true}) circle: ElementRef
+    @ViewChild("drop", {static: true}) drop: ElementRef
+
     ngOnInit(){
         const tl = anime.timeline()
         const shadow = {size: 0}
-        const circle = document.getElementsByClassName("circle")[0]
-        const drop = document.getElementsByClassName("drop")[0]
+        const drop = this.drop.nativeElement
+        const circle = this.circle.nativeElement
 
         tl.add({
             targets: ".drop-wrapper",
