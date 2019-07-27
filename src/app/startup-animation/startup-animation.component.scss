@@ -1,0 +1,36 @@
+.startup-animation{
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.25) 200%);
+    background-blend-mode: multiply;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    $size: 128px;
+    .circle, .logo, .drop-wrapper{
+        position: absolute;
+        width: $size;
+        height: $size;
+        border-radius: 50%;
+    }
+    .circle{
+        border: 1px solid #2ecc71;
+    }
+    .logo{
+        width: $size / 2;
+        height: unset;
+    }
+    .drop-wrapper{
+        display: flex;
+        align-items: center;
+        .drop{
+            $r: 15px;
+            width: $r;
+            height: $r;
+            background: #2ecc71;
+            box-shadow: 0 0 $r/4 $r/4 #2ecc71;
+            border-radius: 50%;
+            margin-left: $r/2*-1;
+        }
+    }
+}

@@ -21,11 +21,13 @@ import { WindowFrameComponent } from './desktop/window/window-frame.component';
 import { WindowManagerComponent } from './desktop/window-manager/window-manager.component';
 import { TestWindowComponent } from './desktop/windows/test-window/test-window.component';
 import { TerminalComponent } from './desktop/windows/terminal/terminal.component';
+import { StartupAnimationComponent } from "./startup-animation/startup-animation.component"
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
   { path: 'signup', component: SignUpComponent, canActivate: [SignUpGuard] },
+  { path: "startup", component: StartupAnimationComponent },
   { path: '**', redirectTo: '/' }
 ];
 
@@ -44,7 +46,8 @@ const routes: Routes = [
     WindowFrameComponent,
     WindowManagerComponent,
     TestWindowComponent,
-    TerminalComponent
+    TerminalComponent,
+    StartupAnimationComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
