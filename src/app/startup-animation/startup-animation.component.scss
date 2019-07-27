@@ -13,12 +13,31 @@
         height: $size;
         border-radius: 50%;
     }
-    .circle{
-        border: 1px solid #2ecc71;
+    svg{
+        transform: rotate(-90deg);
+        circle{stroke: #2ecc71}
+    }
+    .percentage{
+        position: absolute;
+        width: $size * 1.5;
+        height: $size * 1.5;
+        opacity: .5;
+        .display{
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 200%);
+            color: #ecf0f1;
+            font-size: 18px;
+            font-family: "Roboto";
+            width: 100%;
+            text-align: center;
+        }
     }
     .logo{
         width: $size / 2;
         height: unset;
+        border-radius: 0;
     }
     .drop-wrapper{
         display: flex;
