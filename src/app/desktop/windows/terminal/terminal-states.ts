@@ -698,53 +698,244 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
   network(args: string[]) {
-    if(args.length == 1) {
-      if(args[0] === 'public') {
+    if (args.length === 1) {
+      if (args[0] === 'public') {
         this.websocket.ms('network', ['public'], {}).subscribe(publicData => {
           const networks = publicData['networks'];
 
-          if(networks != null) {
+          if (networks != null) {
             this.terminal.outputText('Found ' + networks.length + ' public networks: ');
             this.terminal.outputText('');
 
+            const element = document.createElement('div');
+            element.innerHTML = '';
+
             networks.forEach(network => {
-              this.terminal.outputText(network['name']);
+              element.innerHTML += network['name'] +
+                ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span>';
             });
+
+            this.terminal.outputNode(element);
+
+            DefaultTerminalState.registerPromptAppenders(element);
           } else {
             this.terminal.outputText('No public networks found!');
           }
         });
 
         return;
+      } else if (args[0] === 'list') {
+        const data = {
+          'device': this.activeDevice['uuid']
+        }
+
+        this.websocket.ms('network', ['member'], data).subscribe(memberData => {
+          this.websocket.ms('network', ['owner'], data).subscribe(ownerData => {
+            const memberNetworks = memberData['networks'];
+            const ownerNetworks = ownerData['networks'];
+
+            if (memberNetworks != null && ownerData != null) {
+              this.terminal.outputText('Found ' + (memberNetworks.length + ownerNetworks.length) + ' networks: ');
+              this.terminal.outputText('');
+
+              const element = document.createElement('div');
+              element.innerHTML = '';
+
+              memberNetworks.forEach(network => {
+                element.innerHTML += '<span style="color: yellow;">' + network['name'] + '</span>' +
+                  ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span>';
+              });
+
+              ownerNetworks.forEach(network => {
+                element.innerHTML += '<span style="color: red;">' + network['name'] + '</span>' +
+                  ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span>';
+              })
+              this.terminal.outputNode(element);
+
+              DefaultTerminalState.registerPromptAppenders(element);
+            } else {
+              this.terminal.outputText('This device is not apart of a network.');
+            }
+          });
+        });
+
+        return;
+      } else if (args[0] === 'invitations') {
+        const data = {
+          'device': this.activeDevice['uuid']
+        }
+
+        this.websocket.ms('network', ['invitations'], data).subscribe(invitationsData => {
+          if (!('error' in invitationsData) && invitationsData['invitations']) {
+            const invitations = invitationsData['invitations'];
+
+            if  (invitations.length === 0) {
+             this.terminal.outputText('No invvitations found.');
+            } else {
+              const element = document.createElement('div');
+              element.innerHTML = '';
+
+              invitations.forEach(invitation => {
+                element.innerHTML += '<span style="color: silver;">' + DefaultTerminalState.promptAppender(invitation['device']) + '</span>';
+              });
+
+              this.terminal.outputNode(element);
+
+              DefaultTerminalState.registerPromptAppenders(element);
+            }
+         } else {
+            this.terminal.outputText('Access denied.');
+          }
+        });
+
+        return;
       }
-    } else if(args.length == 3) {
-      if(args[0] === 'create') {
+    } else if (args.length === 2) {
+      if (args[0] === 'delete') {
+        const data = {
+          uuid: args[1],
+          device: this.activeDevice['uuid']
+        };
+
+        this.websocket.ms('network', ['delete'], data).subscribe(deleteData => {
+          if (!('error' in deleteData) && deleteData['result']) {
+            this.terminal.outputText('Network deleted.');
+          } else {
+            this.terminal.outputText('Access denied.');
+          }
+        });
+
+        return;
+      } else if (args[0] === 'request') {
+        const data = {
+          uuid: args[1],
+          device: this.activeDevice['uuid']
+        };
+
+        this.websocket.ms('network', ['request'], data).subscribe(requestData => {
+          if (!('error' in requestData)) {
+            this.terminal.outputText('Request send:');
+            this.terminal.outputText(this.activeDevice['name'] + ' -> ' + requestData['network']);
+          } else {
+            if (requestData['error'] === 'network_not_found') {
+              this.terminal.outputText('Network not found: ' + args[1]);
+            } else {
+              this.terminal.outputText('Access denied.');
+            }
+          }
+        });
+
+        return;
+      } else if (args[0] === 'requests') {
+        const data = {
+          'uuid': args[0]
+        }
+
+        this.websocket.ms('network', ['requests'], data).subscribe(requestsData => {
+          if (!('error' in requestsData) && requestsData['requests']) {
+            const requests = requestsData['requests'];
+
+            if(requests.length === 0) {
+             this.terminal.outputText('No requests found.');
+            } else {
+              const element = document.createElement('div');
+              element.innerHTML = '';
+
+              requests.forEach(request => {
+                element.innerHTML += '<span style="color: silver;">' + DefaultTerminalState.promptAppender(request['device']) + '</span>';
+              });
+
+              this.terminal.outputNode(element);
+
+              DefaultTerminalState.registerPromptAppenders(element);
+            }
+          } else {
+            this.terminal.outputText('Access denied.');
+          }
+        });
+
+        return;
+     } else if (args[0] === 'accept' || args[0] === 'deny') {
+        const data = {
+          'uuid': args[1]
+        }
+
+        this.websocket.ms('network', [args[0]], data).subscribe(updateData => {
+          if (!('error' in updateData) && updateData['result']) {
+            this.terminal.outputText(args[1] + ' -> ' + args[0]);
+          } else {
+            if (updateData['error'] === 'invitation_not_found') {
+              this.terminal.outputText('Invitation not found.');
+            } else {
+              this.terminal.outputText('Access denied.');
+            }
+          }
+        });
+
+        return;
+      }
+    } if (args.length === 3) {
+      if (args[0] === 'create') {
         const name = args[1];
         const mode = args[2].toLowerCase();
 
-        if(mode === 'private' || mode === 'public') {
+        if (mode === 'private' || mode === 'public') {
           const data = {
             'hidden': mode === 'private',
             'name': name,
             'device': this.activeDevice['uuid']
           }
 
-          console.log(data);
-
           this.websocket.ms('network', ['create'], data).subscribe(createData => {
-            this.terminal.outputText('Name: ' + createData['name']);
-            this.terminal.outputText('Visibility: ' + (createData['hidden'] ? 'private' : 'public'));
+            if (!('error' in createData)) {
+              this.terminal.outputText('Name: ' + createData['name']);
+              this.terminal.outputText('Visibility: ' + (createData['hidden'] ? 'private' : 'public'));
+            } else {
+              if (createData['error'] === 'invalid_name') {
+                this.terminal.outputText( 'Name is invalid! 5 - 20 characters');
+              } else if (createData['error'] === 'name_already_in_use') {
+                this.terminal.outputText('Name already in use!');
+              } else {
+                this.terminal.outputText('Access denied.');
+              }
+            }
           });
         } else {
           this.terminal.outputText('Please use public or private as mode.');
         }
 
         return;
+      } else if (args[0] === 'invite') {
+        const data = {
+          'uuid': args[1],
+          'device': args[2]
+        }
+
+        this.websocket.ms('network', ['invite'], data).subscribe(inviteData => {
+          if (!('error' in inviteData)) {
+            this.terminal.outputText(args[2] + ' invited to ' + args[1]);
+          } else {
+            if (data['error'] === 'network_not_found') {
+              this.terminal.outputText('Network not found: ' + args[1]);
+            } else {
+              this.terminal.outputText('Access denied.');
+            }
+          }
+        });
+
+        return;
       }
     }
 
-    this.terminal.outputText('usage of the network command');
+    this.terminal.outputText('network list  # show all networks of this device');
     this.terminal.outputText('network public   # show all public networks');
+    this.terminal.outputText('network invitations  # show invitations of a this device');
+    this.terminal.outputText('network delete <uuid> # delete a network');
+    this.terminal.outputText('network request <uuid> # create join request a network');
+    this.terminal.outputText('network requests <uuid> # show requests of a network');
+    this.terminal.outputText('network accept <uuid> # accept an invitation or request');
+    this.terminal.outputText('network deny <uuid> # accept an invitation or request');
+    this.terminal.outputText('network invite <uuid> <device> # invite to network');
     this.terminal.outputText('network create <name> <private|public>   # create a network');
   }
 
