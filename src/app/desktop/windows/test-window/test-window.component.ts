@@ -1,16 +1,13 @@
 import { Component, OnInit, Type } from '@angular/core';
-import { WindowDelegate } from '../../window/window-delegate';
+import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-test-window',
   templateUrl: './test-window.component.html',
   styleUrls: ['./test-window.component.scss']
 })
-export class TestWindowComponent extends WindowDelegate implements OnInit {
-
-  title = 'Testfenster';
-  icon = 'assets/desktop/img/filemanager.svg';
-  type: Type<any> = TestWindowComponent;
+export class TestWindowComponent extends WindowComponent implements OnInit {
 
   constructor() {
     super();
@@ -19,4 +16,10 @@ export class TestWindowComponent extends WindowDelegate implements OnInit {
   ngOnInit() {
   }
 
+}
+
+export class TestWindowDelegate extends WindowDelegate {
+  title = 'Testfenster';
+  icon = 'assets/desktop/img/filemanager.svg';
+  type: Type<any> = TestWindowComponent;
 }

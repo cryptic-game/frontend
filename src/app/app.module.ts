@@ -21,6 +21,7 @@ import { WindowFrameComponent } from './desktop/window/window-frame.component';
 import { WindowManagerComponent } from './desktop/window-manager/window-manager.component';
 import { TestWindowComponent } from './desktop/windows/test-window/test-window.component';
 import { TerminalComponent } from './desktop/windows/terminal/terminal.component';
+import { WindowPlaceDirective } from './desktop/window/window-place.directive';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -44,7 +45,8 @@ const routes: Routes = [
     WindowFrameComponent,
     WindowManagerComponent,
     TestWindowComponent,
-    TerminalComponent
+    TerminalComponent,
+    WindowPlaceDirective
   ],
   imports: [
     RouterModule.forRoot(routes),

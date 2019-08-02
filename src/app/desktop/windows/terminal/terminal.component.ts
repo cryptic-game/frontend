@@ -1,25 +1,22 @@
 import { Component, ElementRef, OnInit, SecurityContext, Type, ViewChild } from '@angular/core';
-import { WindowDelegate } from '../../window/window-delegate';
+import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { TerminalAPI, TerminalState } from './terminal-api';
 import { WindowManagerService } from '../../window-manager/window-manager.service';
 import { DefaultTerminalState } from './terminal-states';
 import { WebsocketService } from '../../../websocket.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-terminal',
   templateUrl: './terminal.component.html',
   styleUrls: ['./terminal.component.scss']
 })
-export class TerminalComponent extends WindowDelegate
+export class TerminalComponent extends WindowComponent
   implements OnInit, TerminalAPI {
   @ViewChild('history', { static: true }) history: ElementRef;
   @ViewChild('prompt', { static: true }) prompt: ElementRef;
   @ViewChild('cmdLine', { static: true }) cmdLine: ElementRef;
-
-  title = 'Terminal';
-  icon = 'assets/desktop/img/terminal.svg';
-  type: Type<any> = TerminalComponent;
 
   currentState: TerminalState[] = [];
   promptHtml: SafeHtml;
@@ -146,11 +143,17 @@ export class TerminalComponent extends WindowDelegate
   }
 
   closeTerminal() {
-    this.windowManager.closeWindow(this);
+    this.windowManager.closeWindow(this.delegate);
   }
 
   clear() {
     this.history.nativeElement.value = '';
   }
 
+}
+
+export class TerminalWindowDelegate extends WindowDelegate {
+  title = 'Terminal';
+  icon = 'assets/desktop/img/terminal.svg';
+  type: Type<any> = TerminalComponent;
 }

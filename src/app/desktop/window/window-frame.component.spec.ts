@@ -2,6 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WindowFrameComponent } from './window-frame.component';
 import { WindowDelegate } from './window-delegate';
+import { TestWindowComponent } from '../windows/test-window/test-window.component';
+import { NgModule } from '@angular/core';
+import { WindowPlaceDirective } from './window-place.directive';
 
 describe('WindowFrameComponent', () => {
   let component: WindowFrameComponent;
@@ -9,7 +12,8 @@ describe('WindowFrameComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [WindowFrameComponent]
+      imports: [EntryComponentsTestModule],
+      declarations: [WindowFrameComponent, WindowPlaceDirective]
     })
       .compileComponents();
   }));
@@ -19,6 +23,7 @@ describe('WindowFrameComponent', () => {
     component = fixture.componentInstance;
     component.delegate = new class extends WindowDelegate {
       title = 'Test';
+      type = TestWindowComponent;
       icon = '';
     };
     fixture.detectChanges();
@@ -28,3 +33,11 @@ describe('WindowFrameComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
+
+@NgModule({
+  declarations: [TestWindowComponent],
+  entryComponents: [TestWindowComponent]
+})
+class EntryComponentsTestModule {
+}
