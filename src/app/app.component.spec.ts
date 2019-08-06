@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, inject, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { DesktopComponent } from './desktop/desktop.component';
@@ -39,9 +39,18 @@ describe('AppComponent', () => {
       ],
     }).compileComponents();
   }));
+
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   });
+
+  it('should close the websocket when it gets destroyed', inject([WebsocketService], (webSocket) => {
+    const closeSpy = spyOn(webSocket, 'close');
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.destroy();
+    expect(closeSpy).toHaveBeenCalled();
+  }));
+
 });

@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./sign-up.component.scss']
 })
 export class SignUpComponent implements OnInit {
-  @ViewChild('submitButton', { static: false }) loginButton: ElementRef;
+  @ViewChild('submitButton', { static: false }) signUpButton: ElementRef;
   @ViewChild('passwordField', { static: false }) passwordField: ElementRef;
   @ViewChild('passwordConfirm', { static: false }) passwordConfirmField: ElementRef;
   errorText: string;
@@ -34,9 +34,9 @@ export class SignUpComponent implements OnInit {
         } else {
           this.errorText = data.error;
 
-          this.loginButton.nativeElement.disabled = true;
+          this.signUpButton.nativeElement.disabled = true;
           setTimeout(
-            () => (this.loginButton.nativeElement.disabled = false),
+            () => (this.signUpButton.nativeElement.disabled = false),
             500
           );
         }

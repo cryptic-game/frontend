@@ -27,7 +27,4 @@ export class PasswordConfirmValidatorDirective implements Validator {
     return null;
   }
 
-  registerOnValidatorChange(fn: () => void): void {
-  }
-
 }
