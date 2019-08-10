@@ -172,6 +172,12 @@ export class WindowFrameComponent implements OnInit {
     }
   }
 
+  @HostListener('document:mouseup')
+  mouseUp() {
+    this.dragging = false;
+    this.resizing = false;
+  }
+
   minimize() {
     this.windowManager.unfocus();
     this.delegate.position.minimized = true;
