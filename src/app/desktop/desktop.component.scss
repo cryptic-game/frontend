@@ -9,9 +9,8 @@
   width: 100%;
   height: 100%;
   background: $black url('../../assets/desktop/img/cry_crack.png') no-repeat bottom;
-  background-size:  cover;
+  background-size: cover;
   box-sizing: content-box;
-  position: relative;
   overflow: hidden;
   z-index: 0;
 
@@ -37,7 +36,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /*text-shadow: 1px 1px 2px rgb(0, 0, 0);*/
+    text-shadow: 1px 1px 2px black;
+
+    &.not-allowed {
+      background-color: rgba(50, 0, 0, 100) !important;
+    }
 
     img {
       width: 40px;
@@ -46,9 +49,9 @@
     }
 
     &:hover {
-	      background-color: rgba(0, 0, 0, 0.15);
-          box-shadow: inset 0 0 1.5px 1.5px rgba(0, 0, 0, 0.45)
-	}
+      background-color: rgba(0, 0, 0, 0.15);
+      box-shadow: inset 0 0 1.5px 1.5px rgba(0, 0, 0, 0.45);
+    }
 
     &:active {
       background-color: rgba(0, 0, 0, 0.45);

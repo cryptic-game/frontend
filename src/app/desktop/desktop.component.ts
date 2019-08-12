@@ -109,7 +109,8 @@ export class DesktopComponent implements OnInit {
 
   linkageDragStart() {
     const linkageElement = this.surface.nativeElement.querySelectorAll('.linkage')[this.dragLinkageIndex];
-    const linkageClone = linkageElement.cloneNode(true);
+    const linkageClone: HTMLElement = linkageElement.cloneNode(true);
+    linkageClone.id = 'dragLinkage';
     linkageClone.style.zIndex = '10';
     this.surface.nativeElement.appendChild(linkageClone);
     this.dragElement = linkageClone;
@@ -141,20 +142,19 @@ export class DesktopComponent implements OnInit {
     if (this.dragLinkageIndex !== undefined) {
       if (this.dragElement === undefined) {
         this.linkageDragStart();
+      }
+      const surfaceBounds = this.surface.nativeElement.getBoundingClientRect();
+      const taskBarHeight = surfaceBounds.height * 0.055;
+      this.dragElement.style.left =
+        Math.min(Math.max(e.pageX - surfaceBounds.left - this.dragOffset.x, 0),
+          surfaceBounds.width - this.dragElement.clientWidth) + 'px';
+      this.dragElement.style.top =
+        Math.min(Math.max(e.pageY - surfaceBounds.top - this.dragOffset.y, 0),
+          surfaceBounds.height - this.dragElement.clientHeight - taskBarHeight) + 'px';
+      if (!this.checkDropAllowed(e)) {
+        this.dragElement.classList.add('not-allowed');
       } else {
-        const bounding = this.surface.nativeElement.getBoundingClientRect();
-        const taskBarHeight = bounding.height * 0.055;
-        this.dragElement.style.left =
-          Math.min(Math.max(e.pageX - this.dragOffset.x, bounding.left),
-            bounding.right - this.dragElement.clientWidth) + 'px';
-        this.dragElement.style.top =
-          Math.min(Math.max(e.pageY - this.dragOffset.y, bounding.top),
-            bounding.bottom - this.dragElement.clientHeight - taskBarHeight) + 'px';
-        if (!this.checkDropAllowed(e)) {
-          this.dragElement.style.backgroundColor = 'rgba(50, 0, 0, 100)';
-        } else {
-          this.dragElement.style.backgroundColor = '';
-        }
+        this.dragElement.classList.remove('not-allowed');
       }
     }
   }
