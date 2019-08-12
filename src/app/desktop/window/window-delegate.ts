@@ -1,9 +1,9 @@
 import { Type } from '@angular/core';
 
 export abstract class WindowDelegate {
-  title: string;
-  icon: string;
-  type: Type<WindowComponent>;
+  abstract title: string;
+  abstract icon: string;
+  abstract type: Type<WindowComponent>;
 
   component: WindowComponent;
 
