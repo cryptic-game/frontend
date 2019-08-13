@@ -1,33 +1,40 @@
 import { Injectable } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
 import { first } from 'rxjs/operators';
-import { environment } from '../environments/environment';
 import { Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
 
+  private static readySubject = new Subject<any>();
+  public static ready = WebsocketService.readySubject.asObservable();
+
   private socket;
   public online = 0;
   private open = {};
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.init();
   }
 
   public init() {
-    this.socket = webSocket(environment.api);
-    this.socket.subscribe(
-      (message) => this.receive(message),
-      (error) => console.error(error));
+    this.http.get('assets/api.json').subscribe(data => {
+      this.socket = webSocket(data['url']);
+      this.socket.subscribe(
+        (message) => this.receive(message),
+        (error) => console.error(error));
 
-    setInterval(() => {
-      this.send({
-        'action': 'info'
-      });
-    }, 1000 * 30);
+      WebsocketService.readySubject.next();
+
+      setInterval(() => {
+        this.send({
+          'action': 'info'
+        });
+      }, 1000 * 30);
+    });
   }
 
   private send(json) {
@@ -54,12 +61,13 @@ export class WebsocketService {
         .toString(16)
         .substring(1);
     }
+
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
       s4() + '-' + s4() + s4() + s4();
   }
 
   public ms(name, endpoint, data) {
-    let tag = this.generateUUID();
+    const tag = this.generateUUID();
 
     const payload = {
       'ms': name,
@@ -80,9 +88,9 @@ export class WebsocketService {
     } else if (json['online'] != null) {
       this.online = json['online'];
     } else if (json['tag'] != null && json['data'] != null) {
-      let tag = json['tag'];
+      const tag = json['tag'];
 
-      if(this.open[tag] != null) {
+      if (this.open[tag] != null) {
         this.open[tag].next(json['data']);
       }
     }

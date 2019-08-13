@@ -3,8 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  api: 'wss://ws.cryptic-game.net/'
+  production: false
 };
 
 /*
