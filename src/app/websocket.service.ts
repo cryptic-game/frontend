@@ -2,39 +2,32 @@ import { Injectable } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
 import { first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
 
-  private static readySubject = new Subject<any>();
-  public static ready = WebsocketService.readySubject.asObservable();
-
   private socket;
   public online = 0;
   private open = {};
 
-  constructor(private http: HttpClient) {
+  constructor() {
     this.init();
   }
 
   public init() {
-    this.http.get('assets/api.json').subscribe(data => {
-      this.socket = webSocket(data['url']);
-      this.socket.subscribe(
-        (message) => this.receive(message),
-        (error) => console.error(error));
+    this.socket = webSocket(environment.api);
+    this.socket.subscribe(
+      (message) => this.receive(message),
+      (error) => console.error(error));
 
-      WebsocketService.readySubject.next();
-
-      setInterval(() => {
-        this.send({
-          'action': 'info'
-        });
-      }, 1000 * 30);
-    });
+    setInterval(() => {
+      this.send({
+        'action': 'info'
+      });
+    }, 1000 * 30);
   }
 
   private send(json) {
