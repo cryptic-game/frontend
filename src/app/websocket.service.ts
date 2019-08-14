@@ -9,6 +9,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class WebsocketService {
 
+  private static readySubject = new Subject<any>();
+  public static ready = WebsocketService.readySubject.asObservable();
+
   private socket;
   public online = 0;
   private open = {};
@@ -23,6 +26,8 @@ export class WebsocketService {
       this.socket.subscribe(
         (message) => this.receive(message),
         (error) => console.error(error));
+
+      WebsocketService.readySubject.next();
 
       setInterval(() => {
         this.send({
