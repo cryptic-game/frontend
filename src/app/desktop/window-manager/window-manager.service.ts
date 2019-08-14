@@ -8,7 +8,6 @@ export class WindowManagerService {
   windows: WindowDelegate[] = [];
   taskList: WindowDelegate[] = [];
   activeWindow: WindowDelegate;
-  cursorWindow: WindowDelegate = null;
 
   constructor() {
   }
