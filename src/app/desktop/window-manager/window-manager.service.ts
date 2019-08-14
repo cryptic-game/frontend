@@ -78,18 +78,4 @@ export class WindowManagerService {
     }
   }
 
-  setCursor(fromWindow: WindowDelegate, cursor: string) {
-    if (this.cursorWindow === null && cursor !== '') {
-      this.cursorWindow = fromWindow;
-    }
-
-    if (this.cursorWindow === fromWindow && cursor === '') {
-      this.cursorWindow = null;
-    }
-
-    if ((this.cursorWindow === null || this.cursorWindow === fromWindow) && document.body.style.cursor !== cursor) {
-      document.body.style.cursor = cursor;
-    }
-  }
-
 }

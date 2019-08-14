@@ -5,6 +5,7 @@ import { ProgramService } from './program.service';
 import { Router } from '@angular/router';
 import { WindowManagerService } from './window-manager/window-manager.service';
 import { WebsocketService } from '../websocket.service';
+import { GlobalCursorService } from '../global-cursor.service';
 
 @Component({
   selector: 'app-desktop',
@@ -21,6 +22,7 @@ export class DesktopComponent implements OnInit {
   dragLinkageIndex: number; // index of current dragged element
   dragOffset: Position; // mouse offset position of the dragged element
   dragElement: HTMLElement;
+  dragCursorLock: number;
 
   token: string = localStorage.getItem('token');
   username: string = sessionStorage.getItem('username');
@@ -29,7 +31,8 @@ export class DesktopComponent implements OnInit {
     private router: Router,
     private websocket: WebsocketService,
     private programService: ProgramService,
-    public windowManager: WindowManagerService,
+    private cursorService: GlobalCursorService,
+    public windowManager: WindowManagerService
   ) {
   }
 
@@ -133,6 +136,7 @@ export class DesktopComponent implements OnInit {
       }
       this.dragLinkageIndex = undefined;
       this.dragOffset = undefined;
+      this.cursorService.releaseCursor(this.dragCursorLock);
     }
   }
 
@@ -152,8 +156,10 @@ export class DesktopComponent implements OnInit {
             bounding.bottom - this.dragElement.clientHeight - taskBarHeight) + 'px';
         if (!this.checkDropAllowed(e)) {
           this.dragElement.style.backgroundColor = 'rgba(50, 0, 0, 100)';
+          this.dragCursorLock = this.cursorService.requestCursor('no-drop', this.dragCursorLock);
         } else {
           this.dragElement.style.backgroundColor = '';
+          this.cursorService.releaseCursor(this.dragCursorLock);
         }
       }
     }
