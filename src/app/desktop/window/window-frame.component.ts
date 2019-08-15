@@ -45,9 +45,11 @@ export class WindowFrameComponent implements OnInit {
   }
 
   startDragging(event: MouseEvent) {
-    this.dragging = true;
-    this.dragStartPos = [event.clientX, event.clientY];
-    this.dragStartWindowPos = [this.delegate.position.x, this.delegate.position.y];
+    if (this.checkResizeDirection(event.clientX, event.clientY, event.target as Element) === 0) {
+      this.dragging = true;
+      this.dragStartPos = [event.clientX, event.clientY];
+      this.dragStartWindowPos = [this.delegate.position.x, this.delegate.position.y];
+    }
   }
 
   checkResizeDirection(clientX, clientY, target: Element) {
