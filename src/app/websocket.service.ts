@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
 import { first } from 'rxjs/operators';
-import { environment } from '../environments/environment';
 import { Subject } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -54,12 +54,13 @@ export class WebsocketService {
         .toString(16)
         .substring(1);
     }
+
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
       s4() + '-' + s4() + s4() + s4();
   }
 
   public ms(name, endpoint, data) {
-    let tag = this.generateUUID();
+    const tag = this.generateUUID();
 
     const payload = {
       'ms': name,
@@ -80,9 +81,9 @@ export class WebsocketService {
     } else if (json['online'] != null) {
       this.online = json['online'];
     } else if (json['tag'] != null && json['data'] != null) {
-      let tag = json['tag'];
+      const tag = json['tag'];
 
-      if(this.open[tag] != null) {
+      if (this.open[tag] != null) {
         this.open[tag].next(json['data']);
       }
     }
