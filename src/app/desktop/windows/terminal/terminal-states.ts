@@ -230,13 +230,19 @@ export class DefaultTerminalState extends CommandTerminalState {
           this.terminal.outputText('That file does not exist');
         }
 
+        let fileFound: Boolean = false;
+
         r.files.forEach(e => {
           if (e != null && e.filename === name) {
             if (e.content !== '') {
               this.terminal.outputText(e.content);
+              fileFound = true;
             }
           }
         });
+        if (!fileFound) {
+          this.terminal.outputText('That file does not exist');
+        }
       });
     } else {
       this.terminal.outputText('usage: cat <filename>');
