@@ -234,10 +234,8 @@ export class DefaultTerminalState extends CommandTerminalState {
 
         r.files.forEach(e => {
           if (e != null && e.filename === name) {
-            if (e.content !== '') {
-              this.terminal.outputText(e.content);
-              fileFound = true;
-            }
+            this.terminal.outputText(e.content);
+            fileFound = true;
           }
         });
         if (!fileFound) {
@@ -411,7 +409,7 @@ export class DefaultTerminalState extends CommandTerminalState {
                   key: key
                 }).subscribe(r2 => {
                   if (r2.error == null) {
-                    this.terminal.outputText(r2.success.amount + ' morphcoin');
+                    this.terminal.outputText(r2.amount + ' morphcoin');
                   } else {
                     this.terminal.outputText('File is no walletfile');
                   }
@@ -445,11 +443,11 @@ export class DefaultTerminalState extends CommandTerminalState {
             this.websocket.ms('device', ['file', 'create'], {
               device_uuid: this.activeDevice['uuid'],
               filename: filename,
-              content: r2.uuid + ' ' + r2.key
+              content: r2.source_uuid + ' ' + r2.key
             }).subscribe(r3 => {
               if (r3['error'] != null) {
                 this.terminal.outputText('That file couldn\'t be created. Please note your wallet credentials ' +
-                  'and put them in a new file with \'touch\' or contact the support: \'' + r2.uuid + ' ' + r2.key + '\'');
+                  'and put them in a new file with \'touch\' or contact the support: \'' + r2.source_uuid + ' ' + r2.key + '\'');
               }
             });
           });
@@ -569,23 +567,35 @@ export class DefaultTerminalState extends CommandTerminalState {
           return;
         }
 
-        this.websocket.ms('service', ['use'], {
-          service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
-          target_device: targetDevice, target_service: targetService
-        }).subscribe(useData => {
-          if (useData['ok'] === true) {
-            if (useData['access'] == null) {
-              this.terminal.outputText('You started a bruteforce attack');
-              this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
-                if (stop) {
-                  this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
-                }
-              }));
-            } else if (useData['access'] === true) {
-              this.terminal.outputText('Access granted - use `connect <device>`');
-            } else {
-              this.terminal.outputText('Access denied. The bruteforce attack was not successful');
-            }
+        this.websocket.ms('service', ['bruteforce', 'status'], {
+          service_uuid: bruteforceService['uuid'], device_uuid: activeDevice
+        }).subscribe(statusData => {
+          if ('error' in statusData) {
+            console.log(statusData);
+
+            this.websocket.ms('service', ['bruteforce', 'attack'], {
+              service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
+              target_device: targetDevice, target_service: targetService
+            }).subscribe(attackData => {
+              if (attackData['ok'] === true) {
+                this.terminal.outputText('You started a bruteforce attack');
+                this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
+                  if (stop) {
+                    this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
+                  }
+                }));
+              }
+            });
+          } else if ('uuid' in statusData) {
+            this.websocket.ms('service', ['bruteforce', 'stop'], {
+              service_uuid: bruteforceService['uuid'], device_uuid: activeDevice
+            }).subscribe(stopData => {
+              if (stopData['access'] === true) {
+                this.terminal.outputText('Access granted - use `connect <device>`');
+              } else {
+                this.terminal.outputText('Access denied. The bruteforce attack was not successful');
+              }
+            });
           } else {
             this.terminal.outputText('Your attack couldn\'t be started');
           }
