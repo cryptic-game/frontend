@@ -55,7 +55,7 @@ export class DesktopComponent implements OnInit {
         let devices = r.devices;
 
         if (devices == null || devices.length === 0) {
-          this.websocket.ms('device', ['device', 'create'], {}).subscribe(r2 => {
+          this.websocket.ms('device', ['device', 'starter_device'], {}).subscribe(r2 => {
             devices = [r2];
             sessionStorage.setItem('devices', JSON.stringify(devices));
             sessionStorage.setItem('activeDevice', JSON.stringify(devices[0]));
