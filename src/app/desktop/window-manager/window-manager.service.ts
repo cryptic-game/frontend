@@ -8,7 +8,6 @@ export class WindowManagerService {
   windows: WindowDelegate[] = [];
   taskList: WindowDelegate[] = [];
   activeWindow: WindowDelegate;
-  cursorWindow: WindowDelegate = null;
 
   constructor() {
   }
@@ -76,20 +75,6 @@ export class WindowManagerService {
       this.focusWindow(this.windows[this.windows.length - 1]);
     } else {
       this.focusWindow(window);
-    }
-  }
-
-  setCursor(fromWindow: WindowDelegate, cursor: string) {
-    if (this.cursorWindow === null && cursor !== '') {
-      this.cursorWindow = fromWindow;
-    }
-
-    if (this.cursorWindow === fromWindow && cursor === '') {
-      this.cursorWindow = null;
-    }
-
-    if ((this.cursorWindow === null || this.cursorWindow === fromWindow) && document.body.style.cursor !== cursor) {
-      document.body.style.cursor = cursor;
     }
   }
 
