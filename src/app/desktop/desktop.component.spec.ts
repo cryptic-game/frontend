@@ -119,7 +119,7 @@ describe('DesktopComponent', () => {
 
       component.initSession();
       expect(msSpy).toHaveBeenCalledWith('device', ['device', 'all'], {});
-      expect(msSpy).toHaveBeenCalledWith('device', ['device', 'create'], {});
+      expect(msSpy).toHaveBeenCalledWith('device', ['device', 'starter_device'], {});
       expect(setItemSpy).toHaveBeenCalledWith('devices', JSON.stringify([testDevice]));
       expect(setItemSpy).toHaveBeenCalledWith('activeDevice', JSON.stringify(testDevice));
     }));
