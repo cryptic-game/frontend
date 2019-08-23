@@ -22,6 +22,8 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
   activeDevice: string;
   miner;
 
+  sendingData = false;
+
   constructor(private websocketService: WebsocketService) {
     super();
   }
@@ -42,6 +44,8 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
 
   ngOnDestroy() {
     this.active = false;
+    this.power = 0;
+
     this.update();
   }
 
@@ -65,19 +69,19 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
   }
 
   updateMinerWallet(wallet) {
-    if (!this.miner) {
+    if (this.miner) {
       this.websocketService.ms('service', ['miner', 'wallet'], {
-        'device_uuid': this.activeDevice,
+        'service_uuid': this.miner.uuid,
         'wallet_uuid': wallet,
       }).subscribe((walletData) => {
         if (!('error' in walletData)) {
           this.errorMessage = null;
 
           this.miner = walletData;
-          this.get();
         } else {
           this.errorMessage = 'invalid wallet';
         }
+        this.get();
       });
     }
   }
@@ -89,8 +93,8 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
       }).subscribe((getData) => {
         this.wallet = getData['wallet'];
         this.started = getData['started'];
-        this.power = getData['power'];
-        this.active = this.power == null && this.started != null;
+        this.power = getData['power'] * 100;
+        this.active = this.power > 0 && this.started != null;
       });
     }
   }
@@ -105,10 +109,18 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
         this.power = 0.0;
       }
 
-      this.websocketService.ms('service', ['miner', 'power'], {
-        'service_uuid': this.miner.uuid,
-        'power': this.power / 100.0,
-      });
+      if (!this.sendingData) {
+        this.sendingData = true;
+
+        setTimeout(() => {
+          this.websocketService.ms('service', ['miner', 'power'], {
+            'service_uuid': this.miner.uuid,
+            'power': +this.power / 100,
+          });
+
+          this.sendingData = false;
+        }, 1000);
+      }
     }
   }
 
