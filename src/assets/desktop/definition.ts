@@ -2,11 +2,13 @@ import { Program } from '../../dataclasses/program';
 import { Position } from '../../dataclasses/position';
 import { TestWindowDelegate } from '../../app/desktop/windows/test-window/test-window.component';
 import { TerminalWindowDelegate } from '../../app/desktop/windows/terminal/terminal.component';
+import { MinerComponent, MinerWindowDelegate } from '../../app/desktop/windows/miner/miner.component';
 
 export const programWindows = {
   'browser': TestWindowDelegate,
   'fileManager': TestWindowDelegate,
-  'terminal': TerminalWindowDelegate
+  'terminal': TerminalWindowDelegate,
+  'miner': MinerWindowDelegate,
 };
 
 export const desktopDefinition = {
@@ -35,6 +37,14 @@ export const desktopDefinition = {
       '../../assets/desktop/img/terminal.svg',
       true,
       new Position(20, 180, 0)
+    ),
+    new Program(
+      'miner',
+      programWindows['miner'],
+      'Miner',
+      '../../assets/desktop/img/morphcoin_dark.svg',
+      true,
+      new Position(20, 270, 0)
     )
   ]
 };
