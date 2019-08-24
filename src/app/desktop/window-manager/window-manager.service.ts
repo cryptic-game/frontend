@@ -21,8 +21,6 @@ export class WindowManagerService {
     }
     win.position.active = true;
     this.activeWindow = win;
-
-    this.activeWindow.component.events.next('open');
   }
 
   sortWindows() {
