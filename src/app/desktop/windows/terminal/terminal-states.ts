@@ -790,7 +790,6 @@ export class DefaultTerminalState extends CommandTerminalState {
               this.terminal.outputText('No invitations found');
             } else {
               this.terminal.outputText('Found ' + invitations.length + ' invitations: ');
-              this.terminal.outputText('');
 
               const element = document.createElement('div');
               element.innerHTML = '';
@@ -844,6 +843,8 @@ export class DefaultTerminalState extends CommandTerminalState {
               this.terminal.outputText('Network not found: ' + args[1]);
             } else if (requestData['error'] === 'already_member_of_network') {
               this.terminal.outputText('You are already a member of this network');
+            } else if (requestData['error'] === 'invitation_already_exists') {
+              this.terminal.outputText('You already requested to enter this network')
             } else {
               this.terminal.outputText('Access denied');
             }
@@ -1014,6 +1015,8 @@ export class DefaultTerminalState extends CommandTerminalState {
               this.terminal.outputText('Network not found: ' + args[1]);
             } else if (inviteData['error'] === 'already_member_of_network') {
               this.terminal.outputText('This device is already a member of this network');
+            } else if (inviteData['error'] === 'invitation_already_exists') {
+              this.terminal.outputText('You already invited this device')
             } else {
               this.terminal.outputText('Access denied');
             }
