@@ -70,7 +70,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
           this.miner = createData;
           this.get();
         } else {
-          this.errorMessage = 'invalid wallet';
+          this.errorMessage = 'Invalid wallet';
         }
       });
     }
@@ -87,7 +87,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
 
           this.miner = walletData;
         } else {
-          this.errorMessage = 'invalid wallet';
+          this.errorMessage = 'Invalid wallet';
         }
         this.get();
       });

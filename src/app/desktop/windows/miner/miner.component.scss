@@ -9,17 +9,19 @@
   height: 100%;
   background-color: $black;
   color: $white;
+  user-select: none;
+  overflow: auto;
 }
 
 #miner-prepare {
   text-align: center;
   padding: 5%;
-}
 
-#miner-prepare input {
-  width: 98%;
-  padding: 1%;
-  outline: none;
+  input {
+    width: 98%;
+    padding: 1%;
+    outline: none;
+  }
 }
 
 #miner-window {
@@ -58,12 +60,12 @@
   display: inline-block;
   width: 60px;
   height: 34px;
-}
 
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
 }
 
 .slider {
@@ -76,19 +78,20 @@
   background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
+
+  &:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: $white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
 }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: $white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
 
 input:checked + .slider {
   background-color: $green;
@@ -145,12 +148,17 @@ input:checked + .slider:before {
 
 .range:disabled::-moz-range-thumb {
   background: $gray !important;
+  cursor: not-allowed;
 }
+
 .range:disabled::-webkit-slider-thumb {
   background: $gray !important;
+  cursor: not-allowed;
 }
 
 #error-message {
+  margin-top: -2.5%;
+  margin-bottom: -5%;
   color: $red;
   text-align: center;
   font-size: 1.5rem;
