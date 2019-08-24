@@ -22,6 +22,7 @@ import { WindowManagerComponent } from './desktop/window-manager/window-manager.
 import { TestWindowComponent } from './desktop/windows/test-window/test-window.component';
 import { TerminalComponent } from './desktop/windows/terminal/terminal.component';
 import { WindowPlaceDirective } from './desktop/window/window-place.directive';
+import { MinerComponent } from './desktop/windows/miner/miner.component';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -46,6 +47,7 @@ const routes: Routes = [
     WindowManagerComponent,
     TestWindowComponent,
     TerminalComponent,
+    MinerComponent,
     WindowPlaceDirective
   ],
   imports: [
@@ -55,7 +57,7 @@ const routes: Routes = [
     FormsModule
   ],
   providers: [],
-  entryComponents: [TestWindowComponent, TerminalComponent],
+  entryComponents: [TestWindowComponent, TerminalComponent, MinerComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {
