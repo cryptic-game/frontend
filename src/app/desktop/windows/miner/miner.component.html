@@ -1,6 +1,8 @@
 <div id="miner-window-container">
   <div id="miner-prepare">
-    <input type="text" [(ngModel)]="wallet" placeholder="Wallet" (change)="checkWallet()">
+    <label>
+      <input type="text" [(ngModel)]="wallet" placeholder="Wallet" (ngModelChange)="checkWallet()">
+    </label>
   </div>
   <div id="error-message">{{errorMessage}}</div>
   <div id="miner-window" *ngIf="miner">
@@ -23,7 +25,7 @@
       <h4 *ngIf="active">{{power}}%</h4>
     </div>
     <div id="miner-state" *ngIf="active">
-      {{rate | number}} MC/s
+      {{power / 100 | number }} MC/s
     </div>
   </div>
 </div>

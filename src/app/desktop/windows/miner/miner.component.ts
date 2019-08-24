@@ -12,7 +12,6 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
 
   active = false;
   power = 0.0;
-  rate = 0.0;
   started;
 
   wallet: string;
@@ -39,6 +38,15 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
           this.get();
         }
       });
+    });
+
+    this.events.asObservable().subscribe((event) => {
+      if (event === 'close') {
+        this.power = 0;
+        this.active = false;
+
+        this.update();
+      }
     });
   }
 
@@ -102,22 +110,22 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
   update() {
     if (this.miner) {
       if (this.active && this.power === 0.0) {
-        this.power = 100.0;
+        this.power = 100;
       }
 
       if (!this.active) {
-        this.power = 0.0;
+        this.power = 0;
       }
 
       if (!this.sendingData) {
         this.sendingData = true;
 
-        setTimeout(() => {
-          this.websocketService.ms('service', ['miner', 'power'], {
-            'service_uuid': this.miner.uuid,
-            'power': +this.power / 100,
-          });
+        this.websocketService.ms('service', ['miner', 'power'], {
+          'service_uuid': this.miner.uuid,
+          'power': this.power / 100,
+        });
 
+        setTimeout(() => {
           this.sendingData = false;
         }, 1000);
       }
