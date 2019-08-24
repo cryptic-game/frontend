@@ -720,15 +720,14 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.websocket.ms('network', ['public'], {}).subscribe(publicData => {
           const networks = publicData['networks'];
 
-          if (networks != null) {
+          if (networks != null && networks.length != 0) {
             this.terminal.outputText('Found ' + networks.length + ' public networks: ');
-            this.terminal.outputText('');
 
             const element = document.createElement('div');
             element.innerHTML = '';
 
             networks.forEach(network => {
-              element.innerHTML += network['name'] +
+              element.innerHTML += '<br>' + network['name'] +
                 ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span>';
             });
 
@@ -736,7 +735,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
             DefaultTerminalState.registerPromptAppenders(element);
           } else {
-            this.terminal.outputText('No public networks found!');
+            this.terminal.outputText('No public networks found');
           }
         });
 
@@ -751,7 +750,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             const memberNetworks = memberData['networks'];
             const ownerNetworks = ownerData['networks'];
 
-            if (memberNetworks != null && ownerData != null) {
+            if (memberNetworks != null && ownerNetworks != null && (memberNetworks.length + ownerNetworks.length) > 0) {
               this.terminal.outputText('Found ' + (memberNetworks.length + ownerNetworks.length) + ' networks: ');
               this.terminal.outputText('');
 
@@ -772,7 +771,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
               DefaultTerminalState.registerPromptAppenders(element);
             } else {
-              this.terminal.outputText('This device is not apart of a network.');
+              this.terminal.outputText('This device is not part of a network');
             }
           });
         });
@@ -788,21 +787,27 @@ export class DefaultTerminalState extends CommandTerminalState {
             const invitations = invitationsData['invitations'];
 
             if (invitations.length === 0) {
-              this.terminal.outputText('No invitations found.');
+              this.terminal.outputText('No invitations found');
             } else {
+              this.terminal.outputText('Found ' + invitations.length + ' invitations: ');
+              this.terminal.outputText('');
+
               const element = document.createElement('div');
               element.innerHTML = '';
 
               invitations.forEach(invitation => {
-                element.innerHTML += '<span style="color: silver;">' + DefaultTerminalState.promptAppender(invitation['uuid']) + '</span>';
+                this.websocket.ms('network', ['get'], {'uuid': invitation['network']}).subscribe(network => {
+                  element.innerHTML += '<br>Invitation: ' + '<span style="color: grey">' + DefaultTerminalState.promptAppender(invitation['uuid']) + '</span><br>' +
+                    'Network: ' + network['name'] + '<br>' +
+                    'Owner: ' + '<span style="color: grey">' + DefaultTerminalState.promptAppender(network['owner']) + '</span><br>';
+                  DefaultTerminalState.registerPromptAppenders(element);
+                });
               });
 
               this.terminal.outputNode(element);
-
-              DefaultTerminalState.registerPromptAppenders(element);
             }
           } else {
-            this.terminal.outputText('Access denied.');
+            this.terminal.outputText('Access denied');
           }
         });
 
@@ -817,9 +822,9 @@ export class DefaultTerminalState extends CommandTerminalState {
 
         this.websocket.ms('network', ['delete'], data).subscribe(deleteData => {
           if (!('error' in deleteData) && deleteData['result']) {
-            this.terminal.outputText('Network deleted.');
+            this.terminal.outputText('Network deleted');
           } else {
-            this.terminal.outputText('Access denied.');
+            this.terminal.outputText('Access denied');
           }
         });
 
@@ -837,8 +842,10 @@ export class DefaultTerminalState extends CommandTerminalState {
           } else {
             if (requestData['error'] === 'network_not_found') {
               this.terminal.outputText('Network not found: ' + args[1]);
+            } else if (requestData['error'] === 'already_member_of_network') {
+              this.terminal.outputText('You are already a member of this network');
             } else {
-              this.terminal.outputText('Access denied.');
+              this.terminal.outputText('Access denied');
             }
           }
         });
@@ -846,7 +853,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         return;
       } else if (args[0] === 'requests') {
         const data = {
-          'uuid': args[0]
+          'uuid': args[1]
         };
 
         this.websocket.ms('network', ['requests'], data).subscribe(requestsData => {
@@ -854,13 +861,16 @@ export class DefaultTerminalState extends CommandTerminalState {
             const requests = requestsData['requests'];
 
             if (requests.length === 0) {
-              this.terminal.outputText('No requests found.');
+              this.terminal.outputText('No requests found');
             } else {
+              this.terminal.outputText('Found ' + requests.length + ' requests: ');
+
               const element = document.createElement('div');
               element.innerHTML = '';
 
               requests.forEach(request => {
-                element.innerHTML += '<span style="color: silver;">' + DefaultTerminalState.promptAppender(request['device']) + '</span>';
+                element.innerHTML += '<br>Request: <span style="color: grey;">' + DefaultTerminalState.promptAppender(request['uuid']) + '</span><br>' +
+                  'Device: <span style="color: grey;">' + DefaultTerminalState.promptAppender(request['device']) + '</span><br>';
               });
 
               this.terminal.outputNode(element);
@@ -868,12 +878,12 @@ export class DefaultTerminalState extends CommandTerminalState {
               DefaultTerminalState.registerPromptAppenders(element);
             }
           } else {
-            this.terminal.outputText('Access denied.');
+            this.terminal.outputText('Access denied');
           }
         });
 
         return;
-      } else if (args[0] === 'accept' || args[0] === 'deny') {
+      } else if (args[0] === 'accept' || args[0] === 'deny' || args[0] === 'revoke') {
         const data = {
           'uuid': args[1]
         };
@@ -883,9 +893,9 @@ export class DefaultTerminalState extends CommandTerminalState {
             this.terminal.outputText(args[1] + ' -> ' + args[0]);
           } else {
             if (updateData['error'] === 'invitation_not_found') {
-              this.terminal.outputText('Invitation not found.');
+              this.terminal.outputText('Invitation not found');
             } else {
-              this.terminal.outputText('Access denied.');
+              this.terminal.outputText('Access denied');
             }
           }
         });
@@ -900,7 +910,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           if (!('error' in leaveData) && leaveData['result']) {
             this.terminal.outputText('You left the network: ' + args[1]);
           } else {
-            this.terminal.outputText('Access denied.');
+            this.terminal.outputText('Access denied');
           }
         });
 
@@ -910,18 +920,54 @@ export class DefaultTerminalState extends CommandTerminalState {
         data[args[0] === 'info' ? 'uuid' : 'name'] = args[1];
 
         this.websocket.ms('network', [args[0] === 'info' ? 'get' : 'name'], data).subscribe(getData => {
-          const element = document.createElement('div');
-          element.innerHTML = 'UUID: <span style="color: silver;">' + DefaultTerminalState.promptAppender(getData['uuid']) + '</span><br>';
-          element.innerHTML += 'Name: ' + getData['name'] + '<br>';
-          element.innerHTML += 'Hidden: ' + (getData['hidden'] ? 'private' : 'public') + '<br>';
-          element.innerHTML += 'Owner: <span style="color: silver;">' + DefaultTerminalState.promptAppender(getData['owner']) + '</span>';
+          if(!('error' in getData)) {
+            const element = document.createElement('div');
+            element.innerHTML = 'UUID: <span style="color: grey;">' + DefaultTerminalState.promptAppender(getData['uuid']) + '</span><br>';
+            element.innerHTML += 'Name: ' + getData['name'] + '<br>';
+            element.innerHTML += 'Hidden: ' + (getData['hidden'] ? 'private' : 'public') + '<br>';
+            element.innerHTML += 'Owner: <span style="color: grey;">' + DefaultTerminalState.promptAppender(getData['owner']) + '</span>';
 
-          this.terminal.outputNode(element);
+            this.terminal.outputNode(element);
 
-          DefaultTerminalState.registerPromptAppenders(element);
+            DefaultTerminalState.registerPromptAppenders(element);
+          } else {
+            this.terminal.outputText('Network not found: ' + args[1]);
+          }
         });
 
         return;
+      } else if (args[0] === 'members') {
+        const data = {
+          'uuid': args[1]
+        };
+
+        this.websocket.ms('network', ['members'], data).subscribe(membersData => {
+          if(!('error' in membersData)) {
+            const members = membersData['members'];
+
+            if(members != null && members.length > 0) {
+              this.terminal.outputText('Found ' + members.length + ' members: ');
+              this.terminal.outputText('');
+
+              const element = document.createElement('div');
+              element.innerHTML = '';
+
+              members.forEach(member => {
+                element.innerHTML += ' <span style="color: grey">' + DefaultTerminalState.promptAppender(member['device']) + '</span><br>';
+              });
+
+              this.terminal.outputNode(element);
+
+              DefaultTerminalState.registerPromptAppenders(element);
+            } else {
+              this.terminal.outputText("This network has no members");
+            }
+          } else {
+            this.terminal.outputText('Access denied');
+          }
+        });
+
+        return
       }
     } else if (args.length === 3) {
       if (args[0] === 'create') {
@@ -941,16 +987,16 @@ export class DefaultTerminalState extends CommandTerminalState {
               this.terminal.outputText('Visibility: ' + (createData['hidden'] ? 'private' : 'public'));
             } else {
               if (createData['error'] === 'invalid_name') {
-                this.terminal.outputText('Name is invalid! 5 - 20 characters');
+                this.terminal.outputText('Name is invalid: Use 5 - 20 characters');
               } else if (createData['error'] === 'name_already_in_use') {
-                this.terminal.outputText('Name already in use!');
+                this.terminal.outputText('Name already in use');
               } else {
-                this.terminal.outputText('Access denied.');
+                this.terminal.outputText('Access denied');
               }
             }
           });
         } else {
-          this.terminal.outputText('Please use public or private as mode.');
+          this.terminal.outputText('Please use public or private as mode');
         }
 
         return;
@@ -964,10 +1010,12 @@ export class DefaultTerminalState extends CommandTerminalState {
           if (!('error' in inviteData)) {
             this.terminal.outputText(args[2] + ' invited to ' + args[1]);
           } else {
-            if (data['error'] === 'network_not_found') {
+            if (inviteData['error'] === 'network_not_found') {
               this.terminal.outputText('Network not found: ' + args[1]);
+            } else if (inviteData['error'] === 'already_member_of_network') {
+              this.terminal.outputText('This device is already a member of this network');
             } else {
-              this.terminal.outputText('Access denied.');
+              this.terminal.outputText('Access denied');
             }
           }
         });
@@ -981,9 +1029,9 @@ export class DefaultTerminalState extends CommandTerminalState {
 
         this.websocket.ms('network', ['kick'], data).subscribe(kickData => {
           if (!('error' in kickData) && kickData['result']) {
-            this.terminal.outputText('Kicked successfully.');
+            this.terminal.outputText('Kicked successfully');
           } else {
-            this.terminal.outputText('Access denied.');
+            this.terminal.outputText('Access denied');
           }
         });
 
@@ -994,6 +1042,8 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.terminal.outputText('network public   # show all public networks');
     this.terminal.outputText('network invitations  # show invitations of a this device');
     this.terminal.outputText('network info <uuid> # show info of network');
+    this.terminal.outputText('network get <name> # show info of network');
+    this.terminal.outputText('network members <uuid> # show members of network');
     this.terminal.outputText('network leave <uuid> # leave a network');
     this.terminal.outputText('network delete <uuid> # delete a network');
     this.terminal.outputText('network request <uuid> # create join request a network');
@@ -1001,6 +1051,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.terminal.outputText('network accept <uuid> # accept an invitation or request');
     this.terminal.outputText('network deny <uuid> # accept an invitation or request');
     this.terminal.outputText('network invite <uuid> <device> # invite to network');
+    this.terminal.outputText('network revoke <uuid> # revoke an invitation');
     this.terminal.outputText('network kick <uuid> <device> # kick device out of network');
     this.terminal.outputText('network create <name> <private|public>   # create a network');
 
