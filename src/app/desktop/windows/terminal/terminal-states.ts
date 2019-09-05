@@ -1049,7 +1049,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.terminal.outputText('network members <uuid> # show members of network');
     this.terminal.outputText('network leave <uuid> # leave a network');
     this.terminal.outputText('network delete <uuid> # delete a network');
-    this.terminal.outputText('network request <uuid> # create join request a network');
+    this.terminal.outputText('network request <uuid> # create a join request to a network');
     this.terminal.outputText('network requests <uuid> # show requests of a network');
     this.terminal.outputText('network accept <uuid> # accept an invitation or request');
     this.terminal.outputText('network deny <uuid> # accept an invitation or request');
