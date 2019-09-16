@@ -637,7 +637,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             '</ul>';
 
           this.terminal.outputNode(list);
-          DefaultTerminalState.registerPromptAppenders(list)
+          DefaultTerminalState.registerPromptAppenders(list);
 
         });
       });
