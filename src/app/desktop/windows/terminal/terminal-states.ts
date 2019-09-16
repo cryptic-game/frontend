@@ -627,12 +627,18 @@ export class DefaultTerminalState extends CommandTerminalState {
           }
 
           this.terminal.outputText('Open ports on that device:');
-          this.terminal.outputRaw('<ul>' +
+
+          const list = document.createElement('ul');
+          list.innerHTML = '<ul>' +
             (runningServices as any[])
               .map(service =>
-                '<li>' + service['name'] + ' (UUID: <em>' + service['uuid'] + '</em> Port: <em>' + service['running_port'] + '</em>)</li>')
+                '<li>' + service['name'] + ' (UUID: <span style="color: grey">' + DefaultTerminalState.promptAppender(service['uuid']) + '</span> Port: <em>' + service['running_port'] + '</em>)</li>')
               .join('\n') +
-            '</ul>');
+            '</ul>';
+
+          this.terminal.outputNode(list);
+          DefaultTerminalState.registerPromptAppenders(list)
+
         });
       });
     } else {
