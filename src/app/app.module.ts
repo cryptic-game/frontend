@@ -22,6 +22,7 @@ import { WindowManagerComponent } from './desktop/window-manager/window-manager.
 import { TestWindowComponent } from './desktop/windows/test-window/test-window.component';
 import { TerminalComponent } from './desktop/windows/terminal/terminal.component';
 import { WindowPlaceDirective } from './desktop/window/window-place.directive';
+import { SettingsComponent } from './desktop/windows/settings/settings.component';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -46,7 +47,8 @@ const routes: Routes = [
     WindowManagerComponent,
     TestWindowComponent,
     TerminalComponent,
-    WindowPlaceDirective
+    WindowPlaceDirective,
+    SettingsComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -55,7 +57,7 @@ const routes: Routes = [
     FormsModule
   ],
   providers: [],
-  entryComponents: [TestWindowComponent, TerminalComponent],
+  entryComponents: [TestWindowComponent, TerminalComponent, SettingsComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

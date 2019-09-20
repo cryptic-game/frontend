@@ -2,11 +2,13 @@ import { Program } from '../../dataclasses/program';
 import { Position } from '../../dataclasses/position';
 import { TestWindowDelegate } from '../../app/desktop/windows/test-window/test-window.component';
 import { TerminalWindowDelegate } from '../../app/desktop/windows/terminal/terminal.component';
+import {SettingsWindowDelegate} from '../../app/desktop/windows/settings/settings.component';
 
 export const programWindows = {
   'browser': TestWindowDelegate,
   'fileManager': TestWindowDelegate,
-  'terminal': TerminalWindowDelegate
+  'terminal': TerminalWindowDelegate,
+  'settings': SettingsWindowDelegate
 };
 
 export const desktopDefinition = {
@@ -35,6 +37,14 @@ export const desktopDefinition = {
       '../../assets/desktop/img/terminal.svg',
       true,
       new Position(20, 180, 0)
+    ),
+    new Program(
+      'settings',
+      programWindows['settings'],
+      'Settings',
+      '../../assets/desktop/img/terminal.svg',
+      true,
+      new Position(20, 270, 0)
     )
   ]
 };
