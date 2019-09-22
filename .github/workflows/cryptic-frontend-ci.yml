@@ -24,8 +24,8 @@ jobs:
       - name: Build
         run: npm build
       - name: Production build
-        run: npm build -- --prod
+        run: ng build --prod
       - name: Test
-        run: npm test -- --browsers ChromeHeadless --watch=false
+        run: ng test --browsers ChromeHeadless --watch=false
       - name: Run end to end tests
-        run: npm e2e
+        run: ng e2e
