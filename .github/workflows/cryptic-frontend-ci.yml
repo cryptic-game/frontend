@@ -22,10 +22,10 @@ jobs:
       - name: Install npm dependencies
         run: npm install
       - name: Build
-        run: npm build
+        run: './node_modules/@angular/cli/bin/ng build'
       - name: Production build
-        run: ng build --prod
+        run: './node_modules/@angular/cli/bin/ng build --prod'
       - name: Test
-        run: ng test --browsers ChromeHeadless --watch=false
+        run: './node_modules/@angular/cli/bin/ng test --browsers ChromeHeadless --watch=false'
       - name: Run end to end tests
         run: ng e2e
