@@ -13,12 +13,12 @@ jobs:
           node-version: '12.x'
       - name: Install latest Chrome-stable
         run: |
-          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-          sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-          apt-get update -qqy
-          apt-get install -qqy --no-install-recommends google-chrome-stable
-          rm /etc/apt/sources.list.d/google-chrome.list
-          rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt-get update -qqy
+          sudo apt-get install -qqy --no-install-recommends google-chrome-stable
+          sudo rm /etc/apt/sources.list.d/google-chrome.list
+          sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/*
       - name: Install npm dependencies
         run: npm install
       - name: Build
