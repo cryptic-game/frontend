@@ -11,6 +11,7 @@ $warningColor: #FF3333;
   height: 100%;
   background-color: rgba(21, 21, 21, 0.9);
   overflow: auto;
+  user-select: none;
 }
 
 ::-webkit-scrollbar {
@@ -69,6 +70,7 @@ $warningColor: #FF3333;
 
 #terminal-history {
   word-break: break-word;
+  user-select: text;
 }
 
 #terminal-history ::ng-deep .errorText {

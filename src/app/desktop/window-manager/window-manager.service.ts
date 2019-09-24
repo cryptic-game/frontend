@@ -8,7 +8,6 @@ export class WindowManagerService {
   windows: WindowDelegate[] = [];
   taskList: WindowDelegate[] = [];
   activeWindow: WindowDelegate;
-  cursorWindow: WindowDelegate = null;
 
   constructor() {
   }
@@ -41,6 +40,8 @@ export class WindowManagerService {
   }
 
   closeWindow(window: WindowDelegate) {
+    window.component.events.next('close');
+
     this.windows.splice(this.windows.findIndex(win => win === window), 1);
     this.taskList.splice(this.taskList.findIndex(win => win === window), 1);
     this.sortWindows();
@@ -57,6 +58,8 @@ export class WindowManagerService {
       return;
     }
 
+    window.component.events.next('focus');
+
     window.position.zIndex = this.windows[this.windows.length - 1].position.zIndex + 1;
     this.sortWindows();
   }
@@ -64,6 +67,9 @@ export class WindowManagerService {
   unfocus() {
     if (this.activeWindow) {
       this.activeWindow.position.active = false;
+
+      this.activeWindow.component.events.next('unfocus');
+
       this.activeWindow = null;
     }
   }
@@ -74,22 +80,11 @@ export class WindowManagerService {
       window.position.zIndex = -1;
       this.sortWindows();
       this.focusWindow(this.windows[this.windows.length - 1]);
+
+      this.activeWindow.component.events.next('minimize');
     } else {
       this.focusWindow(window);
-    }
-  }
-
-  setCursor(fromWindow: WindowDelegate, cursor: string) {
-    if (this.cursorWindow === null && cursor !== '') {
-      this.cursorWindow = fromWindow;
-    }
-
-    if (this.cursorWindow === fromWindow && cursor === '') {
-      this.cursorWindow = null;
-    }
-
-    if ((this.cursorWindow === null || this.cursorWindow === fromWindow) && document.body.style.cursor !== cursor) {
-      document.body.style.cursor = cursor;
+      this.activeWindow.component.events.next('maximize');
     }
   }
 

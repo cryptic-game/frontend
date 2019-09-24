@@ -7,7 +7,6 @@ import { WebsocketService } from './websocket.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnDestroy {
-  loggedIn = false;
 
   constructor(private websocket: WebsocketService) {
   }

@@ -22,6 +22,7 @@ import { WindowManagerComponent } from './desktop/window-manager/window-manager.
 import { TestWindowComponent } from './desktop/windows/test-window/test-window.component';
 import { TerminalComponent } from './desktop/windows/terminal/terminal.component';
 import { WindowPlaceDirective } from './desktop/window/window-place.directive';
+import { MinerComponent } from './desktop/windows/miner/miner.component';
 import { SettingsComponent } from './desktop/windows/settings/settings.component';
 
 const routes: Routes = [
@@ -45,9 +46,10 @@ const routes: Routes = [
     PXtoViewHeightPipe,
     WindowFrameComponent,
     WindowManagerComponent,
+    WindowPlaceDirective,
     TestWindowComponent,
     TerminalComponent,
-    WindowPlaceDirective,
+    MinerComponent,
     SettingsComponent
   ],
   imports: [
@@ -57,7 +59,7 @@ const routes: Routes = [
     FormsModule
   ],
   providers: [],
-  entryComponents: [TestWindowComponent, TerminalComponent, SettingsComponent],
+  entryComponents: [TestWindowComponent, TerminalComponent, MinerComponent, SettingsComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

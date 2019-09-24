@@ -2,12 +2,14 @@ import { Program } from '../../dataclasses/program';
 import { Position } from '../../dataclasses/position';
 import { TestWindowDelegate } from '../../app/desktop/windows/test-window/test-window.component';
 import { TerminalWindowDelegate } from '../../app/desktop/windows/terminal/terminal.component';
-import {SettingsWindowDelegate} from '../../app/desktop/windows/settings/settings.component';
+import { MinerWindowDelegate } from '../../app/desktop/windows/miner/miner.component';
+import { SettingsWindowDelegate } from '../../app/desktop/windows/settings/settings.component';
 
 export const programWindows = {
   'browser': TestWindowDelegate,
   'fileManager': TestWindowDelegate,
   'terminal': TerminalWindowDelegate,
+  'miner': MinerWindowDelegate,
   'settings': SettingsWindowDelegate
 };
 
@@ -39,12 +41,20 @@ export const desktopDefinition = {
       new Position(20, 180, 0)
     ),
     new Program(
+      'miner',
+      programWindows['miner'],
+      'Miner',
+      '../../assets/desktop/img/morphcoin_dark.svg',
+      true,
+      new Position(20, 270, 0)
+    ),
+    new Program(
       'settings',
       programWindows['settings'],
       'Settings',
       '../../assets/desktop/img/terminal.svg',
       true,
-      new Position(20, 270, 0)
+      new Position(20, 360, 0)
     )
   ]
 };
