@@ -1,7 +1,18 @@
 <div id="settings-window-container">
   <div id="settings-window">
-    <h1>Settings</h1>
-    <p>change your local settings here</p>
-    <input type="checkbox" (change)="onChangeSetting('testSetting', testSetting.value)" #testSetting> Test Setting
+    <div class="row">
+      <span>Background Image</span>
+      <div class="setting">
+        <label>
+          <input #background placeholder="path">
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <button (click)="setBackground(background.value)">Save</button>
+    </div>
+    <div class="row">
+      <button (click)="resetSettings()">Reset Settings</button>
+    </div>
   </div>
 </div>
