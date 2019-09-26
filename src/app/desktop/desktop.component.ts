@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { WindowManagerService } from './window-manager/window-manager.service';
 import { WebsocketService } from '../websocket.service';
 import { GlobalCursorService } from '../global-cursor.service';
-import { Settings } from '../../dataclasses/settings';
 import { SettingsService } from './windows/settings/settings.service';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 

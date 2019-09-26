@@ -5,7 +5,8 @@
       <div class="setting">
         <label>
           <select (change)="onChangeSetting()" size="1" #backgroundSetting>
-            <option *ngFor="let bg of current.getBackgroundPossibilities()" [selected]="current.getSettings().backgroundImage">{{bg}}</option>
+            <option *ngFor="let bg of current.getBackgroundPossibilities()"
+                    [selected]="current.getSettings().backgroundImage == bg">{{bg}}</option>
           </select>
         </label>
       </div>

@@ -1,9 +1,11 @@
+import { backgroundDefinition } from '../assets/desktop/definition';
+
 export class Settings {
   constructor(public backgroundImage: string) {
   }
 
   public static default(): Settings {
-    return new Settings('cry_crack.png');
+    return new Settings('default');
   }
 
   public static toJSON(settings: Settings): string {

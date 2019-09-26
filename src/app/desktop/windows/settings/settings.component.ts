@@ -15,7 +15,6 @@ export class SettingsComponent extends WindowComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(Settings.toJSON(this.current.getSettings()));
   }
 
   onChangeSetting(): void {
