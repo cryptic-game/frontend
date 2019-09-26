@@ -1,4 +1,5 @@
 <div #surface (contextmenu)="showContextMenu($event)" (mousedown)="checkWindowUnfocus($event); hideStartMenu()"
+     [style.background] = "getBackground()"
      id="desktop-surface">
   <h1 id="version-info">Pre-Alpha 2.0</h1>
   <div *ngFor="let linkage of onDesktop(); index as i" (dblclick)="openProgramWindow(linkage)"

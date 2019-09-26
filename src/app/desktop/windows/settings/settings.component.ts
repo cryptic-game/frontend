@@ -26,8 +26,8 @@ export class SettingsComponent extends WindowComponent implements OnInit {
     this.current.setSettings(Settings.default());
   }
 
-  setBackground(path: string) {
-    this.current.modify(x => x.backgroundImage = path);
+  setBackground(backgroundName: string) {
+    this.current.modify(x => x.backgroundImage = backgroundName);
   }
 }
 

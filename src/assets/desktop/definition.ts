@@ -58,3 +58,8 @@ export const desktopDefinition = {
     )
   ]
 };
+
+export const backgroundDefinition = {
+  'default': '../../assets/desktop/img/cry_crack.png',
+  'white': '../../assets/desktop/img/desktop-surface-background.png',
+};

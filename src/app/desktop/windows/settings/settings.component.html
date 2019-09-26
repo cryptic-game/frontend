@@ -4,12 +4,14 @@
       <span>Background Image</span>
       <div class="setting">
         <label>
-          <input #background placeholder="path">
+          <select (change)="onChangeSetting()" size="1" #backgroundSetting>
+            <option *ngFor="let bg of current.getBackgroundPossibilities()" [selected]="current.getSettings().backgroundImage">{{bg}}</option>
+          </select>
         </label>
       </div>
     </div>
     <div class="row">
-      <button (click)="setBackground(background.value)">Save</button>
+      <button (click)="setBackground(backgroundSetting.value)">Save</button>
     </div>
     <div class="row">
       <button (click)="resetSettings()">Reset Settings</button>
