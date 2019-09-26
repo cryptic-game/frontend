@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Settings } from '../../../../dataclasses/settings';
-import { backgroundDefinition } from '../../../../assets/desktop/definition';
+import { backgroundDefinition } from '../../../../assets/desktop/backgrounds/definition';
 
 @Injectable({
   providedIn: 'root'

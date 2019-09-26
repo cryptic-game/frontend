@@ -1,5 +1,3 @@
-import { backgroundDefinition } from '../assets/desktop/definition';
-
 export class Settings {
   constructor(public backgroundImage: string) {
   }
