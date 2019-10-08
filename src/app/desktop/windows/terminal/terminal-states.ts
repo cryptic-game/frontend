@@ -752,34 +752,31 @@ export class DefaultTerminalState extends CommandTerminalState {
         };
 
         this.websocket.ms('network', ['member'], data).subscribe(memberData => {
-          this.websocket.ms('network', ['owner'], data).subscribe(ownerData => {
-            const memberNetworks = memberData['networks'];
-            const ownerNetworks = ownerData['networks'];
+          const memberNetworks = memberData['networks'];
 
-            if (memberNetworks != null && ownerNetworks != null && (memberNetworks.length + ownerNetworks.length) > 0) {
-              this.terminal.outputText('Found ' + (memberNetworks.length + ownerNetworks.length) + ' networks: ');
-              this.terminal.outputText('');
+          if (memberNetworks != null && memberNetworks.length > 0) {
+            this.terminal.outputText('Found ' + memberNetworks.length + ' networks: ');
+            this.terminal.outputText('');
 
-              const element = document.createElement('div');
-              element.innerHTML = '';
+            const element = document.createElement('div');
+            element.innerHTML = '';
 
-              memberNetworks.forEach(network => {
-                element.innerHTML += '<span style="color: yellow;">' + network['name'] + '</span>' +
-                  ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span><br>';
-              });
-
-              ownerNetworks.forEach(network => {
+            memberNetworks.forEach(network => {
+              if(network['owner'] == this.activeDevice['uuid']) {
                 element.innerHTML += '<span style="color: red;">' + network['name'] + '</span>' +
                   ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span><br>';
-              });
+              } else {
+                element.innerHTML += '<span style="color: yellow;">' + network['name'] + '</span>' +
+                  ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span><br>';
+              }
+            });
 
-              this.terminal.outputNode(element);
+            this.terminal.outputNode(element);
 
-              DefaultTerminalState.registerPromptAppenders(element);
-            } else {
-              this.terminal.outputText('This device is not part of a network');
-            }
-          });
+            DefaultTerminalState.registerPromptAppenders(element);
+          } else {
+            this.terminal.outputText('This device is not part of a network');
+          }
         });
 
         return;
