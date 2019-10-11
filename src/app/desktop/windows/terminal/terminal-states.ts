@@ -833,8 +833,8 @@ export class DefaultTerminalState extends CommandTerminalState {
         return;
       } else if (args[0] === 'request') {
         const data = {
-          uuid: args[1],
-          device: this.activeDevice['uuid']
+          'uuid': args[1],
+          'device': this.activeDevice['uuid']
         };
 
         this.websocket.ms('network', ['request'], data).subscribe(requestData => {
@@ -907,7 +907,8 @@ export class DefaultTerminalState extends CommandTerminalState {
         return;
       } else if (args[0] === 'leave') {
         const data = {
-          'uuid': args[1]
+          'uuid': args[1],
+          'device': this.activeDevice['uuid']
         };
 
         this.websocket.ms('network', ['leave'], data).subscribe(leaveData => {
@@ -1036,6 +1037,8 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.websocket.ms('network', ['kick'], data).subscribe(kickData => {
           if (!('error' in kickData) && kickData['result']) {
             this.terminal.outputText('Kicked successfully');
+          } else if (kickData['error'] === 'cannot_kick_yourself') {
+            this.terminal.outputText('You can not kick yourself');
           } else {
             this.terminal.outputText('Access denied');
           }
