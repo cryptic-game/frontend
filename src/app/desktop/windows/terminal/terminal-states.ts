@@ -92,7 +92,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     }
   };
 
-  static promptAppenderListener(evt: MouseEvent) {
+  private static promptAppenderListener(evt: MouseEvent) {
     evt.stopPropagation();
     const this_ = <HTMLElement>evt.target;
     const cmdline: HTMLInputElement = this_.closest('#terminal-window').querySelector('#cmdline');
@@ -174,7 +174,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         }
       });
     } else {
-      this.websocket.ms('device', ['device', 'info'], {device_uuid: this.activeDevice['uuid']}).subscribe(device => {
+      this.websocket.ms('device', ['device', 'info'], { device_uuid: this.activeDevice['uuid'] }).subscribe(device => {
         if (device['uuid'] == null || device['name'] == null) {
           this.terminal.outputText(this.activeDevice['name']);
         } else {
@@ -227,7 +227,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     if (args.length === 1) {
       const name = args[0];
 
-      this.websocket.ms('device', ['file', 'all'], {device_uuid: this.activeDevice['uuid']}).subscribe(r => {
+      this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
         if (r.error != null) {
           this.terminal.outputText('That file does not exist');
         }
@@ -266,12 +266,12 @@ export class DefaultTerminalState extends CommandTerminalState {
             if (file.content !== '') {
               const uuid = file.content.split(' ')[0];
               const key = file.content.split(' ').splice(1).join(' ');
-              this.websocket.ms('currency', ['get'], {source_uuid: uuid, key: key}).subscribe(r2 => {
+              this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(r2 => {
                 if (r2.error == null) {
                   this.terminal.pushState(new YesNoTerminalState(this.terminal,
                     '<span class="errorText">Are you sure you want to delete your wallet? [yes|no]</span>', answer => {
                       if (answer) {
-                        this.websocket.ms('currency', ['delete'], {source_uuid: uuid, key: key}).subscribe(r3 => {
+                        this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(r3 => {
                           if (r3.error == null) {
                             this.websocket.ms('device', ['file', 'delete'], {
                               device_uuid: this.activeDevice['uuid'],
@@ -314,7 +314,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       const src = args[0];
       const dest = args[1];
 
-      this.websocket.ms('device', ['file', 'all'], {device_uuid: this.activeDevice['uuid']}).subscribe(r => {
+      this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
         if (r.files != null) {
           for (const file of r.files) {
             if (file != null && file.filename === src) {
@@ -345,7 +345,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       const src = args[0];
       const dest = args[1];
 
-      this.websocket.ms('device', ['file', 'all'], {device_uuid: this.activeDevice['uuid']}).subscribe(r => {
+      this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
         if (r.files != null) {
           for (const file of r.files) {
             if (file != null && file.filename === src) {
@@ -426,7 +426,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           this.terminal.outputText('That file does not exist');
         });
       } else if (args[0] === 'create') {
-        this.websocket.ms('device', ['file', 'all'], {device_uuid: this.activeDevice['uuid']}).subscribe(r => {
+        this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
           if (r.files == null) {
             console.error('Unexpected error');
             return;
@@ -527,15 +527,22 @@ export class DefaultTerminalState extends CommandTerminalState {
   service(args: string[]) {
     const activeDevice = this.activeDevice['uuid'];
 
-    const getService = name => {
-      return this.websocket.ms('service', ['list'], {device_uuid: activeDevice}).pipe(map(data => {
-        const deviceServices = data['services'];
-        if (deviceServices == null || !(deviceServices instanceof Array)) {
-          return null;
+    const getServices = () =>
+      this.websocket.ms('service', ['list'], { device_uuid: activeDevice }).pipe(map(data => {
+        if (data['error'] != null) {
+          console.warn(data['error']);
+          return [];
+        } else if (!Array.isArray(data['services'])) {
+          console.warn(data);
+          return [];
+        } else {
+          return data['services'];
         }
-        return (deviceServices as any[]).find(service => service['name'] === name);
       }));
-    };
+
+    const getService = name => getServices().pipe(map(services => {
+      return (services as any[]).find(service => service['name'] === name);
+    }));
 
     if (args.length >= 1 && args[0].toLowerCase() === 'create') {
       if (args.length !== 2) {
@@ -549,11 +556,29 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.terminal.outputText('Unknown service. Available services: ' + services.join(', '));
         return;
       }
-      this.websocket.ms('service', ['create'], {name: service, device_uuid: activeDevice}).subscribe(data => {
+      this.websocket.ms('service', ['create'], { name: service, device_uuid: activeDevice }).subscribe(data => {
         if (data['error'] == null) {
           this.terminal.outputText('Service was created');
         } else {
           this.terminal.outputText('You already created this service');  // TODO: more detailed errors
+        }
+      });
+    } else if (args.length >= 1 && args[0] === 'list') {
+      if (args.length !== 1) {
+        this.terminal.outputText('usage: service list');
+        return;
+      }
+
+      getServices().subscribe(services => {
+        if (services.length === 0) {
+          this.terminal.outputText('There is no service on this device');
+        } else {
+          const el = document.createElement('ul');
+          el.innerHTML = services
+            .map(service => '<li>' + escapeHtml(service.name) + ' (UUID: ' + DefaultTerminalState.promptAppender(service.uuid) + ')</li>')
+            .join((''));
+          this.terminal.outputNode(el);
+          DefaultTerminalState.registerPromptAppenders(el);
         }
       });
     } else if (args.length >= 1 && args[0] === 'bruteforce') {
@@ -573,21 +598,27 @@ export class DefaultTerminalState extends CommandTerminalState {
           service_uuid: bruteforceService['uuid'], device_uuid: activeDevice
         }).subscribe(statusData => {
           if ('error' in statusData) {
-            console.log(statusData);
-
-            this.websocket.ms('service', ['bruteforce', 'attack'], {
-              service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
-              target_device: targetDevice, target_service: targetService
-            }).subscribe(attackData => {
-              if (attackData['ok'] === true) {
-                this.terminal.outputText('You started a bruteforce attack');
-                this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
-                  if (stop) {
-                    this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
-                  }
-                }));
-              }
-            });
+            if (statusData['error'] === 'attack_not_running') {
+              this.websocket.ms('service', ['bruteforce', 'attack'], {
+                service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
+                target_device: targetDevice, target_service: targetService
+              }).subscribe(attackData => {
+                if (attackData['ok'] === true) {
+                  this.terminal.outputText('You started a bruteforce attack');
+                  this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
+                    if (stop) {
+                      this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
+                    }
+                  }));
+                } else if (attackData['error'] === 'could_not_start_service') {
+                  this.terminal.outputText('There was an error while starting the bruteforce attack');
+                } else {
+                  console.warn(attackData);
+                }
+              });
+            } else {
+              this.terminal.outputText('Error: ' + statusData['error']);
+            }
           } else if ('uuid' in statusData) {
             this.websocket.ms('service', ['bruteforce', 'stop'], {
               service_uuid: bruteforceService['uuid'], device_uuid: activeDevice
@@ -632,7 +663,9 @@ export class DefaultTerminalState extends CommandTerminalState {
           list.innerHTML = '<ul>' +
             (runningServices as any[])
               .map(service =>
-                '<li>' + service['name'] + ' (UUID: <span style="color: grey">' + DefaultTerminalState.promptAppender(service['uuid']) + '</span> Port: <em>' + service['running_port'] + '</em>)</li>')
+                '<li>' + escapeHtml(service['name']) + ' (UUID: ' +
+                DefaultTerminalState.promptAppender(service['uuid']) +
+                ' Port: <em>' + service['running_port'] + '</em>)</li>')
               .join('\n') +
             '</ul>';
 
@@ -642,7 +675,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         });
       });
     } else {
-      this.terminal.outputText('usage: service create|bruteforce|portscan');
+      this.terminal.outputText('usage: service create|list|bruteforce|portscan');
     }
   }
 
@@ -653,7 +686,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         return;
       }
 
-      this.websocket.ms('service', ['list'], {'device_uuid': this.activeDevice['uuid']}).subscribe(localServices => {
+      this.websocket.ms('service', ['list'], { 'device_uuid': this.activeDevice['uuid'] }).subscribe(localServices => {
         const portScanner = (localServices['services'] || []).filter(service => service.name === 'portscan')[0];
         if (portScanner == null || portScanner['uuid'] == null) {
           this.terminal.outputText('\'' + random_device['name'] + '\':');
@@ -697,13 +730,13 @@ export class DefaultTerminalState extends CommandTerminalState {
       return;
     }
 
-    this.websocket.ms('device', ['device', 'info'], {device_uuid: args[0]}).subscribe(infoData => {
+    this.websocket.ms('device', ['device', 'info'], { device_uuid: args[0] }).subscribe(infoData => {
       if (infoData.error != null) {
         this.terminal.outputText(infoData.error);
         return;
       }
 
-      this.websocket.ms('service', ['part_owner'], {device_uuid: args[0]}).subscribe(partOwnerData => {
+      this.websocket.ms('service', ['part_owner'], { device_uuid: args[0] }).subscribe(partOwnerData => {
         if (partOwnerData.error != null) {
           this.terminal.outputText(partOwnerData.error);
           return;
@@ -726,14 +759,14 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.websocket.ms('network', ['public'], {}).subscribe(publicData => {
           const networks = publicData['networks'];
 
-          if (networks != null && networks.length != 0) {
+          if (networks != null && networks.length !== 0) {
             this.terminal.outputText('Found ' + networks.length + ' public networks: ');
 
             const element = document.createElement('div');
             element.innerHTML = '';
 
             networks.forEach(network => {
-              element.innerHTML += '<br>' + network['name'] +
+              element.innerHTML += '<br>' + escapeHtml(network['name']) +
                 ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span>';
             });
 
@@ -764,12 +797,12 @@ export class DefaultTerminalState extends CommandTerminalState {
               element.innerHTML = '';
 
               memberNetworks.forEach(network => {
-                element.innerHTML += '<span style="color: yellow;">' + network['name'] + '</span>' +
+                element.innerHTML += '<span style="color: yellow;">' + escapeHtml(network['name']) + '</span>' +
                   ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span><br>';
               });
 
               ownerNetworks.forEach(network => {
-                element.innerHTML += '<span style="color: red;">' + network['name'] + '</span>' +
+                element.innerHTML += '<span style="color: red;">' + escapeHtml(network['name']) + '</span>' +
                   ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span><br>';
               });
 
@@ -801,9 +834,10 @@ export class DefaultTerminalState extends CommandTerminalState {
               element.innerHTML = '';
 
               invitations.forEach(invitation => {
-                this.websocket.ms('network', ['get'], {'uuid': invitation['network']}).subscribe(network => {
-                  element.innerHTML += '<br>Invitation: ' + '<span style="color: grey">' + DefaultTerminalState.promptAppender(invitation['uuid']) + '</span><br>' +
-                    'Network: ' + network['name'] + '<br>' +
+                this.websocket.ms('network', ['get'], { 'uuid': invitation['network'] }).subscribe(network => {
+                  element.innerHTML += '<br>Invitation: ' + '<span style="color: grey">' +
+                    DefaultTerminalState.promptAppender(invitation['uuid']) + '</span><br>' +
+                    'Network: ' + escapeHtml(network['name']) + '<br>' +
                     'Owner: ' + '<span style="color: grey">' + DefaultTerminalState.promptAppender(network['owner']) + '</span><br>';
                   DefaultTerminalState.registerPromptAppenders(element);
                 });
@@ -850,7 +884,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             } else if (requestData['error'] === 'already_member_of_network') {
               this.terminal.outputText('You are already a member of this network');
             } else if (requestData['error'] === 'invitation_already_exists') {
-              this.terminal.outputText('You already requested to enter this network')
+              this.terminal.outputText('You already requested to enter this network');
             } else {
               this.terminal.outputText('Access denied');
             }
@@ -876,8 +910,10 @@ export class DefaultTerminalState extends CommandTerminalState {
               element.innerHTML = '';
 
               requests.forEach(request => {
-                element.innerHTML += '<br>Request: <span style="color: grey;">' + DefaultTerminalState.promptAppender(request['uuid']) + '</span><br>' +
-                  'Device: <span style="color: grey;">' + DefaultTerminalState.promptAppender(request['device']) + '</span><br>';
+                element.innerHTML += '<br>Request: <span style="color: grey;">' +
+                  DefaultTerminalState.promptAppender(request['uuid']) + '</span><br>' +
+                  'Device: <span style="color: grey;">' +
+                  DefaultTerminalState.promptAppender(request['device']) + '</span><br>';
               });
 
               this.terminal.outputNode(element);
@@ -927,10 +963,10 @@ export class DefaultTerminalState extends CommandTerminalState {
         data[args[0] === 'info' ? 'uuid' : 'name'] = args[1];
 
         this.websocket.ms('network', [args[0] === 'info' ? 'get' : 'name'], data).subscribe(getData => {
-          if(!('error' in getData)) {
+          if (!('error' in getData)) {
             const element = document.createElement('div');
             element.innerHTML = 'UUID: <span style="color: grey;">' + DefaultTerminalState.promptAppender(getData['uuid']) + '</span><br>';
-            element.innerHTML += 'Name: ' + getData['name'] + '<br>';
+            element.innerHTML += 'Name: ' + escapeHtml(getData['name']) + '<br>';
             element.innerHTML += 'Hidden: ' + (getData['hidden'] ? 'private' : 'public') + '<br>';
             element.innerHTML += 'Owner: <span style="color: grey;">' + DefaultTerminalState.promptAppender(getData['owner']) + '</span>';
 
@@ -949,10 +985,10 @@ export class DefaultTerminalState extends CommandTerminalState {
         };
 
         this.websocket.ms('network', ['members'], data).subscribe(membersData => {
-          if(!('error' in membersData)) {
+          if (!('error' in membersData)) {
             const members = membersData['members'];
 
-            if(members != null && members.length > 0) {
+            if (members != null && members.length > 0) {
               this.terminal.outputText('Found ' + members.length + ' members: ');
               this.terminal.outputText('');
 
@@ -967,14 +1003,14 @@ export class DefaultTerminalState extends CommandTerminalState {
 
               DefaultTerminalState.registerPromptAppenders(element);
             } else {
-              this.terminal.outputText("This network has no members");
+              this.terminal.outputText('This network has no members');
             }
           } else {
             this.terminal.outputText('Access denied');
           }
         });
 
-        return
+        return;
       }
     } else if (args.length === 3) {
       if (args[0] === 'create') {
@@ -1022,7 +1058,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             } else if (inviteData['error'] === 'already_member_of_network') {
               this.terminal.outputText('This device is already a member of this network');
             } else if (inviteData['error'] === 'invitation_already_exists') {
-              this.terminal.outputText('You already invited this device')
+              this.terminal.outputText('You already invited this device');
             } else {
               this.terminal.outputText('Access denied');
             }
