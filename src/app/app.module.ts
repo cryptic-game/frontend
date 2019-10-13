@@ -44,7 +44,7 @@ import { ControlCenterModule } from './control-center/control-center.module';
 import { AppRouteReuseStrategy } from './app-route-reuse-strategy';
 import { DesktopDeviceResolver } from './desktop/desktop-device.resolver';
 import { EditorComponent } from './desktop/windows/editor/editor.component';
-
+import { FileManagerComponent } from './desktop/windows/file-manager/file-manager.component';
 // tslint:enable:max-line-length
 
 const routes: Routes = [
@@ -96,7 +96,8 @@ const routes: Routes = [
     WalletAppEditComponent,
     WalletAppTransactionComponent,
     HardwareShopSidebarComponent,
-    EditorComponent
+    EditorComponent,
+    FileManagerComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

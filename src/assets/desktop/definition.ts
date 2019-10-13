@@ -8,9 +8,10 @@ import { TaskManagerWindowDelegate } from '../../app/desktop/windows/task-manage
 import { WalletAppWindowDelegate } from '../../app/desktop/windows/wallet-app/wallet-app.component';
 import { HardwareShopWindowDelegate } from '../../app/desktop/windows/hardware-shop/hardware-shop.component';
 import { EditorWindowDelegate } from '../../app/desktop/windows/editor/editor.component';
+import { FileManagerWindowDelegate } from '../../app/desktop/windows/file-manager/file-manager.component';
 
 export const programWindows = {
-  'file-manager': TestWindowDelegate,
+  'fileManager': FileManagerWindowDelegate,
   'terminal': TerminalWindowDelegate,
   'miner': MinerWindowDelegate,
   'settings': SettingsWindowDelegate,
