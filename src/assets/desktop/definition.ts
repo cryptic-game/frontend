@@ -4,10 +4,11 @@ import { TestWindowDelegate } from '../../app/desktop/windows/test-window/test-w
 import { TerminalWindowDelegate } from '../../app/desktop/windows/terminal/terminal.component';
 import { MinerWindowDelegate } from '../../app/desktop/windows/miner/miner.component';
 import { SettingsWindowDelegate } from '../../app/desktop/windows/settings/settings.component';
+import { FileManagerWindowDelegate } from '../../app/desktop/windows/file-manager/file-manager.component';
 
 export const programWindows = {
   'browser': TestWindowDelegate,
-  'fileManager': TestWindowDelegate,
+  'fileManager': FileManagerWindowDelegate,
   'terminal': TerminalWindowDelegate,
   'miner': MinerWindowDelegate,
   'settings': SettingsWindowDelegate

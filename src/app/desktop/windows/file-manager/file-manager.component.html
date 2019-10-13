@@ -1,0 +1,21 @@
+<div id="file-manager-window-container">
+  <div id="file-manager-window">
+    <div class="category">
+      <h2>Data</h2>
+      <div class="hr" style="width: 100%"></div>
+    </div>
+
+
+    <div class="file-list">
+      <div class="header">
+        <div class="name">Name</div>
+        <div class="size">Size</div>
+      </div>
+      <div class="hr"></div>
+      <div class="file" *ngFor="let file of files">
+        <div class="name selectable">{{file['filename']}}</div>
+        <div class="size selectable">{{file['content'].length}} byte</div>
+      </div>
+    </div>
+  </div>
+</div>
