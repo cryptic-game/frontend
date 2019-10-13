@@ -10,7 +10,7 @@ import { SettingsService } from './settings.service';
 })
 export class SettingsComponent extends WindowComponent implements OnInit {
 
-  constructor(private current: SettingsService) {
+  constructor(public current: SettingsService) {
     super();
   }
 
