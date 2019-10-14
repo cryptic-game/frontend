@@ -915,7 +915,11 @@ export class DefaultTerminalState extends CommandTerminalState {
           if (!('error' in leaveData) && leaveData['result']) {
             this.terminal.outputText('You left the network: ' + args[1]);
           } else {
-            this.terminal.outputText('Access denied');
+            if(leaveData['error'] === 'cannot_leave_own_network') {
+              this.terminal.outputText('You can not leave your own network');
+            } else {
+              this.terminal.outputText('Access denied');
+            }
           }
         });
 
@@ -1034,13 +1038,20 @@ export class DefaultTerminalState extends CommandTerminalState {
           'device': args[2]
         };
 
+        if(data['device'] === this.activeDevice['uuid']) {
+          this.terminal.outputText("You can not kick yourself");
+          return;
+        }
+
         this.websocket.ms('network', ['kick'], data).subscribe(kickData => {
           if (!('error' in kickData) && kickData['result']) {
             this.terminal.outputText('Kicked successfully');
-          } else if (kickData['error'] === 'cannot_kick_yourself') {
-            this.terminal.outputText('You can not kick yourself');
           } else {
-            this.terminal.outputText('Access denied');
+            if(kickData['error'] === 'cannot_kick_owner') {
+              this.terminal.outputText('You can not kick the owner of the network');
+            } else {
+              this.terminal.outputText('Access denied');
+            }
           }
         });
 
