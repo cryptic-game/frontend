@@ -4,13 +4,15 @@ import { TestWindowDelegate } from '../../app/desktop/windows/test-window/test-w
 import { TerminalWindowDelegate } from '../../app/desktop/windows/terminal/terminal.component';
 import { MinerWindowDelegate } from '../../app/desktop/windows/miner/miner.component';
 import { SettingsWindowDelegate } from '../../app/desktop/windows/settings/settings.component';
+import { TaskManagerWindowDelegate } from '../../app/desktop/windows/task-manager/task-manager.component';
 
 export const programWindows = {
   'browser': TestWindowDelegate,
   'fileManager': TestWindowDelegate,
   'terminal': TerminalWindowDelegate,
   'miner': MinerWindowDelegate,
-  'settings': SettingsWindowDelegate
+  'settings': SettingsWindowDelegate,
+  'task-manager': TaskManagerWindowDelegate
 };
 
 export const desktopDefinition = {
@@ -22,15 +24,15 @@ export const desktopDefinition = {
       'Browser',
       '../../assets/desktop/img/browser.svg',
       true,
-      new Position(20, 10, 0)
+      new Position(20, 10)
     ),
     new Program(
-      'fileManager',
-      programWindows['fileManager'],
+      'file-manager',
+      programWindows['file-manager'],
       'File-Manager',
       '../../assets/desktop/img/filemanager.svg',
       true,
-      new Position(20, 90, 0)
+      new Position(20, 90)
     ),
     new Program(
       'terminal',
@@ -38,7 +40,7 @@ export const desktopDefinition = {
       'Terminal',
       '../../assets/desktop/img/terminal.svg',
       true,
-      new Position(20, 180, 0)
+      new Position(20, 180)
     ),
     new Program(
       'miner',
@@ -46,7 +48,7 @@ export const desktopDefinition = {
       'Miner',
       '../../assets/desktop/img/morphcoin_dark.svg',
       true,
-      new Position(20, 270, 0)
+      new Position(20, 270)
     ),
     new Program(
       'settings',
@@ -54,7 +56,15 @@ export const desktopDefinition = {
       'Settings',
       '../../assets/desktop/img/terminal.svg',
       true,
-      new Position(20, 360, 0)
+      new Position(20, 360)
+    ),
+    new Program(
+      'task-manager',
+      programWindows['task-manager'],
+      'Task-Manager',
+      '../../assets/desktop/img/task-manager.svg',
+      true,
+      new Position(20, 450)
     )
   ]
 };
