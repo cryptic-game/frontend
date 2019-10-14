@@ -573,11 +573,21 @@ export class DefaultTerminalState extends CommandTerminalState {
         if (services.length === 0) {
           this.terminal.outputText('There is no service on this device');
         } else {
+          const dev = document.createElement('span');
+          dev.innerHTML = '\'' + this.activeDevice['name'] + '\' (' + DefaultTerminalState.promptAppender(this.activeDevice['uuid']) + '):';
+
           const el = document.createElement('ul');
           el.innerHTML = services
-            .map(service => '<li>' + escapeHtml(service.name) + ' (UUID: ' + DefaultTerminalState.promptAppender(service.uuid) + ')</li>')
+            .map(service => '<li>' + escapeHtml(service.name) + ' (<em>' +
+              (service['running'] ? 'Running' : 'Offline') +
+              '</em> UUID: ' + DefaultTerminalState.promptAppender(service.uuid) +
+              (service['running_port'] ? (' Port: <em>' + service['running_port'] + '</em>') : '') +
+              ')</li>')
             .join((''));
+
+          this.terminal.outputNode(dev);
           this.terminal.outputNode(el);
+          DefaultTerminalState.registerPromptAppenders(dev);
           DefaultTerminalState.registerPromptAppenders(el);
         }
       });
@@ -708,14 +718,12 @@ export class DefaultTerminalState extends CommandTerminalState {
 
           this.terminal.outputText('\'' + escapeHtml(random_device['name']) + '\':');
           const list = document.createElement('ul');
-          list.innerHTML = '<ul>' +
-            '<li>UUID: ' + DefaultTerminalState.promptAppender(random_device['uuid']) + '</li>' +
+          list.innerHTML = '<li>UUID: ' + DefaultTerminalState.promptAppender(random_device['uuid']) + '</li>' +
             '<li>Services:</li>' +
             '<ul>' +
             remoteServices['services']
               .map(service => '<li>' + escapeHtml(service['name']) + ' (' + DefaultTerminalState.promptAppender(service['uuid']) + ')</li>')
               .join('\n') +
-            '</ul>' +
             '</ul>';
           this.terminal.outputNode(list);
           DefaultTerminalState.registerPromptAppenders(list);
