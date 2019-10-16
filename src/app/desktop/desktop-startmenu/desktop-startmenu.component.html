@@ -6,6 +6,10 @@
       <p id="online">online: {{ websocket.online }}</p>
     </div>
   </div>
+  <div id="bugreport">
+    <p>Report a bug through <span (click)="openBugReportPageGitHub()" class="button">GitHub</span>
+    or our <span (click)="openBugReportPageForm()" class="button">Form</span></p>
+  </div>
   <div id="programs">
     <div id="linkages">
       <span (click)="parent.openProgramWindow(linkage); parent.hideStartMenu()"
