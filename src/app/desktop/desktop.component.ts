@@ -179,7 +179,7 @@ export class DesktopComponent implements OnInit {
 
   getBackground(): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(
-      `black url(${this.settings.getBackgroundUrl(this.settings.getSettings().backgroundImage)}) no-repeat bottom`);
+      `black url(${this.settings.getBackgroundUrl(this.settings.getSettings().backgroundImage)}) bottom/cover no-repeat`);
   }
 
 }

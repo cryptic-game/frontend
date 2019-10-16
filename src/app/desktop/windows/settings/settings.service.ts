@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Settings } from '../../../../dataclasses/settings';
-import { backgroundDefinition } from '../../../../assets/desktop/backgrounds/definition';
+import { availableBackgrounds } from '../../../../assets/desktop/backgrounds/backgrounds';
 
 @Injectable({
   providedIn: 'root'
@@ -29,10 +29,10 @@ export class SettingsService {
   }
 
   getBackgroundPossibilities(): string[] {
-    return Object.keys(backgroundDefinition);
+    return Object.keys(availableBackgrounds);
   }
 
   getBackgroundUrl(backgroundName: string): string {
-    return backgroundDefinition[backgroundName];
+    return availableBackgrounds[backgroundName];
   }
 }
