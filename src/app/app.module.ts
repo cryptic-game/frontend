@@ -24,6 +24,7 @@ import { TerminalComponent } from './desktop/windows/terminal/terminal.component
 import { WindowPlaceDirective } from './desktop/window/window-place.directive';
 import { MinerComponent } from './desktop/windows/miner/miner.component';
 import { SettingsComponent } from './desktop/windows/settings/settings.component';
+import { TaskManagerComponent } from './desktop/windows/task-manager/task-manager.component';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -50,7 +51,8 @@ const routes: Routes = [
     TestWindowComponent,
     TerminalComponent,
     MinerComponent,
-    SettingsComponent
+    SettingsComponent,
+    TaskManagerComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -59,7 +61,7 @@ const routes: Routes = [
     FormsModule
   ],
   providers: [],
-  entryComponents: [TestWindowComponent, TerminalComponent, MinerComponent, SettingsComponent],
+  entryComponents: [TestWindowComponent, TerminalComponent, MinerComponent, SettingsComponent, TaskManagerComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {
