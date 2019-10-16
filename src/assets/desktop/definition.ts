@@ -54,7 +54,7 @@ export const desktopDefinition = {
       'settings',
       programWindows['settings'],
       'Settings',
-      '../../assets/desktop/img/terminal.svg',
+      '../../assets/desktop/img/gear.svg',
       true,
       new Position(20, 430)
     ),
