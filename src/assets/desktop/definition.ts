@@ -8,7 +8,7 @@ import { TaskManagerWindowDelegate } from '../../app/desktop/windows/task-manage
 
 export const programWindows = {
   'browser': TestWindowDelegate,
-  'fileManager': TestWindowDelegate,
+  'file-manager': TestWindowDelegate,
   'terminal': TerminalWindowDelegate,
   'miner': MinerWindowDelegate,
   'settings': SettingsWindowDelegate,
@@ -32,7 +32,7 @@ export const desktopDefinition = {
       'File-Manager',
       '../../assets/desktop/img/filemanager.svg',
       true,
-      new Position(20, 90)
+      new Position(20, 110)
     ),
     new Program(
       'terminal',
@@ -40,7 +40,7 @@ export const desktopDefinition = {
       'Terminal',
       '../../assets/desktop/img/terminal.svg',
       true,
-      new Position(20, 180)
+      new Position(20, 230)
     ),
     new Program(
       'miner',
@@ -48,7 +48,7 @@ export const desktopDefinition = {
       'Miner',
       '../../assets/desktop/img/morphcoin_dark.svg',
       true,
-      new Position(20, 270)
+      new Position(20, 330)
     ),
     new Program(
       'settings',
@@ -56,7 +56,7 @@ export const desktopDefinition = {
       'Settings',
       '../../assets/desktop/img/terminal.svg',
       true,
-      new Position(20, 360)
+      new Position(20, 430)
     ),
     new Program(
       'task-manager',
@@ -64,7 +64,7 @@ export const desktopDefinition = {
       'Task-Manager',
       '../../assets/desktop/img/task-manager.svg',
       true,
-      new Position(20, 450)
+      new Position(20, 530)
     )
   ]
 };
