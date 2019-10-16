@@ -793,34 +793,31 @@ export class DefaultTerminalState extends CommandTerminalState {
         };
 
         this.websocket.ms('network', ['member'], data).subscribe(memberData => {
-          this.websocket.ms('network', ['owner'], data).subscribe(ownerData => {
-            const memberNetworks = memberData['networks'];
-            const ownerNetworks = ownerData['networks'];
+          const memberNetworks = memberData['networks'];
 
-            if (memberNetworks != null && ownerNetworks != null && (memberNetworks.length + ownerNetworks.length) > 0) {
-              this.terminal.outputText('Found ' + (memberNetworks.length + ownerNetworks.length) + ' networks: ');
-              this.terminal.outputText('');
+          if (memberNetworks != null && memberNetworks.length > 0) {
+            this.terminal.outputText('Found ' + memberNetworks.length + ' networks: ');
+            this.terminal.outputText('');
 
-              const element = document.createElement('div');
-              element.innerHTML = '';
+            const element = document.createElement('div');
+            element.innerHTML = '';
 
-              memberNetworks.forEach(network => {
-                element.innerHTML += '<span style="color: yellow;">' + escapeHtml(network['name']) + '</span>' +
-                  ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span><br>';
-              });
-
-              ownerNetworks.forEach(network => {
+            memberNetworks.forEach(network => {
+              if(network['owner'] == this.activeDevice['uuid']) {
                 element.innerHTML += '<span style="color: red;">' + escapeHtml(network['name']) + '</span>' +
                   ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span><br>';
-              });
+              } else {
+                element.innerHTML += '<span style="color: yellow;">' + escapeHtml(network['name']) + '</span>' +
+                  ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span><br>';
+              }
+            });
 
-              this.terminal.outputNode(element);
+            this.terminal.outputNode(element);
 
-              DefaultTerminalState.registerPromptAppenders(element);
-            } else {
-              this.terminal.outputText('This device is not part of a network');
-            }
-          });
+            DefaultTerminalState.registerPromptAppenders(element);
+          } else {
+            this.terminal.outputText('This device is not part of a network');
+          }
         });
 
         return;
@@ -878,8 +875,8 @@ export class DefaultTerminalState extends CommandTerminalState {
         return;
       } else if (args[0] === 'request') {
         const data = {
-          uuid: args[1],
-          device: this.activeDevice['uuid']
+          'uuid': args[1],
+          'device': this.activeDevice['uuid']
         };
 
         this.websocket.ms('network', ['request'], data).subscribe(requestData => {
@@ -954,14 +951,19 @@ export class DefaultTerminalState extends CommandTerminalState {
         return;
       } else if (args[0] === 'leave') {
         const data = {
-          'uuid': args[1]
+          'uuid': args[1],
+          'device': this.activeDevice['uuid']
         };
 
         this.websocket.ms('network', ['leave'], data).subscribe(leaveData => {
           if (!('error' in leaveData) && leaveData['result']) {
             this.terminal.outputText('You left the network: ' + args[1]);
           } else {
-            this.terminal.outputText('Access denied');
+            if(leaveData['error'] === 'cannot_leave_own_network') {
+              this.terminal.outputText('You can not leave your own network');
+            } else {
+              this.terminal.outputText('Access denied');
+            }
           }
         });
 
@@ -1080,11 +1082,20 @@ export class DefaultTerminalState extends CommandTerminalState {
           'device': args[2]
         };
 
+        if(data['device'] === this.activeDevice['uuid']) {
+          this.terminal.outputText("You cannot kick yourself");
+          return;
+        }
+
         this.websocket.ms('network', ['kick'], data).subscribe(kickData => {
           if (!('error' in kickData) && kickData['result']) {
             this.terminal.outputText('Kicked successfully');
           } else {
-            this.terminal.outputText('Access denied');
+            if(kickData['error'] === 'cannot_kick_owner') {
+              this.terminal.outputText('You can not kick the owner of the network');
+            } else {
+              this.terminal.outputText('Access denied');
+            }
           }
         });
 
