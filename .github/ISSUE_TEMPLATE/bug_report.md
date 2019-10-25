@@ -13,7 +13,7 @@ about: Create a report to help us improve
 
 <!--- A clear and concise description of what the bug is. -->
 
-## Reproduce
+## To Reproduce
 
 <!--
 
@@ -37,7 +37,7 @@ e.g.:
 <!--
 
 We need the following information:
-- OS: [e.g. MacOS, Linux Mint]
+- OS: [e.g. macOS Catalina, Linux Mint Tina]
 - Browser: [e.g. Chrome, Firefox]
 - Node and NPM version
 
