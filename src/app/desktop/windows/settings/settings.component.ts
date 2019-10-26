@@ -9,14 +9,16 @@ import { SettingsService } from './settings.service';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent extends WindowComponent implements OnInit {
-  
+
   constructor(public current: SettingsService) {
     super();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
-  onChangeSetting(): void {}
+  onChangeSetting(): void {
+  }
 
   resetSettings(): void {
     this.current.setSettings(Settings.default());

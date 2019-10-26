@@ -1,19 +1,11 @@
-import { SettingsService } from './../settings/settings.service';
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  SecurityContext,
-  Type,
-  ViewChild
-} from '@angular/core';
+import { SettingsService } from '../settings/settings.service';
+import { Component, ElementRef, OnInit, SecurityContext, Type, ViewChild } from '@angular/core';
 import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { TerminalAPI, TerminalState } from './terminal-api';
 import { WindowManagerService } from '../../window-manager/window-manager.service';
 import { DefaultTerminalState } from './terminal-states';
 import { WebsocketService } from '../../../websocket.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Statement } from '@angular/compiler';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -59,6 +51,7 @@ export class TerminalComponent extends WindowComponent
     if (window.getSelection().type !== 'Range') {
       this.cmdLine.nativeElement.focus();
     }
+    this.getState().refreshPrompt();
   }
 
   changePrompt(prompt: string | SafeHtml, trust: boolean = false) {

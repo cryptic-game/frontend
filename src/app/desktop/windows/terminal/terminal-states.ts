@@ -1,4 +1,3 @@
-import { Settings } from './../../../../dataclasses/settings';
 import { TerminalAPI, TerminalState } from './terminal-api';
 import { WebsocketService } from '../../../websocket.service';
 import { map } from 'rxjs/operators';
@@ -126,8 +125,8 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private domSanitizer: DomSanitizer,
-    protected terminal: TerminalAPI, protected activeDevice: object, protected username: string,
-    public promptColor: string = settings.getTPC()) {
+              protected terminal: TerminalAPI, protected activeDevice: object, protected username: string,
+              public promptColor: string = null) {
     super();
   }
 
@@ -136,7 +135,7 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
   refreshPrompt() {
-    const color = this.domSanitizer.sanitize(SecurityContext.STYLE, this.promptColor);
+    const color = this.domSanitizer.sanitize(SecurityContext.STYLE, this.promptColor || this.settings.getTPC());
     const prompt = this.domSanitizer.bypassSecurityTrustHtml(
       `<span style="color: ${color}">${escapeHtml(this.username)}@${escapeHtml(this.activeDevice['name'])} $</span>`);
     this.terminal.changePrompt(prompt);
@@ -212,7 +211,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         content = args.slice(1).join(' ');
       }
 
-      if(filename.length > 64) {
+      if (filename.length > 64) {
         this.terminal.outputText('That filename is too long');
         return;
       }
@@ -811,7 +810,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             element.innerHTML = '';
 
             memberNetworks.forEach(network => {
-              if(network['owner'] == this.activeDevice['uuid']) {
+              if (network['owner'] === this.activeDevice['uuid']) {
                 element.innerHTML += '<span style="color: red;">' + escapeHtml(network['name']) + '</span>' +
                   ' <span style="color: grey">' + DefaultTerminalState.promptAppender(network['uuid']) + '</span><br>';
               } else {
@@ -967,7 +966,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           if (!('error' in leaveData) && leaveData['result']) {
             this.terminal.outputText('You left the network: ' + args[1]);
           } else {
-            if(leaveData['error'] === 'cannot_leave_own_network') {
+            if (leaveData['error'] === 'cannot_leave_own_network') {
               this.terminal.outputText('You can not leave your own network');
             } else {
               this.terminal.outputText('Access denied');
@@ -1090,8 +1089,8 @@ export class DefaultTerminalState extends CommandTerminalState {
           'device': args[2]
         };
 
-        if(data['device'] === this.activeDevice['uuid']) {
-          this.terminal.outputText("You cannot kick yourself");
+        if (data['device'] === this.activeDevice['uuid']) {
+          this.terminal.outputText('You cannot kick yourself');
           return;
         }
 
@@ -1099,7 +1098,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           if (!('error' in kickData) && kickData['result']) {
             this.terminal.outputText('Kicked successfully');
           } else {
-            if(kickData['error'] === 'cannot_kick_owner') {
+            if (kickData['error'] === 'cannot_kick_owner') {
               this.terminal.outputText('You can not kick the owner of the network');
             } else {
               this.terminal.outputText('Access denied');
