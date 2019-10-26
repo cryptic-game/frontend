@@ -1,5 +1,12 @@
 import { SettingsService } from './../settings/settings.service';
-import { Component, ElementRef, OnInit, SecurityContext, Type, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  SecurityContext,
+  Type,
+  ViewChild
+} from '@angular/core';
 import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { TerminalAPI, TerminalState } from './terminal-api';
 import { WindowManagerService } from '../../window-manager/window-manager.service';
@@ -35,8 +42,16 @@ export class TerminalComponent extends WindowComponent
   }
 
   ngOnInit() {
-    this.pushState(new DefaultTerminalState(this.websocket, this.settings, this.domSanitizer, this,
-      JSON.parse(sessionStorage.getItem('activeDevice')), sessionStorage.getItem('username')));
+    this.pushState(
+      new DefaultTerminalState(
+        this.websocket,
+        this.settings,
+        this.domSanitizer,
+        this,
+        JSON.parse(sessionStorage.getItem('activeDevice')),
+        sessionStorage.getItem('username')
+      )
+    );
     this.getState().refreshPrompt();
   }
 
@@ -44,8 +59,6 @@ export class TerminalComponent extends WindowComponent
     if (window.getSelection().type !== 'Range') {
       this.cmdLine.nativeElement.focus();
     }
-    // TODO: implementation of changeColorPrompt
-    this.ngOnInit();
   }
 
   changePrompt(prompt: string | SafeHtml, trust: boolean = false) {
@@ -55,14 +68,13 @@ export class TerminalComponent extends WindowComponent
     }
 
     if (typeof prompt === 'string') {
-      this.promptHtml = this.domSanitizer.sanitize(SecurityContext.HTML, prompt);
+      this.promptHtml = this.domSanitizer.sanitize(
+        SecurityContext.HTML,
+        prompt
+      );
     } else {
       this.promptHtml = prompt;
     }
-  }
-
-  changePromptColor(color: string) {
-
   }
 
   pushState(state: TerminalState) {
@@ -116,7 +128,8 @@ export class TerminalComponent extends WindowComponent
   nextFromHistory() {
     if (this.historyIndex > -1) {
       this.historyIndex--;
-      this.cmdLine.nativeElement.value = this.historyIndex > -1 ? this.getHistory()[this.historyIndex] : '';
+      this.cmdLine.nativeElement.value =
+        this.historyIndex > -1 ? this.getHistory()[this.historyIndex] : '';
       this.cmdLine.nativeElement.scrollIntoView();
     }
   }
@@ -158,7 +171,6 @@ export class TerminalComponent extends WindowComponent
   clear() {
     this.history.nativeElement.value = '';
   }
-
 }
 
 export class TerminalWindowDelegate extends WindowDelegate {
