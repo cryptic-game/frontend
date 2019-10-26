@@ -212,6 +212,11 @@ export class DefaultTerminalState extends CommandTerminalState {
         content = args.slice(1).join(' ');
       }
 
+      if(filename.length > 64) {
+        this.terminal.outputText('That filename is too long');
+        return;
+      }
+
       this.websocket.ms('device', ['file', 'create'], {
         device_uuid: this.activeDevice['uuid'],
         filename: filename,

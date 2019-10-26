@@ -9,6 +9,7 @@ import { SettingsService } from './settings.service';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent extends WindowComponent implements OnInit {
+  
   constructor(public current: SettingsService) {
     super();
   }
@@ -33,6 +34,7 @@ export class SettingsComponent extends WindowComponent implements OnInit {
     this.setBackground(backgroundName);
     this.setTerminalPromptColor(color);
   }
+
 }
 
 export class SettingsWindowDelegate extends WindowDelegate {
