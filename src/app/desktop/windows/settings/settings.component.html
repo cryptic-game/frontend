@@ -5,20 +5,14 @@
       <div class="setting">
         <label>
           <select (change)="onChangeSetting()" size="1" #backgroundSetting>
-            <option
-              *ngFor="let bg of current.getBackgroundPossibilities()"
-              [selected]="current.getSettings().backgroundImage == bg"
-              >{{ bg }}</option
-            >
+            <option *ngFor="let bg of current.getBackgroundPossibilities()"
+                    [selected]="current.getSettings().backgroundImage == bg">{{bg}}</option>
           </select>
         </label>
       </div>
     </div>
     <div class="row">
-      <span
-        >Terminal-Prompt color(after change reopen Terminal, to apply
-        changes)</span
-      >
+      <span>Terminal-prompt color</span>
       <div class="setting">
         <label>
           <input
@@ -27,7 +21,6 @@
             [value]="current.getSettings().tpc"
             #terminalPromptColorSetting
           />
-          <!-- tlc = TerminalPromptColor-->
         </label>
       </div>
     </div>
@@ -45,9 +38,7 @@
               saveSettings(
                 backgroundSetting.value,
                 terminalPromptColorSetting.value
-              )
-            "
-          >
+              )">
             Save
           </button>
         </div>
