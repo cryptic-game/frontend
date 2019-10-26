@@ -15,7 +15,10 @@
       </div>
     </div>
     <div class="row">
-      <span>Terminal-Prompt color</span>
+      <span
+        >Terminal-Prompt color(after change reopen Terminal, to apply
+        changes)</span
+      >
       <div class="setting">
         <label>
           <input
@@ -37,7 +40,14 @@
               Reset Settings
             </button>
           </div>
-          <button (click)="saveSettings(backgroundSetting.value, terminalPromptColorSetting.value)">
+          <button
+            (click)="
+              saveSettings(
+                backgroundSetting.value,
+                terminalPromptColorSetting.value
+              )
+            "
+          >
             Save
           </button>
         </div>
