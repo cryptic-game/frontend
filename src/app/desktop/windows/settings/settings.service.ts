@@ -6,8 +6,7 @@ import { availableBackgrounds } from '../../../../assets/desktop/backgrounds/bac
   providedIn: 'root'
 })
 export class SettingsService {
-  constructor() {
-  }
+  constructor() {}
 
   public getSettings(): Settings {
     const settingsJSON = localStorage.getItem('settings');
@@ -34,5 +33,10 @@ export class SettingsService {
 
   getBackgroundUrl(backgroundName: string): string {
     return availableBackgrounds[backgroundName];
+  }
+
+  // terminal prompt color tpc
+  getTPC(): string {
+    return this.getSettings().tpc;
   }
 }
