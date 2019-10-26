@@ -1,3 +1,4 @@
+import { SettingsService } from './../settings/settings.service';
 import { Component, ElementRef, OnInit, SecurityContext, Type, ViewChild } from '@angular/core';
 import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { TerminalAPI, TerminalState } from './terminal-api';
@@ -5,6 +6,7 @@ import { WindowManagerService } from '../../window-manager/window-manager.servic
 import { DefaultTerminalState } from './terminal-states';
 import { WebsocketService } from '../../../websocket.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Statement } from '@angular/compiler';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -25,6 +27,7 @@ export class TerminalComponent extends WindowComponent
 
   constructor(
     private websocket: WebsocketService,
+    private settings: SettingsService,
     private windowManager: WindowManagerService,
     private domSanitizer: DomSanitizer
   ) {
@@ -32,7 +35,7 @@ export class TerminalComponent extends WindowComponent
   }
 
   ngOnInit() {
-    this.pushState(new DefaultTerminalState(this.websocket, this.domSanitizer, this,
+    this.pushState(new DefaultTerminalState(this.websocket, this.settings, this.domSanitizer, this,
       JSON.parse(sessionStorage.getItem('activeDevice')), sessionStorage.getItem('username')));
     this.getState().refreshPrompt();
   }
@@ -41,6 +44,8 @@ export class TerminalComponent extends WindowComponent
     if (window.getSelection().type !== 'Range') {
       this.cmdLine.nativeElement.focus();
     }
+    // TODO: implementation of changeColorPrompt
+    this.ngOnInit();
   }
 
   changePrompt(prompt: string | SafeHtml, trust: boolean = false) {
@@ -54,6 +59,10 @@ export class TerminalComponent extends WindowComponent
     } else {
       this.promptHtml = prompt;
     }
+  }
+
+  changePromptColor(color: string) {
+
   }
 
   pushState(state: TerminalState) {

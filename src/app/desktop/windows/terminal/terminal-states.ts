@@ -1,8 +1,10 @@
+import { Settings } from './../../../../dataclasses/settings';
 import { TerminalAPI, TerminalState } from './terminal-api';
 import { WebsocketService } from '../../../websocket.service';
 import { map } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SecurityContext } from '@angular/core';
+import { SettingsService } from '../settings/settings.service';
 
 
 function escapeHtml(html) {
@@ -123,8 +125,9 @@ export class DefaultTerminalState extends CommandTerminalState {
     return `<span class="promptAppender" style="text-decoration: underline; cursor: pointer;">${escapeHtml(value)}</span>`;
   }
 
-  constructor(protected websocket: WebsocketService, private domSanitizer: DomSanitizer, protected terminal: TerminalAPI,
-              protected activeDevice: object, protected username: string, public promptColor: string = '#64DD17') {
+  constructor(protected websocket: WebsocketService, private settings: SettingsService, private domSanitizer: DomSanitizer,
+    protected terminal: TerminalAPI, protected activeDevice: object, protected username: string,
+    public promptColor: string = settings.getTPC()) {
     super();
   }
 
@@ -757,7 +760,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
         const user_uuid = JSON.parse(sessionStorage.getItem('activeDevice'))['owner'];
         if (infoData['owner'] === user_uuid || partOwnerData['ok'] === true) {
-          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.domSanitizer, this.terminal,
+          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.domSanitizer, this.terminal,
             infoData, this.username, '#DD2C00'));
         } else {
           this.terminal.outputText('Access denied');

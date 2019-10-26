@@ -9,24 +9,29 @@ import { SettingsService } from './settings.service';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent extends WindowComponent implements OnInit {
-
   constructor(public current: SettingsService) {
     super();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  onChangeSetting(): void {
-  }
-
+  onChangeSetting(): void {}
 
   resetSettings(): void {
     this.current.setSettings(Settings.default());
   }
 
   setBackground(backgroundName: string) {
-    this.current.modify(x => x.backgroundImage = backgroundName);
+    this.current.modify(x => (x.backgroundImage = backgroundName));
+  }
+
+  setTerminalPromptColor(color: string) {
+    this.current.modify(x => (x.tpc = color));
+  }
+
+  saveSettings(backgroundName: string, color: string) {
+    this.setBackground(backgroundName);
+    this.setTerminalPromptColor(color);
   }
 }
 
