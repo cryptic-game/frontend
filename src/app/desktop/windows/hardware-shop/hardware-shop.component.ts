@@ -55,7 +55,7 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, On
   }
 
   checkWallet() {
-    if (!(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(this.wallet))) {
+    if (!(/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/.test(this.wallet))) {
       this.error = 'The Wallet-UUID is invalid.';
     } else {
       this.error = '';
@@ -63,7 +63,7 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, On
   }
 
   checkWalletKey() {
-    if (!(/^[0-9a-fA-F]{10}$/.test(this.walletKey))) {
+    if (!(/^[0-9a-f]{10}$/.test(this.walletKey))) {
       this.error = 'The Wallet-Key is invalid.';
     } else {
       this.error = '';
