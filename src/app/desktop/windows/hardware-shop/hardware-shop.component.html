@@ -2,10 +2,10 @@
 
   <div id="hardware-shop-prepare">
     <label>
-      <input type="text" [(ngModel)]="wallet" placeholder="Wallet UUID">
+      <input type="text" [(ngModel)]="wallet" placeholder="Wallet UUID" (ngModelChange)="checkWallet()">
     </label>
     <label>
-      <input type="text" [(ngModel)]="walletKey" placeholder="Wallet Key">
+      <input type="text" [(ngModel)]="walletKey" placeholder="Wallet Key" (ngModelChange)="checkWalletKey()">
     </label>
   </div>
 

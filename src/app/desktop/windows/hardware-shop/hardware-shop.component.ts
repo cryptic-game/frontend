@@ -10,12 +10,12 @@ import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 })
 export class HardwareShopComponent extends WindowComponent implements OnInit, OnDestroy {
 
-  error: String;
-  info: String;
+  error: string;
+  info: string;
   items: HardwarePart[];
 
-  wallet: String = '';
-  walletKey: String = '';
+  wallet: string;
+  walletKey: string;
 
   constructor(private websocketService: WebsocketService) {
     super();
@@ -54,10 +54,26 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, On
       });
   }
 
-  private getError(error: String): String {
+  checkWallet() {
+    if (!(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(this.wallet))) {
+      this.error = 'The Wallet-UUID is invalid.';
+    } else {
+      this.error = '';
+    }
+  }
+
+  checkWalletKey() {
+    if (!(/^[0-9a-fA-F]{10}$/.test(this.walletKey))) {
+      this.error = 'The Wallet-Key is invalid.';
+    } else {
+      this.error = '';
+    }
+  }
+
+  private getError(error: string): string {
     switch (error) {
       case 'invalid_input_data':
-        return 'The UUID is invalid.';
+        return 'The UUID ore the Key is invalid.';
       case 'wallet_not_found':
         return 'Can\'t find a Wallet with this UUID.';
       case 'permission_denied':
