@@ -1,3 +1,4 @@
+import { HardwareShopWindowDelegate } from './../../app/desktop/windows/hardware-shop/hardware-shop.component';
 import { Program } from '../../dataclasses/program';
 import { Position } from '../../dataclasses/position';
 import { TestWindowDelegate } from '../../app/desktop/windows/test-window/test-window.component';
@@ -12,7 +13,8 @@ export const programWindows = {
   'terminal': TerminalWindowDelegate,
   'miner': MinerWindowDelegate,
   'settings': SettingsWindowDelegate,
-  'task-manager': TaskManagerWindowDelegate
+  'task-manager': TaskManagerWindowDelegate,
+  'hardware-shop': HardwareShopWindowDelegate
 };
 
 export const desktopDefinition = {
@@ -65,6 +67,14 @@ export const desktopDefinition = {
       '../../assets/desktop/img/task-manager.svg',
       true,
       new Position(20, 530)
+    ),
+    new Program(
+      'hardware-shop',
+      programWindows['hardware-shop'],
+      'Hardware Shop',
+      '../../assets/desktop/img/browser.svg',
+      true,
+      new Position(20, 630)
     )
   ]
 };

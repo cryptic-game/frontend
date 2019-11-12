@@ -1,0 +1,30 @@
+<div id="hardware-shop-window-container">
+
+  <div id="hardware-shop-prepare">
+    <label>
+      <input type="text" [(ngModel)]="wallet" placeholder="Wallet UUID">
+    </label>
+    <label>
+      <input type="text" [(ngModel)]="walletKey" placeholder="Wallet Key">
+    </label>
+  </div>
+
+  <div class="infos">
+    <span *ngIf="error" class="error">{{error}}</span>
+    <span *ngIf="info" class="info">{{info}}</span>
+  </div>
+
+  <div class="items">
+
+    <div class="item" *ngFor="let item of items">
+
+      <span class="name">{{item.name}}</span>
+      <span class="price">{{item.price}} MC</span>
+      <span class="buy" (click)="buy(item.name)">Buy</span>
+
+      <hr>
+    </div>
+
+  </div>
+
+</div>
