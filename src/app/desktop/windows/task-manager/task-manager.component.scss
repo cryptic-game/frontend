@@ -7,18 +7,16 @@
 #task-manager-container {
   width: 100%;
   height: 100%;
-  background-color: #CAD7DB;
+  background-color: #cad7db;
   user-select: none;
   overflow: auto;
 }
-
 
 #resource-usage-table {
   width: 100%;
   height: 100%;
   padding: 15px 30px 30px;
   box-sizing: border-box;
-
 
   .header {
     font-size: 15pt;
@@ -40,7 +38,14 @@
         background-color: white;
 
         &#temp-chart {
-          background-image: linear-gradient(to bottom, #CF2610, #F5C415 28%, #D9CC31 47%, #86B377 65%, #088CE4);
+          background-image: linear-gradient(
+            to bottom,
+            #cf2610,
+            #f5c415 28%,
+            #d9cc31 47%,
+            #86b377 65%,
+            #088ce4
+          );
         }
 
         .indicator {
@@ -82,7 +87,7 @@
       .top-marking {
         color: #838789;
         position: absolute;
-        top: 0
+        top: 0;
       }
 
       .bottom-marking {
@@ -91,7 +96,5 @@
         bottom: 0;
       }
     }
-
   }
-
 }

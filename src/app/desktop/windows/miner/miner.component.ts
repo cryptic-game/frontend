@@ -39,22 +39,9 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
         }
       });
     });
-
-    this.events.asObservable().subscribe((event) => {
-      if (event === 'close') {
-        this.power = 0;
-        this.active = false;
-
-        this.update();
-      }
-    });
   }
 
   ngOnDestroy() {
-    this.active = false;
-    this.power = 0;
-
-    this.update();
   }
 
   createMiner(wallet) {
