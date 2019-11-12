@@ -72,7 +72,7 @@ export const desktopDefinition = {
       'hardware-shop',
       programWindows['hardware-shop'],
       'Hardware Shop',
-      '../../assets/desktop/img/browser.svg',
+      '../../assets/desktop/img/hardware-shop.svg',
       true,
       new Position(20, 630)
     )

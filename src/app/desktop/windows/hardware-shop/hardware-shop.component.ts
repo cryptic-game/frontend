@@ -13,6 +13,7 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, On
   error: string;
   info: string;
   items: HardwarePart[];
+  valid = true;
 
   wallet: string;
   walletKey: string;
@@ -24,6 +25,7 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, On
   }
 
   ngOnInit() {
+    this.updateValid();
   }
 
   ngOnDestroy() {
@@ -60,6 +62,7 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, On
     } else {
       this.error = '';
     }
+    this.updateValid();
   }
 
   checkWalletKey() {
@@ -67,6 +70,15 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, On
       this.error = 'The Wallet-Key is invalid.';
     } else {
       this.error = '';
+    }
+    this.updateValid();
+  }
+
+  updateValid() {
+    if (!(/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/.test(this.wallet) && /^[0-9a-f]{10}$/.test(this.walletKey))) {
+      this.valid = false;
+    } else {
+      this.valid = true;
     }
   }
 
@@ -88,7 +100,7 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, On
 
 export class HardwareShopWindowDelegate extends WindowDelegate {
   title = 'Hardware-Shop';
-  icon = 'assets/desktop/img/browser.svg';
+  icon = 'assets/desktop/img/hardware-shop.svg';
   type: Type<any> = HardwareShopComponent;
 }
 

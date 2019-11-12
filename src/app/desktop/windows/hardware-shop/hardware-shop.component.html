@@ -20,7 +20,7 @@
 
       <span class="name">{{item.name}}</span>
       <span class="price">{{item.price}} MC</span>
-      <span class="buy" (click)="buy(item.name)">Buy</span>
+      <span class="buy" *ngIf="valid" (click)="buy(item.name)">Buy</span>
 
       <hr>
     </div>
