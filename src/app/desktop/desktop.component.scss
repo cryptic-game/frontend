@@ -1,6 +1,5 @@
 @import "~src/constants";
 
-
 * {
   font-family: $default-font;
 }
@@ -8,7 +7,8 @@
 #desktop-surface {
   width: 100%;
   height: 100%;
-  background: $black url('../../assets/desktop/backgrounds/cry_crack.png') bottom/cover no-repeat;
+  background: $black url("../../assets/desktop/backgrounds/cry_crack.png")
+    bottom/cover no-repeat;
   box-sizing: content-box;
   position: relative;
   overflow: hidden;
@@ -46,14 +46,13 @@
     }
 
     &:hover {
-	      background-color: rgba(0, 0, 0, 0.15);
-          box-shadow: inset 0 0 1.5px 1.5px rgba(0, 0, 0, 0.45)
-	}
+      background-color: rgba(252, 236, 239, 0.1);
+      box-shadow: inset 0 0 1.5px 1.5px rgba(0, 0, 0, 0.45);
+    }
 
     &:active {
       background-color: rgba(0, 0, 0, 0.45);
       box-shadow: inset 0 0 1.5px 1.5px rgba(0, 0, 0, 0.45);
     }
   }
-
 }

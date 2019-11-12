@@ -1,7 +1,7 @@
 @import "~src/constants";
 
-$active-window-color: $gray;
-$inactive-window-color: $black;
+$active-window-color: rgb(6, 0, 14);
+$inactive-window-color: rgba(0, 0, 0, 0.459);
 
 .window {
   display: flex;
@@ -28,13 +28,18 @@ $inactive-window-color: $black;
 }
 
 .window-header {
-  padding: 6px;
+  padding: 1px;
   display: flex;
+  border-bottom-style: solid white 1px;
+  border-radius: 5px 5px 0px 0px;
   flex-direction: row;
   background-color: $inactive-window-color;
   user-select: none;
   height: 2rem;
   align-items: center;
+  border-width: 0px 0px 1px 0px;
+  border-style: solid solid solid solid;
+  border-color: #5ffffb #5ffffb #1d1588 #5ffffb;
 
   .window-title {
     padding-bottom: 3px;
