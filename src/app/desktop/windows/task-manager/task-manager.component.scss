@@ -7,10 +7,10 @@
 #task-manager-container {
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: $window_background;
   user-select: none;
   overflow: auto;
-  color: aliceblue;
+  color: $window_font_color;
 }
 
 #resource-usage-table {
@@ -36,9 +36,9 @@
         position: relative;
         width: 100%;
         height: 6em;
-        background-color: rgba(12, 12, 12, 0.7);
+        background-color: $task_manager_chart_back;
         border: solid;
-        border-color: #1d1588;
+        border-color: $task_manager_chart_border;
         border-width: 1.5px;
 
         &#temp-chart {
@@ -81,7 +81,7 @@
       line-height: 1.4em;
 
       .description {
-        color: #6f9aaf;
+        color: $window_font_color;
       }
 
       .value {
