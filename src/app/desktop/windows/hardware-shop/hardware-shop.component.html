@@ -1,6 +1,5 @@
-<div id="hardware-shop-window-container">
-
-  <div id="hardware-shop-prepare">
+<div class="hardware-shop" #hardwareShop>
+  <!-- <div id="hardware-shop-prepare">
     <label>
       <input type="text" [(ngModel)]="wallet" placeholder="Wallet UUID" (ngModelChange)="checkWallet()">
     </label>
@@ -12,19 +11,43 @@
   <div class="infos">
     <span *ngIf="error" class="error">{{error}}</span>
     <span *ngIf="info" class="info">{{info}}</span>
+  </div> -->
+
+  <div class="header">
+    <app-hardware-shop-header [morphCoins]="morphCoins"
+                              [cardItems]="10"
+                              (walletChangePopupOpen)="setWalletSettingsStatus(true)"></app-hardware-shop-header>
   </div>
 
-  <div class="items">
+  {{walletChangePopup}}
 
-    <div class="item" *ngFor="let item of items">
-
-      <span class="name">{{item.name}}</span>
-      <span class="price">{{item.price}} MC</span>
-      <span class="buy" *ngIf="valid" (click)="buy(item.name)">Buy</span>
-
-      <hr>
+  <div class="grid">
+    <div class="body">
+      <app-hardware-shop-item-grid [items]="items"></app-hardware-shop-item-grid>
     </div>
-
   </div>
 
+  <div class="popup settings-popup" *ngIf="walletChangePopup" [style.width.px]="width" [style.height.px]="height">
+    <div class="modal">
+      <div class="title">
+        <h1>Wallet Settings</h1>
+      </div>
+      <div class="content">
+        <app-hardware-shop-wallet-edit (closeEvent)="setWalletSettingsStatus(false)">
+        </app-hardware-shop-wallet-edit>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup cart-popup" *ngIf="cartPopup" [style.width.px]="width" [style.height.px]="height">
+    <div class="modal">
+      <div class="title">
+        <h1>Cart</h1>
+      </div>
+      <div class="content">
+        <app-hardware-shop-cart (closeEvent)="setWalletSettingsStatus(false)">
+        </app-hardware-shop-cart>
+      </div>
+    </div>
+  </div>
 </div>

@@ -13,7 +13,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DesktopGuard } from './desktop/desktop.guard';
 import { LoginGuard } from './login/login.guard';
 import { SignUpGuard } from './sign-up/sign-up.guard';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasswordConfirmValidatorDirective } from './sign-up/password-confirm-validator.directive';
 import { PXtoViewWidthPipe } from './pxto-view-width.pipe';
 import { PXtoViewHeightPipe } from './pxto-view-height.pipe';
@@ -26,6 +26,12 @@ import { MinerComponent } from './desktop/windows/miner/miner.component';
 import { SettingsComponent } from './desktop/windows/settings/settings.component';
 import { TaskManagerComponent } from './desktop/windows/task-manager/task-manager.component';
 import { HardwareShopComponent } from './desktop/windows/hardware-shop/hardware-shop.component';
+import { HardwareShopItemComponent } from './desktop/windows/hardware-shop/hardware-shop-item/hardware-shop-item.component';
+import { HardwareShopItemGridComponent } from './desktop/windows/hardware-shop/hardware-shop-item-grid/hardware-shop-item-grid.component';
+import { HardwareShopHeaderComponent } from './desktop/windows/hardware-shop/hardware-shop-header/hardware-shop-header.component';
+// tslint:disable-next-line:max-line-length
+import { HardwareShopWalletEditComponent } from './desktop/windows/hardware-shop/hardware-shop-wallet-edit/hardware-shop-wallet-edit.component';
+import { HardwareShopCartComponent } from './desktop/windows/hardware-shop/hardware-shop-cart/hardware-shop-cart.component';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -54,13 +60,19 @@ const routes: Routes = [
     MinerComponent,
     SettingsComponent,
     TaskManagerComponent,
-    HardwareShopComponent
+    HardwareShopComponent,
+    HardwareShopItemComponent,
+    HardwareShopItemGridComponent,
+    HardwareShopHeaderComponent,
+    HardwareShopWalletEditComponent,
+    HardwareShopCartComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
     BrowserModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   entryComponents: [TestWindowComponent, TerminalComponent, MinerComponent, SettingsComponent, TaskManagerComponent, HardwareShopComponent],

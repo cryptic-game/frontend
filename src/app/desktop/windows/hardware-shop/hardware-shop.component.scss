@@ -1,87 +1,61 @@
+@import "../../../../constants";
+
 :host {
-  flex-basis: 100%;
-  display: flex;
-}
-
-#hardware-shop-prepare {
-  display: flex;
-  flex-wrap: wrap;
-
-  label {
-    width: 100%;
-    margin: 10px 5px;
-
-    input {
-      width: 100%;
-      padding: 5px;
-      border: none;
-      outline: none;
-      border-bottom: 1px solid #000000;
-    }
-  }
-}
-
-#hardware-shop-window-container {
   width: 100%;
   height: 100%;
-  background-color: white;
-  padding: 10px;
-  overflow: auto;
 
-  .infos{
-    padding: 20px 0;
-
-    span {
-      margin-right: 10px;
-    }
-
-    .error {
-      background-color: #DD2C00;
-      color: white;
-      border-radius: 20px;
-      padding: 3px 10px;
-    }
-
-    .info {
-      background-color: #64DD17;
-      color: white;
-      border-radius: 20px;
-      padding: 3px 10px;
-    }
-  }
-
-  .items {
+  div.hardware-shop {
     width: 100%;
     height: 100%;
+    background-color: $white;
+    user-select: none;
+    overflow: auto;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
 
-    .item {
+    div.header {
       width: 100%;
-      padding: 5px;
+    }
+
+    div.grid {
+      width: 100%;
+
+      div.body {
+        padding: 10px;
+      }
+    }
+
+    div.popup {
+      position: fixed;
+      background-color: rgba(0, 0, 0, .25);
+
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      justify-content: center;
+      align-items: center;
 
-        span {
-          padding: 3px 10px;
+      div.modal {
+        width: 50%;
+        background-color: $white;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
+        border-radius: 15px;
+        padding: 10px;
+
+        display: flex;
+        flex-direction: column;
+
+        div.title {
+          display: flex;
+          justify-content: center;
+
+          h1 {
+            font-size: 23px;
+            margin-bottom: 0;
+          }
         }
 
-        .price  {
-          margin-left: auto;
+        div.content {
         }
-
-        .buy {
-          background-color: #64DD17;
-          color: white;
-          border-radius: 20px;
-          cursor: pointer;
-          justify-self: flex-end;
-        }
-
-        hr {
-          width: 100%;
-        }
+      }
     }
   }
 }
