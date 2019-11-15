@@ -25,7 +25,7 @@
       <h4 *ngIf="active">{{power}}%</h4>
     </div>
     <div id="miner-state" *ngIf="active">
-      {{power / 100 | number }} MC/s
+      {{miningRate | number }} MC/s
     </div>
   </div>
 </div>

@@ -1,7 +1,7 @@
 @import "~src/constants";
 
-$active-window-color: rgb(6, 0, 14);
-$inactive-window-color: rgba(0, 0, 0, 0.459);
+$active-window-color: $active_w;
+$inactive-window-color: $inactive_w;
 
 .window {
   display: flex;
@@ -45,7 +45,7 @@ $inactive-window-color: rgba(0, 0, 0, 0.459);
     padding-bottom: 3px;
     line-height: 2em;
     margin-left: 8px;
-    color: white;
+    color: $window_title_color;
   }
 
   .window-icons {
