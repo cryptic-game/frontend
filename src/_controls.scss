@@ -31,3 +31,11 @@
 .btn-error:hover {
   background-color: darken($red, 10%);
 }
+
+.btn-disabled {
+  background-color: $gray;
+}
+
+.btn-disabled:hover {
+  background-color: $gray;
+}

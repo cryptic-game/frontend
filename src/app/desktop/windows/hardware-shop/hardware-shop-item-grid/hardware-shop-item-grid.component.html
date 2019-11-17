@@ -6,7 +6,7 @@
   <div class="grid-content" #content>
     <div class="item" *ngFor="let item of items" [style.width.%]="itemWidth">
       <div class="content">
-        <app-hardware-shop-item [name]="item.name" [price]="item.price"></app-hardware-shop-item>
+        <app-hardware-shop-item [item]="item"></app-hardware-shop-item>
       </div>
     </div>
   </div>

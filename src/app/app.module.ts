@@ -32,6 +32,7 @@ import { HardwareShopHeaderComponent } from './desktop/windows/hardware-shop/har
 // tslint:disable-next-line:max-line-length
 import { HardwareShopWalletEditComponent } from './desktop/windows/hardware-shop/hardware-shop-wallet-edit/hardware-shop-wallet-edit.component';
 import { HardwareShopCartComponent } from './desktop/windows/hardware-shop/hardware-shop-cart/hardware-shop-cart.component';
+import { HardwareShopCartItemComponent } from './desktop/windows/hardware-shop/hardware-shop-cart-item/hardware-shop-cart-item.component';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -65,7 +66,8 @@ const routes: Routes = [
     HardwareShopItemGridComponent,
     HardwareShopHeaderComponent,
     HardwareShopWalletEditComponent,
-    HardwareShopCartComponent
+    HardwareShopCartComponent,
+    HardwareShopCartItemComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

@@ -2,12 +2,12 @@
   <div class="body">
 
     <div class="content">
-      <span class="name">{{name}}</span>
+      <span class="name">{{item.name}}</span>
     </div>
 
     <div class="footer">
-      <span>{{price}} MC</span>
-      <span class="btn btn-success">Add to cart</span>
+      <span>{{item.price}} MC</span>
+      <span (click)="addToCart()" class="btn btn-success">Add to cart</span>
     </div>
 
   </div>

@@ -10,6 +10,15 @@ div.cart {
       font-size: 22px;
       margin: 0;
     }
+
+    div.control {
+      display: flex;
+      align-items: center;
+
+      span {
+        margin-left: 10px;
+      }
+    }
   }
 
   hr {

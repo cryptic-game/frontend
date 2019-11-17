@@ -46,15 +46,27 @@ export class HardwareShopService {
     this.localStorage.setItem('cart', JSON.stringify(items));
   }
 
+  public addCartItem(item: HardwarePart): void {
+    const items = this.getCartItems();
+    items.push(item);
+    this.setCartItems(items);
+  }
+
+  public removeCartItem(item: HardwarePart): void {
+    this.setCartItems(this.getCartItems().filter(function (ele) {
+      return ele.name !== item.name;
+    }));
+  }
+
   public getMorphCoins(): Promise<number> {
     return new Promise<number>((resolve, reject) => {
       this.websocketService.ms('currency', ['get'], { source_uuid: this.getWalletUuid(), key: this.getWalletKey() })
         .subscribe(data => {
-            if ('error' in data) {
-              reject(data.error);
-            } else {
-              resolve(data.amount);
-            }
+          if ('error' in data) {
+            reject(data.error);
+          } else {
+            resolve(data.amount);
+          }
           }
         );
     });
@@ -71,5 +83,17 @@ export class HardwareShopService {
           }
         });
     });
+  }
+
+  // TODO: BUY
+  public buyCart(): void {
+    // this.websocketService.ms('inventory', ['shop', 'buy'], { product: name, wallet_uuid: this.wallet, key: this.walletKey })
+    //   .subscribe(data => {
+    //     if (!('error' in data)) {
+    //       this.info = `You bought ${name} successfully.`;
+    //     } else {
+    //       this.error = this.getError(data.error);
+    //     }
+    //   });
   }
 }

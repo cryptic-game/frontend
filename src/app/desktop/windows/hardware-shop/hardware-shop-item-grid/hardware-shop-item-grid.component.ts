@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterViewChecked, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { HardwarePart } from '../hardware-shop.component';
 
 @Component({

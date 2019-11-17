@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
 import { HardwarePart } from '../hardware-shop.component';
 
@@ -10,11 +10,34 @@ import { HardwarePart } from '../hardware-shop.component';
 export class HardwareShopCartComponent {
 
   protected items: HardwarePart[];
+  protected morphCoins: number;
+  protected hasEnoughMorphCoins: boolean;
 
   constructor(
     private hardwareShopService: HardwareShopService
   ) {
     this.items = this.hardwareShopService.getCartItems();
-    console.log(this.items);
+    this.hardwareShopService.getMorphCoins()
+      .then(data => this.morphCoins = data)
+      .catch(() => this.morphCoins = 0);
+  }
+
+  protected getHoleMorphCoins(): number {
+    let mc = 0;
+    this.items.forEach(item => mc += item.price * item.number);
+    this.hasEnoughMorphCoins = this.morphCoins >= mc && mc !== 0;
+    return mc;
+  }
+
+  protected updateNumber(): void {
+    this.hardwareShopService.setCartItems(this.items);
+  }
+
+  protected update(): void {
+    this.items = this.hardwareShopService.getCartItems();
+  }
+
+  protected buy(): void {
+    this.hardwareShopService.buyCart();
   }
 }

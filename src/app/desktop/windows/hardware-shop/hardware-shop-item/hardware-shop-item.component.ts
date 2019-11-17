@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { HardwareShopService } from '../hardware-shop.service';
+import { HardwarePart } from '../hardware-shop.component';
 
 @Component({
   selector: 'app-hardware-shop-item',
@@ -7,11 +9,17 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class HardwareShopItemComponent implements OnInit {
 
-  @Input() name: string;
-  @Input() price: string;
+  @Input() item: HardwarePart;
 
-  constructor() { }
+  constructor(
+    private hardwareShopService: HardwareShopService
+  ) {
+  }
 
   ngOnInit() {
+  }
+
+  protected addToCart(): void {
+    this.hardwareShopService.addCartItem(this.item);
   }
 }
