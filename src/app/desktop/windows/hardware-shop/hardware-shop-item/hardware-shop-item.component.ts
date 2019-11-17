@@ -19,7 +19,7 @@ export class HardwareShopItemComponent implements OnInit {
   ngOnInit() {
   }
 
-  protected addToCart(): void {
-    this.hardwareShopService.addCartItem(this.item);
-  }
+   addToCart(): void {
+     this.hardwareShopService.addCartItem(this.item);
+   }
 }

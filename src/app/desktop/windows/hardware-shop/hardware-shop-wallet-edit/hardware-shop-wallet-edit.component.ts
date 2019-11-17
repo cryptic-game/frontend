@@ -10,13 +10,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class HardwareShopWalletEditComponent implements OnInit {
 
   @Output()
-  protected closeEvent: EventEmitter<any> = new EventEmitter<any>();
+  closeEvent: EventEmitter<any> = new EventEmitter<any>();
 
-  protected form: FormGroup;
-  protected valid: boolean;
+  form: FormGroup;
+  valid: boolean;
 
-  protected uuidHint: string;
-  protected keyHint: string;
+  uuidHint: string;
+  keyHint: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -51,7 +51,7 @@ export class HardwareShopWalletEditComponent implements OnInit {
     this.valid = !this.uuidHint && !this.keyHint;
   }
 
-  protected save(): void {
+  save(): void {
     const uuid = this.form.get('walletUuid').value;
     const key = this.form.get('walletKey').value;
 
@@ -63,7 +63,7 @@ export class HardwareShopWalletEditComponent implements OnInit {
     }
   }
 
-  protected close(): void {
+  close(): void {
     this.closeEvent.emit();
   }
 }

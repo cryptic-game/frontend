@@ -2,7 +2,7 @@
 
   <div class="header" #header [style.width.px]="width">
     <app-hardware-shop-header [morphCoins]="morphCoins"
-                              [cardItems]="10"
+                              [cardItems]="getCartLenght()"
                               [cardVisibility]="cardVisibility"
                               (walletPopupOpen)="setWalletSettingsStatus(true)"
                               (cartOpen)="setCardVisibility(true)"
@@ -10,7 +10,8 @@
     ></app-hardware-shop-header>
   </div>
 
-  <div class="content" [style.top.px]="header.offsetHeight" [style.height]="'calc(100% - ' + header.offsetHeight + 'px)'">
+  <div [style.height]="'calc(100% - ' + header.offsetHeight + 'px)'" [style.top.px]="header.offsetHeight"
+       class="content">
     <div class="body">
       <app-hardware-shop-item-grid [items]="items" *ngIf="!cardVisibility"></app-hardware-shop-item-grid>
       <app-hardware-shop-cart *ngIf="cardVisibility"></app-hardware-shop-cart>

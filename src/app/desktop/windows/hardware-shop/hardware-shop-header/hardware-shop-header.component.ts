@@ -8,35 +8,35 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class HardwareShopHeaderComponent {
 
   @Output()
-  protected walletPopupOpen: EventEmitter<any> = new EventEmitter<any>();
+  walletPopupOpen: EventEmitter<any> = new EventEmitter<any>();
 
   @Output()
-  protected cartOpen: EventEmitter<any> = new EventEmitter<any>();
+  cartOpen: EventEmitter<any> = new EventEmitter<any>();
 
   @Output()
-  protected cartClose: EventEmitter<any> = new EventEmitter<any>();
+  cartClose: EventEmitter<any> = new EventEmitter<any>();
 
   @Input()
-  protected cardVisibility: boolean;
+  cardVisibility: boolean;
 
   @Input()
-  protected morphCoins: number;
+  morphCoins: number;
 
   @Input()
-  protected cardItems: number;
+  cardItems: number;
 
   constructor() {
   }
 
-  protected showWalletSettings(): void {
+  showWalletSettings(): void {
     this.walletPopupOpen.emit();
   }
 
-  protected showCart() {
+  showCart() {
     this.cartOpen.emit();
   }
 
-  protected hideCard() {
+  hideCard() {
     this.cartClose.emit();
   }
 }

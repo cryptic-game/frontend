@@ -9,9 +9,9 @@ import { HardwarePart } from '../hardware-shop.component';
 })
 export class HardwareShopCartComponent {
 
-  protected items: HardwarePart[];
-  protected morphCoins: number;
-  protected hasEnoughMorphCoins: boolean;
+  items: HardwarePart[];
+  morphCoins: number;
+  hasEnoughMorphCoins: boolean;
 
   constructor(
     private hardwareShopService: HardwareShopService
@@ -22,22 +22,22 @@ export class HardwareShopCartComponent {
       .catch(() => this.morphCoins = 0);
   }
 
-  protected getHoleMorphCoins(): number {
+  getHoleMorphCoins(): number {
     let mc = 0;
     this.items.forEach(item => mc += item.price * item.number);
     this.hasEnoughMorphCoins = this.morphCoins >= mc && mc !== 0;
     return mc;
   }
 
-  protected updateNumber(): void {
+  updateNumber(): void {
     this.hardwareShopService.setCartItems(this.items);
   }
 
-  protected update(): void {
+  update(): void {
     this.items = this.hardwareShopService.getCartItems();
   }
 
-  protected buy(): void {
+  buy(): void {
     this.hardwareShopService.buyCart();
   }
 }

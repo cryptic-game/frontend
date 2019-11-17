@@ -11,15 +11,15 @@ import { HardwareShopService } from '../hardware-shop.service';
 export class HardwareShopCartItemComponent implements OnInit {
 
   @Input()
-  protected item: HardwarePart;
+  item: HardwarePart;
 
   @Output()
-  protected updateNumber: EventEmitter<any> = new EventEmitter<any>();
+  updateNumber: EventEmitter<any> = new EventEmitter<any>();
 
   @Output()
-  protected update: EventEmitter<any> = new EventEmitter<any>();
+  update: EventEmitter<any> = new EventEmitter<any>();
 
-  protected formGroup: FormGroup;
+  formGroup: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -44,7 +44,7 @@ export class HardwareShopCartItemComponent implements OnInit {
     });
   }
 
-  protected remove(): void {
+  remove(): void {
     this.hardwareShopService.removeCartItem(this.item);
     this.update.emit();
   }

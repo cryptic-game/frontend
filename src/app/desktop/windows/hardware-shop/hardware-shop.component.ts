@@ -10,17 +10,17 @@ import { HardwareShopService } from './hardware-shop.service';
 })
 export class HardwareShopComponent extends WindowComponent implements AfterViewChecked {
 
-  protected walletSettingsPopup: boolean;
-  protected cardVisibility: boolean;
-  protected morphCoins: number;
+  walletSettingsPopup: boolean;
+  cardVisibility: boolean;
+  morphCoins: number;
 
-  protected width: number;
-  protected height: number;
+  width: number;
+  height: number;
 
   @ViewChild('hardwareShop', { static: false })
   private hardwareShop: ElementRef;
 
-  protected items: HardwarePart[];
+  items: HardwarePart[];
 
   constructor(private hardwareShopService: HardwareShopService) {
     super();
@@ -43,15 +43,19 @@ export class HardwareShopComponent extends WindowComponent implements AfterViewC
       .catch(() => this.morphCoins = -1);
   }
 
-  protected setWalletSettingsStatus(status: boolean) {
+  setWalletSettingsStatus(status: boolean) {
     if (status === false) {
       this.loadMorphCoins();
     }
     this.walletSettingsPopup = status;
   }
 
-  protected setCardVisibility(status: boolean) {
+  setCardVisibility(status: boolean) {
     this.cardVisibility = status;
+  }
+
+  getCartLenght(): number {
+    return this.hardwareShopService.getCartItems().length;
   }
 }
 
