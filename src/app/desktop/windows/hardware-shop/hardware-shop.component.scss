@@ -9,32 +9,36 @@
     height: 100%;
     background-color: $white;
     user-select: none;
-    overflow: auto;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 
     div.header {
-      width: 100%;
+      position: fixed;
+      z-index: 1;
     }
 
-    div.grid {
+    div.content {
+      position: relative;
       width: 100%;
+      overflow-y: auto;
 
       div.body {
         padding: 10px;
       }
     }
 
-    div.popup {
+    div.wallet-settings {
       position: fixed;
       background-color: rgba(0, 0, 0, .25);
+      z-index: 1;
 
       display: flex;
       justify-content: center;
       align-items: center;
 
-      div.modal {
-        width: 50%;
+      div.wallet-settings-pupup {
+        width: 80%;
         background-color: $white;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
         border-radius: 15px;

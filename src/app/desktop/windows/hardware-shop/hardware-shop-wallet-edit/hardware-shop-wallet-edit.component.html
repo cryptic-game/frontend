@@ -1,0 +1,19 @@
+<form [formGroup]="form">
+
+  <label>
+    <span class="name">Wallet Uuid:</span>
+    <input formControlName="walletUuid" type="text">
+    <span class="hint" *ngIf="uuidHint">{{uuidHint}}</span>
+  </label>
+
+  <label>
+    <span class="name">Wallet Key:</span>
+    <input formControlName="walletKey" type="text">
+    <span class="hint" *ngIf="keyHint">{{keyHint}}</span>
+  </label>
+
+  <div class="buttons">
+    <span class="save btn btn-success" (click)="save()" *ngIf="valid">Save</span>
+    <span class="close btn" (click)="close()">Close</span>
+  </div>
+</form>

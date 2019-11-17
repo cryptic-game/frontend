@@ -1,0 +1,22 @@
+div.cart {
+  display: flex;
+  flex-direction: column;
+
+  div.title {
+    display: flex;
+    justify-content: space-between;
+
+    h1 {
+      font-size: 22px;
+      margin: 0;
+    }
+  }
+
+  hr {
+    width: 100%;
+  }
+
+  div.content {
+
+  }
+}

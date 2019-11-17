@@ -1,0 +1,13 @@
+<div class="grid">
+  <div class="title">
+    <h1>Hardware Shop ({{items.length}} Items)</h1>
+  </div>
+  <hr>
+  <div class="grid-content" #content>
+    <div class="item" *ngFor="let item of items" [style.width.%]="itemWidth">
+      <div class="content">
+        <app-hardware-shop-item [name]="item.name" [price]="item.price"></app-hardware-shop-item>
+      </div>
+    </div>
+  </div>
+</div>

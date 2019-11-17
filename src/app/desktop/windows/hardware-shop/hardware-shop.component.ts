@@ -10,8 +10,8 @@ import { HardwareShopService } from './hardware-shop.service';
 })
 export class HardwareShopComponent extends WindowComponent implements AfterViewChecked {
 
-  protected walletChangePopup: boolean;
-  protected cartPopup: boolean;
+  protected walletSettingsPopup: boolean;
+  protected cardVisibility: boolean;
   protected morphCoins: number;
 
   protected width: number;
@@ -20,21 +20,16 @@ export class HardwareShopComponent extends WindowComponent implements AfterViewC
   @ViewChild('hardwareShop', { static: false })
   private hardwareShop: ElementRef;
 
-  error: string;
-  info: string;
-  items: HardwarePart[];
-  valid = true;
-
-  wallet: string;
-  walletKey: string;
+  protected items: HardwarePart[];
 
   constructor(private hardwareShopService: HardwareShopService) {
     super();
-    this.walletChangePopup = false;
-    this.cartPopup = false;
-    this.hardwareShopService.getMorphCoins()
-      .then(data => this.morphCoins = data)
-      .catch(() => this.morphCoins = -1);
+    this.walletSettingsPopup = false;
+    this.cardVisibility = false;
+    this.loadMorphCoins();
+    this.hardwareShopService.getHardwareParts()
+      .then(data => this.items = data)
+      .catch(() => this.items = []);
   }
 
   ngAfterViewChecked(): void {
@@ -42,23 +37,23 @@ export class HardwareShopComponent extends WindowComponent implements AfterViewC
     this.height = this.hardwareShop.nativeElement.offsetHeight;
   }
 
-  protected setWalletSettingsStatus(status: boolean) {
-    this.walletChangePopup = status;
+  private loadMorphCoins(): void {
+    this.hardwareShopService.getMorphCoins()
+      .then(data => this.morphCoins = data)
+      .catch(() => this.morphCoins = -1);
   }
 
-  // private getParts() {
-  //   this.websocketService.ms('inventory', ['shop', 'list'], {})
-  //     .subscribe((data) => {
-  //       if (!('error' in data)) {
-  //         this.error = '';
-  //         this.items = data.products;
-  //       } else {
-  //         this.error = this.getError(data.error);
-  //         this.items = [{ name: `Error ${data.error}`, price: 0 }];
-  //       }
-  //     });
-  // }
-  //
+  protected setWalletSettingsStatus(status: boolean) {
+    if (status === false) {
+      this.loadMorphCoins();
+    }
+    this.walletSettingsPopup = status;
+  }
+
+  protected setCardVisibility(status: boolean) {
+    this.cardVisibility = status;
+  }
+
   // buy(name: string) {
   //   console.log(JSON.stringify({ product: name, wallet_uuid: this.wallet, key: this.walletKey }));
   //   this.websocketService.ms('inventory', ['shop', 'buy'], { product: name, wallet_uuid: this.wallet, key: this.walletKey })
@@ -96,4 +91,5 @@ export class HardwareShopWindowDelegate extends WindowDelegate {
 export interface HardwarePart {
   name: string;
   price: number;
+  number: number;
 }
