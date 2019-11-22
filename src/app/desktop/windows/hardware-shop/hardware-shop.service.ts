@@ -48,8 +48,20 @@ export class HardwareShopService {
 
   public addCartItem(item: HardwarePart): void {
     const items = this.getCartItems();
-    items.push(item);
+    if (!this.contains(item)) {
+      items.push(item);
+    }
     this.setCartItems(items);
+  }
+
+  public contains(item: HardwarePart): boolean {
+    let contains = false;
+    for (const ele of this.getCartItems()) {
+      if (ele.name === item.name) {
+        contains = true;
+      }
+    }
+    return contains;
   }
 
   public removeCartItem(item: HardwarePart): void {

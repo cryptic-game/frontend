@@ -32,20 +32,20 @@ export class HardwareShopCartItemComponent implements OnInit {
       this.item.number = 1;
     }
     this.formGroup = this.formBuilder.group({ number: this.item.number });
-    this.formGroup.valueChanges.subscribe(data => {
-      if (data.number < 0) {
-        this.item.number = 0;
-        this.formGroup.get('number').setValue(0);
-        this.updateNumber.emit();
-      } else {
-        this.item.number = data.number;
-        this.updateNumber.emit();
-      }
-    });
   }
 
   remove(): void {
     this.hardwareShopService.removeCartItem(this.item);
     this.update.emit();
+  }
+
+  updateField(): void {
+    const field = this.formGroup.get('number');
+    field.setValue(field.value);
+    if (field.value < 1) {
+      field.setValue(1);
+    }
+    this.item.number = field.value;
+    this.updateNumber.emit();
   }
 }

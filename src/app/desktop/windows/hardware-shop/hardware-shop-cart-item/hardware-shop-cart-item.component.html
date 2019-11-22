@@ -3,7 +3,7 @@
   <div class="control">
     <span class="price control-item">{{item.price * item.number}} MC</span>
     <form [formGroup]="formGroup" class="number control-item">
-      <label><input formControlName="number" type="number"></label>
+      <label><input (blur)="updateField()" formControlName="number" min="1" step="1" type="number"></label>
     </form>
     <span (click)="remove()" class="btn btn-error control-item">Remove</span>
   </div>
