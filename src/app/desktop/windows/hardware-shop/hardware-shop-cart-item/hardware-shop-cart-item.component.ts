@@ -41,8 +41,12 @@ export class HardwareShopCartItemComponent implements OnInit {
 
   updateField(): void {
     const field = this.formGroup.get('number');
-    field.setValue(field.value);
+    field.setValue(Math.floor(field.value));
     if (field.value < 1) {
+      field.setValue(1);
+    } else if (field.value > 50) {
+      field.setValue(50);
+    } else {
       field.setValue(1);
     }
     this.item.number = field.value;

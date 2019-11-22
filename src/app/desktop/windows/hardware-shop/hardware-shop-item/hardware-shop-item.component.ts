@@ -19,4 +19,8 @@ export class HardwareShopItemComponent {
   addToCart(): void {
     this.hardwareShopService.addCartItem(this.item);
   }
+
+  removeFromCart(): void {
+    this.hardwareShopService.removeCartItem(this.item);
+  }
 }

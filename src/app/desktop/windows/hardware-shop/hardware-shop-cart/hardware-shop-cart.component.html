@@ -2,7 +2,7 @@
   <div class="title">
     <h1>Cart ({{items.length}} Items)</h1>
     <div class="control">
-      <span>{{getHoleMorphCoins()}} MC</span>
+      <span>Total {{getHoleMorphCoins()}} MC</span>
       <span (click)="buy()" [className]="hasEnoughMorphCoins ? 'btn btn-success' : 'btn btn-disabled'">Buy</span>
     </div>
   </div>
