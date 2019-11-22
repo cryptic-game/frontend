@@ -7,8 +7,8 @@
   <div class="right">
     <span *ngIf="!(morphCoins >= 0)">Not Wallet found.</span>
     <span *ngIf="morphCoins >= 0">{{morphCoins}} MC</span>
-    <span class="btn" (click)="showCart()" *ngIf="!cardVisibility">Show Cart - {{cardItems}} Items</span>
-    <span class="btn" (click)="hideCard()" *ngIf="cardVisibility">Hide Cart - {{cardItems}} Items</span>
+    <span (click)="showCart()" *ngIf="!cardVisibility" class="btn">Shopping cart - {{cardItems}} Items</span>
+    <span (click)="hideCard()" *ngIf="cardVisibility" class="btn">Back to shop - {{cardItems}} Items</span>
   </div>
 
 </div>
