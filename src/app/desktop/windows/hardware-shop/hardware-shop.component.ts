@@ -1,14 +1,15 @@
-import { AfterViewChecked, Component, ElementRef, Type, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, Type, ViewChild } from '@angular/core';
 
 import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { HardwareShopService } from './hardware-shop.service';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop',
   templateUrl: './hardware-shop.component.html',
   styleUrls: ['./hardware-shop.component.scss']
 })
-export class HardwareShopComponent extends WindowComponent implements AfterViewChecked {
+export class HardwareShopComponent extends WindowComponent implements OnInit, AfterViewChecked {
 
   walletSettingsPopup: boolean;
   cardVisibility: boolean;
@@ -24,12 +25,18 @@ export class HardwareShopComponent extends WindowComponent implements AfterViewC
 
   constructor(private hardwareShopService: HardwareShopService) {
     super();
+  }
+
+  ngOnInit(): void {
     this.walletSettingsPopup = false;
     this.cardVisibility = false;
     this.loadMorphCoins();
     this.hardwareShopService.getHardwareParts()
       .then(data => this.items = data)
       .catch(() => this.items = []);
+
+    interval(1000 * 20)
+      .subscribe(this.loadMorphCoins);
   }
 
   ngAfterViewChecked(): void {
@@ -38,6 +45,7 @@ export class HardwareShopComponent extends WindowComponent implements AfterViewC
   }
 
   private loadMorphCoins(): void {
+    console.log('load mc.');
     this.hardwareShopService.getMorphCoins()
       .then(data => this.morphCoins = data)
       .catch(() => this.morphCoins = -1);
