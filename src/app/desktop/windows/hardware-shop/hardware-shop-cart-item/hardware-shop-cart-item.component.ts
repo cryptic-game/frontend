@@ -46,8 +46,6 @@ export class HardwareShopCartItemComponent implements OnInit {
       field.setValue(1);
     } else if (field.value > 50) {
       field.setValue(50);
-    } else {
-      field.setValue(1);
     }
     this.item.number = field.value;
     this.updateNumber.emit();
