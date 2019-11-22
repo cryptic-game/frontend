@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
 import { HardwarePart } from '../hardware-shop.component';
 
@@ -7,7 +7,7 @@ import { HardwarePart } from '../hardware-shop.component';
   templateUrl: './hardware-shop-item.component.html',
   styleUrls: ['./hardware-shop-item.component.scss']
 })
-export class HardwareShopItemComponent implements OnInit {
+export class HardwareShopItemComponent {
 
   @Input() item: HardwarePart;
 
@@ -16,10 +16,7 @@ export class HardwareShopItemComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+  addToCart(): void {
+    this.hardwareShopService.addCartItem(this.item);
   }
-
-   addToCart(): void {
-     this.hardwareShopService.addCartItem(this.item);
-   }
 }

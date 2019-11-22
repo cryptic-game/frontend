@@ -7,7 +7,8 @@
 
     <div class="footer">
       <span>{{item.price}} MC</span>
-      <span (click)="addToCart()" class="btn btn-success">Add to cart</span>
+      <span (click)="addToCart()"
+            [className]="!item.containsInCart ? 'btn btn-success': 'btn btn-disabled'">Add to cart</span>
     </div>
 
   </div>

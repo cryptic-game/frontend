@@ -31,9 +31,6 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, Af
     this.walletSettingsPopup = false;
     this.cardVisibility = false;
     this.loadMorphCoins();
-    this.hardwareShopService.getHardwareParts()
-      .then(data => this.items = data)
-      .catch(() => this.items = []);
 
     interval(1000 * 20)
       .subscribe(this.loadMorphCoins);
@@ -77,4 +74,5 @@ export interface HardwarePart {
   name: string;
   price: number;
   number?: number;
+  containsInCart: boolean;
 }

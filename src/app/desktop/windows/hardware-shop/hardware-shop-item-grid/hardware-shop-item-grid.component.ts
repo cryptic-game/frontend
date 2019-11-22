@@ -1,21 +1,30 @@
-import { AfterViewChecked, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HardwarePart } from '../hardware-shop.component';
+import { HardwareShopService } from '../hardware-shop.service';
 
 @Component({
   selector: 'app-hardware-shop-item-grid',
   templateUrl: './hardware-shop-item-grid.component.html',
   styleUrls: ['./hardware-shop-item-grid.component.scss']
 })
-export class HardwareShopItemGridComponent implements AfterViewChecked {
+export class HardwareShopItemGridComponent implements OnInit, AfterViewChecked {
 
-  @Input() items: HardwarePart[];
-  protected itemWidth: number;
+  items: HardwarePart[];
+  itemWidth: number;
 
   @ViewChild('content', { static: false })
   private content: ElementRef;
 
-  constructor() {
+  constructor(
+    private hardwareShopService: HardwareShopService
+  ) {
     this.items = [];
+  }
+
+  ngOnInit(): void {
+    this.hardwareShopService.getHardwareParts()
+      .then(data => this.items = data)
+      .catch(() => this.items = []);
   }
 
   ngAfterViewChecked(): void {

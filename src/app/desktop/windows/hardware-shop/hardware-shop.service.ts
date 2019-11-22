@@ -44,14 +44,28 @@ export class HardwareShopService {
 
   public setCartItems(items: HardwarePart[]): void {
     this.localStorage.setItem('cart', JSON.stringify(items));
+    this.updateCart();
   }
 
   public addCartItem(item: HardwarePart): void {
     const items = this.getCartItems();
     if (!this.contains(item)) {
+      item.containsInCart = true;
       items.push(item);
     }
     this.setCartItems(items);
+  }
+
+  public updateCart(): void {
+    for (const item of this.getCartItems()) {
+      item.containsInCart = true;
+    }
+  }
+
+  public updateCartItems(items: HardwarePart[]) {
+    for (const item of items) {
+      item.containsInCart = this.contains(item);
+    }
   }
 
   public contains(item: HardwarePart): boolean {
@@ -65,6 +79,7 @@ export class HardwareShopService {
   }
 
   public removeCartItem(item: HardwarePart): void {
+    item.containsInCart = false;
     this.setCartItems(this.getCartItems().filter(function (ele) {
       return ele.name !== item.name;
     }));
@@ -91,7 +106,9 @@ export class HardwareShopService {
           if ('error' in data) {
             reject(data.error);
           } else {
-            resolve(data.products);
+            const elements = data.products;
+            this.updateCartItems(elements);
+            resolve(elements);
           }
         });
     });
