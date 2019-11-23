@@ -57,6 +57,9 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, Af
 
   setCardVisibility(status: boolean) {
     this.cardVisibility = status;
+    this.hardwareShopService.getMorphCoins()
+      .then(data => this.morphCoins = data)
+      .catch(() => this.morphCoins = -1);
   }
 
   getCartLenght(): number {
