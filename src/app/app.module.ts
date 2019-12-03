@@ -22,8 +22,14 @@ import { WindowManagerComponent } from './desktop/window-manager/window-manager.
 import { TestWindowComponent } from './desktop/windows/test-window/test-window.component';
 import { TerminalComponent } from './desktop/windows/terminal/terminal.component';
 import { WindowPlaceDirective } from './desktop/window/window-place.directive';
+
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+
+import { MinerComponent } from './desktop/windows/miner/miner.component';
+import { SettingsComponent } from './desktop/windows/settings/settings.component';
+import { TaskManagerComponent } from './desktop/windows/task-manager/task-manager.component';
+
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -46,9 +52,12 @@ const routes: Routes = [
     PXtoViewHeightPipe,
     WindowFrameComponent,
     WindowManagerComponent,
+    WindowPlaceDirective,
     TestWindowComponent,
     TerminalComponent,
-    WindowPlaceDirective
+    MinerComponent,
+    SettingsComponent,
+    TaskManagerComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -58,7 +67,7 @@ const routes: Routes = [
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [],
-  entryComponents: [TestWindowComponent, TerminalComponent],
+  entryComponents: [TestWindowComponent, TerminalComponent, MinerComponent, SettingsComponent, TaskManagerComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

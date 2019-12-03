@@ -1,4 +1,5 @@
 import { Type } from '@angular/core';
+import { Subject } from 'rxjs';
 
 export abstract class WindowDelegate {
   title: string;
@@ -32,4 +33,5 @@ export interface WindowPosition {
 
 export abstract class WindowComponent {
   delegate: WindowDelegate;
+  events = new Subject<string>();
 }

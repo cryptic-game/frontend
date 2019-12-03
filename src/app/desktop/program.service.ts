@@ -22,6 +22,14 @@ export class ProgramService {
         el.onDesktop,
         new Position(el.position.x, el.position.y, el.position.z)
       ));
+
+      desktopDefinition.programs.forEach(programDef => {
+        if (!this.programs.find(program => program.id === programDef.id)) {
+          this.programs.push(programDef);
+        }
+      });
+
+      this.programs = this.programs.filter(program => desktopDefinition.programs.find(programDef => programDef.id === program.id));
     }
 
     return this.programs;

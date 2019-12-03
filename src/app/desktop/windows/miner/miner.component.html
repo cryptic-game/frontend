@@ -1,0 +1,31 @@
+<div id="miner-window-container">
+  <div id="miner-prepare">
+    <label>
+      <input type="text" [(ngModel)]="wallet" placeholder="Wallet UUID" (ngModelChange)="checkWallet()">
+    </label>
+  </div>
+  <div id="error-message">{{errorMessage}}</div>
+  <div id="miner-window" *ngIf="miner">
+    <div id="miner-control">
+      <label class="switch" id="switch">
+        <input type="checkbox" [(ngModel)]="active" (ngModelChange)="update()">
+        <span class="slider round"></span>
+      </label>
+      <div id="state">
+        {{active ? 'Active' : 'Inactive'}}
+      </div>
+    </div>
+    <div id="miner-power">
+      <label>
+        <input type="range" min="1" max="100" class="range"
+               [(ngModel)]="power"
+               [disabled]="!active"
+               (ngModelChange)="update()">
+      </label>
+      <h4 *ngIf="active">{{power}}%</h4>
+    </div>
+    <div id="miner-state" *ngIf="active">
+      {{miningRate | number }} MC/s
+    </div>
+  </div>
+</div>

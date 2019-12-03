@@ -1,13 +1,14 @@
-$background-color: #2b2b2b;
+$background-color: rgb(43, 43, 43, 0.8);
 $field-background-color: #3c3c3c;
-$secondary-color: #045d6a;
+$secondary-color: #014752;
 $important-color: #27c211;
-$input-border-radius: 12px;
+$input-border-radius: 5px;
 
 #body {
   width: 100%;
   height: 100%;
-  background-color: #333333;
+  background-image: url('../../assets/desktop/img/lock_open.png');
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,8 +16,8 @@ $input-border-radius: 12px;
 
 #form-container {
   background-color: $background-color;
-  border-radius: 20px;
-}
+  border-radius: 5px;
+  }
 
 #login-form {
   padding: 2em 2em 1.5em 2em;
@@ -44,12 +45,12 @@ $input-border-radius: 12px;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   font-style: italic;
-  height: 2.4em;
+  height: 2.1em;
   width: 100%;
   background-color: $field-background-color;
   border-radius: $input-border-radius;
   border: none;
-  font-size: 1.25em;
+  font-size: 1.15em;
   color: white;
   outline: none;
 }
@@ -75,7 +76,7 @@ $input-border-radius: 12px;
 // TODO: better animation
 #login-button:disabled {
   transition: border 500ms;
-  border-color: #ff281c;
+  border-color: #005c18;
 }
 
 #signup-link-container {
@@ -86,7 +87,7 @@ $input-border-radius: 12px;
 
   span {
     color: white;
-    font-family: Lato, sans-serif;
+	font-family: Lato, sans-serif;
 
     a {
       color: $secondary-color;
