@@ -22,6 +22,8 @@ import { WindowManagerComponent } from './desktop/window-manager/window-manager.
 import { TestWindowComponent } from './desktop/windows/test-window/test-window.component';
 import { TerminalComponent } from './desktop/windows/terminal/terminal.component';
 import { WindowPlaceDirective } from './desktop/window/window-place.directive';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -52,7 +54,8 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     BrowserModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [],
   entryComponents: [TestWindowComponent, TerminalComponent],
