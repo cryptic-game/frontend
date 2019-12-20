@@ -37,23 +37,26 @@ export class WalletAppService {
     return /^[0-9a-f]{10}$/.test(key);
   }
 
-  private async loadWallet(uuid: string, key: string): Promise<any> {
-    if (this.checkWalletUuidFormat(uuid) && this.checkWalletKeyFormat(key)) {
-      const data = await this.websocketService.ms('currency', ['get'], { source_uuid: uuid, key: key }).toPromise();
-      console.log(data);
-      if ('error' in data) {
-        return null;
-      } else {
-        return data;
-      }
-    } else {
-      return null;
-    }
-  }
-
   private setWallet(wallet: Wallet) {
     this.wallet = wallet;
     localStorage.setItem('wallet_uuid', wallet.source_uuid);
     localStorage.setItem('wallet_key', wallet.key);
+  }
+
+  private loadWallet(uuid: string, key: string): Promise<any> {
+    return new Promise<any>((resolve => {
+      this.websocketService.ms('currency', ['get'], { source_uuid: uuid, key: key })
+        .subscribe(data => {
+          if ('error' in data) {
+            resolve(null);
+          } else {
+            resolve(data);
+          }
+        });
+      if (this.checkWalletUuidFormat(uuid) && this.checkWalletKeyFormat(key)) {
+      } else {
+        resolve(null);
+      }
+    }));
   }
 }
