@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { WalletAppService } from '../../wallet-app/wallet-app.service';
 
 @Component({
   selector: 'app-hardware-shop-header',
@@ -6,9 +7,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./hardware-shop-header.component.scss']
 })
 export class HardwareShopHeaderComponent {
-
-  @Output()
-  walletPopupOpen: EventEmitter<any> = new EventEmitter<any>();
 
   @Output()
   cartOpen: EventEmitter<any> = new EventEmitter<any>();
@@ -20,16 +18,15 @@ export class HardwareShopHeaderComponent {
   cardVisibility: boolean;
 
   @Input()
-  morphCoins: number;
-
-  @Input()
   cardItems: number;
 
-  constructor() {
-  }
+  morphCoins: number;
 
-  showWalletSettings(): void {
-    this.walletPopupOpen.emit();
+  constructor(
+    private walletAppService: WalletAppService
+  ) {
+    this.walletAppService.updateWallet();
+    this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet.amount);
   }
 
   showCart() {

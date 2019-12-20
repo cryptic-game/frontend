@@ -2,7 +2,6 @@ import { AfterViewChecked, Component, ElementRef, OnInit, Type, ViewChild } from
 
 import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { HardwareShopService } from './hardware-shop.service';
-import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop',
@@ -11,9 +10,7 @@ import { interval } from 'rxjs';
 })
 export class HardwareShopComponent extends WindowComponent implements OnInit, AfterViewChecked {
 
-  walletSettingsPopup: boolean;
   cardVisibility: boolean;
-  morphCoins: number;
 
   width: number;
   height: number;
@@ -28,12 +25,7 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, Af
   }
 
   ngOnInit(): void {
-    this.walletSettingsPopup = false;
     this.cardVisibility = false;
-    this.loadMorphCoins();
-
-    interval(1000 * 20)
-      .subscribe(this.loadMorphCoins);
   }
 
   ngAfterViewChecked(): void {
@@ -41,25 +33,8 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, Af
     this.height = this.hardwareShop.nativeElement.offsetHeight;
   }
 
-  private loadMorphCoins(): void {
-    console.log('load mc.');
-    this.hardwareShopService.getMorphCoins()
-      .then(data => this.morphCoins = data)
-      .catch(() => this.morphCoins = -1);
-  }
-
-  setWalletSettingsStatus(status: boolean) {
-    if (status === false) {
-      this.loadMorphCoins();
-    }
-    this.walletSettingsPopup = status;
-  }
-
   setCardVisibility(status: boolean) {
     this.cardVisibility = status;
-    this.hardwareShopService.getMorphCoins()
-      .then(data => this.morphCoins = data)
-      .catch(() => this.morphCoins = -1);
   }
 
   getCartLenght(): number {
@@ -76,6 +51,7 @@ export class HardwareShopWindowDelegate extends WindowDelegate {
 export interface HardwarePart {
   name: string;
   price: number;
+  category: string;
   number?: number;
   containsInCart: boolean;
 }

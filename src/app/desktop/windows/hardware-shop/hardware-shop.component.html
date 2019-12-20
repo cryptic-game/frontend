@@ -1,10 +1,8 @@
 <div class="hardware-shop" #hardwareShop>
 
   <div class="header" #header [style.width.px]="width">
-    <app-hardware-shop-header [morphCoins]="morphCoins"
-                              [cardItems]="getCartLenght()"
+    <app-hardware-shop-header [cardItems]="getCartLenght()"
                               [cardVisibility]="cardVisibility"
-                              (walletPopupOpen)="setWalletSettingsStatus(true)"
                               (cartOpen)="setCardVisibility(true)"
                               (cartClose)="setCardVisibility(false)"
     ></app-hardware-shop-header>
@@ -15,18 +13,6 @@
     <div class="body">
       <app-hardware-shop-item-grid *ngIf="!cardVisibility"></app-hardware-shop-item-grid>
       <app-hardware-shop-cart *ngIf="cardVisibility"></app-hardware-shop-cart>
-    </div>
-  </div>
-
-  <div class="wallet-settings" *ngIf="walletSettingsPopup" [style.width.px]="width" [style.height.px]="height">
-    <div class="wallet-settings-pupup">
-      <div class="title">
-        <h1>Wallet Settings</h1>
-      </div>
-      <div class="content">
-        <app-hardware-shop-wallet-edit (closeEvent)="setWalletSettingsStatus(false)">
-        </app-hardware-shop-wallet-edit>
-      </div>
     </div>
   </div>
 </div>

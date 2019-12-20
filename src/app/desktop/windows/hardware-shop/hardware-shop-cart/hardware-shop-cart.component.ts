@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
 import { HardwarePart } from '../hardware-shop.component';
+import { WalletAppService } from '../../wallet-app/wallet-app.service';
 
 @Component({
   selector: 'app-hardware-shop-cart',
@@ -14,12 +15,12 @@ export class HardwareShopCartComponent {
   hasEnoughMorphCoins: boolean;
 
   constructor(
-    private hardwareShopService: HardwareShopService
+    private hardwareShopService: HardwareShopService,
+    private walletAppService: WalletAppService
   ) {
     this.items = this.hardwareShopService.getCartItems();
-    this.hardwareShopService.getMorphCoins()
-      .then(data => this.morphCoins = data)
-      .catch(() => this.morphCoins = 0);
+    this.walletAppService.updateWallet();
+    this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet.amount);
   }
 
   getHoleMorphCoins(): number {

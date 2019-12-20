@@ -27,39 +27,5 @@
         padding: 10px;
       }
     }
-
-    div.wallet-settings {
-      position: fixed;
-      background-color: rgba(0, 0, 0, .25);
-      z-index: 1;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      div.wallet-settings-pupup {
-        width: 80%;
-        background-color: $white;
-        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
-        border-radius: 15px;
-        padding: 10px;
-
-        display: flex;
-        flex-direction: column;
-
-        div.title {
-          display: flex;
-          justify-content: center;
-
-          h1 {
-            font-size: 23px;
-            margin-bottom: 0;
-          }
-        }
-
-        div.content {
-        }
-      }
-    }
   }
 }

@@ -12,7 +12,7 @@
     display: flex;
     justify-content: space-between;
 
-    div.left {
+    div {
       height: 50px;
       margin-left: 10px;
       display: flex;
@@ -20,17 +20,9 @@
       align-items: center;
     }
 
-    div.right {
-      height: 50px;
-      margin-right: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      span {
-        color: $white;
-        margin: 0 10px;
-      }
+    div.right span {
+      color: $white;
+      margin: 0 10px;
     }
   }
 }

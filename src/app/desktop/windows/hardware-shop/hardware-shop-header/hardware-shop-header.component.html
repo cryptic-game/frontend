@@ -1,14 +1,13 @@
 <div class="header">
 
   <div class="left">
-    <span class="btn" (click)="showWalletSettings()">Wallet Settings</span>
+    <span (click)="showCart()" *ngIf="!cardVisibility" class="btn">Shopping cart - {{cardItems}} Items</span>
+    <span (click)="hideCard()" *ngIf="cardVisibility" class="btn">Back to shop</span>
   </div>
 
   <div class="right">
     <span *ngIf="!(morphCoins >= 0)">Not Wallet found.</span>
     <span *ngIf="morphCoins >= 0">{{morphCoins}} MC</span>
-    <span (click)="showCart()" *ngIf="!cardVisibility" class="btn">Shopping cart - {{cardItems}} Items</span>
-    <span (click)="hideCard()" *ngIf="cardVisibility" class="btn">Back to shop</span>
   </div>
 
 </div>
