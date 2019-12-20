@@ -15,9 +15,19 @@ export class WalletAppComponent extends WindowComponent implements OnInit {
     private walletAppService: WalletAppService
   ) {
     super();
-    if (!this.walletAppService.wallet) {
-      this.setWalletEditStatus(true);
-    }
+    walletAppService.updateWallet().then((loaded) => {
+      if (loaded) {
+        this.setWalletEditStatus(false);
+      } else {
+        this.setWalletEditStatus(true);
+      }
+    });
+
+    walletAppService.update.subscribe((wallet) => {
+      if (wallet) {
+        this.setWalletEditStatus(false);
+      }
+    });
   }
 
   ngOnInit() {

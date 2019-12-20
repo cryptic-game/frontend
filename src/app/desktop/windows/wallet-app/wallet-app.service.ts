@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Wallet } from './wallet';
 import { WebsocketService } from '../../../websocket.service';
 
@@ -8,6 +8,9 @@ import { WebsocketService } from '../../../websocket.service';
 export class WalletAppService {
 
   public wallet: Wallet;
+
+  public update: EventEmitter<Wallet> = new EventEmitter<Wallet>();
+  public error: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
     private websocketService: WebsocketService
@@ -23,8 +26,10 @@ export class WalletAppService {
     const wallet: any = await this.loadWallet(uuid, key);
     if (wallet) {
       this.setWallet(wallet);
+      this.update.emit(wallet);
       return true;
     } else {
+      this.error.emit();
       return false;
     }
   }

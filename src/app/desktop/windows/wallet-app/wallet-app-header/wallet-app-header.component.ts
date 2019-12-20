@@ -18,6 +18,13 @@ export class WalletAppHeaderComponent {
     private walletAppService: WalletAppService
   ) {
     this.wallet = walletAppService.wallet;
+    walletAppService.update.subscribe((wallet) => {
+      this.wallet = wallet;
+    });
+
+    walletAppService.error.subscribe(() => {
+      this.wallet = null;
+    });
   }
 
   showWalletEdit(): void {
