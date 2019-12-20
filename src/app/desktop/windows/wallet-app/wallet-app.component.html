@@ -6,6 +6,6 @@
 
   </div>
   <div *ngIf="walletEdit" class="wallet-edit">
-    <app-wallet-app-edit></app-wallet-app-edit>
+    <app-wallet-app-edit (close)="setWalletEditStatus(false)"></app-wallet-app-edit>
   </div>
 </div>

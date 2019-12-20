@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { WalletAppService } from '../wallet-app.service';
 
@@ -8,6 +8,9 @@ import { WalletAppService } from '../wallet-app.service';
   styleUrls: ['./wallet-app-edit.component.scss']
 })
 export class WalletAppEditComponent {
+
+  @Output()
+  private close: EventEmitter<void> = new EventEmitter<void>();
 
   form = new FormGroup({
     uuid: new FormControl(),
@@ -36,10 +39,11 @@ export class WalletAppEditComponent {
     if (this.correctUuid && this.correctKey) {
       this.walletAppService.loadNewWallet(this.form.get('uuid').value, this.form.get('key').value)
         .then(data => {
-          console.log(data);
-          this.error = data;
+          this.error = !data;
           if (!data) {
             setTimeout(() => this.error = false, 5 * 1000);
+          } else {
+            this.close.emit();
           }
         });
     }
