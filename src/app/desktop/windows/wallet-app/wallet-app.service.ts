@@ -10,7 +10,6 @@ export class WalletAppService {
   public wallet: Wallet;
 
   public update: EventEmitter<Wallet> = new EventEmitter<Wallet>();
-  public error: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
     private websocketService: WebsocketService
@@ -29,7 +28,6 @@ export class WalletAppService {
       this.update.emit(wallet);
       return true;
     } else {
-      this.error.emit();
       return false;
     }
   }
