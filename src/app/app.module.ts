@@ -33,6 +33,9 @@ import { HardwareShopHeaderComponent } from './desktop/windows/hardware-shop/har
 import { HardwareShopWalletEditComponent } from './desktop/windows/hardware-shop/hardware-shop-wallet-edit/hardware-shop-wallet-edit.component';
 import { HardwareShopCartComponent } from './desktop/windows/hardware-shop/hardware-shop-cart/hardware-shop-cart.component';
 import { HardwareShopCartItemComponent } from './desktop/windows/hardware-shop/hardware-shop-cart-item/hardware-shop-cart-item.component';
+import { WalletAppComponent } from './desktop/windows/wallet-app/wallet-app.component';
+import { WalletAppHeaderComponent } from './desktop/windows/wallet-app/wallet-app-header/wallet-app-header.component';
+import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-edit/wallet-app-edit.component';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -67,7 +70,10 @@ const routes: Routes = [
     HardwareShopHeaderComponent,
     HardwareShopWalletEditComponent,
     HardwareShopCartComponent,
-    HardwareShopCartItemComponent
+    HardwareShopCartItemComponent,
+    WalletAppComponent,
+    WalletAppHeaderComponent,
+    WalletAppEditComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -77,7 +83,7 @@ const routes: Routes = [
     ReactiveFormsModule
   ],
   providers: [],
-  entryComponents: [TestWindowComponent, TerminalComponent, MinerComponent, SettingsComponent, TaskManagerComponent, HardwareShopComponent],
+  entryComponents: [TestWindowComponent, TerminalComponent, MinerComponent, SettingsComponent, TaskManagerComponent, HardwareShopComponent, WalletAppComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

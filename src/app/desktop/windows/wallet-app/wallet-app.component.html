@@ -1,0 +1,11 @@
+<div class="wallet-app">
+  <div class="header">
+    <app-wallet-app-header (walletEdit)="setWalletEditStatus(true)"></app-wallet-app-header>
+  </div>
+  <div class="content">
+
+  </div>
+  <div *ngIf="walletEdit" class="wallet-edit">
+    <app-wallet-app-edit></app-wallet-app-edit>
+  </div>
+</div>

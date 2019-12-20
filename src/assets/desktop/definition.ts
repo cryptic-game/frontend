@@ -1,4 +1,3 @@
-import { HardwareShopWindowDelegate } from './../../app/desktop/windows/hardware-shop/hardware-shop.component';
 import { Program } from '../../dataclasses/program';
 import { Position } from '../../dataclasses/position';
 import { TestWindowDelegate } from '../../app/desktop/windows/test-window/test-window.component';
@@ -6,6 +5,8 @@ import { TerminalWindowDelegate } from '../../app/desktop/windows/terminal/termi
 import { MinerWindowDelegate } from '../../app/desktop/windows/miner/miner.component';
 import { SettingsWindowDelegate } from '../../app/desktop/windows/settings/settings.component';
 import { TaskManagerWindowDelegate } from '../../app/desktop/windows/task-manager/task-manager.component';
+import { HardwareShopWindowDelegate } from '../../app/desktop/windows/hardware-shop/hardware-shop.component';
+import { WalletAppWindowDelegate } from '../../app/desktop/windows/wallet-app/wallet-app.component';
 
 export const programWindows = {
   'browser': TestWindowDelegate,
@@ -14,7 +15,8 @@ export const programWindows = {
   'miner': MinerWindowDelegate,
   'settings': SettingsWindowDelegate,
   'task-manager': TaskManagerWindowDelegate,
-  'hardware-shop': HardwareShopWindowDelegate
+  'hardware-shop': HardwareShopWindowDelegate,
+  'wallet-app': WalletAppWindowDelegate
 };
 
 export const desktopDefinition = {
@@ -69,12 +71,20 @@ export const desktopDefinition = {
       new Position(20, 530)
     ),
     new Program(
+      'wallet-app',
+      programWindows['wallet-app'],
+      'Wallep-App',
+      '../../assets/desktop/img/wallet_app.svg',
+      true,
+      new Position(20, 630)
+    ),
+    new Program(
       'hardware-shop',
       programWindows['hardware-shop'],
       'Hardware Shop',
       '../../assets/desktop/img/hardware-shop.svg',
       true,
-      new Position(20, 630)
+      new Position(20, 730)
     )
   ]
 };

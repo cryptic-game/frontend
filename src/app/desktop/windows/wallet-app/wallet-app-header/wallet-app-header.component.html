@@ -1,0 +1,11 @@
+<div class="header">
+
+  <div class="left">
+    <span (click)="showWalletEdit()" class="btn">Change Wallet</span>
+  </div>
+
+  <div class="right">
+    <span *ngIf="wallet">{{wallet.amount}} MC</span>
+  </div>
+
+</div>
