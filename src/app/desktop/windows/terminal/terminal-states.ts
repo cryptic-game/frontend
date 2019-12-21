@@ -418,7 +418,7 @@ export class DefaultTerminalState extends CommandTerminalState {
                   key: key
                 }).subscribe(r2 => {
                   if (r2.error == null) {
-                    this.terminal.outputText(r2.amount + ' morphcoin');
+                    this.terminal.outputText(r2.amount / 1000 + ' morphcoin');
                   } else {
                     this.terminal.outputText('File is no walletfile');
                   }
@@ -478,8 +478,8 @@ export class DefaultTerminalState extends CommandTerminalState {
         usage = args[3];
       }
 
-      if (isNaN(parseInt(amount, 10))) {
-        this.terminal.output('<em>amount</em> is not a number');
+      if (isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+        this.terminal.output('<em>amount</em> is not a valid number');
       } else {
         this.websocket
           .ms('device', ['file', 'all'], {
@@ -505,7 +505,7 @@ export class DefaultTerminalState extends CommandTerminalState {
                           .ms('currency', ['send'], {
                             source_uuid: uuid,
                             key: key,
-                            send_amount: parseInt(amount, 10),
+                            send_amount: Math.floor(parseFloat(amount) * 1000),
                             destination_uuid: receiver,
                             usage: usage
                           })
