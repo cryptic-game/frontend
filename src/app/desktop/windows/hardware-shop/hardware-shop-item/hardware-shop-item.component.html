@@ -6,7 +6,7 @@
     </div>
 
     <div class="footer">
-      <span>{{item.price}} MC</span>
+      <span>{{item.price / 1000}} MC</span>
       <span (click)="addToCart()" *ngIf="!item.containsInCart" class="btn btn-success">Add to cart</span>
       <span (click)="removeFromCart()" *ngIf="item.containsInCart" class="btn btn-error">Remove from cart</span>
     </div>
