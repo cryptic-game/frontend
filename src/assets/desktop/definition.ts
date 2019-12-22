@@ -73,7 +73,7 @@ export const desktopDefinition = {
     new Program(
       'wallet-app',
       programWindows['wallet-app'],
-      'Wallep-App',
+      'Wallet-App',
       '../../assets/desktop/img/wallet_app.svg',
       true,
       new Position(20, 630)
