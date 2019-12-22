@@ -1,11 +1,14 @@
 <div class="wallet-app">
   <div class="header">
-    <app-wallet-app-header (walletEdit)="setWalletEditStatus(true)"></app-wallet-app-header>
+    <app-wallet-app-header [isWalletEdit]="false" (walletEdit)="setWalletEditStatus($event)"></app-wallet-app-header>
   </div>
   <div class="content">
 
   </div>
   <div *ngIf="walletEdit" class="wallet-edit">
     <app-wallet-app-edit (close)="setWalletEditStatus(false)"></app-wallet-app-edit>
+  </div>
+  <div *ngIf="!walletEdit" class="wallet-transaction-list">
+    <app-wallet-app-transaction *ngFor="let transaction of wallet.transactions" [transaction]="transaction" ]></app-wallet-app-transaction>
   </div>
 </div>

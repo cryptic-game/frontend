@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { WalletAppService } from '../wallet-app.service';
 import { Wallet } from '../wallet';
 
@@ -10,19 +10,28 @@ import { Wallet } from '../wallet';
 export class WalletAppHeaderComponent {
 
   wallet: Wallet;
+  @Input()
+  isWalletEdit: boolean;
 
   @Output()
-  public walletEdit: EventEmitter<void> = new EventEmitter<void>();
+  public walletEdit: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(
     private walletAppService: WalletAppService
   ) {
     walletAppService.update.subscribe((wallet) => {
       this.wallet = wallet;
+      this.isWalletEdit = false;
     });
   }
 
   showWalletEdit(): void {
-    this.walletEdit.emit();
+    this.walletEdit.emit(true);
+    this.isWalletEdit = true;
+  }
+
+  hideWalletEdit(): void {
+    this.walletEdit.emit(false);
+    this.isWalletEdit = false;
   }
 }

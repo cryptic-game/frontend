@@ -1,6 +1,8 @@
 import { Component, OnInit, Type } from '@angular/core';
 import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { WalletAppService } from './wallet-app.service';
+import { Wallet } from './wallet';
+import { WalletAppHeaderComponent } from './wallet-app-header/wallet-app-header.component';
 
 @Component({
   selector: 'app-wallet-app',
@@ -10,6 +12,7 @@ import { WalletAppService } from './wallet-app.service';
 export class WalletAppComponent extends WindowComponent implements OnInit {
 
   walletEdit: boolean;
+  wallet: Wallet;
 
   constructor(
     private walletAppService: WalletAppService
@@ -23,12 +26,16 @@ export class WalletAppComponent extends WindowComponent implements OnInit {
       }
     });
 
+    this.wallet = walletAppService.wallet;
+
     walletAppService.update.subscribe((wallet) => {
+      this.wallet = wallet;
       if (wallet) {
         this.setWalletEditStatus(false);
       }
     });
   }
+
 
   ngOnInit() {
   }
