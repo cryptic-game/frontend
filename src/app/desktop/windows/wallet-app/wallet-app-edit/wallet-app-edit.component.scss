@@ -4,8 +4,13 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  min-height: 70%;
 
   form {
+    padding-top: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
