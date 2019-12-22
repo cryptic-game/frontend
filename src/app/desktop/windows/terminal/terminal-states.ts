@@ -1013,7 +1013,10 @@ export class DefaultTerminalState extends CommandTerminalState {
               element.innerHTML = '';
 
               members.forEach(member => {
-                element.innerHTML += ' <span style="color: grey">' + DefaultTerminalState.promptAppender(member['device']) + '</span><br>';
+                this.websocket.ms('device', ['device', 'info'], {'device_uuid': member['device']}).subscribe(deviceData => {
+                  element.innerHTML += ' <span style="color: grey">' + DefaultTerminalState.promptAppender(member['device']) + '</span> '
+                    + deviceData['name'] + '<br>';
+                });
               });
 
               this.terminal.outputNode(element);
