@@ -8,11 +8,18 @@
 div.wallet-app {
   display: flex;
   flex-direction: column;
+  height: 100%;
 
   div.header {
 
   }
 
   div.content {
+    height: 100%;
+    overflow-y: auto;
+
+    div.wallet-transaction-list {
+      text-align: center;
+    }
   }
 }

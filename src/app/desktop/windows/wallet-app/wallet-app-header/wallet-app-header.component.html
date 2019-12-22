@@ -1,7 +1,7 @@
 <div class="header">
 
   <div class="left">
-    <span *ngIf="walletAppService.wallet" class="btn">
+    <span *ngIf="walletAppService.wallet && wallet" class="btn">
       <span *ngIf="!isWalletEdit" (click)="showWalletEdit()">Change Wallet</span>
       <span *ngIf="isWalletEdit" (click)="hideWalletEdit()">Back to Wallet</span>
     </span>

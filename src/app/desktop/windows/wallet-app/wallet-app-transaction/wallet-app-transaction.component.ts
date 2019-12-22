@@ -14,6 +14,9 @@ export class WalletAppTransactionComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    if (this.transaction.destination_uuid == "00000000-0000-0000-0000-000000000000") {
+      this.transaction.destination_uuid = "Bank";
+    }
   }
 
 }
