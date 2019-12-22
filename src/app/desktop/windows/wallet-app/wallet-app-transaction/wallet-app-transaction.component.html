@@ -1,1 +1,20 @@
-<p>{{transaction.time_stamp}}: {{transaction.send_amount / 1000}} MC -> {{transaction.destination_uuid}} ({{transaction.usage}})</p>
+<div class="transaction">
+  <div class="line">
+    <span>
+      Amount:
+      <span [ngClass]="{'green': moneyToCurrent, 'red': !moneyToCurrent}">
+        <span *ngIf="moneyToCurrent">+</span><span *ngIf="!moneyToCurrent">-</span>{{transaction.send_amount / 1000}} MC
+      </span>
+    </span>
+    <span>{{time}}</span>
+  </div>
+  <div *ngIf="transaction.usage" class="line">
+    <span>Usage: {{transaction.usage}}</span>
+  </div>
+  <div *ngIf="moneyToCurrent" class="line">
+    <span>From: {{transaction.source_uuid}}</span>
+  </div>
+  <div *ngIf="!moneyToCurrent" class="line">
+    <span>To: {{transaction.destination_uuid}}</span>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 export interface Transaction {
 
   id: string;
-  time_stamp: Date;
+  time_stamp: string;
   source_uuid: string;
   destination_uuid: string;
   send_amount: number;
