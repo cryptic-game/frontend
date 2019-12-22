@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { WebsocketService } from '../../../websocket.service';
 import { HardwarePart } from './hardware-shop.component';
 import { WalletAppService } from '../wallet-app/wallet-app.service';
@@ -7,6 +7,8 @@ import { WalletAppService } from '../wallet-app/wallet-app.service';
   providedIn: 'root'
 })
 export class HardwareShopService {
+
+  public updateCartView: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
     private websocketService: WebsocketService,
@@ -78,23 +80,19 @@ export class HardwareShopService {
   }
 
   public buyCart(): void {
-    const parts: string[] = [];
-    this.getCartItems().forEach(part => parts.push(part.name));
-    console.log(parts);
-
-    console.log(JSON.stringify({
-      products: parts,
-      wallet_uuid: this.walletAppService.wallet.key,
-      key: this.walletAppService.wallet.source_uuid
-    }));
+    let parts: any = '';
+    this.getCartItems().forEach(part => parts += `,"${part.name}": ${part.number === undefined ? 1 : part.number}`);
+    parts = JSON.parse('{' + parts.substring(1) + '}');
 
     this.websocketService.ms('inventory', ['shop', 'buy'], {
       products: parts,
-      wallet_uuid: this.walletAppService.wallet.key,
-      key: this.walletAppService.wallet.source_uuid
+      wallet_uuid: this.walletAppService.wallet.source_uuid,
+      key: this.walletAppService.wallet.key
     }).subscribe(data => {
+      console.log(data);
       if (!('error' in data)) {
         this.setCartItems([]);
+        this.updateCartView.emit();
       } else {
         console.log(data);
       }
