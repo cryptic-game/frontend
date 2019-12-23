@@ -1,3 +1,5 @@
+@import "~src/constants";
+
 #desktop-menu {
   position: fixed;
   left: 0;
@@ -72,5 +74,12 @@
       transition: transform 0.2s;
       transform: scale(1.05);
     }
+  }
+
+  #clock {
+    width: 100%;
+    text-align: right;
+    margin-right: 10px;
+    color: $white;
   }
 }

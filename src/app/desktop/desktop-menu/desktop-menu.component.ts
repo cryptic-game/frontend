@@ -11,7 +11,14 @@ import { WebsocketService } from '../../websocket.service';
 export class DesktopMenuComponent implements OnInit {
   @Output() startMenu = new EventEmitter();
 
-  constructor(public windowManager: WindowManagerService) {}
+  now: Date;
+
+  constructor(public windowManager: WindowManagerService) {
+    this.now = new Date();
+    setInterval(() => {
+      this.now = new Date();
+    }, 1000)
+  }
 
   ngOnInit() {}
 
