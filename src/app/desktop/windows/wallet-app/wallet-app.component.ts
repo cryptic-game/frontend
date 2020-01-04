@@ -2,7 +2,7 @@ import { Component, OnInit, Type } from '@angular/core';
 import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { WalletAppService } from './wallet-app.service';
 import { Wallet } from './wallet';
-import { WalletAppHeaderComponent } from './wallet-app-header/wallet-app-header.component';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-wallet-app',
@@ -36,8 +36,8 @@ export class WalletAppComponent extends WindowComponent implements OnInit {
     });
   }
 
-
   ngOnInit() {
+    interval(1000 * 15).subscribe(() => this.walletAppService.updateWallet());
   }
 
   setWalletEditStatus(status: boolean): void {
