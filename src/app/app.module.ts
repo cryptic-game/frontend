@@ -36,6 +36,8 @@ import { WalletAppComponent } from './desktop/windows/wallet-app/wallet-app.comp
 import { WalletAppHeaderComponent } from './desktop/windows/wallet-app/wallet-app-header/wallet-app-header.component';
 import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-edit/wallet-app-edit.component';
 import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wallet-app-transaction/wallet-app-transaction.component';
+import { HardwareShopSidebarComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar/hardware-shop-sidebar.component';
+import { HardwareShopSidebarItemComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar-item/hardware-shop-sidebar-item.component';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -73,7 +75,9 @@ const routes: Routes = [
     WalletAppComponent,
     WalletAppHeaderComponent,
     WalletAppEditComponent,
-    WalletAppTransactionComponent
+    WalletAppTransactionComponent,
+    HardwareShopSidebarComponent,
+    HardwareShopSidebarItemComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

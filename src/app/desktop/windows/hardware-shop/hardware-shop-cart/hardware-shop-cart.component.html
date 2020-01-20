@@ -6,7 +6,6 @@
       <span (click)="buy()" [className]="hasEnoughMorphCoins ? 'btn btn-success' : 'btn btn-disabled'">Buy</span>
     </div>
   </div>
-  <hr>
   <div class="content">
     <div *ngFor="let item of items" class="item">
       <app-hardware-shop-cart-item (update)="update()" (updateNumber)="updateNumber()"

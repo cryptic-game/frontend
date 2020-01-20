@@ -10,9 +10,22 @@
 
   <div [style.height]="'calc(100% - ' + header.offsetHeight + 'px)'" [style.top.px]="header.offsetHeight"
        class="content">
+
     <div class="body">
-      <app-hardware-shop-item-grid *ngIf="!cardVisibility"></app-hardware-shop-item-grid>
-      <app-hardware-shop-cart *ngIf="cardVisibility"></app-hardware-shop-cart>
+      <div *ngIf="!cardVisibility; else elseCardVisibility" class="hardware-shop-items">
+        <div class="sidebar">
+          <app-hardware-shop-sidebar (select)="selectCategory($event)"></app-hardware-shop-sidebar>
+        </div>
+        <div class="main">
+          <app-hardware-shop-item-grid [category]="category"></app-hardware-shop-item-grid>
+        </div>
+      </div>
+
+      <ng-template #elseCardVisibility>
+        <div class="main">
+          <app-hardware-shop-cart></app-hardware-shop-cart>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

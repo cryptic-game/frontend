@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
-import { HardwarePart } from '../hardware-shop.component';
+import { HardwarePart } from '../hardware-part';
 
 @Component({
   selector: 'app-hardware-shop-item',

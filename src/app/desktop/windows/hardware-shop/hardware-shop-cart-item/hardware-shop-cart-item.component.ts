@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { HardwarePart } from '../hardware-shop.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HardwareShopService } from '../hardware-shop.service';
+import { HardwarePart } from '../hardware-part';
 
 @Component({
   selector: 'app-hardware-shop-cart-item',

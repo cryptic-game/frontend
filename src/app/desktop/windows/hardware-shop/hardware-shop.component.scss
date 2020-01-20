@@ -24,7 +24,24 @@
       overflow-y: auto;
 
       div.body {
-        padding: 10px;
+        div.hardware-shop-items {
+          display: flex;
+          flex-direction: row;
+
+          div.sidebar {
+            margin: 10px 0 10px 10px;
+            padding: 0 10px 0 0;
+            border-right: 2px solid lighten(#000000, 10%);
+          }
+
+          div.main {
+            flex-grow: 1;
+          }
+        }
+
+        div.main {
+          padding: 10px;
+        }
       }
     }
   }

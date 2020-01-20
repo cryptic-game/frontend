@@ -1,7 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { WebsocketService } from '../../../websocket.service';
-import { HardwarePart } from './hardware-shop.component';
 import { WalletAppService } from '../wallet-app/wallet-app.service';
+import { Category } from './category';
+import { HardwarePart } from './hardware-part';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +10,14 @@ import { WalletAppService } from '../wallet-app/wallet-app.service';
 export class HardwareShopService {
 
   public updateCartView: EventEmitter<void> = new EventEmitter<void>();
+  public updateGridView: EventEmitter<void> = new EventEmitter<void>();
+  public categories: Category[];
 
   constructor(
     private websocketService: WebsocketService,
-    private walletAppService: WalletAppService) {
+    private walletAppService: WalletAppService
+  ) {
+    this.updateHardwareParts();
   }
 
   public getCartItems(): HardwarePart[] {
@@ -27,7 +32,7 @@ export class HardwareShopService {
 
   public addCartItem(item: HardwarePart): void {
     const items = this.getCartItems();
-    if (!this.contains(item)) {
+    if (!this.containsInCart(item)) {
       item.containsInCart = true;
       items.push(item);
     }
@@ -41,18 +46,16 @@ export class HardwareShopService {
   }
 
   public updateCartItems(items: HardwarePart[]) {
-    for (const item of items) {
-      item.containsInCart = this.contains(item);
-    }
+    items.forEach(item => item.containsInCart = this.containsInCart(item));
   }
 
-  public contains(item: HardwarePart): boolean {
+  public containsInCart(itemName): boolean {
     let contains = false;
-    for (const ele of this.getCartItems()) {
-      if (ele.name === item.name) {
+    this.getCartItems().forEach(element => {
+      if (element.name === itemName) {
         contains = true;
       }
-    }
+    });
     return contains;
   }
 
@@ -63,39 +66,71 @@ export class HardwareShopService {
     }));
   }
 
-  public getHardwareParts(): Promise<HardwarePart[]> {
-    return new Promise<HardwarePart[]>((resolve, reject) => {
-      this.websocketService.ms('inventory', ['shop', 'list'], {})
-        .subscribe(data => {
-          if ('error' in data) {
-            reject(data.error);
-          } else {
-            const elements = data.products;
-            this.updateCartItems(elements);
-            console.log(elements);
-            resolve(elements);
-          }
-        });
-    });
+  /* Loading Hardwareshop Items */
+  public updateHardwareParts(): void {
+    this.websocketService.ms('inventory', ['shop', 'list'], {})
+      .subscribe(data => {
+        if ('error' in data) {
+          console.error('[HardwareShopService] Error while loading items:');
+          console.error(data);
+        } else {
+          this.categories = this.loadCategories(data.categories);
+          this.updateCartItems(this.getItems(this.categories));
+          this.updateGridView.emit();
+        }
+      });
   }
 
+  /* Buying */
   public buyCart(): void {
-    let parts: any = '';
+    let parts = '';
     this.getCartItems().forEach(part => parts += `,"${part.name}": ${part.number === undefined ? 1 : part.number}`);
-    parts = JSON.parse('{' + parts.substring(1) + '}');
 
     this.websocketService.ms('inventory', ['shop', 'buy'], {
-      products: parts,
+      products: JSON.parse('{' + parts.substring(1) + '}'),
       wallet_uuid: this.walletAppService.wallet.source_uuid,
       key: this.walletAppService.wallet.key
     }).subscribe(data => {
-      console.log(data);
       if (!('error' in data)) {
         this.setCartItems([]);
         this.updateCartView.emit();
       } else {
-        console.log(data);
+        console.error('[HardwareShopService] Error while buy items:');
+        console.error(data);
       }
     });
+  }
+
+  /* Utils */
+  public getItems(categories: Category[], items?: HardwarePart[]): HardwarePart[] {
+    let hardwareParts = items ? items : [];
+    categories.forEach(category => {
+      hardwareParts = hardwareParts.concat(category.items);
+      hardwareParts = this.getItems(category.categories, hardwareParts);
+    });
+    return hardwareParts;
+  }
+
+  private loadCategories(data: any): Category[] {
+    if (!data) {
+      return [];
+    }
+    const categories: Category[] = [];
+    Object.entries(data).forEach(([key, value]: [string, any]) => categories.push({
+      name: key,
+      items: this.loadItems(value.items),
+      categories: this.loadCategories(value.categories)
+    }));
+    return categories;
+  }
+
+  private loadItems(data: any): HardwarePart[] {
+    const items: HardwarePart[] = [];
+    Object.entries(data).forEach(([key, value]: [string, any]) => items.push({
+      name: key,
+      price: value.price,
+      containsInCart: this.containsInCart(key),
+    }));
+    return items;
   }
 }

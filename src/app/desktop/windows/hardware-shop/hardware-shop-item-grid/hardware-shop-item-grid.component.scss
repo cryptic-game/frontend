@@ -1,36 +1,32 @@
 :host {
   width: 100%;
 
-  div.grid {
+  div.title {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
 
-    div.title {
-      display: flex;
-      justify-content: space-between;
+    border-bottom: 2px solid lighten(#000000, 10%);
 
-      h1 {
-        font-size: 22px;
-        margin: 0;
-      }
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+
+    h1 {
+      font-size: 22px;
+      margin: 0;
     }
+  }
 
-    hr {
-      width: 100%;
-    }
+  div.grid-content {
+    width: 100%;
 
-    div.grid-content {
-      width: 100%;
+    display: flex;
+    flex-wrap: wrap;
 
-      display: flex;
-      flex-wrap: wrap;
+    div.item {
+      // width: (100% / 3);
 
-      div.item {
-        // width: (100% / 3);
-
-        div.content {
-          margin: 5px;
-        }
+      div.content {
+        margin: 5px;
       }
     }
   }

@@ -2,6 +2,7 @@ import { AfterViewChecked, Component, ElementRef, OnInit, Type, ViewChild } from
 
 import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { HardwareShopService } from './hardware-shop.service';
+import { Category } from './category';
 
 @Component({
   selector: 'app-hardware-shop',
@@ -18,7 +19,7 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, Af
   @ViewChild('hardwareShop', { static: false })
   private hardwareShop: ElementRef;
 
-  items: HardwarePart[];
+  category: Category;
 
   constructor(private hardwareShopService: HardwareShopService) {
     super();
@@ -40,18 +41,14 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, Af
   getCartLenght(): number {
     return this.hardwareShopService.getCartItems().length;
   }
+
+  selectCategory(category: Category): void {
+    this.category = category;
+  }
 }
 
 export class HardwareShopWindowDelegate extends WindowDelegate {
   title = 'Hardware-Shop';
   icon = 'assets/desktop/img/hardware-shop.svg';
   type: Type<any> = HardwareShopComponent;
-}
-
-export interface HardwarePart {
-  name: string;
-  price: number;
-  category: string;
-  number?: number;
-  containsInCart: boolean;
 }
