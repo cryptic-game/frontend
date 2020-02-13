@@ -23,7 +23,7 @@
           <td colspan="2">
             <input #emailField="ngModel" [(ngModel)]="model.email" email id="email" name="email"
                    autocomplete="section-sign-up mobile email" placeholder="Email Address" required type="email">
-            <div *ngIf="emailField.invalid && (emailField.dirty || emailField.touched) && emailField.touched && emailField.value" class="errorText">
+            <div *ngIf="emailField.invalid && (emailField.dirty || emailField.touched) && emailField.value" class="errorText">
               <div *ngIf="emailField['errors'].required">
                 Email is required.
               </div>
