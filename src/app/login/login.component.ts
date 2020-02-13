@@ -11,6 +11,7 @@ export class LoginComponent implements OnInit {
   @ViewChild('loginButton', { static: false }) loginButton: ElementRef;
   errorText = '';
   model = { username: '', password: '' };
+  invalid: boolean = false;
 
   constructor(private loginService: LoginService, private router: Router) {
   }
@@ -27,6 +28,9 @@ export class LoginComponent implements OnInit {
           setTimeout(() => this.router.navigateByUrl('/'), 500);
         } else {
           this.loginButton.nativeElement.disabled = true;
+          this.invalid = true;
+
+          setTimeout(() => this.invalid = false, 5000);
           setTimeout(
             () => (this.loginButton.nativeElement.disabled = false),
             500
