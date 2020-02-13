@@ -11,7 +11,7 @@ export class LoginComponent implements OnInit {
   @ViewChild('loginButton', { static: false }) loginButton: ElementRef;
   errorText = '';
   model = { username: '', password: '' };
-  invalid: boolean = false;
+  invalid = false;
 
   constructor(private loginService: LoginService, private router: Router) {
   }

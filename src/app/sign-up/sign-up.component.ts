@@ -20,26 +20,36 @@ export class SignUpComponent implements OnInit {
   ngOnInit() {
   }
 
+  check(): boolean {
+    if (!(this.model.username && this.model.email && this.model.password && this.model.passwordConfirm)) {
+      this.errorText = 'Please enter something in all fields.';
+      setTimeout(() => this.errorText = '', 5000);
+      return false;
+    }
+    return true;
+  }
 
   performSignup() {
-    this.signUpService.signUp(this.model.username, this.model.email, this.model.password).subscribe(
-      data => {
-        if (data.token != null) {
-          localStorage.setItem('token', data.token);
+    if (this.check()) {
+      this.signUpService.signUp(this.model.username, this.model.email, this.model.password).subscribe(
+        data => {
+          if (data.token != null) {
+            localStorage.setItem('token', data.token);
 
-          setTimeout(
-            () => (this.router.navigateByUrl('/')),
-            500
-          );
-        } else {
-          this.errorText = data.error;
+            setTimeout(
+              () => (this.router.navigateByUrl('/')),
+              500
+            );
+          } else {
+            this.errorText = data.error;
 
-          this.loginButton.nativeElement.disabled = true;
-          setTimeout(
-            () => (this.loginButton.nativeElement.disabled = false),
-            500
-          );
-        }
-      });
+            this.loginButton.nativeElement.disabled = true;
+            setTimeout(
+              () => (this.loginButton.nativeElement.disabled = false),
+              500
+            );
+          }
+        });
+    }
   }
 }
