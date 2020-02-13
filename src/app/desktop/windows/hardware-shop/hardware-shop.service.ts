@@ -144,9 +144,15 @@ export class HardwareShopService {
       categories: this.loadCategories(value.categories),
       index: value.index
     }));
-    // categories.sort((a, b) => {
-    //   if(a.index < b.index)
-    // });
+    categories.sort((a: Category, b: Category) => {
+      if (a.index < b.index) {
+        return -1;
+      }
+      if (a.index > b.index) {
+        return 1;
+      }
+      return 0;
+    });
     return categories;
   }
 }
