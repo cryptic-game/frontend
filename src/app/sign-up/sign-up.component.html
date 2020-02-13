@@ -9,7 +9,7 @@
             <input #usernameField="ngModel" [(ngModel)]="model.username" id="username" minlength="4" name="username"
                    autocomplete="section-sign-up username" placeholder="Username" required
                    type="text">
-            <div *ngIf="usernameField.invalid && (usernameField.dirty || usernameField.touched)" class="errorText">
+            <div *ngIf="usernameField.invalid && (usernameField.dirty || usernameField.touched) && usernameField.value" class="errorText">
               <div *ngIf="usernameField['errors'].required">
                 Username is required.
               </div>
@@ -23,7 +23,7 @@
           <td colspan="2">
             <input #emailField="ngModel" [(ngModel)]="model.email" email id="email" name="email"
                    autocomplete="section-sign-up mobile email" placeholder="Email Address" required type="email">
-            <div *ngIf="emailField.invalid && (emailField.dirty || emailField.touched)" class="errorText">
+            <div *ngIf="emailField.invalid && (emailField.dirty || emailField.touched) && emailField.touched && emailField.value" class="errorText">
               <div *ngIf="emailField['errors'].required">
                 Email is required.
               </div>
@@ -39,7 +39,7 @@
                    name="password" autocomplete="section-sign-up new-password" placeholder="Type in password" required
                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                    type="password">
-            <div *ngIf="passwordField.invalid && (passwordField.dirty || passwordField.touched)" class="errorText">
+            <div *ngIf="passwordField.invalid && (passwordField.dirty || passwordField.touched) && passwordField.value" class="errorText">
               <div *ngIf="passwordField['errors'].required">
                 Password is required.
               </div>
@@ -57,7 +57,7 @@
             <input #passwordConfirm="ngModel" [(ngModel)]="model.passwordConfirm" appPasswordMatch id="password-confirm"
                    name="password-confirm" autocomplete="section-sign-up new-password"
                    placeholder="Confirm your password" required type="password">
-            <div *ngIf="passwordConfirm.invalid && (passwordConfirm.dirty || passwordConfirm.touched)"
+            <div *ngIf="passwordConfirm.invalid && (passwordConfirm.dirty || passwordConfirm.touched) && passwordConfirm.value"
                  class="errorText">
               <div *ngIf="passwordConfirm['errors'].required || passwordConfirm['errors'].notMatching">
                 Passwords don't match.
