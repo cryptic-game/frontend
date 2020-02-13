@@ -21,13 +21,17 @@ export class HardwareShopService {
   }
 
   public getCartItems(): HardwarePart[] {
+    // TODO: Use Server Action Settings
     const items = JSON.parse(localStorage.getItem('cart'));
     return items === null ? [] : items;
   }
 
   public setCartItems(items: HardwarePart[]): void {
+    // TODO: Use Server Action Settings
     localStorage.setItem('cart', JSON.stringify(items));
     this.updateCart();
+    this.updateGridView.emit();
+    this.updateCartView.emit();
   }
 
   public addCartItem(item: HardwarePart): void {
@@ -111,17 +115,12 @@ export class HardwareShopService {
     return hardwareParts;
   }
 
-  private loadCategories(data: any): Category[] {
-    if (!data) {
-      return [];
+  public getCategory(name: string): Category {
+    for (const category of this.categories) {
+      if (category.name === name) {
+        return category;
+      }
     }
-    const categories: Category[] = [];
-    Object.entries(data).forEach(([key, value]: [string, any]) => categories.push({
-      name: key,
-      items: this.loadItems(value.items),
-      categories: this.loadCategories(value.categories)
-    }));
-    return categories;
   }
 
   private loadItems(data: any): HardwarePart[] {
@@ -132,5 +131,22 @@ export class HardwareShopService {
       containsInCart: this.containsInCart(key),
     }));
     return items;
+  }
+
+  private loadCategories(data: any): Category[] {
+    if (!data) {
+      return [];
+    }
+    const categories: Category[] = [];
+    Object.entries(data).forEach(([key, value]: [string, any]) => categories.push({
+      name: key,
+      items: this.loadItems(value.items),
+      categories: this.loadCategories(value.categories),
+      index: value.index
+    }));
+    // categories.sort((a, b) => {
+    //   if(a.index < b.index)
+    // });
+    return categories;
   }
 }

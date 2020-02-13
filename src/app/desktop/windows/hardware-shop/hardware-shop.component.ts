@@ -23,6 +23,8 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, Af
 
   constructor(private hardwareShopService: HardwareShopService) {
     super();
+    this.hardwareShopService.updateGridView.subscribe(() => this.category = this.hardwareShopService.getCategory(this.category.name));
+    this.hardwareShopService.updateCartView.subscribe(() => this.category = this.hardwareShopService.getCategory(this.category.name));
   }
 
   ngOnInit(): void {
@@ -30,8 +32,8 @@ export class HardwareShopComponent extends WindowComponent implements OnInit, Af
   }
 
   ngAfterViewChecked(): void {
-    this.width = this.hardwareShop.nativeElement.offsetWidth;
-    this.height = this.hardwareShop.nativeElement.offsetHeight;
+    // this.width = this.hardwareShop.nativeElement.offsetWidth;
+    // this.height = this.hardwareShop.nativeElement.offsetHeight;
   }
 
   setCardVisibility(status: boolean) {

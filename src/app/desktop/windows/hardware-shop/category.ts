@@ -4,4 +4,5 @@ export interface Category {
   name: string;
   items: HardwarePart[];
   categories: Category[];
+  index: number;
 }
