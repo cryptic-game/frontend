@@ -1,0 +1,25 @@
+<app-account-page-base>
+  <div class="content">
+
+    <div class="title">
+      <span>Cryptic Login</span>
+    </div>
+
+    <form [formGroup]="form">
+      <label>
+        <input type="text" formControlName="username" placeholder="Username">
+      </label>
+
+      <label>
+        <input type="password" formControlName="password" placeholder="Password">
+      </label>
+
+      <label>
+        <input type="submit" value="Login" [disabled]="!form.valid" (click)="login()">
+      </label>
+    </form>
+
+    <p class="error" *ngIf="error">{{error}}</p>
+    <p>You do not have an account yet, click <a [routerLink]="['/signup']">here</a>.</p>
+  </div>
+</app-account-page-base>

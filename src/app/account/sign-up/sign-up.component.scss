@@ -1,0 +1,100 @@
+div.content {
+  display: flex;
+  flex-direction: column;
+
+  padding: 50px;
+
+  div.title {
+    display: flex;
+    justify-content: center;
+
+    margin-bottom: 30px;
+
+    span {
+      color: #fff;
+      font-size: 35px;
+      font-weight: bold;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      display: flex;
+      flex-direction: column;
+
+      padding-bottom: 10px;
+
+      &.strength {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+
+        div {
+          width: 16.666666%;
+          height: 6px;
+          background-color: #838789;
+          border-radius: 10px;
+
+          &.red-box {
+            background-color: red;
+          }
+
+          &.yellow-box {
+            background-color: yellow;
+          }
+
+          &.green-box {
+            background-color: green;
+          }
+        }
+      }
+
+      span, input {
+        color: #fff;
+        font-size: 16px;
+
+        outline: none;
+        border: none;
+        background-color: transparent;
+      }
+
+      input {
+        padding: 10px;
+        border-radius: 15px;
+        background-color: #838789;
+        transition: background-color 200ms ease-in-out;
+      }
+
+      input[type=submit] {
+        cursor: pointer;
+        background-color: #1e910d;
+      }
+
+      input[disabled] {
+        background-color: #45494b;
+      }
+    }
+  }
+
+  p {
+    color: #fff;
+    text-align: center;
+
+    a {
+      color: #1e910d;
+      transition: color 200ms ease-in-out;
+      text-decoration: none;
+
+      &:hover {
+        color: #16630b;
+      }
+    }
+
+    &.error {
+      color: red;
+    }
+  }
+}

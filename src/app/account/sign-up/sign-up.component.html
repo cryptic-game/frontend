@@ -1,0 +1,40 @@
+<app-account-page-base>
+  <div class="content">
+
+    <div class="title">
+      <span>Cryptic Sing up</span>
+    </div>
+
+    <form [formGroup]="form">
+      <label>
+        <input type="text" formControlName="username" placeholder="Username">
+      </label>
+      <label>
+        <input type="email" formControlName="email" placeholder="E-Mail">
+      </label>
+
+      <label>
+        <input type="password" formControlName="password" placeholder="Password">
+      </label>
+
+      <label class="strength">
+        <div [class.red-box]="passwordStrength >= 1"></div>
+        <div [class.red-box]="passwordStrength >= 2"></div>
+        <div [class.yellow-box]="passwordStrength >= 3"></div>
+        <div [class.green-box]="passwordStrength >= 4"></div>
+        <div [class.green-box]="passwordStrength >= 5"></div>
+      </label>
+
+      <label>
+        <input type="password" formControlName="passwordConfirm" placeholder="Confirm Password">
+      </label>
+
+      <label>
+        <input type="submit" value="Login" [disabled]="!form.valid" (click)="signUp()">
+      </label>
+    </form>
+
+    <p class="error" *ngIf="error">{{error}}</p>
+    <p>You have already created an account, then click <a [routerLink]="['/login']">here</a>.</p>
+  </div>
+</app-account-page-base>
