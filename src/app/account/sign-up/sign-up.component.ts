@@ -47,7 +47,7 @@ export class SignUpComponent {
       }
 
       if (this.accountService.checkPassword(value.password) < 5) {
-        this.error = 'The password is too weak.';
+        this.error = 'The password is too weak. (min. 1 uppercase letter, min. 1 lowercase letter, min. 1 special character & min. 8 characters)';
         this.errorLive = 10000;
       }
 
