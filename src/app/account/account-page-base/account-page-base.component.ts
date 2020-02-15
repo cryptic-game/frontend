@@ -17,8 +17,8 @@ export class AccountPageBaseComponent implements OnInit, OnDestroy {
     this.p = Particles.init({
       selector: 'canvas',
       maxParticles: 450,
-      color: '#00AD00',
-      speed: 1
+      color: '#007f00',
+      speed: 0.5
     });
     console.log(this.p);
   }
