@@ -44,26 +44,35 @@ export class SignUpComponent {
       if (value.password !== value.passwordConfirm) {
         this.error = 'The passwords are not the equal.';
         this.errorLive = 10000;
+        return;
       }
 
       if (this.accountService.checkPassword(value.password) < 5) {
         this.error = 'The password is too weak. (min. 1 uppercase letter, min. 1 lowercase letter, min. 1 special character & min. 8 characters)';
         this.errorLive = 10000;
+        return;
       }
 
       this.accountService.signUp(value.username, value.email, value.password).subscribe(data => {
         if (data.error === 'invalid email') {
           this.error = 'The e-mail address is not valid.';
           this.errorLive = 10000;
-        } else if (data.error === 'username already exists') {
+          return;
+        }
+
+        if (data.error === 'username already exists') {
           this.error = 'This username is already taken.';
           this.errorLive = 10000;
-        } else if (data.error) {
+          return;
+        }
+
+        if (data.error) {
           this.error = data.error;
           this.errorLive = 10000;
-        } else {
-          this.accountService.finalLogin(data.token);
+          return;
         }
+
+        this.accountService.finalLogin(data.token);
       });
     }
   }
