@@ -37,7 +37,7 @@
           <td colspan="2">
             <input #passwordField="ngModel" [(ngModel)]="model.password" id="password" minlength="8"
                    name="password" autocomplete="section-sign-up new-password" placeholder="Type in password" required
-                   pattern="(?=.*\d)((?=.*[a-z])|(?=.*[A-Z]))(?=.*[@#$&_%=!?\/()=*+^'.\\&quot;`:;~|><\}{\][,-]).{8,}"
+                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                    type="password">
             <div *ngIf="passwordField.invalid && (passwordField.dirty || passwordField.touched)" class="errorText">
               <div *ngIf="passwordField['errors'].required">
@@ -47,7 +47,7 @@
                 Password must be at least 8 characters long.
               </div>
               <div *ngIf="passwordField['errors'].pattern">
-                Password must have a special character and a number.
+                Password must have a small and a capital letter and a number.
               </div>
             </div>
           </td>

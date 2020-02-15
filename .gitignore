@@ -232,3 +232,4 @@ $RECYCLE.BIN/
 .angulardoc.json
 /coverage
 yarn-error.log
+/frontend.iml
