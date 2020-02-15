@@ -1,6 +1,5 @@
 @import "~src/constants";
 
-
 #startmenu {
   width: 25%;
   height: 65%;
@@ -9,7 +8,7 @@
   padding: 1.5% 1.5% 5.5% 2%;
   background-color: rgba(28, 28, 28, 0.95);
   color: $white;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.70);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.7);
 
   img {
     height: auto;
@@ -49,12 +48,11 @@
   #bugreport {
     margin-left: 2%;
     justify-content: center;
-    font-size: 1rem;
-    height: 4%;
+    font-size: 0.9rem;
+    height: 5%;
 
     .button {
       color: grey;
-      height: 0;
       display: inline;
       align-items: normal;
       cursor: pointer;
@@ -98,7 +96,6 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-
 
     .icon {
       margin-right: 9px;
