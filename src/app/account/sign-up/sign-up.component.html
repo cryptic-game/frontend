@@ -30,11 +30,12 @@
       </label>
 
       <label>
-        <input (click)="signUp()" [disabled]="!form.valid" type="submit" value="Login">
+        <input (click)="signUp()" [disabled]="!form.valid" type="submit" value="Sing Up">
       </label>
     </form>
 
     <p *ngIf="error" class="error">{{error}}</p>
+    <p>The username must have at least 4 characters.</p>
     <p>Your password must contain at least one uppercase letter, one lowercase letter, one number and one special
       character.</p>
     <p>You have already created an account, then click <a [routerLink]="['/login']">here</a>.</p>

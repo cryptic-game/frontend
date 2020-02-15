@@ -36,7 +36,7 @@ export class LoginComponent {
       const value: { username: string, password: string } = this.form.value;
       this.accountService.login(value.username, value.password).subscribe(data => {
         if (data.error === 'permissions denied') {
-          this.error = 'The specified combination of username and password could not be found.';
+          this.error = 'This username and password could not be found.';
           this.errorLive = 10000;
         } else if (data.error) {
           this.error = data.error;
