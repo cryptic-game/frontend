@@ -9,6 +9,14 @@ div.base {
   background-image: url("src/assets/desktop/backgrounds/login_wallpaper.png");
   background-position: center;
 
+  canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
   div.content {
     width: 400px;
     max-width: 80%;
@@ -16,5 +24,7 @@ div.base {
 
     background-color: rgb(43, 43, 43, 0.8);
     border-radius: 30px;
+
+    z-index: 2;
   }
 }
