@@ -2,7 +2,7 @@
   <div class="content">
 
     <div class="title">
-      <span>Cryptic Log In</span>
+      <span>Cryptic Login</span>
     </div>
 
     <form [formGroup]="form">
@@ -20,6 +20,6 @@
     </form>
 
     <p *ngIf="error" class="error">{{error}}</p>
-    <p>You do not have an account yet, click <a [routerLink]="['/signup']">here</a>.</p>
+    <p>If you do not have an account yet, click <a [routerLink]="['/signup']">here</a>.</p>
   </div>
 </app-account-page-base>
