@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "^8.2.7",
     "@angular/router": "^8.2.7",
     "ngx-contextmenu": "^5.2.0",
+    "particlesjs": "^2.2.3",
     "rxjs": "~6.5.3",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"

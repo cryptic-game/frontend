@@ -1,0 +1,26 @@
+<app-account-page-base>
+  <div class="content">
+
+    <div class="title">
+      <img src="../../assets/desktop/img/logo.svg">
+      <span>Log In</span>
+    </div>
+
+    <form [formGroup]="form">
+      <label>
+        <input formControlName="username" placeholder="Username" type="text">
+      </label>
+
+      <label>
+        <input formControlName="password" placeholder="Password" type="password">
+      </label>
+
+      <label>
+        <input (click)="login()" [disabled]="!form.valid" type="submit" value="Log In">
+      </label>
+    </form>
+
+    <p *ngIf="error" class="error">{{error}}</p>
+    <p>If you do not have an account yet, click <a [routerLink]="['/signup']">here</a>.</p>
+  </div>
+</app-account-page-base>

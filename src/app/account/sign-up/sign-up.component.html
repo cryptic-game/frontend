@@ -1,0 +1,44 @@
+<app-account-page-base>
+  <div class="content">
+
+    <div class="title">
+      <img src="../../assets/desktop/img/logo.svg">
+      <span>Sign Up</span>
+    </div>
+
+    <form [formGroup]="form">
+      <label>
+        <input formControlName="username" placeholder="Username" type="text">
+      </label>
+      <label>
+        <input formControlName="email" placeholder="E-Mail" type="email">
+      </label>
+
+      <label>
+        <input formControlName="password" placeholder="Password" type="password">
+      </label>
+
+      <label class="strength">
+        <div [class.red-box]="passwordStrength >= 1"></div>
+        <div [class.red-box]="passwordStrength >= 2"></div>
+        <div [class.yellow-box]="passwordStrength >= 3"></div>
+        <div [class.green-box]="passwordStrength >= 4"></div>
+        <div [class.green-box]="passwordStrength >= 5"></div>
+      </label>
+
+      <label>
+        <input formControlName="passwordConfirm" placeholder="Confirm Password" type="password">
+      </label>
+
+      <label>
+        <input (click)="signUp()" [disabled]="!form.valid" type="submit" value="Sign Up">
+      </label>
+    </form>
+
+    <p *ngIf="error" class="error">{{error}}</p>
+    <p>The username must have at least 4 characters.</p>
+    <p>Your password must contain at least one uppercase letter, one lowercase letter, one number and one special
+      character.</p>
+    <p>If you have already created an account, then click <a [routerLink]="['/login']">here</a>.</p>
+  </div>
+</app-account-page-base>
