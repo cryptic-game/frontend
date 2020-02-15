@@ -1,6 +1,6 @@
 import { async, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './account/login/login.component';
 import { DesktopComponent } from './desktop/desktop.component';
 import { DesktopMenuComponent } from './desktop/desktop-menu/desktop-menu.component';
 import { HttpClientModule } from '@angular/common/http';
