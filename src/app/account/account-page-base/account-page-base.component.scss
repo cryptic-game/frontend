@@ -25,6 +25,13 @@ div.base {
     background-color: rgb(43, 43, 43, 0.8);
     border-radius: 30px;
 
+    overflow-y: auto;
     z-index: 2;
+
+    scrollbar-width: thin;
+
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
   }
 }
