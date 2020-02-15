@@ -39,7 +39,7 @@ export class DesktopStartmenuComponent implements OnInit {
   }
 
   openBugReportPageGitHub() {
-    window.open("https://github.com/cryptic-game/cryptic/issues/new");
+    window.open("https://github.com/cryptic-game/cryptic/issues/new/choose");
   }
 
   openBugReportPageForm() {
