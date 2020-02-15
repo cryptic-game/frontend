@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { AccountService } from '../account.service';
 
 @Component({
@@ -19,9 +19,9 @@ export class SignUpComponent {
     private accountService: AccountService) {
 
     this.form = this.formBuilder.group({
-      username: ['', Validators.required],
+      username: ['', [Validators.required, Validators.minLength(4)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/[0-9]/), Validators.pattern(/[A-Z]/), Validators.pattern(/[a-z]/)]],
       passwordConfirm: ['', Validators.required]
     });
 
@@ -43,12 +43,6 @@ export class SignUpComponent {
       const value: { username: string, email: string, password: string, passwordConfirm: string } = this.form.value;
       if (value.password !== value.passwordConfirm) {
         this.error = 'The passwords are not the equal.';
-        this.errorLive = 10000;
-        return;
-      }
-
-      if (this.accountService.checkPassword(value.password) < 5) {
-        this.error = 'The password is too weak. (min. 1 uppercase letter, min. 1 lowercase letter, min. 1 special character & min. 8 characters)';
         this.errorLive = 10000;
         return;
       }
@@ -75,5 +69,10 @@ export class SignUpComponent {
         this.accountService.finalLogin(data.token);
       });
     }
+  }
+
+  private validatePasswords(group: FormGroup): ValidationErrors | null {
+    const value: { password: string, passwordConfirm: string } = group.value;
+    return value.password === value.passwordConfirm ? null : { notSame: true };
   }
 }

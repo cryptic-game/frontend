@@ -7,19 +7,19 @@
 
     <form [formGroup]="form">
       <label>
-        <input type="text" formControlName="username" placeholder="Username">
+        <input formControlName="username" placeholder="Username" type="text">
       </label>
 
       <label>
-        <input type="password" formControlName="password" placeholder="Password">
+        <input formControlName="password" placeholder="Password" type="password">
       </label>
 
       <label>
-        <input type="submit" value="Login" [disabled]="!form.valid" (click)="login()">
+        <input (click)="login()" [disabled]="!form.valid" type="submit" value="Login">
       </label>
     </form>
 
-    <p class="error" *ngIf="error">{{error}}</p>
+    <p *ngIf="error" class="error">{{error}}</p>
     <p>You do not have an account yet, click <a [routerLink]="['/signup']">here</a>.</p>
   </div>
 </app-account-page-base>

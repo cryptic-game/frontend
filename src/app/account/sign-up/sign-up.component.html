@@ -7,14 +7,14 @@
 
     <form [formGroup]="form">
       <label>
-        <input type="text" formControlName="username" placeholder="Username">
+        <input formControlName="username" placeholder="Username" type="text">
       </label>
       <label>
-        <input type="email" formControlName="email" placeholder="E-Mail">
+        <input formControlName="email" placeholder="E-Mail" type="email">
       </label>
 
       <label>
-        <input type="password" formControlName="password" placeholder="Password">
+        <input formControlName="password" placeholder="Password" type="password">
       </label>
 
       <label class="strength">
@@ -26,15 +26,17 @@
       </label>
 
       <label>
-        <input type="password" formControlName="passwordConfirm" placeholder="Confirm Password">
+        <input formControlName="passwordConfirm" placeholder="Confirm Password" type="password">
       </label>
 
       <label>
-        <input type="submit" value="Login" [disabled]="!form.valid" (click)="signUp()">
+        <input (click)="signUp()" [disabled]="!form.valid" type="submit" value="Login">
       </label>
     </form>
 
-    <p class="error" *ngIf="error">{{error}}</p>
+    <p *ngIf="error" class="error">{{error}}</p>
+    <p>Your password must contain at least one uppercase letter, one lowercase letter, one number and one special
+      character.</p>
     <p>You have already created an account, then click <a [routerLink]="['/login']">here</a>.</p>
   </div>
 </app-account-page-base>
