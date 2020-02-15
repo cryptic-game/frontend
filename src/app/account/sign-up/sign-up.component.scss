@@ -30,7 +30,7 @@ div.content {
       &.strength {
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: space-between;
 
         div {
           width: 16.666666%;
@@ -64,7 +64,7 @@ div.content {
 
       input {
         padding: 10px;
-        border-radius: 15px;
+        border-radius: 10px;
         background-color: #838789;
         transition: background-color 200ms ease-in-out;
       }
