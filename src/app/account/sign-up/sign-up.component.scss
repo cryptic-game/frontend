@@ -37,6 +37,7 @@ div.content {
           height: 6px;
           background-color: #838789;
           border-radius: 10px;
+          transition: background-color 200ms ease-in-out;
 
           &.red-box {
             background-color: red;
