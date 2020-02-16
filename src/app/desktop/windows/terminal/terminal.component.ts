@@ -6,6 +6,7 @@ import { WindowManagerService } from '../../window-manager/window-manager.servic
 import { DefaultTerminalState } from './terminal-states';
 import { WebsocketService } from '../../../websocket.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { FileService } from '../../api/files/file.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -27,6 +28,7 @@ export class TerminalComponent extends WindowComponent
   constructor(
     private websocket: WebsocketService,
     private settings: SettingsService,
+    private fileService: FileService,
     private windowManager: WindowManagerService,
     private domSanitizer: DomSanitizer
   ) {
@@ -38,6 +40,7 @@ export class TerminalComponent extends WindowComponent
       new DefaultTerminalState(
         this.websocket,
         this.settings,
+        this.fileService,
         this.domSanitizer,
         this,
         JSON.parse(sessionStorage.getItem('activeDevice')),
