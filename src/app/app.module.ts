@@ -61,7 +61,6 @@ const routes: Routes = [
     ReactiveFormsModule
   ],
   providers: [],
-  entryComponents: [TestWindowComponent, TerminalComponent, MinerComponent, SettingsComponent, TaskManagerComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {
