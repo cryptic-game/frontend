@@ -15,7 +15,7 @@ export class FileService {
 
   getFiles(deviceUUID: string, parentUUID: string = Path.ROOT): Observable<File[]> {
     return this.webSocket.ms('device', ['file', 'all'], { device_uuid: deviceUUID, parent_dir_uuid: parentUUID })
-      .pipe(map(response => {
+      .pipe(map((response: any) => {
         if ('error' in response) {
           throw new Error(response['error']);
         }
@@ -45,7 +45,7 @@ export class FileService {
       return of(this.getRootFile(deviceUUID));
     }
 
-    return this.webSocket.ms('device', ['file', 'info'], { device_uuid: deviceUUID, file_uuid: fileUUID }).pipe(map(response => {
+    return this.webSocket.ms('device', ['file', 'info'], { device_uuid: deviceUUID, file_uuid: fileUUID }).pipe(map((response: any) => {
       if ('error' in response) {
         throw new Error(response['error']);
       }
@@ -59,7 +59,7 @@ export class FileService {
       file_uuid: fileUUID,
       new_parent_dir_uuid: parentUUID,
       new_filename: filename
-    }).pipe(map(response => {
+    }).pipe(map((response: any) => {
       if ('error' in response) {
         throw new Error(response['error']);
       }
@@ -69,7 +69,7 @@ export class FileService {
 
   changeFileContent(deviceUUID: string, fileUUID: string, content: string): Observable<File> {
     return this.webSocket.ms('device', ['file', 'update'], { device_uuid: deviceUUID, file_uuid: fileUUID, content: content })
-      .pipe(map(response => {
+      .pipe(map((response: any) => {
         if ('error' in response) {
           throw new Error(response['error']);
         }
@@ -78,7 +78,7 @@ export class FileService {
   }
 
   deleteFile(deviceUUID: string, fileUUID: string): Observable<any> {
-    return this.webSocket.ms('device', ['file', 'delete'], { device_uuid: deviceUUID, file_uuid: fileUUID }).pipe(map(response => {
+    return this.webSocket.ms('device', ['file', 'delete'], { device_uuid: deviceUUID, file_uuid: fileUUID }).pipe(map((response: any) => {
       if ('error' in response) {
         throw new Error(response['error']);
       }
@@ -93,7 +93,7 @@ export class FileService {
       content: content,
       parent_dir_uuid: parentUUID,
       is_directory: false
-    }).pipe(map(response => {
+    }).pipe(map((response: any) => {
       if ('error' in response) {
         throw new Error(response['error']);
       }
@@ -108,7 +108,7 @@ export class FileService {
       content: '',
       parent_dir_uuid: parentUUID,
       is_directory: true
-    }).pipe(map(response => {
+    }).pipe(map((response: any) => {
       if ('error' in response) {
         throw new Error(response['error']);
       }
