@@ -20,7 +20,6 @@ export class AccountPageBaseComponent implements OnInit, OnDestroy {
       color: '#007f00',
       speed: 0.5
     });
-    console.log(this.p);
   }
 
   ngOnDestroy(): void {

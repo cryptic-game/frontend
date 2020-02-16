@@ -21,7 +21,13 @@ export class SignUpComponent {
     this.form = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(4)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/[0-9]/), Validators.pattern(/[A-Z]/), Validators.pattern(/[a-z]/)]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/[0-9]/),
+        Validators.pattern(/[A-Z]/),
+        Validators.pattern(/[a-z]/)]
+      ],
       passwordConfirm: ['', Validators.required]
     });
 
@@ -49,7 +55,7 @@ export class SignUpComponent {
 
       this.accountService.signUp(value.username, value.email, value.password).subscribe(data => {
         if (data.error === 'invalid email') {
-          this.error = 'The e-mail address is not valid.';
+          this.error = 'The email address is not valid.';
           this.errorLive = 10000;
           return;
         }
