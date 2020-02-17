@@ -38,8 +38,8 @@ import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wall
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
-  { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
-  { path: 'signup', component: SignUpComponent, canActivate: [SignUpGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [AccountGuard] },
+  { path: 'signup', component: SignUpComponent, canActivate: [AccountGuard] },
   { path: '**', redirectTo: '/' }
 ];
 
