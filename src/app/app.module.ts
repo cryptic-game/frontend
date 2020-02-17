@@ -31,6 +31,7 @@ import { HardwareShopHeaderComponent } from './desktop/windows/hardware-shop/har
 // tslint:disable-next-line:max-line-length
 import { HardwareShopCartComponent } from './desktop/windows/hardware-shop/hardware-shop-cart/hardware-shop-cart.component';
 import { HardwareShopCartItemComponent } from './desktop/windows/hardware-shop/hardware-shop-cart-item/hardware-shop-cart-item.component';
+import { HardwareShopSidebarItemComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar-item/hardware-shop-sidebar-item.component';
 import { WalletAppComponent } from './desktop/windows/wallet-app/wallet-app.component';
 import { WalletAppHeaderComponent } from './desktop/windows/wallet-app/wallet-app-header/wallet-app-header.component';
 import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-edit/wallet-app-edit.component';
@@ -73,6 +74,10 @@ const routes: Routes = [
     HardwareShopItemComponent,
     HardwareShopItemGridComponent,
     HardwareShopSidebarItemComponent,
+    WalletAppComponent,
+    WalletAppHeaderComponent,
+    WalletAppEditComponent,
+    WalletAppTransactionComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

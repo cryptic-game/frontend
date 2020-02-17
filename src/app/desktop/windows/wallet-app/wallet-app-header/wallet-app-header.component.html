@@ -1,0 +1,14 @@
+<div class="header">
+
+  <div class="left">
+    <span *ngIf="wallet " class="btn">
+      <span (click)="showWalletEdit()" *ngIf="!isWalletEdit">Change Wallet</span>
+      <span (click)="hideWalletEdit()" *ngIf="isWalletEdit">Back to Wallet</span>
+    </span>
+  </div>
+
+  <div class="right">
+    <span *ngIf="wallet">{{wallet.amount / 1000}} MC</span>
+  </div>
+
+</div>

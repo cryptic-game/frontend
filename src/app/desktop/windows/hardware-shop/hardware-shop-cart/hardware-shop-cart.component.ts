@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
-import { WalletAppService } from '../../wallet-app/wallet-app.service';
 import { HardwarePart } from '../hardware-part';
+import { WalletAppService } from '../../wallet-app/wallet-app.service';
 
 @Component({
   selector: 'app-hardware-shop-cart',
