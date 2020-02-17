@@ -4,6 +4,9 @@ import { map } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SecurityContext } from '@angular/core';
 import { SettingsService } from '../settings/settings.service';
+import { FileService } from '../../api/files/file.service';
+import { Path } from '../../api/files/path';
+import { of } from 'rxjs';
 
 
 function escapeHtml(html) {
@@ -67,6 +70,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     'help': this.help.bind(this),
     'status': this.status.bind(this),
     'hostname': this.hostname.bind(this),
+    'cd': this.cd.bind(this),
     'ls': this.ls.bind(this),
     'l': this.ls.bind(this),
     'dir': this.ls.bind(this),
@@ -75,6 +79,8 @@ export class DefaultTerminalState extends CommandTerminalState {
     'rm': this.rm.bind(this),
     'cp': this.cp.bind(this),
     'mv': this.mv.bind(this),
+    'rename': this.rename.bind(this),
+    'mkdir': this.mkdir.bind(this),
     'exit': this.exit.bind(this),
     'quit': this.exit.bind(this),
     'clear': this.clear.bind(this),
@@ -92,6 +98,8 @@ export class DefaultTerminalState extends CommandTerminalState {
       this.terminal.outputText('"mess with the best, die like the rest :D`" - chaozz');
     }
   };
+
+  working_dir: string = Path.ROOT;  // UUID of the working directory
 
   private static promptAppenderListener(evt: MouseEvent) {
     evt.stopPropagation();
@@ -124,9 +132,9 @@ export class DefaultTerminalState extends CommandTerminalState {
     return `<span class="promptAppender" style="text-decoration: underline; cursor: pointer;">${escapeHtml(value)}</span>`;
   }
 
-  constructor(protected websocket: WebsocketService, private settings: SettingsService, private domSanitizer: DomSanitizer,
-              protected terminal: TerminalAPI, protected activeDevice: object, protected username: string,
-              public promptColor: string = null) {
+  constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
+              private domSanitizer: DomSanitizer, protected terminal: TerminalAPI, protected activeDevice: object,
+              protected username: string, public promptColor: string = null) {
     super();
   }
 
@@ -135,10 +143,17 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
   refreshPrompt() {
-    const color = this.domSanitizer.sanitize(SecurityContext.STYLE, this.promptColor || this.settings.getTPC());
-    const prompt = this.domSanitizer.bypassSecurityTrustHtml(
-      `<span style="color: ${color}">${escapeHtml(this.username)}@${escapeHtml(this.activeDevice['name'])} $</span>`);
-    this.terminal.changePrompt(prompt);
+    this.fileService.getAbsolutePath(this.activeDevice['uuid'], this.working_dir).subscribe(path => {
+      const color = this.domSanitizer.sanitize(SecurityContext.STYLE, this.promptColor || this.settings.getTPC());
+      const prompt = this.domSanitizer.bypassSecurityTrustHtml(
+        `<span style="color: ${color}">` +
+        `${escapeHtml(this.username)}@${escapeHtml(this.activeDevice['name'])}` +
+        `<span style="color: white">:</span>` +
+        `<span style="color: #0089ff;">/${path.join('/')}</span>$` +
+        `</span>`
+      );
+      this.terminal.changePrompt(prompt);
+    });
   }
 
 
@@ -190,16 +205,64 @@ export class DefaultTerminalState extends CommandTerminalState {
     }
   }
 
-  ls(args: string[]) {
-    this.websocket.ms('device', ['file', 'all'], {
-      device_uuid: this.activeDevice['uuid']
-    }).subscribe(r => {
-      if (r.files != null) {
-        r.files.forEach(e => {
-          this.terminal.outputText(e.filename);
-        });
+  cd(args: string[]) {
+    if (args.length === 1) {
+      let path: Path;
+      try {
+        path = Path.fromString(args[0], this.working_dir);
+      } catch {
+        this.terminal.outputText('The specified path is not valid');
+        return;
       }
-    });
+      this.fileService.getFromPath(this.activeDevice['uuid'], path).subscribe(file => {
+        if (file.is_directory) {
+          this.working_dir = file.uuid;
+          this.refreshPrompt();
+        } else {
+          this.terminal.outputText('That is not a directory');
+        }
+      }, error => {
+        if (error.message === 'file_not_found') {
+          this.terminal.outputText('That directory does not exist');
+        } else {
+          console.warn(error.message);
+        }
+      });
+    }
+  }
+
+  ls(args: string[]) {
+    if (args.length === 0) {
+      this.fileService.getFiles(this.activeDevice['uuid'], this.working_dir).subscribe(files =>
+        files.forEach(f => this.terminal.outputText(f.filename))
+      );
+    } else if (args.length === 1) {
+      let path: Path;
+      try {
+        path = Path.fromString(args[0], this.working_dir);
+      } catch {
+        this.terminal.outputText('The specified path is not valid');
+        return;
+      }
+
+      this.fileService.getFromPath(this.activeDevice['uuid'], path).subscribe(target => {
+        if (target.is_directory) {
+          this.fileService.getFiles(this.activeDevice['uuid'], target.uuid).subscribe(files =>
+            files.forEach(f => this.terminal.outputText(f.filename))
+          );
+        } else {
+          this.terminal.outputText('That is not a directory');
+        }
+      }, error => {
+        if (error.message === 'file_not_found') {
+          this.terminal.outputText('That directory does not exist');
+        } else {
+          console.warn(error.message);
+        }
+      });
+    } else {
+      this.terminal.outputText('usage: ls [directory]');
+    }
   }
 
   touch(args: string[]) {
@@ -207,8 +270,9 @@ export class DefaultTerminalState extends CommandTerminalState {
       const filename = args[0];
       let content = '';
 
-      if (args.length > 1) {
-        content = args.slice(1).join(' ');
+      if (!filename.match(/^[a-zA-Z0-9.\-_]+$/)) {
+        this.terminal.outputText('That filename is not valid');
+        return;
       }
 
       if (filename.length > 64) {
@@ -216,13 +280,17 @@ export class DefaultTerminalState extends CommandTerminalState {
         return;
       }
 
-      this.websocket.ms('device', ['file', 'create'], {
-        device_uuid: this.activeDevice['uuid'],
-        filename: filename,
-        content: content
-      }).subscribe(r => {
-        if (r.error != null) {
-          this.terminal.outputText('That file already exists');
+      if (args.length > 1) {
+        content = args.slice(1).join(' ');
+      }
+
+      this.fileService.createFile(this.activeDevice['uuid'], filename, content, this.working_dir).subscribe({
+        error: err => {
+          if (err.message === 'file_already_exists') {
+            this.terminal.outputText('That file already exists');
+          } else {
+            console.warn(err.message);
+          }
         }
       });
     } else {
@@ -232,23 +300,25 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   cat(args: string[]) {
     if (args.length === 1) {
-      const name = args[0];
+      let path: Path;
+      try {
+        path = Path.fromString(args[0], this.working_dir);
+      } catch {
+        this.terminal.outputText('The specified path is not valid');
+        return;
+      }
 
-      this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
-        if (r.error != null) {
-          this.terminal.outputText('That file does not exist');
+      this.fileService.getFromPath(this.activeDevice['uuid'], path).subscribe(file => {
+        if (file.is_directory) {
+          this.terminal.outputText('That is not a file');
+        } else {
+          this.terminal.outputText(file.content);
         }
-
-        let fileFound: Boolean = false;
-
-        r.files.forEach(e => {
-          if (e != null && e.filename === name) {
-            this.terminal.outputText(e.content);
-            fileFound = true;
-          }
-        });
-        if (!fileFound) {
+      }, error => {
+        if (error.message === 'file_not_found') {
           this.terminal.outputText('That file does not exist');
+        } else {
+          console.warn(error.message);
         }
       });
     } else {
@@ -258,58 +328,61 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   rm(args: string[]) {
     if (args.length === 1) {
-      const name = args[0];
+      let path: Path;
+      try {
+        path = Path.fromString(args[0], this.working_dir);
+      } catch {
+        this.terminal.outputText('The specified path is not valid');
+        return;
+      }
 
-      this.websocket.ms('device', ['file', 'all'], {
-        device_uuid: this.activeDevice['uuid']
-      }).subscribe(r => {
-        if (r.files == null) {
-          console.error('Unexpected error');
-          return;
-        }
-
-        for (const file of r.files) {
-          if (file != null && file.filename === name) {
-            if (file.content !== '') {
-              const uuid = file.content.split(' ')[0];
-              const key = file.content.split(' ').splice(1).join(' ');
-              this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(r2 => {
-                if (r2.error == null) {
-                  this.terminal.pushState(new YesNoTerminalState(this.terminal,
-                    '<span class="errorText">Are you sure you want to delete your wallet? [yes|no]</span>', answer => {
-                      if (answer) {
-                        this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(r3 => {
-                          if (r3.error == null) {
-                            this.websocket.ms('device', ['file', 'delete'], {
-                              device_uuid: this.activeDevice['uuid'],
-                              file_uuid: file.uuid
-                            });
-                          } else {
-                            this.terminal.output('<span class="errorText"">The wallet couldn\'t be deleted successfully. ' +
-                              'Please report this bug.</span>');
-                          }
-                        });
-                      }
-                    }));
-                } else {
-                  this.websocket.ms('device', ['file', 'delete'], {
-                    device_uuid: this.activeDevice['uuid'],
-                    file_uuid: file.uuid
-                  });
-                }
-              });
-            } else {
-              this.websocket.ms('device', ['file', 'delete'], {
-                device_uuid: this.activeDevice['uuid'],
-                file_uuid: file.uuid
-              });
-            }
-
-            return;
+      this.fileService.getFromPath(this.activeDevice['uuid'], path).subscribe(file => {
+        const deleteFile = () => {
+          this.websocket.ms('device', ['file', 'delete'], {
+            device_uuid: this.activeDevice['uuid'],
+            file_uuid: file.uuid
+          });
+        };
+        if (file.content.trim().length === 47) {
+          const walletCred = file.content.split(' ');
+          const uuid = walletCred[0];
+          const key = walletCred[1];
+          if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
+            this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(wallet => {
+              if (wallet.error == null) {
+                this.terminal.pushState(new YesNoTerminalState(this.terminal,
+                  '<span class="errorText">Are you sure you want to delete your wallet? [yes|no]</span>', answer => {
+                    if (answer) {
+                      this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(r => {
+                        if (r.error == null) {
+                          this.websocket.ms('device', ['file', 'delete'], {
+                            device_uuid: this.activeDevice['uuid'],
+                            file_uuid: file.uuid
+                          });
+                        } else {
+                          this.terminal.output('<span class="errorText"">The wallet couldn\'t be deleted successfully. ' +
+                            'Please report this bug.</span>');
+                        }
+                      });
+                    }
+                  })
+                );
+              } else {
+                deleteFile();
+              }
+            });
+          } else {
+            deleteFile();
           }
+        } else {
+          deleteFile();
         }
-
-        this.terminal.outputText('That file does not exist');
+      }, error => {
+        if (error.message === 'file_not_found') {
+          this.terminal.outputText('That file does not exist');
+        } else {
+          console.warn(error.message);
+        }
       });
     } else {
       this.terminal.outputText('usage: rm <filename>');
@@ -318,30 +391,36 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   cp(args: string[]) {
     if (args.length === 2) {
-      const src = args[0];
-      const dest = args[1];
+      let srcPath: Path;
+      let destPath: Path;
+      try {
+        srcPath = Path.fromString(args[0], this.working_dir);
+        destPath = Path.fromString(args[1], this.working_dir);
+      } catch {
+        this.terminal.outputText('The specified path is not valid');
+        return;
+      }
+      const deviceUUID = this.activeDevice['uuid'];
 
-      this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
-        if (r.files != null) {
-          for (const file of r.files) {
-            if (file != null && file.filename === src) {
-              this.websocket.ms('device', ['file', 'create'], {
-                device_uuid: this.activeDevice['uuid'],
-                filename: dest,
-                content: file.content
-              }).subscribe(r2 => {
-                if (r2['error'] != null) {
-                  this.terminal.outputText('The file \'' + dest + '\' already exists');
-                }
-              });
-              return;
-            }
+      this.fileService.getFromPath(deviceUUID, srcPath).subscribe(source => {
+        this.fileService.copyFile(source, destPath).subscribe(file => {
+        }, error => {
+          if (error.message === 'file_already_exists') {
+            this.terminal.outputText('That file already exists');
+          } else if (error.message === 'cannot_copy_directory') {
+            this.terminal.outputText('Cannot copy directories');
+          } else if (error.message === 'destination_not_found') {
+            this.terminal.outputText('The destination folder was not found');
+          } else {
+            console.warn(error.message);
           }
-          this.terminal.outputText('The file \'' + src + '\' does not exist');
-        } else {
-          console.error('Unexpected error');
+        });
+      }, error => {
+        if (error.message === 'file_not_found') {
+          this.terminal.outputText('That file does not exist');
         }
       });
+
     } else {
       this.terminal.outputText('usage: cp <source> <destination>');
     }
@@ -349,37 +428,116 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   mv(args: string[]) {
     if (args.length === 2) {
-      const src = args[0];
-      const dest = args[1];
+      let srcPath: Path;
+      let destPath: Path;
+      try {
+        srcPath = Path.fromString(args[0], this.working_dir);
+        destPath = Path.fromString(args[1], this.working_dir);
+      } catch {
+        this.terminal.outputText('The specified path is not valid');
+        return;
+      }
 
-      this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
-        if (r.files != null) {
-          for (const file of r.files) {
-            if (file != null && file.filename === src) {
-              this.websocket.ms('device', ['file', 'create'], {
-                device_uuid: this.activeDevice['uuid'],
-                filename: dest,
-                content: file.content
-              }).subscribe(r2 => {
-                if (r2['error'] == null) {
-                  this.websocket.ms('device', ['file', 'delete'], {
-                    device_uuid: this.activeDevice['uuid'],
-                    file_uuid: file.uuid
-                  });
-                } else {
-                  this.terminal.outputText('The file \'' + dest + '\' already exists');
-                }
-              });
-              return;
+      this.fileService.getFromPath(this.activeDevice['uuid'], srcPath).subscribe(source => {
+        if (source.is_directory) {
+          this.terminal.outputText('You cannot move directories');
+          return;
+        }
+        this.fileService.moveToPath(source, destPath).subscribe({
+          error: err => {
+            if (err.message === 'destination_is_file') {
+              this.terminal.outputText('The destination must be a directory');
+            } else if (err.message === 'file_already_exists') {
+              this.terminal.outputText('A file with the specified name already exists in the destination directory');
+            } else if (err.message === 'file_not_found') {
+              this.terminal.outputText('The destination directory does not exist');
+            } else {
+              console.warn(err.message);
             }
           }
-          this.terminal.outputText('The file \'' + src + '\' does not exist');
+        });
+      }, error => {
+        if (error.message === 'file_not_found') {
+          this.terminal.outputText('That file does not exist');
         } else {
-          console.error('Unexpected error');
+          console.warn(error.message);
+        }
+      });
+
+    } else {
+      this.terminal.outputText('usage: mv <source> <destination>');
+    }
+  }
+
+  rename(args: string[]) {
+    if (args.length === 2) {
+      let filePath: Path;
+      try {
+        filePath = Path.fromString(args[0], this.working_dir);
+      } catch {
+        this.terminal.outputText('The specified path is not valid');
+        return;
+      }
+
+      const name = args[1];
+
+      if (!name.match(/^[a-zA-Z0-9.\-_]+$/)) {
+        this.terminal.outputText('That name is not valid');
+        return;
+      }
+
+      if (name.length > 64) {
+        this.terminal.outputText('That name is too long');
+        return;
+      }
+
+      this.fileService.getFromPath(this.activeDevice['uuid'], filePath).subscribe(file => {
+        this.fileService.rename(file, name).subscribe({
+          error: err => {
+            if (err.message === 'file_already_exists') {
+              this.terminal.outputText('A file with the specified name already exists');
+            } else {
+              console.warn(err.message);
+            }
+          }
+        });
+      }, error => {
+        if (error.message === 'file_not_found') {
+          this.terminal.outputText('That file does not exist');
+        } else {
+          console.warn(error.message);
+        }
+      });
+
+    } else {
+      this.terminal.outputText('usage: rename <file> <new name>');
+    }
+  }
+
+  mkdir(args: string[]) {
+    if (args.length === 1) {
+      const dirname = args[0];
+      if (!dirname.match(/^[a-zA-Z0-9.\-_]+$/)) {
+        this.terminal.outputText('That directory name is not valid');
+        return;
+      }
+
+      if (dirname.length > 64) {
+        this.terminal.outputText('That directory name is too long');
+        return;
+      }
+
+      this.fileService.createDirectory(this.activeDevice['uuid'], dirname, this.working_dir).subscribe({
+        error: err => {
+          if (err.message === 'file_already_exists') {
+            this.terminal.outputText('A file with the specified name already exists');
+          } else {
+            console.warn(err.message);
+          }
         }
       });
     } else {
-      this.terminal.outputText('usage: mv <source> <destination>');
+      this.terminal.outputText('usage: mkdir <directory>');
     }
   }
 
@@ -403,63 +561,85 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   morphcoin(args: string[]) {
     if (args.length === 2) {
-      const filename = args[1];
+      let path: Path;
+      try {
+        path = Path.fromString(args[1], this.working_dir);
+      } catch {
+        this.terminal.outputText('The specified path is not valid');
+        return;
+      }
+
       if (args[0] === 'look') {
-        this.websocket.ms('device', ['file', 'all'], {
-          device_uuid: this.activeDevice['uuid']
-        }).subscribe(r => {
-          for (const e of r.files) {
-            if (e != null && e.filename === filename) {
-              if (e.content !== '') {
-                const uuid = e.content.split(' ')[0];
-                const key = e.content.split(' ').splice(1).join(' ');
-                this.websocket.ms('currency', ['get'], {
-                  source_uuid: uuid,
-                  key: key
-                }).subscribe(r2 => {
-                  if (r2.error == null) {
-                    this.terminal.outputText(r2.amount / 1000 + ' morphcoin');
-                  } else {
-                    this.terminal.outputText('File is no walletfile');
-                  }
-                });
-                return;
-              } else {
-                this.terminal.outputText('File is no valid walletfile');
-                return;
-              }
-            }
+        this.fileService.getFromPath(this.activeDevice['uuid'], path).subscribe(file => {
+          if (file.is_directory) {
+            this.terminal.outputText('That file does not exist');
+            return;
           }
-          this.terminal.outputText('That file does not exist');
+
+          if (file.content.trim().length === 47) {
+            const walletCred = file.content.split(' ');
+            const uuid = walletCred[0];
+            const key = walletCred[1];
+            if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
+              this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(wallet => {
+                if (wallet.error == null) {
+                  this.terminal.outputText(wallet.amount / 1000 + ' morphcoin');
+                } else {
+                  this.terminal.outputText('That file is not connected with a wallet');
+                }
+              });
+            } else {
+              this.terminal.outputText('That file is not a wallet file');
+            }
+          } else {
+            this.terminal.outputText('That file is not a wallet file');
+          }
+        }, error => {
+          if (error.message === 'file_not_found') {
+            this.terminal.outputText('That file does not exist');
+          } else {
+            console.warn(error.message);
+          }
         });
+
       } else if (args[0] === 'create') {
-        this.websocket.ms('device', ['file', 'all'], { device_uuid: this.activeDevice['uuid'] }).subscribe(r => {
-          if (r.files == null) {
-            console.error('Unexpected error');
-            return;
-          }
-          if (r.files.some(file => file != null && file.filename === filename)) {
+        (path.path.length > 1
+            ? this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(0, -1), path.parentUUID))
+            : of({ uuid: path.parentUUID })
+        ).subscribe(dest => {
+          this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(-1), dest.uuid)).subscribe(() => {
             this.terminal.outputText('That file already exists');
-            return;
-          }
+          }, error => {
+            if (error.message === 'file_not_found') {
+              this.websocket.ms('currency', ['create'], {}).subscribe(wallet => {
+                if (wallet.error != null) {
+                  if (wallet.error === 'already_own_a_wallet') {
+                    this.terminal.outputText('You already own a wallet');
+                  } else {
+                    this.terminal.outputText(wallet.error);
+                  }
+                } else {
+                  const credentials = wallet.source_uuid + ' ' + wallet.key;
 
-          this.websocket.ms('currency', ['create'], {}).subscribe(r2 => {
-            if (r2['error'] != null) {
-              this.terminal.outputText('You already own a wallet');
-              return;
+                  this.fileService.createFile(this.activeDevice['uuid'], path.path[path.path.length - 1], credentials, this.working_dir)
+                    .subscribe({
+                      error: () => {
+                        this.terminal.outputText('That file couldn\'t be created. Please note your wallet credentials ' +
+                          'and put them in a new file with \'touch\' or contact the support: \'' + credentials + '\'');
+                      }
+                    });
+                }
+              });
+            } else {
+              console.warn(error.message);
             }
-
-            this.websocket.ms('device', ['file', 'create'], {
-              device_uuid: this.activeDevice['uuid'],
-              filename: filename,
-              content: r2.source_uuid + ' ' + r2.key
-            }).subscribe(r3 => {
-              if (r3['error'] != null) {
-                this.terminal.outputText('That file couldn\'t be created. Please note your wallet credentials ' +
-                  'and put them in a new file with \'touch\' or contact the support: \'' + r2.source_uuid + ' ' + r2.key + '\'');
-              }
-            });
           });
+        }, error => {
+          if (error.message === 'file_not_found') {
+            this.terminal.outputText('That path does not exist');
+          } else {
+            console.warn(error.message);
+          }
         });
       }
     } else {
@@ -469,7 +649,13 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   pay(args: string[]) {
     if (args.length === 3 || args.length === 4) {
-      const filename = args[0];
+      let walletPath: Path;
+      try {
+        walletPath = Path.fromString(args[0], this.working_dir);
+      } catch {
+        this.terminal.outputText('The specified path is not valid');
+        return;
+      }
       const receiver = args[1];
       const amount = args[2];
       let usage = '';
@@ -481,50 +667,51 @@ export class DefaultTerminalState extends CommandTerminalState {
       if (isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
         this.terminal.output('<em>amount</em> is not a valid number');
       } else {
-        this.websocket
-          .ms('device', ['file', 'all'], {
-            device_uuid: this.activeDevice['uuid']
-          })
-          .subscribe(r => {
-            r.files.forEach(e => {
-              if (e != null && e.filename === filename) {
-                if (e.content !== '') {
-                  const uuid = e.content.split(' ')[0];
-                  const key = e.content
-                    .split(' ')
-                    .splice(1)
-                    .join(' ');
-                  this.websocket
-                    .ms('currency', ['get'], {
-                      source_uuid: uuid,
-                      key: key
-                    })
-                    .subscribe(r2 => {
-                      if (r2.error == null) {
-                        this.websocket
-                          .ms('currency', ['send'], {
-                            source_uuid: uuid,
-                            key: key,
-                            send_amount: Math.floor(parseFloat(amount) * 1000),
-                            destination_uuid: receiver,
-                            usage: usage
-                          })
-                          .subscribe(r3 => {
-                              if (r3.error == null) {
-                                this.terminal.outputText('send ' + amount + ' to ' + receiver);
-                              } else {
-                                this.terminal.outputText(r3.error);
-                              }
-                            }
-                          );
-                      } else {
-                        this.terminal.output('No valid walletfile');
-                      }
-                    });
+        this.fileService.getFromPath(this.activeDevice['uuid'], walletPath).subscribe(walletFile => {
+          if (walletFile.is_directory) {
+            this.terminal.outputText('That file does not exist');
+            return;
+          }
+
+          if (walletFile.content.trim().length === 47) {
+            const walletCred = walletFile.content.split(' ');
+            const uuid = walletCred[0];
+            const key = walletCred[1];
+            if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
+              this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(wallet => {
+                if (wallet.error != null) {
+                  this.terminal.outputText('That file is not connected with a wallet');
+                  return;
                 }
-              }
-            });
-          });
+
+                this.websocket.ms('currency', ['send'], {
+                  source_uuid: uuid,
+                  key: key,
+                  send_amount: Math.floor(parseFloat(amount) * 1000),
+                  destination_uuid: receiver,
+                  usage: usage
+                }).subscribe(response => {
+                    if (response.error == null) {
+                      this.terminal.outputText('Successfully sent ' + amount + ' to ' + receiver);
+                    } else {
+                      this.terminal.outputText(response.error);
+                    }
+                  }
+                );
+              });
+            } else {
+              this.terminal.outputText('That file is not a wallet file');
+            }
+          } else {
+            this.terminal.outputText('That file is not a wallet file');
+          }
+        }, error => {
+          if (error.message === 'file_not_found') {
+            this.terminal.outputText('That file does not exist');
+          } else {
+            console.warn(error.message);
+          }
+        });
       }
     } else {
       this.terminal.outputText('usage: pay <filename> <receiver> <amount> [usage]');
@@ -759,8 +946,8 @@ export class DefaultTerminalState extends CommandTerminalState {
 
         const user_uuid = JSON.parse(sessionStorage.getItem('activeDevice'))['owner'];
         if (infoData['owner'] === user_uuid || partOwnerData['ok'] === true) {
-          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.domSanitizer, this.terminal,
-            infoData, this.username, '#DD2C00'));
+          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.fileService, this.domSanitizer,
+            this.terminal, infoData, this.username, '#DD2C00'));
         } else {
           this.terminal.outputText('Access denied');
         }
@@ -1013,7 +1200,7 @@ export class DefaultTerminalState extends CommandTerminalState {
               element.innerHTML = '';
 
               members.forEach(member => {
-                this.websocket.ms('device', ['device', 'info'], {'device_uuid': member['device']}).subscribe(deviceData => {
+                this.websocket.ms('device', ['device', 'info'], { 'device_uuid': member['device'] }).subscribe(deviceData => {
                   element.innerHTML += ' <span style="color: grey">' + DefaultTerminalState.promptAppender(member['device']) + '</span> '
                     + deviceData['name'] + '<br>';
                 });

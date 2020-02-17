@@ -11,9 +11,6 @@ import { DesktopStartmenuComponent } from './desktop-startmenu/desktop-startmenu
 import { FormsModule } from '@angular/forms';
 import { WindowManagerComponent } from './window-manager/window-manager.component';
 import { WindowFrameComponent } from './window/window-frame.component';
-import { TestWindowComponent } from './windows/test-window/test-window.component';
-import { NgModule } from '@angular/core';
-import { TerminalComponent } from './windows/terminal/terminal.component';
 import { WebsocketService } from '../websocket.service';
 import { ProgramService } from './program.service';
 
@@ -33,7 +30,6 @@ describe('DesktopComponent', () => {
       imports: [
         HttpClientModule,
         FormsModule,
-        EntryComponentsTestModule,
         RouterTestingModule
       ],
       declarations: [
@@ -59,10 +55,3 @@ describe('DesktopComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-
-@NgModule({
-  declarations: [TestWindowComponent, TerminalComponent],
-  entryComponents: [TestWindowComponent, TerminalComponent]
-})
-class EntryComponentsTestModule {
-}

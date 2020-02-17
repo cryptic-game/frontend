@@ -11,6 +11,7 @@ import { ContextMenuComponent } from './desktop/context-menu/context-menu.compon
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { RouterModule, Routes } from '@angular/router';
 import { DesktopGuard } from './desktop/desktop.guard';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginGuard } from './login/login.guard';
 import { SignUpGuard } from './sign-up/sign-up.guard';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -38,6 +39,8 @@ import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-
 import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wallet-app-transaction/wallet-app-transaction.component';
 import { HardwareShopSidebarComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar/hardware-shop-sidebar.component';
 import { HardwareShopSidebarItemComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar-item/hardware-shop-sidebar-item.component';
+import { AccountPageBaseComponent } from './account/account-page-base/account-page-base.component';
+import { AccountGuard } from './account/account.guard';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -78,13 +81,14 @@ const routes: Routes = [
     WalletAppTransactionComponent,
     HardwareShopSidebarComponent,
     HardwareShopSidebarItemComponent
+    TaskManagerComponent,
+    AccountPageBaseComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
     BrowserModule,
     HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule
+    FormsModule
   ],
   providers: [],
   entryComponents: [TestWindowComponent, TerminalComponent, MinerComponent, SettingsComponent, TaskManagerComponent, HardwareShopComponent, WalletAppComponent],
