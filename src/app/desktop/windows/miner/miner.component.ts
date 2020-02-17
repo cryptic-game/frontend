@@ -92,7 +92,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
       }).subscribe((getData) => {
         this.wallet = getData['wallet'];
         this.started = getData['started'];
-        this.power = getData['power'] * 100;
+        this.power = Math.round(getData['power'] * 100);
         this.active = this.power > 0 && this.started != null;
       });
     }
