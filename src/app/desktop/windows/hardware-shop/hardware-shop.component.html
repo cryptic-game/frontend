@@ -1,12 +1,13 @@
 <div class="hardware-shop" #hardwareShop>
 
-  <div class="header" #header [style.width.px]="width">
-    <app-hardware-shop-header [cardItems]="getCartLenght()"
-                              [cardVisibility]="cardVisibility"
-                              (cartOpen)="setCardVisibility(true)"
-                              (cartClose)="setCardVisibility(false)"
-    ></app-hardware-shop-header>
-  </div>
+  <!--  TODO -->
+  <!--  <div class="header" #header [style.width.px]="width">-->
+  <!--    <app-hardware-shop-header [cardItems]="getCartLenght()"-->
+  <!--                              [cardVisibility]="cardVisibility"-->
+  <!--                              (cartOpen)="setCardVisibility(true)"-->
+  <!--                              (cartClose)="setCardVisibility(false)"-->
+  <!--    ></app-hardware-shop-header>-->
+  <!--  </div>-->
 
   <div [style.height]="'calc(100% - ' + header.offsetHeight + 'px)'" [style.top.px]="header.offsetHeight"
        class="content">

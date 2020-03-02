@@ -9,7 +9,7 @@ import { Category } from '../category';
 })
 export class HardwareShopSidebarComponent {
 
-  categorys: Category[];
+  categories: Category[];
 
   @Output()
   private select: EventEmitter<Category> = new EventEmitter<Category>();
@@ -26,6 +26,6 @@ export class HardwareShopSidebarComponent {
   }
 
   private load(): void {
-    this.categorys = this.hardwareShopService.categories;
+    this.categories = this.hardwareShopService.categories;
   }
 }

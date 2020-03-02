@@ -77,7 +77,8 @@ const routes: Routes = [
     WalletAppComponent,
     WalletAppHeaderComponent,
     WalletAppEditComponent,
-    WalletAppTransactionComponent
+    WalletAppTransactionComponent,
+    HardwareShopSidebarComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

@@ -1,4 +1,4 @@
-@import "../../../../constants";
+@import "src/constants";
 
 :host {
   width: 100%;
@@ -13,10 +13,10 @@
     flex-direction: column;
     overflow: hidden;
 
-    div.header {
-      position: fixed;
-      z-index: 1;
-    }
+    //div.header {
+    //  position: fixed;
+    //  z-index: 1;
+    //}
 
     div.content {
       position: relative;
