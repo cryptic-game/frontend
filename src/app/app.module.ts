@@ -24,6 +24,7 @@ import { SettingsComponent } from './desktop/windows/settings/settings.component
 import { TaskManagerComponent } from './desktop/windows/task-manager/task-manager.component';
 import { AccountPageBaseComponent } from './account/account-page-base/account-page-base.component';
 import { AccountGuard } from './account/account.guard';
+import { DesignModule } from './design/design.module';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -58,7 +59,8 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DesignModule
   ],
   providers: [],
   bootstrap: [AppComponent]
