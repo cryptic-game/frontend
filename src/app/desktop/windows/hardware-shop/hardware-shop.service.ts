@@ -70,7 +70,7 @@ export class HardwareShopService {
     }));
   }
 
-  /* Loading Hardwareshop Items */
+  /* Loading HardwareShop Items */
   public updateHardwareParts(): void {
     this.websocketService.ms('inventory', ['shop', 'list'], {})
       .subscribe(data => {
@@ -89,6 +89,8 @@ export class HardwareShopService {
   public buyCart(): void {
     let parts = '';
     this.getCartItems().forEach(part => parts += `,"${part.name}": ${part.number === undefined ? 1 : part.number}`);
+
+    console.log(this.walletAppService.wallet);
 
     this.websocketService.ms('inventory', ['shop', 'buy'], {
       products: JSON.parse('{' + parts.substring(1) + '}'),
@@ -116,11 +118,18 @@ export class HardwareShopService {
   }
 
   public getCategory(name: string): Category {
-    for (const category of this.categories) {
+    const categories: Category[] = [];
+    this.categories.forEach(category => {
+      categories.push(category);
+      category.categories.forEach(subCategory => categories.push(subCategory));
+    });
+
+    for (const category of categories) {
       if (category.name === name) {
         return category;
       }
     }
+    return undefined;
   }
 
   private loadItems(data: any): HardwarePart[] {

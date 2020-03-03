@@ -12,6 +12,7 @@ export class HardwareShopCartComponent {
 
   items: HardwarePart[];
   morphCoins: number;
+  cardMorphCoins: string | number;
   hasEnoughMorphCoins: boolean;
 
   constructor(
@@ -19,16 +20,21 @@ export class HardwareShopCartComponent {
     private walletAppService: WalletAppService
   ) {
     this.items = this.hardwareShopService.getCartItems();
-    this.hardwareShopService.updateCartView.subscribe(() => this.items = this.hardwareShopService.getCartItems());
+    this.cardMorphCoins = 'Loading...';
+    setTimeout(() => this.cardMorphCoins = this.getHoleMorphCoins(), 2000);
+    this.hardwareShopService.updateCartView.subscribe(() => {
+      this.items = this.hardwareShopService.getCartItems();
+      this.cardMorphCoins = this.getHoleMorphCoins();
+    });
     this.walletAppService.updateWallet();
     this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet.amount);
   }
 
-  getHoleMorphCoins(): number {
+  private getHoleMorphCoins(): number {
     let mc = 0;
     this.items.forEach(item => mc += item.price * item.number);
     this.hasEnoughMorphCoins = this.morphCoins >= mc && mc !== 0;
-    return mc;
+    return mc / 1000;
   }
 
   updateNumber(): void {

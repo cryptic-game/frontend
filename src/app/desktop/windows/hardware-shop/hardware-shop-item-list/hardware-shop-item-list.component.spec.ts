@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HardwareShopItemGridComponent } from './hardware-shop-item-grid.component';
+import { HardwareShopItemListComponent } from './hardware-shop-item-list.component';
 
 describe('HardwareShopItemGridComponent', () => {
-  let component: HardwareShopItemGridComponent;
-  let fixture: ComponentFixture<HardwareShopItemGridComponent>;
+  let component: HardwareShopItemListComponent;
+  let fixture: ComponentFixture<HardwareShopItemListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HardwareShopItemGridComponent ]
+      declarations: [HardwareShopItemListComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HardwareShopItemGridComponent);
+    fixture = TestBed.createComponent(HardwareShopItemListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

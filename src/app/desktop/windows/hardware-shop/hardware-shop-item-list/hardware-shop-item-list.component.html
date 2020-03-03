@@ -3,10 +3,9 @@
     <h1>Hardware Shop <span *ngIf="category">({{category.name}} {{category.items.length}} Items)</span></h1>
   </div>
   <div *ngIf="category" class="grid-content">
-    <div *ngFor="let item of category.items" [style.width.%]="itemWidth" class="item">
-      <div class="content">
-        <app-hardware-shop-item [item]="item"></app-hardware-shop-item>
-      </div>
-    </div>
+    <app-hardware-shop-item
+      *ngFor="let item of category.items"
+      [item]="item"
+    ></app-hardware-shop-item>
   </div>
 </div>

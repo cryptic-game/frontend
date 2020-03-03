@@ -3,6 +3,7 @@
 :host {
   display: block;
   width: 100%;
+  padding-bottom: 10px;
 
   div.item {
     width: 100%;
@@ -18,11 +19,6 @@
 
       div {
         width: 100%;
-      }
-
-      div.content {
-        span.name {
-        }
       }
 
       div.footer {

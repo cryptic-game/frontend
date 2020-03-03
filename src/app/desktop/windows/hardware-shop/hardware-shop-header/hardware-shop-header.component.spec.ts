@@ -8,9 +8,9 @@ describe('HardwareShopHeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HardwareShopHeaderComponent ]
+      declarations: [HardwareShopHeaderComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,3 +1,4 @@
+// tslint:disable:max-line-length
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -26,9 +27,8 @@ import { AccountPageBaseComponent } from './account/account-page-base/account-pa
 import { AccountGuard } from './account/account.guard';
 import { HardwareShopComponent } from './desktop/windows/hardware-shop/hardware-shop.component';
 import { HardwareShopItemComponent } from './desktop/windows/hardware-shop/hardware-shop-item/hardware-shop-item.component';
-import { HardwareShopItemGridComponent } from './desktop/windows/hardware-shop/hardware-shop-item-grid/hardware-shop-item-grid.component';
+import { HardwareShopItemListComponent } from './desktop/windows/hardware-shop/hardware-shop-item-list/hardware-shop-item-list.component';
 import { HardwareShopHeaderComponent } from './desktop/windows/hardware-shop/hardware-shop-header/hardware-shop-header.component';
-// tslint:disable-next-line:max-line-length
 import { HardwareShopCartComponent } from './desktop/windows/hardware-shop/hardware-shop-cart/hardware-shop-cart.component';
 import { HardwareShopCartItemComponent } from './desktop/windows/hardware-shop/hardware-shop-cart-item/hardware-shop-cart-item.component';
 import { HardwareShopSidebarItemComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar-item/hardware-shop-sidebar-item.component';
@@ -37,6 +37,8 @@ import { WalletAppHeaderComponent } from './desktop/windows/wallet-app/wallet-ap
 import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-edit/wallet-app-edit.component';
 import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wallet-app-transaction/wallet-app-transaction.component';
 import { DesignModule } from './design/design.module';
+import { HardwareShopSidebarComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar/hardware-shop-sidebar.component';
+// tslint:enable:max-line-length
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -67,13 +69,13 @@ const routes: Routes = [
     AccountPageBaseComponent,
     HardwareShopComponent,
     HardwareShopItemComponent,
-    HardwareShopItemGridComponent,
+    HardwareShopItemListComponent,
     HardwareShopHeaderComponent,
     HardwareShopCartComponent,
     HardwareShopCartItemComponent,
     HardwareShopHeaderComponent,
     HardwareShopItemComponent,
-    HardwareShopItemGridComponent,
+    HardwareShopItemListComponent,
     HardwareShopSidebarItemComponent,
     WalletAppComponent,
     WalletAppHeaderComponent,

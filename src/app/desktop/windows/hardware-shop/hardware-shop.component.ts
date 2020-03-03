@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, Type, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Type, ViewChild } from '@angular/core';
 
 import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { HardwareShopService } from './hardware-shop.service';
@@ -9,39 +9,36 @@ import { Category } from './category';
   templateUrl: './hardware-shop.component.html',
   styleUrls: ['./hardware-shop.component.scss']
 })
-export class HardwareShopComponent extends WindowComponent implements OnInit, AfterViewChecked {
+export class HardwareShopComponent extends WindowComponent implements OnInit {
 
   cardVisibility: boolean;
 
   width: number;
   height: number;
-
+  category: Category;
   @ViewChild('hardwareShop', { static: false })
   private hardwareShop: ElementRef;
 
-  category: Category;
-
   constructor(private hardwareShopService: HardwareShopService) {
     super();
-    this.hardwareShopService.updateGridView.subscribe(() => this.category = this.hardwareShopService.getCategory(this.category.name));
-    this.hardwareShopService.updateCartView.subscribe(() => this.category = this.hardwareShopService.getCategory(this.category.name));
+    this.hardwareShopService.updateGridView.subscribe(() => {
+      if (this.category) {
+        this.category = this.hardwareShopService.getCategory(this.category.name);
+      }
+    });
+    this.hardwareShopService.updateCartView.subscribe(() => {
+      if (this.category) {
+        this.category = this.hardwareShopService.getCategory(this.category.name);
+      }
+    });
   }
 
   ngOnInit(): void {
     this.cardVisibility = false;
   }
 
-  ngAfterViewChecked(): void {
-    // this.width = this.hardwareShop.nativeElement.offsetWidth;
-    // this.height = this.hardwareShop.nativeElement.offsetHeight;
-  }
-
   setCardVisibility(status: boolean) {
     this.cardVisibility = status;
-  }
-
-  getCartLenght(): number {
-    return this.hardwareShopService.getCartItems().length;
   }
 
   selectCategory(category: Category): void {
