@@ -12,6 +12,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
 
   active = false;
   power = 0.0;
+  miningRate = 0.0;
   started;
 
   wallet: string;
@@ -35,26 +36,14 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
       listData.services.forEach((service) => {
         if (service.name === 'miner') {
           this.miner = service;
+          this.miningRate = service.speed;
           this.get();
         }
       });
     });
-
-    this.events.asObservable().subscribe((event) => {
-      if (event === 'close') {
-        this.power = 0;
-        this.active = false;
-
-        this.update();
-      }
-    });
   }
 
   ngOnDestroy() {
-    this.active = false;
-    this.power = 0;
-
-    this.update();
   }
 
   createMiner(wallet) {
@@ -68,6 +57,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
           this.errorMessage = null;
 
           this.miner = createData;
+          this.miningRate = createData.speed;
           this.get();
         } else {
           this.errorMessage = 'Invalid wallet';
@@ -86,6 +76,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
           this.errorMessage = null;
 
           this.miner = walletData;
+          this.miningRate = walletData.speed;
         } else {
           this.errorMessage = 'Invalid wallet';
         }
@@ -101,7 +92,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
       }).subscribe((getData) => {
         this.wallet = getData['wallet'];
         this.started = getData['started'];
-        this.power = getData['power'] * 100;
+        this.power = Math.round(getData['power'] * 100);
         this.active = this.power > 0 && this.started != null;
       });
     }
@@ -123,17 +114,22 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
         this.websocketService.ms('service', ['miner', 'power'], {
           'service_uuid': this.miner.uuid,
           'power': this.power / 100,
+        }).subscribe(() => {
+          this.websocketService.ms('service', ['private_info'], {
+            'device_uuid': this.miner.device,
+            'service_uuid': this.miner.uuid
+          }).subscribe((service) => {
+            this.miner = service;
+            this.miningRate = service.speed;
+            this.sendingData = false;
+          });
         });
-
-        setTimeout(() => {
-          this.sendingData = false;
-        }, 1000);
       }
     }
   }
 
   checkWallet() {
-    if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(this.wallet)) {
+    if (/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/.test(this.wallet)) {
       if (this.miner) {
         this.updateMinerWallet(this.wallet);
       } else {

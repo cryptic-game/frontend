@@ -24,6 +24,9 @@ import { TerminalComponent } from './desktop/windows/terminal/terminal.component
 import { WindowPlaceDirective } from './desktop/window/window-place.directive';
 import { MinerComponent } from './desktop/windows/miner/miner.component';
 import { SettingsComponent } from './desktop/windows/settings/settings.component';
+import { TaskManagerComponent } from './desktop/windows/task-manager/task-manager.component';
+import { AccountPageBaseComponent } from './account/account-page-base/account-page-base.component';
+import { AccountGuard } from './account/account.guard';
 import { FileManagerComponent } from './desktop/windows/file-manager/file-manager.component';
 
 const routes: Routes = [
@@ -52,6 +55,9 @@ const routes: Routes = [
     TerminalComponent,
     MinerComponent,
     SettingsComponent,
+    TaskManagerComponent,
+    AccountPageBaseComponent,
+    SettingsComponent,
     FileManagerComponent
   ],
   imports: [
@@ -61,7 +67,6 @@ const routes: Routes = [
     FormsModule
   ],
   providers: [],
-  entryComponents: [TestWindowComponent, TerminalComponent, MinerComponent, SettingsComponent, FileManagerComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

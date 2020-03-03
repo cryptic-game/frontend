@@ -1,6 +1,7 @@
-import {Component, OnInit, Type} from '@angular/core';
-import {WindowComponent, WindowDelegate} from '../../window/window-delegate';
-import {TestWindowComponent} from '../test-window/test-window.component';
+import { Component, OnInit, Type } from '@angular/core';
+import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
+import { Settings } from '../../../../dataclasses/settings';
+import { SettingsService } from './settings.service';
 
 @Component({
   selector: 'app-settings',
@@ -9,21 +10,37 @@ import {TestWindowComponent} from '../test-window/test-window.component';
 })
 export class SettingsComponent extends WindowComponent implements OnInit {
 
-  constructor() {
+  constructor(public current: SettingsService) {
     super();
   }
 
   ngOnInit() {
   }
 
-  onChangeSetting(setting: string, value: any) {
-    // TODO actually change the setting
-    console.log(`changed ${setting} to ${value}`);
+  onChangeSetting(): void {
   }
+
+  resetSettings(): void {
+    this.current.setSettings(Settings.default());
+  }
+
+  setBackground(backgroundName: string) {
+    this.current.modify(x => (x.backgroundImage = backgroundName));
+  }
+
+  setTerminalPromptColor(color: string) {
+    this.current.modify(x => (x.tpc = color));
+  }
+
+  saveSettings(backgroundName: string, color: string) {
+    this.setBackground(backgroundName);
+    this.setTerminalPromptColor(color);
+  }
+
 }
 
 export class SettingsWindowDelegate extends WindowDelegate {
   title = 'Settings';
-  icon = 'assets/desktop/img/filemanager.svg';
+  icon = 'assets/desktop/img/gear.svg';
   type: Type<any> = SettingsComponent;
 }

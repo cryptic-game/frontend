@@ -41,8 +41,7 @@ The title should have the following format:
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
 <!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
 
-- [ ] I referenced the according Issue
-  - [ ] I created an Issue
+- [ ] I referenced the according issue
   - [ ] I put a link in the Section [Related Issue](#related-issue)
 - [ ] I tested my code with multiple browsers
 - [ ] I followed the [Angular style guide](https://angular.io/guide/styleguide)
@@ -52,4 +51,4 @@ The title should have the following format:
 
 - [ ] I linted my code with TSLint
 - [ ] I tested my code with Karma
-- [ ] I tested my code with Protector
+- [ ] I tested my code with Protractor
