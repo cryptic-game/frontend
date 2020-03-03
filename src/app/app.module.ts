@@ -24,23 +24,13 @@ import { SettingsComponent } from './desktop/windows/settings/settings.component
 import { TaskManagerComponent } from './desktop/windows/task-manager/task-manager.component';
 import { AccountPageBaseComponent } from './account/account-page-base/account-page-base.component';
 import { AccountGuard } from './account/account.guard';
-import { HardwareShopComponent } from './desktop/windows/hardware-shop/hardware-shop.component';
-import { HardwareShopItemComponent } from './desktop/windows/hardware-shop/hardware-shop-item/hardware-shop-item.component';
-import { HardwareShopItemGridComponent } from './desktop/windows/hardware-shop/hardware-shop-item-grid/hardware-shop-item-grid.component';
-import { HardwareShopHeaderComponent } from './desktop/windows/hardware-shop/hardware-shop-header/hardware-shop-header.component';
-// tslint:disable-next-line:max-line-length
-import { HardwareShopCartComponent } from './desktop/windows/hardware-shop/hardware-shop-cart/hardware-shop-cart.component';
-import { HardwareShopCartItemComponent } from './desktop/windows/hardware-shop/hardware-shop-cart-item/hardware-shop-cart-item.component';
-import { WalletAppComponent } from './desktop/windows/wallet-app/wallet-app.component';
-import { WalletAppHeaderComponent } from './desktop/windows/wallet-app/wallet-app-header/wallet-app-header.component';
-import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-edit/wallet-app-edit.component';
-import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wallet-app-transaction/wallet-app-transaction.component';
+import { DesignModule } from './design/design.module';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
   { path: 'login', component: LoginComponent, canActivate: [AccountGuard] },
   { path: 'signup', component: SignUpComponent, canActivate: [AccountGuard] },
-  { path: '**', redirectTo: '/' }
+  { path: '**', redirectTo: '/' },
 ];
 
 @NgModule({
@@ -62,25 +52,15 @@ const routes: Routes = [
     MinerComponent,
     SettingsComponent,
     TaskManagerComponent,
-    AccountPageBaseComponent,
-    TaskManagerComponent,
-    HardwareShopComponent,
-    HardwareShopItemComponent,
-    HardwareShopItemGridComponent,
-    HardwareShopHeaderComponent,
-    HardwareShopCartComponent,
-    HardwareShopCartItemComponent,
-    WalletAppComponent,
-    WalletAppHeaderComponent,
-    WalletAppEditComponent,
-    WalletAppTransactionComponent
+    AccountPageBaseComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DesignModule
   ],
   providers: [],
   bootstrap: [AppComponent]
