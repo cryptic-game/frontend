@@ -1,9 +1,12 @@
 import { Type } from '@angular/core';
+import { Subject } from 'rxjs';
 
 export abstract class WindowDelegate {
   title: string;
   icon: string;
-  type: Type<any>;
+  type: Type<WindowComponent>;
+
+  component: WindowComponent;
 
   position: WindowPosition = {
     x: 0,
@@ -26,4 +29,9 @@ export interface WindowPosition {
   active: boolean;
   maximized: boolean;
   minimized: boolean;
+}
+
+export abstract class WindowComponent {
+  delegate: WindowDelegate;
+  events = new Subject<string>();
 }

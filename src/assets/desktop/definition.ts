@@ -1,12 +1,18 @@
 import { Program } from '../../dataclasses/program';
 import { Position } from '../../dataclasses/position';
-import { TestWindowComponent } from '../../app/desktop/windows/test-window/test-window.component';
-import { TerminalComponent } from '../../app/desktop/windows/terminal/terminal.component';
+import { TestWindowDelegate } from '../../app/desktop/windows/test-window/test-window.component';
+import { TerminalWindowDelegate } from '../../app/desktop/windows/terminal/terminal.component';
+import { MinerWindowDelegate } from '../../app/desktop/windows/miner/miner.component';
+import { SettingsWindowDelegate } from '../../app/desktop/windows/settings/settings.component';
+import { TaskManagerWindowDelegate } from '../../app/desktop/windows/task-manager/task-manager.component';
 
 export const programWindows = {
-  'browser': TestWindowComponent,
-  'fileManager': TestWindowComponent,
-  'terminal': TerminalComponent
+  'browser': TestWindowDelegate,
+  'file-manager': TestWindowDelegate,
+  'terminal': TerminalWindowDelegate,
+  'miner': MinerWindowDelegate,
+  'settings': SettingsWindowDelegate,
+  'task-manager': TaskManagerWindowDelegate
 };
 
 export const desktopDefinition = {
@@ -18,15 +24,15 @@ export const desktopDefinition = {
       'Browser',
       '../../assets/desktop/img/browser.svg',
       true,
-      new Position(20, 10, 0)
+      new Position(20, 10)
     ),
     new Program(
-      'fileManager',
-      programWindows['fileManager'],
+      'file-manager',
+      programWindows['file-manager'],
       'File-Manager',
       '../../assets/desktop/img/filemanager.svg',
       true,
-      new Position(20, 90, 0)
+      new Position(20, 110)
     ),
     new Program(
       'terminal',
@@ -34,7 +40,31 @@ export const desktopDefinition = {
       'Terminal',
       '../../assets/desktop/img/terminal.svg',
       true,
-      new Position(20, 180, 0)
+      new Position(20, 230)
+    ),
+    new Program(
+      'miner',
+      programWindows['miner'],
+      'Miner',
+      '../../assets/desktop/img/morphcoin_dark.svg',
+      true,
+      new Position(20, 330)
+    ),
+    new Program(
+      'settings',
+      programWindows['settings'],
+      'Settings',
+      '../../assets/desktop/img/gear.svg',
+      true,
+      new Position(20, 430)
+    ),
+    new Program(
+      'task-manager',
+      programWindows['task-manager'],
+      'Task-Manager',
+      '../../assets/desktop/img/task-manager.svg',
+      true,
+      new Position(20, 530)
     )
   ]
 };

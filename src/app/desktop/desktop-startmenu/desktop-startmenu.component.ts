@@ -37,4 +37,12 @@ export class DesktopStartmenuComponent implements OnInit {
         .match(term.trim().toLowerCase())
     );
   }
+
+  openBugReportPageGitHub() {
+    window.open("https://github.com/cryptic-game/cryptic/issues/new/choose");
+  }
+
+  openBugReportPageForm() {
+    window.open("https://docs.google.com/forms/d/e/1FAIpQLSey6IZg-zJliAO4zNRmEdplqPkyqw-qmfKp4hARaBZHgNZSgQ/viewform");
+  }
 }

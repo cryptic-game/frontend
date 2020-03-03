@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WindowFrameComponent } from './window-frame.component';
 import { WindowDelegate } from './window-delegate';
+import { TestWindowComponent } from '../windows/test-window/test-window.component';
+import { WindowPlaceDirective } from './window-place.directive';
 
 describe('WindowFrameComponent', () => {
   let component: WindowFrameComponent;
@@ -9,7 +11,7 @@ describe('WindowFrameComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [WindowFrameComponent]
+      declarations: [WindowFrameComponent, WindowPlaceDirective]
     })
       .compileComponents();
   }));
@@ -19,6 +21,7 @@ describe('WindowFrameComponent', () => {
     component = fixture.componentInstance;
     component.delegate = new class extends WindowDelegate {
       title = 'Test';
+      type = TestWindowComponent;
       icon = '';
     };
     fixture.detectChanges();

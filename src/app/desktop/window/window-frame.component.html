@@ -1,11 +1,11 @@
-<div (document:mouseup)="resizing = false;" (mousedown)="windowManager.focusWindow(delegate);"
+<div (mousedown)="windowManager.focusWindow(delegate);"
      [class.active]="delegate.position.active" [class.maximized]="delegate.position.maximized"
      [style.display]="delegate.position.minimized ? 'none' : 'flex'" [style.height.px]="delegate.position.height"
      [style.width.px]="delegate.position.width"
      class="window">
   <div (dblclick)="maximize()" (mousedown)="$event.target.closest('.window-icons') || startDragging($event)"
-       (mouseup)="dragging = false;" class="window-header">
-    <img [src]="delegate.icon" alt="" class="window-icon" draggable="false" height="30px" width="30px"/>
+       class="window-header">
+    <img [src]="delegate.icon" alt="" class="window-icon" draggable="false" height="25px" width="30px"/>
     <span class="window-title">{{delegate.title}}</span>
     <div class="window-icons">
       <svg (click)="minimize()" class="minimize-icon" height="20" stroke="white" width="20">
@@ -22,6 +22,6 @@
   </div>
 
   <div class="window-content">
-    <ng-content></ng-content>
+    <ng-template appWindowPlace></ng-template>
   </div>
 </div>
