@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Wallet } from './wallet';
 import { WebsocketService } from '../../../websocket.service';
 

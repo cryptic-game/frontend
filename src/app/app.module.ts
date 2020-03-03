@@ -25,6 +25,10 @@ import { TaskManagerComponent } from './desktop/windows/task-manager/task-manage
 import { AccountPageBaseComponent } from './account/account-page-base/account-page-base.component';
 import { AccountGuard } from './account/account.guard';
 import { DesignModule } from './design/design.module';
+import { WalletAppComponent } from './desktop/windows/wallet-app/wallet-app.component';
+import { WalletAppHeaderComponent } from './desktop/windows/wallet-app/wallet-app-header/wallet-app-header.component';
+import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-edit/wallet-app-edit.component';
+import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wallet-app-transaction/wallet-app-transaction.component';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -52,7 +56,11 @@ const routes: Routes = [
     MinerComponent,
     SettingsComponent,
     TaskManagerComponent,
-    AccountPageBaseComponent
+    AccountPageBaseComponent,
+    WalletAppComponent,
+    WalletAppHeaderComponent,
+    WalletAppEditComponent,
+    WalletAppTransactionComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

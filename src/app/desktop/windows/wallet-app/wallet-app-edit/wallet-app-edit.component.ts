@@ -9,18 +9,15 @@ import { WalletAppService } from '../wallet-app.service';
 })
 export class WalletAppEditComponent {
 
-  @Output()
-  private close: EventEmitter<void> = new EventEmitter<void>();
-
   form = new FormGroup({
     uuid: new FormControl(),
     key: new FormControl()
   });
-
   correctUuid: boolean;
   correctKey: boolean;
-
   error: boolean;
+  @Output()
+  private close: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
     private walletAppService: WalletAppService
@@ -31,7 +28,6 @@ export class WalletAppEditComponent {
     this.form.valueChanges.subscribe(data => {
       this.correctUuid = walletAppService.checkWalletUuidFormat(data.uuid);
       this.correctKey = walletAppService.checkWalletKeyFormat(data.key);
-      console.log(data);
     });
   }
 
