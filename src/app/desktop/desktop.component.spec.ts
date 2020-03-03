@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DesktopComponent } from './desktop.component';
 import { DesktopMenuComponent } from './desktop-menu/desktop-menu.component';
-import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PXtoViewHeightPipe } from '../pxto-view-height.pipe';
 import { PXtoViewWidthPipe } from '../pxto-view-width.pipe';
@@ -28,7 +27,6 @@ describe('DesktopComponent', () => {
         ProgramService
       ],
       imports: [
-        HttpClientModule,
         FormsModule,
         RouterTestingModule
       ],
