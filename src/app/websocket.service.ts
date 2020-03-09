@@ -12,6 +12,7 @@ export class WebsocketService {
   private socket;
   public online = 0;
   private open = {};
+  private notification_subjects: { [notify_id: string]: Subject<Notification> } = {};
 
   constructor() {
     this.init();
@@ -37,6 +38,16 @@ export class WebsocketService {
   public request(json) {
     this.send(json);
     return this.socket.pipe(first());
+  }
+
+  public register_notification(notify_id: string): Subject<Notification> {
+    if (this.notification_subjects[notify_id] != null) {
+      return this.notification_subjects[notify_id];
+    }
+
+    const subject = new Subject<Notification>();
+    this.notification_subjects[notify_id] = subject;
+    return subject;
   }
 
   public close() {
@@ -86,7 +97,18 @@ export class WebsocketService {
       if (this.open[tag] != null) {
         this.open[tag].next(json['data']);
       }
+    } else if (json['notify-id'] != null && json['data'] != null) {
+      const subject = this.notification_subjects[json['notify-id']];
+      if (subject != null) {
+        subject.next({ data: json['data'], device_uuid: json['device_uuid'], origin: json['origin'] });
+      }
     }
   }
 
+}
+
+export interface Notification {
+  data: any;
+  device_uuid?: string;
+  origin?: string;
 }

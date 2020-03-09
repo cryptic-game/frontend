@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { WindowManagerService } from './window-manager/window-manager.service';
 import { WebsocketService } from '../websocket.service';
 import { GlobalCursorService } from '../global-cursor.service';
+import { SettingsService } from './windows/settings/settings.service';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-desktop',
@@ -32,7 +34,9 @@ export class DesktopComponent implements OnInit {
     private websocket: WebsocketService,
     private programService: ProgramService,
     private cursorService: GlobalCursorService,
-    public windowManager: WindowManagerService
+    private settings: SettingsService,
+    private sanitizer: DomSanitizer,
+    public windowManager: WindowManagerService,
   ) {
   }
 
@@ -171,6 +175,11 @@ export class DesktopComponent implements OnInit {
       return true;
     }
     return (elementsFromPoint.bind(document)(e.pageX, e.pageY) || [])[1] === this.surface.nativeElement;
+  }
+
+  getBackground(): SafeStyle {
+    return this.sanitizer.bypassSecurityTrustStyle(
+      `black url(${this.settings.getBackgroundUrl(this.settings.getSettings().backgroundImage)}) bottom/cover no-repeat`);
   }
 
 }

@@ -11,8 +11,6 @@ import { DesktopStartmenuComponent } from './desktop-startmenu/desktop-startmenu
 import { FormsModule } from '@angular/forms';
 import { WindowManagerComponent } from './window-manager/window-manager.component';
 import { WindowFrameComponent } from './window/window-frame.component';
-import { TestWindowComponent } from './windows/test-window/test-window.component';
-import { TerminalComponent } from './windows/terminal/terminal.component';
 import { WebsocketService } from '../websocket.service';
 import { ProgramService } from './program.service';
 import { of } from 'rxjs';
@@ -48,9 +46,7 @@ describe('DesktopComponent', () => {
         ContextMenuComponent,
         DesktopStartmenuComponent,
         WindowManagerComponent,
-        WindowFrameComponent,
-        TestWindowComponent,
-        TerminalComponent
+        WindowFrameComponent
       ]
     }).compileComponents();
   }));
