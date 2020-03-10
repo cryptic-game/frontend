@@ -27,37 +27,11 @@ div.content {
     display: flex;
     flex-direction: column;
 
-    label {
+    label, div.strength, p {
       display: flex;
       flex-direction: column;
 
       padding-bottom: 10px;
-
-      &.strength {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-
-        div {
-          width: 16.666666%;
-          height: 6px;
-          background-color: #838789;
-          border-radius: 10px;
-          transition: background-color 200ms ease-in-out;
-
-          &.red-box {
-            background-color: red;
-          }
-
-          &.yellow-box {
-            background-color: yellow;
-          }
-
-          &.green-box {
-            background-color: green;
-          }
-        }
-      }
 
       span, input {
         color: #fff;
@@ -73,6 +47,10 @@ div.content {
         border-radius: 10px;
         background-color: #838789;
         transition: background-color 200ms ease-in-out;
+
+        &::placeholder {
+          color: #fff;
+        }
       }
 
       input[type=submit] {
@@ -82,6 +60,36 @@ div.content {
 
       input[disabled] {
         background-color: #45494b;
+      }
+    }
+
+    p {
+      display: inline;
+    }
+
+    div.strength {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      div {
+        width: 16.666666%;
+        height: 6px;
+        background-color: #838789;
+        border-radius: 10px;
+        transition: background-color 200ms ease-in-out;
+
+        &.red-box {
+          background-color: red;
+        }
+
+        &.yellow-box {
+          background-color: yellow;
+        }
+
+        &.green-box {
+          background-color: green;
+        }
       }
     }
   }

@@ -18,17 +18,22 @@
         <input formControlName="password" placeholder="Password" type="password">
       </label>
 
-      <label class="strength">
+      <div class="strength">
         <div [class.red-box]="passwordStrength >= 1"></div>
         <div [class.red-box]="passwordStrength >= 2"></div>
         <div [class.yellow-box]="passwordStrength >= 3"></div>
         <div [class.green-box]="passwordStrength >= 4"></div>
         <div [class.green-box]="passwordStrength >= 5"></div>
-      </label>
+      </div>
 
       <label>
         <input formControlName="passwordConfirm" placeholder="Confirm Password" type="password">
       </label>
+
+      <p>
+        With your registration you agree to our <a href="https://the-morpheus.de/faq-en.html" target="_blank">privacy
+        policy</a>.
+      </p>
 
       <label>
         <input (click)="signUp()" disabled [disabled]="!form.valid" type="submit" value="Sign Up">
