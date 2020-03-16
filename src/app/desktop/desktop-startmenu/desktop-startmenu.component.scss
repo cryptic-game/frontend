@@ -54,11 +54,18 @@
     font-size: 0.9rem;
     height: 5%;
 
-    .button {
-      color: grey;
-      display: inline;
-      align-items: normal;
-      cursor: pointer;
+    p {
+
+      .button {
+        color: grey;
+        display: inline;
+        align-items: normal;
+        cursor: pointer;
+      }
+
+      a {
+        text-decoration: none;
+      }
     }
   }
 
@@ -99,7 +106,6 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-
 
     .icon {
       margin-right: 9px;
