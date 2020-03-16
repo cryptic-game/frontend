@@ -34,4 +34,13 @@ div.base {
       width: 5px;
     }
   }
+
+  div.imprint {
+    position: absolute;
+    bottom: 20px;
+
+    a {
+      color: #fff;
+    }
+  }
 }
