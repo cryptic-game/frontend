@@ -232,11 +232,25 @@ describe('DesktopComponent', () => {
       .toEqual(testDropPos, 'Shortcut was not dropped at the right position');
   });
 
-  it('#checkDropAllowed() should only allow dragging a shortcut if the element under the dragging element is the desktop surface', () => {
-    const elementsFromPointSpy = spyOn(document, 'elementsFromPoint').and.returnValue([null, component.surface.nativeElement]);
+  it('#checkDropAllowed() should only allow dragging a shortcut ' +
+    'if the element under the dragging element is the desktop surface or the original linkage', () => {
+    const elementsFromPointSpy = spyOn(document, 'elementsFromPoint');
     const movePosition = { x: 246, y: 315 };
+    component.dragLinkageIndex = 0;
+    const originalLinkageElement = document.createElement('div');
+    const anotherLinkageElement = document.createElement('div');
+    spyOn(component.surface.nativeElement, 'querySelectorAll').and.returnValue([originalLinkageElement]);
 
+    elementsFromPointSpy.and.returnValue([null, component.surface.nativeElement]);
     expect(component.checkDropAllowed(new MouseEvent('mousemove', { clientX: movePosition.x, clientY: movePosition.y }))).toBeTruthy();
+    expect(elementsFromPointSpy).toHaveBeenCalledWith(movePosition.x, movePosition.y);
+
+    elementsFromPointSpy.and.returnValue([null, originalLinkageElement]);
+    expect(component.checkDropAllowed(new MouseEvent('mousemove', { clientX: movePosition.x, clientY: movePosition.y }))).toBeTruthy();
+    expect(elementsFromPointSpy).toHaveBeenCalledWith(movePosition.x, movePosition.y);
+
+    elementsFromPointSpy.and.returnValue([null, anotherLinkageElement]);
+    expect(component.checkDropAllowed(new MouseEvent('mousemove', { clientX: movePosition.x, clientY: movePosition.y }))).toBeFalsy();
     expect(elementsFromPointSpy).toHaveBeenCalledWith(movePosition.x, movePosition.y);
 
     elementsFromPointSpy.and.returnValue([null]);

@@ -174,7 +174,10 @@ export class DesktopComponent implements OnInit {
     if (!elementsFromPoint) {
       return true;
     }
-    return (elementsFromPoint.bind(document)(e.pageX, e.pageY) || [])[1] === this.surface.nativeElement;
+
+    const originalLinkage = this.surface.nativeElement.querySelectorAll('.linkage')[this.dragLinkageIndex];
+    const mouseHoverElement: Element = (elementsFromPoint.bind(document)(e.pageX, e.pageY) || [])[1];
+    return mouseHoverElement === this.surface.nativeElement || (originalLinkage !== null && mouseHoverElement === originalLinkage);
   }
 
   getBackground(): SafeStyle {
