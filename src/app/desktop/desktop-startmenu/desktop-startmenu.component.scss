@@ -51,11 +51,17 @@
     font-size: 0.9rem;
     height: 5%;
 
-    .button {
-      color: grey;
-      display: inline;
-      align-items: normal;
-      cursor: pointer;
+    p {
+      .button {
+        color: grey;
+        display: inline;
+        align-items: normal;
+        cursor: pointer;
+      }
+
+      a {
+        text-decoration: none;
+      }
     }
   }
 
