@@ -76,8 +76,8 @@ describe('DesktopComponent', () => {
       expect(requestSpy).toHaveBeenCalledWith({ action: 'info' });
       expect(setItemSpy).toHaveBeenCalledWith('username', infoResponse.name);
       expect(setItemSpy).toHaveBeenCalledWith('email', infoResponse.mail);
-      expect(setItemSpy).toHaveBeenCalledWith('created', infoResponse.created);
-      expect(setItemSpy).toHaveBeenCalledWith('last', infoResponse.last);
+      expect(setItemSpy).toHaveBeenCalledWith('created', infoResponse.created as any);
+      expect(setItemSpy).toHaveBeenCalledWith('last', infoResponse.last as any);
     }));
 
   it('#initSession() should save all devices to the session-storage', inject([WebsocketService], (webSocket: WebsocketService) => {
@@ -271,8 +271,7 @@ describe('DesktopComponent', () => {
 
     const linkageClone = component.dragElement;
     expect(linkageClone).toBeTruthy();
-    const cloneBounds = linkageClone ? linkageClone.getBoundingClientRect() : {};
-    expect({ x: cloneBounds['x'], y: cloneBounds['y'] }).toEqual(endPosition);
+    expect({ x: linkageClone.offsetLeft, y: linkageClone.offsetTop }).toEqual(endPosition);
   });
 
   it('should not drop a shortcut if checkDropAllowed() returns false', () => {
