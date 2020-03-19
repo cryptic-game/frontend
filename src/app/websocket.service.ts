@@ -70,7 +70,7 @@ export class WebsocketService {
       s4() + '-' + s4() + s4() + s4();
   }
 
-  public ms(name, endpoint, data) {
+  public ms(name, endpoint, data): Subject<any> {
     const tag = this.generateUUID();
 
     const payload = {
