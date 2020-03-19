@@ -12,9 +12,12 @@
       </div>
     </div>
     <div *ngIf="!walletEdit && wallet" class="wallet-transaction-list">
-      <h1>Transactions ({{wallet.transactions.length}})</h1>
+      <div class="title wallet-app-header">
+        <h1>Transactions ({{wallet.transactions}})</h1>
+        <span>Nächste Seite</span>
+      </div>
       <hr>
-      <app-wallet-app-transaction *ngFor="let transaction of wallet.transactions.reverse()"
+      <app-wallet-app-transaction *ngFor="let transaction of transactions.reverse()"
                                   [transaction]="transaction"></app-wallet-app-transaction>
     </div>
   </div>

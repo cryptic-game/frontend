@@ -23,6 +23,10 @@ div.wallet-app {
       display: flex;
       align-items: baseline;
 
+      &.wallet-app-header {
+        justify-content: space-between;
+      }
+
       h1 {
         margin-right: 10px;
       }

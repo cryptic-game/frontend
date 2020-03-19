@@ -3,6 +3,7 @@ import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { WalletAppService } from './wallet-app.service';
 import { Wallet } from './wallet';
 import { interval } from 'rxjs';
+import { Transaction } from './transaction';
 
 @Component({
   selector: 'app-wallet-app',
@@ -13,6 +14,7 @@ export class WalletAppComponent extends WindowComponent implements OnInit {
 
   walletEdit: boolean;
   wallet: Wallet;
+  transactions: Transaction[];
 
   constructor(
     private walletAppService: WalletAppService
@@ -34,6 +36,7 @@ export class WalletAppComponent extends WindowComponent implements OnInit {
         this.setWalletEditStatus(false);
       }
     });
+    this.transactions = [];
   }
 
   ngOnInit() {
