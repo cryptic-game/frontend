@@ -1,0 +1,43 @@
+@import "constants";
+
+.btn {
+  user-select: none;
+  cursor: pointer;
+  border-radius: 20px;
+  padding: 3px 10px;
+  color: $white;
+  background-color: $blue;
+  transition: 200ms background-color;
+  text-align: center;
+}
+
+.btn:hover {
+  background-color: darken($blue, 10%);
+}
+
+.btn-success {
+  background-color: $green;
+  color: $white;
+}
+
+.btn-success:hover {
+  background-color: darken($green, 10%);
+}
+
+.btn-error {
+  background-color: $red;
+  color: $white;
+}
+
+.btn-error:hover {
+  background-color: darken($red, 10%);
+}
+
+.btn-disabled {
+  background-color: $gray;
+  cursor: default;
+}
+
+.btn-disabled:hover {
+  background-color: $gray;
+}

@@ -1,0 +1,28 @@
+<div class="wallet-app">
+  <div class="header">
+    <app-wallet-app-header (walletEdit)="setWalletEditStatus($event)" [isWalletEdit]="false"></app-wallet-app-header>
+  </div>
+  <div class="content">
+    <div *ngIf="walletEdit" class="wallet-edit">
+      <div class="title"><h1>Edit Wallet</h1><span>The wallet will be changed in all apps that use your wallet</span>
+      </div>
+      <hr>
+      <div>
+        <app-wallet-app-edit (close)="setWalletEditStatus(false)"></app-wallet-app-edit>
+      </div>
+    </div>
+    <div *ngIf="!walletEdit && wallet" class="wallet-transaction-list">
+      <div class="title wallet-app-header">
+        <h1>Transactions ({{wallet.transactions}})</h1>
+        <div class="transaction-buttons">
+          <span class="btn" [class.btn-disabled]="currentPage == 1" (click)="previousPage()">Previous Page</span>
+          <span class="btn btn-disabled">{{currentPage}} / {{pages}}</span>
+          <span class="btn" [class.btn-disabled]="currentPage == pages" (click)="nextPage()">Next Page</span>
+        </div>
+      </div>
+      <hr>
+      <app-wallet-app-transaction *ngFor="let transaction of transactions"
+                                  [transaction]="transaction"></app-wallet-app-transaction>
+    </div>
+  </div>
+</div>
