@@ -25,6 +25,7 @@ import { SettingsComponent } from './desktop/windows/settings/settings.component
 import { TaskManagerComponent } from './desktop/windows/task-manager/task-manager.component';
 import { AccountPageBaseComponent } from './account/account-page-base/account-page-base.component';
 import { AccountGuard } from './account/account.guard';
+import { DesignModule } from './design/design.module';
 import { HardwareShopComponent } from './desktop/windows/hardware-shop/hardware-shop.component';
 import { HardwareShopItemComponent } from './desktop/windows/hardware-shop/hardware-shop-item/hardware-shop-item.component';
 import { HardwareShopItemListComponent } from './desktop/windows/hardware-shop/hardware-shop-item-list/hardware-shop-item-list.component';
@@ -36,7 +37,6 @@ import { WalletAppComponent } from './desktop/windows/wallet-app/wallet-app.comp
 import { WalletAppHeaderComponent } from './desktop/windows/wallet-app/wallet-app-header/wallet-app-header.component';
 import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-edit/wallet-app-edit.component';
 import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wallet-app-transaction/wallet-app-transaction.component';
-import { DesignModule } from './design/design.module';
 import { HardwareShopSidebarComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar/hardware-shop-sidebar.component';
 // tslint:enable:max-line-length
 
@@ -44,7 +44,7 @@ const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
   { path: 'login', component: LoginComponent, canActivate: [AccountGuard] },
   { path: 'signup', component: SignUpComponent, canActivate: [AccountGuard] },
-  { path: '**', redirectTo: '/' },
+  { path: '**', redirectTo: '/' }
 ];
 
 @NgModule({

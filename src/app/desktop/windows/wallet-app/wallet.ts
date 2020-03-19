@@ -1,5 +1,3 @@
-import { Transaction } from './transaction';
-
 export interface Wallet {
 
   time_stamp: Date;
@@ -7,6 +5,5 @@ export interface Wallet {
   key: string;
   amount: number;
   user_uuid: string;
-  transactions: Transaction[];
-
+  transactions: number;
 }

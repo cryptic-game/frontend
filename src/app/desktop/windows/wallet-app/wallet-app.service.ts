@@ -1,6 +1,9 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Wallet } from './wallet';
 import { WebsocketService } from '../../../websocket.service';
+import { Observable } from 'rxjs';
+import { Transaction } from './transaction';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -61,5 +64,11 @@ export class WalletAppService {
         resolve(null);
       }
     }));
+  }
+
+  public getTransactions(offset: number, count: number): Observable<Transaction[]> {
+    return this.websocketService.ms('currency', ['transactions'],
+      { source_uuid: this.wallet.source_uuid, key: this.wallet.key, offset, count })
+      .pipe(map(data => data.transactions));
   }
 }

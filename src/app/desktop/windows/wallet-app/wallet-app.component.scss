@@ -12,7 +12,7 @@ div.wallet-app {
 
   div.content {
     height: 100%;
-    overflow-y: auto;
+    overflow-y: scroll;
 
     h1 {
       font-size: 22px;
@@ -22,6 +22,16 @@ div.wallet-app {
     div.title {
       display: flex;
       align-items: baseline;
+
+      &.wallet-app-header {
+        justify-content: space-between;
+
+        .transaction-buttons {
+          span:nth-child(2) {
+            margin: 0 5px;
+          }
+        }
+      }
 
       h1 {
         margin-right: 10px;

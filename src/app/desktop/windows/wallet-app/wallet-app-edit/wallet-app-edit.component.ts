@@ -28,7 +28,6 @@ export class WalletAppEditComponent {
     this.form.valueChanges.subscribe(data => {
       this.correctUuid = walletAppService.checkWalletUuidFormat(data.uuid);
       this.correctKey = walletAppService.checkWalletKeyFormat(data.key);
-      console.log(data);
     });
   }
 
