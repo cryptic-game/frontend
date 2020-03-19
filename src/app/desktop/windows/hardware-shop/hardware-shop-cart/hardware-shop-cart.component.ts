@@ -30,13 +30,6 @@ export class HardwareShopCartComponent {
     this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet.amount);
   }
 
-  private getHoleMorphCoins(): number {
-    let mc = 0;
-    this.items.forEach(item => mc += item.price * item.number);
-    this.hasEnoughMorphCoins = this.morphCoins >= mc && mc !== 0;
-    return mc / 1000;
-  }
-
   updateNumber(): void {
     this.hardwareShopService.setCartItems(this.items);
   }
@@ -47,5 +40,12 @@ export class HardwareShopCartComponent {
 
   buy(): void {
     this.hardwareShopService.buyCart();
+  }
+
+  private getHoleMorphCoins(): number {
+    let mc = 0;
+    this.items.forEach(item => mc += item.price * item.number);
+    this.hasEnoughMorphCoins = this.morphCoins >= mc && mc !== 0;
+    return mc / 1000;
   }
 }

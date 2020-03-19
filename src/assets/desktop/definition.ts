@@ -75,6 +75,14 @@ export const desktopDefinition = {
       '../../assets/desktop/img/wallet_app.svg',
       true,
       new Position(20, 630)
+    ),
+    new Program(
+      'hardware-shop-app',
+      programWindows['hardware-shop-app'],
+      'Hardware-Shop-App',
+      '../../assets/desktop/img/hardware_shop_app.svg',
+      true,
+      new Position(20, 730)
     )
   ]
 };
