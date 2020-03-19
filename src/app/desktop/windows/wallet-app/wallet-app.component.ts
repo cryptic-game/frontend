@@ -15,6 +15,9 @@ export class WalletAppComponent extends WindowComponent implements OnInit {
   walletEdit: boolean;
   wallet: Wallet;
   transactions: Transaction[];
+  currentPage = 1;
+  pages = 1;
+  itemsPerPage = 3;
 
   constructor(
     private walletAppService: WalletAppService
@@ -30,10 +33,18 @@ export class WalletAppComponent extends WindowComponent implements OnInit {
 
     this.wallet = walletAppService.wallet;
 
+    let loading = true;
+
     walletAppService.update.subscribe((wallet) => {
       this.wallet = wallet;
       if (wallet) {
         this.setWalletEditStatus(false);
+        this.pages = Math.ceil(this.wallet.transactions / this.itemsPerPage);
+        if (loading) {
+          this.walletAppService.getTransactions(this.currentPage * this.itemsPerPage, this.itemsPerPage)
+            .subscribe((data) => this.transactions = data);
+        }
+        loading = false;
       }
     });
     this.transactions = [];
@@ -45,6 +56,22 @@ export class WalletAppComponent extends WindowComponent implements OnInit {
 
   setWalletEditStatus(status: boolean): void {
     this.walletEdit = status;
+  }
+
+  nextPage() {
+    if (this.currentPage < this.pages) {
+      this.currentPage++;
+      this.walletAppService.getTransactions((this.currentPage - 1) * (this.itemsPerPage), this.itemsPerPage)
+        .subscribe((data) => this.transactions = data);
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.walletAppService.getTransactions((this.currentPage - 1) * (this.itemsPerPage), this.itemsPerPage)
+        .subscribe((data) => this.transactions = data);
+    }
   }
 }
 

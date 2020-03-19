@@ -1,6 +1,7 @@
 @import "constants";
 
 .btn {
+  user-select: none;
   cursor: pointer;
   border-radius: 20px;
   padding: 3px 10px;
@@ -34,6 +35,7 @@
 
 .btn-disabled {
   background-color: $gray;
+  cursor: default;
 }
 
 .btn-disabled:hover {
