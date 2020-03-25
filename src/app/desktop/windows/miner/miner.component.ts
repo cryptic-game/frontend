@@ -23,6 +23,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
   miner;
 
   sendingData = false;
+  temp: number;
 
   constructor(private websocketService: WebsocketService) {
     super();
@@ -100,29 +101,30 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
 
   update() {
     if (this.miner) {
-      if (this.active && this.power === 0.0) {
-        this.power = 100;
-      }
-
-      if (!this.active) {
-        this.power = 0;
-      }
-
-      if (!this.sendingData) {
+      if (this.sendingData) {
+        this.temp = this.power / 100;
+      } else {
         this.sendingData = true;
 
         this.websocketService.ms('service', ['miner', 'power'], {
           'service_uuid': this.miner.uuid,
-          'power': this.power / 100,
-        }).subscribe(() => {
-          this.websocketService.ms('service', ['private_info'], {
-            'device_uuid': this.miner.device,
-            'service_uuid': this.miner.uuid
-          }).subscribe((service) => {
-            this.miner = service;
-            this.miningRate = service.speed;
-            this.sendingData = false;
-          });
+          'power': this.active ? this.power / 100 : 0,
+        }).subscribe((data: { power: number }) => {
+          if (this.temp !== data.power) {
+            setTimeout(() => {
+              this.sendingData = false;
+              this.update();
+            }, 500);
+          } else {
+            this.websocketService.ms('service', ['private_info'], {
+              'device_uuid': this.miner.device,
+              'service_uuid': this.miner.uuid
+            }).subscribe((service) => {
+              this.miner = service;
+              this.miningRate = service.speed;
+              this.sendingData = false;
+            });
+          }
         });
       }
     }
