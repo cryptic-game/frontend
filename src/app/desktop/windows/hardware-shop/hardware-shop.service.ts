@@ -3,7 +3,6 @@ import { WebsocketService } from '../../../websocket.service';
 import { WalletAppService } from '../wallet-app/wallet-app.service';
 import { Category } from './category';
 import { HardwarePart } from './hardware-part';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -141,10 +140,6 @@ export class HardwareShopService {
       containsInCart: this.containsInCart(key),
     }));
     return items;
-  }
-
-  public getHardwarePartData(hardwarePart: HardwarePart): Observable<any> {
-    return this.websocketService.ms('');
   }
 
   private loadCategories(data: any): Category[] {
