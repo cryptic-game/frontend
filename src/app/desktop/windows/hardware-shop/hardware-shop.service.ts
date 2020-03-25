@@ -3,6 +3,7 @@ import { WebsocketService } from '../../../websocket.service';
 import { WalletAppService } from '../wallet-app/wallet-app.service';
 import { Category } from './category';
 import { HardwarePart } from './hardware-part';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -142,6 +143,10 @@ export class HardwareShopService {
     return items;
   }
 
+  public getHardwarePartData(hardwarePart: HardwarePart): Observable<any> {
+    return this.websocketService.ms('');
+  }
+
   private loadCategories(data: any): Category[] {
     if (!data) {
       return [];
@@ -151,7 +156,8 @@ export class HardwareShopService {
       name: key,
       items: this.loadItems(value.items),
       categories: this.loadCategories(value.categories),
-      index: value.index
+      index: value.index,
+      selected: false
     }));
     categories.sort((a: Category, b: Category) => {
       if (a.index < b.index) {

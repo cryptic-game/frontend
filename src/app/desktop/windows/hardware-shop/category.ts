@@ -5,4 +5,5 @@ export interface Category {
   items: HardwarePart[];
   categories: Category[];
   index: number;
+  selected: boolean;
 }

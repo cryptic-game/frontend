@@ -42,7 +42,11 @@ export class HardwareShopComponent extends WindowComponent implements OnInit {
   }
 
   selectCategory(category: Category): void {
+    if (this.category) {
+      this.category.selected = false;
+    }
     this.category = category;
+    category.selected = true;
   }
 }
 

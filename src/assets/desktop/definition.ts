@@ -6,6 +6,7 @@ import { MinerWindowDelegate } from '../../app/desktop/windows/miner/miner.compo
 import { SettingsWindowDelegate } from '../../app/desktop/windows/settings/settings.component';
 import { TaskManagerWindowDelegate } from '../../app/desktop/windows/task-manager/task-manager.component';
 import { WalletAppWindowDelegate } from '../../app/desktop/windows/wallet-app/wallet-app.component';
+import { HardwareShopWindowDelegate } from '../../app/desktop/windows/hardware-shop/hardware-shop.component';
 
 export const programWindows = {
   'browser': TestWindowDelegate,
@@ -14,7 +15,8 @@ export const programWindows = {
   'miner': MinerWindowDelegate,
   'settings': SettingsWindowDelegate,
   'task-manager': TaskManagerWindowDelegate,
-  'wallet-app': WalletAppWindowDelegate
+  'wallet-app': WalletAppWindowDelegate,
+  'hardware-shop-app': HardwareShopWindowDelegate
 };
 
 export const desktopDefinition = {

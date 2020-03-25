@@ -1,4 +1,4 @@
-<div class="item">
+<div [class.selected]="category.selected" class="item">
   <span (click)="selectItem()" class="name">{{category.name}}</span>
   <div class="sublist">
     <ng-content></ng-content>
