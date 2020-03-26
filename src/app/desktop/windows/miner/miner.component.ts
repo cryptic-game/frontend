@@ -114,7 +114,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
             setTimeout(() => {
               this.sendingData = false;
               this.update();
-            }, 500);
+            }, 1000);
           } else {
             this.websocketService.ms('service', ['private_info'], {
               'device_uuid': this.miner.device,
