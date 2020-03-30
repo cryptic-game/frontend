@@ -9,17 +9,17 @@ describe('HardwareShopSidebarItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [HardwareShopSidebarItemComponent]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(HardwareShopSidebarItemComponent);
     component = fixture.componentInstance;
+    component.category = { name: '', items: [], categories: [], index: 0, selected: false };
     fixture.detectChanges();
   });
 
-  /*it('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
-  });*/
+  });
 });

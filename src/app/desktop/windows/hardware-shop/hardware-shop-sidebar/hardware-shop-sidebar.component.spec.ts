@@ -9,8 +9,7 @@ describe('HardwareShopSidebarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [HardwareShopSidebarComponent]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
