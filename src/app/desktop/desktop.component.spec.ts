@@ -91,7 +91,7 @@ describe('DesktopComponent', () => {
     };
     const secondDevice = Object.assign({}, firstDevice);
     secondDevice.name = 'another device';
-    const msSpy = spyOn(webSocket, 'ms').and.returnValue(of({ devices: [firstDevice, secondDevice] }));
+    const msSpy = spyOn(webSocket, 'ms').and.returnValue(of({ devices: [firstDevice, secondDevice] }) as any);
     const setItemSpy = spyOn(sessionStorage, 'setItem');
 
     component.initSession();
@@ -110,7 +110,7 @@ describe('DesktopComponent', () => {
         powered_on: true
       };
       spyOn(webSocket, 'request').and.returnValue(of({ name: '', mail: '', created: 0, last: 0 }));
-      const msSpy = spyOn(webSocket, 'ms').and.returnValues(of({ devices: [] }), of(testDevice));
+      const msSpy = spyOn(webSocket, 'ms').and.returnValues(of({ devices: [] }) as any, of(testDevice) as any);
       const setItemSpy = spyOn(sessionStorage, 'setItem');
 
       component.initSession();

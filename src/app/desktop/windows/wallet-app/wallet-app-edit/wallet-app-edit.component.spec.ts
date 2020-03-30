@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WalletAppEditComponent } from './wallet-app-edit.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('WalletAppEditComponent', () => {
   let component: WalletAppEditComponent;
@@ -8,7 +9,8 @@ describe('WalletAppEditComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [WalletAppEditComponent]
+      declarations: [WalletAppEditComponent],
+      imports: [ReactiveFormsModule]
     })
       .compileComponents();
   }));
