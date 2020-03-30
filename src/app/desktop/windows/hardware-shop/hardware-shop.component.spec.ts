@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HardwareShopComponent } from './hardware-shop.component';
+import { HardwareShopHeaderComponent } from './hardware-shop-header/hardware-shop-header.component';
+import { HardwareShopSidebarComponent } from './hardware-shop-sidebar/hardware-shop-sidebar.component';
+import { HardwareShopItemListComponent } from './hardware-shop-item-list/hardware-shop-item-list.component';
+import { HardwareShopCartComponent } from './hardware-shop-cart/hardware-shop-cart.component';
 
 describe('HardwareShopComponent', () => {
   let component: HardwareShopComponent;
@@ -8,7 +12,13 @@ describe('HardwareShopComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [HardwareShopComponent]
+      declarations: [
+        HardwareShopComponent,
+        HardwareShopHeaderComponent,
+        HardwareShopSidebarComponent,
+        HardwareShopItemListComponent,
+        HardwareShopCartComponent
+      ]
     })
       .compileComponents();
   }));
