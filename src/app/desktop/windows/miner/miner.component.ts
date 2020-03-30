@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, Type } from '@angular/core';
 import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { WebsocketService } from '../../../websocket.service';
+import { FormControl, Validators } from '@angular/forms';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -15,6 +16,8 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
   miningRate = 0.0;
   started;
 
+  walletControl: FormControl = new FormControl('',
+    [Validators.required, Validators.pattern(/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/)]);
   wallet: string;
 
   errorMessage: string;
