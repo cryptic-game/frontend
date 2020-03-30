@@ -16,6 +16,13 @@ describe('HardwareShopItemComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HardwareShopItemComponent);
     component = fixture.componentInstance;
+    component.item = {
+      name: '',
+      price: 0,
+      number: 0,
+      containsInCart: false
+    };
+
     fixture.detectChanges();
   });
 

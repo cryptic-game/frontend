@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HardwareShopCartItemComponent } from './hardware-shop-cart-item.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('HardwareShopCartItemComponent', () => {
   let component: HardwareShopCartItemComponent;
@@ -8,7 +9,8 @@ describe('HardwareShopCartItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [HardwareShopCartItemComponent]
+      declarations: [HardwareShopCartItemComponent],
+      imports: [ReactiveFormsModule]
     })
       .compileComponents();
   }));
@@ -16,6 +18,12 @@ describe('HardwareShopCartItemComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HardwareShopCartItemComponent);
     component = fixture.componentInstance;
+    component.item = {
+      name: '',
+      price: 0,
+      number: 0,
+      containsInCart: false
+    };
     fixture.detectChanges();
   });
 
