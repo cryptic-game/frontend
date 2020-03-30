@@ -16,13 +16,10 @@ export class WalletAppHeaderComponent {
   @Output()
   public walletEdit: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  walletAppService: WalletAppService;
-
   constructor(
-    walletAppService: WalletAppService
+    private walletAppService: WalletAppService
   ) {
-    this.walletAppService = walletAppService;
-    this.walletAppService.update.subscribe((wallet) => {
+    walletAppService.update.subscribe((wallet) => {
       this.wallet = wallet;
       this.isWalletEdit = false;
     });

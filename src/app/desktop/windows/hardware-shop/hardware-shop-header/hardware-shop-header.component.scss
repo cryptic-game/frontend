@@ -1,0 +1,28 @@
+@import "../../../../../constants";
+
+:host {
+  width: 100%;
+  height: 50px;
+  display: flex;
+
+  div.header {
+    width: 100%;
+    height: 100%;
+    background-color: #34495e;
+    display: flex;
+    justify-content: space-between;
+
+    div {
+      height: 50px;
+      margin-left: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    div.right span {
+      color: $white;
+      margin: 0 10px;
+    }
+  }
+}

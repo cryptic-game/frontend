@@ -15,9 +15,9 @@
       <div class="title wallet-app-header">
         <h1>Transactions ({{wallet.transactions}})</h1>
         <div class="transaction-buttons">
-          <span class="btn" [class.btn-disabled]="currentPage == 1" (click)="previousPage()">Previous Page</span>
+          <span (click)="previousPage()" [class.btn-disabled]="currentPage == 1" class="btn">Previous Page</span>
           <span class="btn btn-disabled">{{currentPage}} / {{pages}}</span>
-          <span class="btn" [class.btn-disabled]="currentPage == pages" (click)="nextPage()">Next Page</span>
+          <span (click)="nextPage()" [class.btn-disabled]="currentPage == pages" class="btn">Next Page</span>
         </div>
       </div>
       <hr>

@@ -1,0 +1,48 @@
+@import "src/constants";
+
+:host {
+  width: 100%;
+  height: 100%;
+
+  div.hardware-shop {
+    width: 100%;
+    height: 100%;
+    background-color: $white;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    //div.header {
+    //  position: fixed;
+    //  z-index: 1;
+    //}
+
+    div.content {
+      position: relative;
+      width: 100%;
+      overflow-y: auto;
+
+      div.body {
+        div.hardware-shop-items {
+          display: flex;
+          flex-direction: row;
+
+          div.sidebar {
+            margin: 10px 0 10px 10px;
+            padding: 0 10px 0 0;
+            border-right: 2px solid lighten(#000000, 10%);
+          }
+
+          div.main {
+            flex-grow: 1;
+          }
+        }
+
+        div.main {
+          padding: 10px;
+        }
+      }
+    }
+  }
+}

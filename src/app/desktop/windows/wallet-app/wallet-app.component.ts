@@ -41,7 +41,7 @@ export class WalletAppComponent extends WindowComponent implements OnInit {
         this.setWalletEditStatus(false);
         this.pages = Math.ceil(this.wallet.transactions / this.itemsPerPage);
         if (loading) {
-          this.walletAppService.getTransactions(this.currentPage * this.itemsPerPage, this.itemsPerPage)
+          this.walletAppService.getTransactions(0, this.itemsPerPage)
             .subscribe((data) => this.transactions = data);
         }
         loading = false;
