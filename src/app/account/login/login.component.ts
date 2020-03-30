@@ -24,8 +24,10 @@ export class LoginComponent {
     this.errorLive = 0;
     setInterval(() => {
       if (this.errorLive > 0) {
-        this.errorLive -= 1000;
-      } else {
+        this.errorLive -= 1;
+      }
+
+      if (this.errorLive <= 0) {
         this.error = undefined;
       }
     }, 1000);
@@ -34,16 +36,20 @@ export class LoginComponent {
   login(): void {
     if (this.form.valid) {
       const value: { username: string, password: string } = this.form.value;
+
       this.accountService.login(value.username, value.password).subscribe(data => {
-        if (data.error === 'permissions denied') {
-          this.error = 'This username and password could not be found.';
-          this.errorLive = 10000;
-        } else if (data.error) {
-          this.error = data.error;
-          this.errorLive = 10000;
-        } else {
-          this.accountService.finalLogin(data.token);
+        if (data.error) {
+          if (data.error === 'permissions denied') {
+            this.error = 'This username and password could not be found.';
+          } else {
+            this.error = data.error;
+          }
+
+          this.errorLive = 10;
+          return;
         }
+
+        this.accountService.finalLogin(data.token);
       });
     }
   }

@@ -7,9 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class AccountGuard implements CanActivate {
 
-  constructor(
-    private router: Router
-  ) {
+  constructor(private router: Router) {
   }
 
   canActivate(
