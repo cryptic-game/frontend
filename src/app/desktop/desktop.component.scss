@@ -32,7 +32,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /*text-shadow: 1px 1px 2px rgb(0, 0, 0);*/
+    text-shadow: 1px 1px 2px rgb(0, 0, 0);
+
+    &.not-allowed {
+      background-color: rgba(50, 0, 0, 100) !important;
+    }
 
     img {
       width: 40px;

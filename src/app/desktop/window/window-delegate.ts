@@ -2,9 +2,9 @@ import { Type } from '@angular/core';
 import { Subject } from 'rxjs';
 
 export abstract class WindowDelegate {
-  title: string;
-  icon: string;
-  type: Type<WindowComponent>;
+  abstract title: string;
+  abstract icon: string;
+  abstract type: Type<WindowComponent>;
 
   component: WindowComponent;
 
