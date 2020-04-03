@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+// tslint:disable:max-line-length
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -69,6 +69,8 @@ const routes: Routes = [
     AccountPageBaseComponent,
     SettingsComponent,
     FileManagerComponent,
+    WalletAppTransactionComponent,
+    HardwareShopSidebarComponent,
     HardwareShopComponent,
     HardwareShopItemComponent,
     HardwareShopItemListComponent,
