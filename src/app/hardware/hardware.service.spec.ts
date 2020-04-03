@@ -93,7 +93,7 @@ describe('HardwareService', () => {
       };
 
       service.hardwareAvailable = {
-        mainboards: { test_mainboard: expected.mainboard },
+        mainboard: { test_mainboard: expected.mainboard },
         cpu: { test_cpu: expected.cpu },
         gpu: { test_gpu: expected.gpu },
         ram: { test_ram1: expected.ram[0], test_ram2: expected.ram[1] },
