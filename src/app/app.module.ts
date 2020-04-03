@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -24,6 +25,11 @@ import { TaskManagerComponent } from './desktop/windows/task-manager/task-manage
 import { AccountPageBaseComponent } from './account/account-page-base/account-page-base.component';
 import { AccountGuard } from './account/account.guard';
 import { FileManagerComponent } from './desktop/windows/file-manager/file-manager.component';
+import { DesignModule } from './design/design.module';
+import { WalletAppComponent } from './desktop/windows/wallet-app/wallet-app.component';
+import { WalletAppHeaderComponent } from './desktop/windows/wallet-app/wallet-app-header/wallet-app-header.component';
+import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-edit/wallet-app-edit.component';
+import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wallet-app-transaction/wallet-app-transaction.component';
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -53,13 +59,18 @@ const routes: Routes = [
     TaskManagerComponent,
     AccountPageBaseComponent,
     SettingsComponent,
-    FileManagerComponent
+    FileManagerComponent,
+    WalletAppComponent,
+    WalletAppHeaderComponent,
+    WalletAppEditComponent,
+    WalletAppTransactionComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
     BrowserModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DesignModule
   ],
   providers: [],
   bootstrap: [AppComponent]

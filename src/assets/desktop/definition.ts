@@ -5,6 +5,7 @@ import { TerminalWindowDelegate } from '../../app/desktop/windows/terminal/termi
 import { MinerWindowDelegate } from '../../app/desktop/windows/miner/miner.component';
 import { SettingsWindowDelegate } from '../../app/desktop/windows/settings/settings.component';
 import { TaskManagerWindowDelegate } from '../../app/desktop/windows/task-manager/task-manager.component';
+import { WalletAppWindowDelegate } from '../../app/desktop/windows/wallet-app/wallet-app.component';
 import { FileManagerWindowDelegate } from '../../app/desktop/windows/file-manager/file-manager.component';
 
 export const programWindows = {
@@ -13,7 +14,8 @@ export const programWindows = {
   'terminal': TerminalWindowDelegate,
   'miner': MinerWindowDelegate,
   'settings': SettingsWindowDelegate,
-  'task-manager': TaskManagerWindowDelegate
+  'task-manager': TaskManagerWindowDelegate,
+  'wallet-app': WalletAppWindowDelegate
 };
 
 export const desktopDefinition = {
@@ -66,6 +68,14 @@ export const desktopDefinition = {
       '../../assets/desktop/img/task-manager.svg',
       true,
       new Position(20, 530)
+    ),
+    new Program(
+      'wallet-app',
+      programWindows['wallet-app'],
+      'Wallet-App',
+      '../../assets/desktop/img/wallet_app.svg',
+      true,
+      new Position(20, 630)
     )
   ]
 };

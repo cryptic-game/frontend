@@ -1,13 +1,22 @@
 //  GLOBAL COLORS  //
 
-$green: #64DD17;
-$red: #DD2C00;
+$green: #64dd17;
+$red: #dd2c00;
 $black: #212121;
+$blue: #007bff;
 $gray: #424242;
-$white: #FAFAFA;
-
+$white: #fafafa;
+$window_title_color: #fafafa;
+$active_w: rgb(6, 0, 14);
+$inactive_w: rgba(0, 0, 0, 0.459);
+$window_font_color: #fafafa;
+$window_background: rgba(0, 0, 0, 0.9);
+$window_input_font_color: rgb(238, 238, 238);
+$window_input_background: rgb(26, 26, 26);
+$task_manager_chart_back: rgba(12, 12, 12, 0.7);
+$task_manager_chart_border: #1d1588;
+$startmenu_background: rgba(0, 0, 0, 0.719);
 
 //  FONTS  //
 
-$default-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+$default-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;

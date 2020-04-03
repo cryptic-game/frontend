@@ -1,3 +1,4 @@
+import { async, inject, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { DesktopComponent } from './desktop/desktop.component';
 import { DesktopMenuComponent } from './desktop/desktop-menu/desktop-menu.component';
@@ -10,7 +11,6 @@ import { WindowFrameComponent } from './desktop/window/window-frame.component';
 import { WebsocketService } from './websocket.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import { async, TestBed } from '@angular/core/testing';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -35,9 +35,18 @@ describe('AppComponent', () => {
       ],
     }).compileComponents();
   }));
+
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   });
+
+  it('should close the websocket when it gets destroyed', inject([WebsocketService], (webSocket) => {
+    const closeSpy = spyOn(webSocket, 'close');
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.destroy();
+    expect(closeSpy).toHaveBeenCalled();
+  }));
+
 });
