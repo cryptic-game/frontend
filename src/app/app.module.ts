@@ -26,10 +26,19 @@ import { AccountPageBaseComponent } from './account/account-page-base/account-pa
 import { AccountGuard } from './account/account.guard';
 import { FileManagerComponent } from './desktop/windows/file-manager/file-manager.component';
 import { DesignModule } from './design/design.module';
+import { HardwareShopComponent } from './desktop/windows/hardware-shop/hardware-shop.component';
+import { HardwareShopItemComponent } from './desktop/windows/hardware-shop/hardware-shop-item/hardware-shop-item.component';
+import { HardwareShopItemListComponent } from './desktop/windows/hardware-shop/hardware-shop-item-list/hardware-shop-item-list.component';
+import { HardwareShopHeaderComponent } from './desktop/windows/hardware-shop/hardware-shop-header/hardware-shop-header.component';
+import { HardwareShopCartComponent } from './desktop/windows/hardware-shop/hardware-shop-cart/hardware-shop-cart.component';
+import { HardwareShopCartItemComponent } from './desktop/windows/hardware-shop/hardware-shop-cart-item/hardware-shop-cart-item.component';
+import { HardwareShopSidebarItemComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar-item/hardware-shop-sidebar-item.component';
 import { WalletAppComponent } from './desktop/windows/wallet-app/wallet-app.component';
 import { WalletAppHeaderComponent } from './desktop/windows/wallet-app/wallet-app-header/wallet-app-header.component';
 import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-edit/wallet-app-edit.component';
 import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wallet-app-transaction/wallet-app-transaction.component';
+import { HardwareShopSidebarComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar/hardware-shop-sidebar.component';
+// tslint:enable:max-line-length
 
 const routes: Routes = [
   { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
@@ -60,6 +69,16 @@ const routes: Routes = [
     AccountPageBaseComponent,
     SettingsComponent,
     FileManagerComponent,
+    HardwareShopComponent,
+    HardwareShopItemComponent,
+    HardwareShopItemListComponent,
+    HardwareShopHeaderComponent,
+    HardwareShopCartComponent,
+    HardwareShopCartItemComponent,
+    HardwareShopHeaderComponent,
+    HardwareShopItemComponent,
+    HardwareShopItemListComponent,
+    HardwareShopSidebarItemComponent,
     WalletAppComponent,
     WalletAppHeaderComponent,
     WalletAppEditComponent,

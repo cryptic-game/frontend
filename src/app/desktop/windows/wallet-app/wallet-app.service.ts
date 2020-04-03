@@ -43,6 +43,12 @@ export class WalletAppService {
     return /^[0-9a-f]{10}$/.test(key);
   }
 
+  public getTransactions(offset: number, count: number): Observable<Transaction[]> {
+    return this.websocketService.ms('currency', ['transactions'],
+      { source_uuid: this.wallet.source_uuid, key: this.wallet.key, offset, count })
+      .pipe(map(data => data.transactions));
+  }
+
   private setWallet(wallet: Wallet) {
     this.wallet = wallet;
     localStorage.setItem('wallet_uuid', wallet.source_uuid);
@@ -64,11 +70,5 @@ export class WalletAppService {
         resolve(null);
       }
     }));
-  }
-
-  public getTransactions(offset: number, count: number): Observable<Transaction[]> {
-    return this.websocketService.ms('currency', ['transactions'],
-      { source_uuid: this.wallet.source_uuid, key: this.wallet.key, offset, count })
-      .pipe(map(data => data.transactions));
   }
 }

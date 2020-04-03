@@ -1,0 +1,18 @@
+<div class="list">
+  <div class="title">
+    <h1>Categories</h1>
+  </div>
+
+  <app-hardware-shop-sidebar-item
+    (select)="selectCategory(category)"
+    *ngFor="let category of categories"
+    [category]="category">
+
+    <app-hardware-shop-sidebar-item
+      (select)="selectCategory(subCategory)"
+      *ngFor="let subCategory of category.categories"
+      [category]="subCategory">
+    </app-hardware-shop-sidebar-item>
+
+  </app-hardware-shop-sidebar-item>
+</div>

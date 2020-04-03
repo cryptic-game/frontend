@@ -1,0 +1,20 @@
+@import "src/constants";
+
+div.item {
+
+  span.name {
+    cursor: pointer;
+    padding: 2px 4px;
+    display: block;
+  }
+
+  div.sublist {
+    margin-left: 10px;
+  }
+
+  &.selected > span.name:first-child {
+    background-color: $green;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.75);
+    color: #fff;
+  }
+}

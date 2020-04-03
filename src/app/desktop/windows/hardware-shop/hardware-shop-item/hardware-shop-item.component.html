@@ -1,0 +1,15 @@
+<div class="item">
+  <div class="body">
+
+    <div class="content">
+      <span class="name">{{item.name}}</span>
+    </div>
+
+    <div class="footer">
+      <span>{{item.price / 1000}} MC</span>
+      <span (click)="addToCart()" *ngIf="!item.containsInCart" class="btn btn-success">Add</span>
+      <span (click)="removeFromCart()" *ngIf="item.containsInCart" class="btn btn-error">Remove</span>
+    </div>
+
+  </div>
+</div>

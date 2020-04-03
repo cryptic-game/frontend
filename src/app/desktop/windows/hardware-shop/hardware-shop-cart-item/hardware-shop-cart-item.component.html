@@ -1,0 +1,10 @@
+<div class="item">
+  <span class="name">{{item.name}}</span>
+  <div class="control">
+    <span class="price control-item">{{item.price * item.number / 1000}} MC</span>
+    <form [formGroup]="formGroup" class="number control-item">
+      <label><input (blur)="updateField()" formControlName="number" max="50" min="1" step="1" type="number"></label>
+    </form>
+    <span (click)="remove()" class="btn btn-error control-item">Remove</span>
+  </div>
+</div>

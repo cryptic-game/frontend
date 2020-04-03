@@ -7,6 +7,7 @@ import { SettingsWindowDelegate } from '../../app/desktop/windows/settings/setti
 import { TaskManagerWindowDelegate } from '../../app/desktop/windows/task-manager/task-manager.component';
 import { WalletAppWindowDelegate } from '../../app/desktop/windows/wallet-app/wallet-app.component';
 import { FileManagerWindowDelegate } from '../../app/desktop/windows/file-manager/file-manager.component';
+import { HardwareShopWindowDelegate } from '../../app/desktop/windows/hardware-shop/hardware-shop.component';
 
 export const programWindows = {
   'browser': TestWindowDelegate,
@@ -15,7 +16,8 @@ export const programWindows = {
   'miner': MinerWindowDelegate,
   'settings': SettingsWindowDelegate,
   'task-manager': TaskManagerWindowDelegate,
-  'wallet-app': WalletAppWindowDelegate
+  'wallet-app': WalletAppWindowDelegate,
+  'hardware-shop-app': HardwareShopWindowDelegate
 };
 
 export const desktopDefinition = {
@@ -76,6 +78,14 @@ export const desktopDefinition = {
       '../../assets/desktop/img/wallet_app.svg',
       true,
       new Position(20, 630)
+    ),
+    new Program(
+      'hardware-shop-app',
+      programWindows['hardware-shop-app'],
+      'Hardware-Shop-App',
+      '../../assets/desktop/img/hardware_shop_app.svg',
+      true,
+      new Position(20, 730)
     )
   ]
 };
