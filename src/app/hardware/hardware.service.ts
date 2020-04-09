@@ -33,7 +33,7 @@ export class HardwareService {
         for (const { hardware_element, hardware_type } of data['hardware']) {
           switch (hardware_type) {
             case 'mainboard':
-              mainboard = this.hardwareAvailable.mainboards[hardware_element];
+              mainboard = this.hardwareAvailable.mainboard[hardware_element];
               break;
             case 'cpu':
               cpu = this.hardwareAvailable.cpu[hardware_element];
@@ -203,7 +203,7 @@ export class HardwareList {
     disk: []
   };
 
-  'mainboards': { [name: string]: Parts.Mainboard } = {};
+  'mainboard': { [name: string]: Parts.Mainboard } = {};
 
   'cpu': { [name: string]: Parts.CPU } = {};
 
