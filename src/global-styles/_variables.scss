@@ -6,16 +6,16 @@ $black: #212121;
 $blue: #007bff;
 $gray: #424242;
 $white: #fafafa;
-$window_title_color: #fafafa;
-$active_w: rgb(6, 0, 14);
-$inactive_w: rgba(0, 0, 0, 0.459);
-$window_font_color: #fafafa;
-$window_background: rgba(0, 0, 0, 0.9);
-$window_input_font_color: rgb(238, 238, 238);
-$window_input_background: rgb(26, 26, 26);
-$task_manager_chart_back: rgba(12, 12, 12, 0.7);
-$task_manager_chart_border: #1d1588;
-$startmenu_background: rgba(0, 0, 0, 0.719);
+$window-title-color: $white;
+$active-window-color: $gray;
+$inactive-window-color: rgba(15, 15, 15, 0.9);
+$window-font-color: #fafafa;
+$window-background: rgba(21, 21, 21, 0.9);
+$window-input-font-color: #eeeeee;
+$window-input-background: #1a1a1a;
+$task-manager-chart-back: rgba(12, 12, 12, 0.7);
+$task-manager-chart-border: #8c8c8c;
+$start-menu-background: rgba(0, 0, 0, 0.719);
 
 //  FONTS  //
 

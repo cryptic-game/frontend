@@ -7,7 +7,7 @@
 #miner-window-container {
   width: 100%;
   height: 100%;
-  background-color: $window_background;
+  background-color: $window-background;
   user-select: none;
   overflow: auto;
 }
@@ -20,8 +20,8 @@
     width: 98%;
     padding: 1.5%;
     outline: none;
-    color: $window_input_font_color;
-    background-color: $window_input_background;
+    color: $window-input-font-color;
+    background-color: $window-input-background;
   }
 }
 
@@ -50,13 +50,13 @@
 
 #miner-power h4 {
   text-align: center;
-  color: $window_font_color;
+  color: $window-font-color;
 }
 
 #miner-state {
   text-align: center;
   font-size: 2rem;
-  color: $window_font_color;
+  color: $window-font-color;
 }
 
 .switch {
