@@ -8,7 +8,7 @@
     <tr>
       <td>
         <div id="cpu">
-          <span class="header">CPU {{deviceHardware.cpu.name}} / {{deviceHardware.cpu.frequencyMax}} MHz</span>
+          <span class="header">CPU {{cpu.name}} / {{cpu.frequencyMax}} MHz</span>
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
@@ -25,7 +25,7 @@
       </td>
       <td>
         <div id="gpu">
-          <span class="header">GPU {{deviceHardware.gpu.name}} / {{deviceHardware.gpu.frequency}} MHz</span>
+          <span class="header">GPU {{gpu.name}} / {{gpu.frequency}} MHz</span>
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
@@ -44,13 +44,14 @@
     <tr>
       <td>
         <div id="ram">
-          <span class="header">RAM {{deviceHardware.mainboard.ram.typ}} / {{ramTotal}} MB</span>
+          <span class="header">RAM {{ram.type}} / {{ram.totalMemory}} MB</span>
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
-                <div class="indicator red-indicator" [style.height.%]="utilization.ram / ramTotal * 100"></div>
+                <div class="indicator red-indicator" [style.height.%]="utilization.ram / ram.totalMemory * 100"></div>
               </div>
-              <p style="text-align: center; margin: 0;">{{utilization.ram / ramTotal * 100 | number:'1.0-0'}}%</p>
+              <p style="text-align: center; margin: 0;">{{utilization.ram / ram.totalMemory * 100 | number:'1.0-0'}}
+                %</p>
             </div>
             <div class="value-container">
               <span class="description">Usage</span>
@@ -61,7 +62,7 @@
       </td>
       <td>
         <div id="disk">
-          <span class="header">{{deviceHardware.disk.length >= 1 ? deviceHardware.disk[0].name : 'Disk'}}</span>
+          <span class="header">{{diskName}}</span>
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
