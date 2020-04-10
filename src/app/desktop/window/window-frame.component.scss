@@ -21,6 +21,11 @@
     height: 94.5vh !important;
 
     border: none;
+    box-shadow: none;
+
+    .window-header {
+      border-radius: 0;
+    }
   }
 }
 
