@@ -21,12 +21,24 @@ describe('TaskManagerComponent', () => {
 
     hardwareService = jasmine.createSpyObj('HardwareService', ['getDeviceParts']);
     const hardware = new DeviceHardware();
+    hardware.cpu.push({
+      name: '',
+      cores: 0,
+      frequencyMax: 0,
+      frequencyMin: 0,
+      id: 0,
+      maxTemperature: 0,
+      overClock: false,
+      power: 0,
+      socket: '',
+      turboSpeed: false
+    });
     hardware.ram.push({
-      'name': 'test',
-      'ramSize': 14,
-      'ramTyp': 'testType',
-      'frequency': 0,
-      'power': 0
+      id: 156,
+      ramSize: 987,
+      ramTyp: ['test-type', 4],
+      frequency: 123,
+      power: 321,
     });
     hardwareService.getDeviceParts.and.returnValue(rxjs.of(hardware));
 
@@ -62,7 +74,7 @@ describe('TaskManagerComponent', () => {
       fixture.whenStable().then(() => {
         expect(webSocket.register_notification).toHaveBeenCalledWith('resource-usage');
 
-        notification_subject.next({ 'device_uuid': deviceUUID, data: { cpu: cpuUtilization } });
+        notification_subject.next({ 'device_uuid': deviceUUID, 'data': { cpu: cpuUtilization } });
         expect(component.utilization.cpu).toEqual(cpuUtilization);
       });
     }));
@@ -73,7 +85,7 @@ describe('TaskManagerComponent', () => {
     component.utilization.cpu = cpuUtilBefore;
 
     fixture.whenStable().then(() => {
-      notification_subject.next({ 'device_uuid': '32692145', data: { cpu: 236723 } });
+      notification_subject.next({ 'device_uuid': '32692145', 'data': { cpu: 236723 } });
       expect(component.utilization.cpu).toEqual(cpuUtilBefore);
     });
   }));

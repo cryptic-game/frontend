@@ -20,16 +20,18 @@ export class HardwareService {
       if (data != null && data['error'] == null) {
         this.hardwareAvailable = data;
         for (const partCategory of [
-          this.hardwareAvailable.mainboard,
-          this.hardwareAvailable.cpu,
-          this.hardwareAvailable.gpu,
-          this.hardwareAvailable.ram,
-          this.hardwareAvailable.disk,
-          this.hardwareAvailable.processorCooler,
-          this.hardwareAvailable.powerPack
+          data.mainboard,
+          data.cpu,
+          data.gpu,
+          data.ram,
+          data.disk,
+          data.processorCooler,
+          data.powerPack
         ]) {
-          for (const [name, part] of Object.entries(partCategory)) {
-            part.name = name;
+          if (partCategory) {
+            for (const [name, part] of Object.entries(partCategory)) {
+              part.name = name;
+            }
           }
         }
       }
