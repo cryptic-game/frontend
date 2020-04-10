@@ -30,6 +30,11 @@
             "styles": [
               "src/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/global-styles"
+              ]
+            },
             "scripts": []
           },
           "configurations": {
@@ -94,6 +99,11 @@
             "styles": [
               "src/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/global-styles"
+              ]
+            },
             "scripts": []
           }
         },
