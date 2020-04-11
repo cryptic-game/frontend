@@ -48,6 +48,7 @@ export class TerminalComponent extends WindowComponent
       )
     );
     this.getState().refreshPrompt();
+    this.focusCommandLine();
   }
 
   focusCommandLine() {
