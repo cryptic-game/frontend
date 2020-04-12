@@ -99,6 +99,8 @@ export class WindowFrameComponent implements OnInit {
     this.resizeDirection = this.checkResizeDirection(event.clientX, event.clientY, event.target as Element);
     if (this.resizeDirection !== 0) {
       this.resizing = true;
+      event.preventDefault();
+      event.stopImmediatePropagation();
       this.dragStartWindowPos = [this.delegate.position.x, this.delegate.position.y];
       this.dragStartPos = [event.clientX, event.clientY];
       this.resizeStartSize = [this.delegate.position.width, this.delegate.position.height];
