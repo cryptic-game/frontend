@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Type } from '@angular/core';
-import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
+import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { WebsocketService } from '../../../websocket.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
@@ -144,4 +144,12 @@ export class MinerWindowDelegate extends WindowDelegate {
   title = 'Miner';
   icon = 'assets/desktop/img/morphcoin_dark.svg';
   type: Type<any> = MinerComponent;
+
+  constraints = new WindowConstraints({ resizable: false, maximizable: false });
+
+  constructor() {
+    super();
+    this.position.width = 450;
+    this.position.height = 360;
+  }
 }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
+import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { WebsocketService } from '../../../websocket.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -79,9 +79,11 @@ export class TaskManagerWindowDelegate extends WindowDelegate {
   icon = '../../assets/desktop/img/task-manager.svg';
   type = TaskManagerComponent;
 
+  constraints = new WindowConstraints({ minWidth: 400, minHeight: 350 });
+
   constructor() {
     super();
-    this.position.height = 500;
+    this.position.height = 550;
   }
 }
 

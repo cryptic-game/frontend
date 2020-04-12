@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, Type, ViewChild } from '@angular/core';
 
-import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
+import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { HardwareShopService } from './hardware-shop.service';
 import { Category } from './category';
 
@@ -54,4 +54,6 @@ export class HardwareShopWindowDelegate extends WindowDelegate {
   title = 'Hardware-Shop';
   icon = 'assets/desktop/img/hardware-shop.svg';
   type: Type<any> = HardwareShopComponent;
+
+  constraints = new WindowConstraints({ minWidth: 485, minHeight: 325 });
 }

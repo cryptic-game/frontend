@@ -6,18 +6,35 @@ export abstract class WindowDelegate {
   abstract icon: string;
   abstract type: Type<WindowComponent>;
 
+  constraints: WindowConstraints = new WindowConstraints();
+
   component: WindowComponent;
 
   position: WindowPosition = {
     x: 0,
     y: 0,
-    width: 600,
-    height: 400,
+    width: Math.min(Math.max(600, this.constraints.minWidth), this.constraints.maxWidth),
+    height: Math.min(Math.max(400, this.constraints.minHeight), this.constraints.maxHeight),
     zIndex: 1,
     active: false,
     maximized: false,
     minimized: false
   };
+}
+
+export class WindowConstraints {
+  constructor(constraints: Partial<WindowConstraints> = {}) {
+    Object.assign(this, constraints);
+  }
+
+  resizable = true;
+  maximizable = true;
+
+  minWidth = 300;
+  minHeight = 150;
+
+  maxWidth = 2 ** 15;
+  maxHeight = 2 ** 15;
 }
 
 export interface WindowPosition {

@@ -1,5 +1,5 @@
 import { Component, OnInit, Type } from '@angular/core';
-import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
+import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { WalletAppService } from './wallet-app.service';
 import { Wallet } from './wallet';
 import { interval } from 'rxjs';
@@ -79,4 +79,6 @@ export class WalletAppWindowDelegate extends WindowDelegate {
   title = 'Wallet';
   icon = 'assets/desktop/img/wallet_app.svg';
   type: Type<any> = WalletAppComponent;
+
+  constraints = new WindowConstraints({ minWidth: 485, minHeight: 325 });
 }

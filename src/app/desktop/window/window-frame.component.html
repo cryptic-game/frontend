@@ -11,7 +11,8 @@
       <svg (click)="minimize()" class="minimize-icon" height="20" stroke="white" width="20">
         <line stroke-width="2" x1="2" x2="18" y1="15" y2="15"></line>
       </svg>
-      <svg (click)="maximize()" class="maximize-icon" height="20" stroke="white" width="20">
+      <svg (click)="maximize()" *ngIf="delegate.constraints.maximizable" class="maximize-icon" height="20"
+           stroke="white" width="20">
         <rect fill="transparent" height="16" stroke-width="2" width="16" x="2" y="2"></rect>
       </svg>
       <svg (click)="close()" class="close-icon" height="20" stroke="white" width="20">
