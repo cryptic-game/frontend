@@ -145,7 +145,7 @@ export class MinerWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/morphcoin_dark.svg';
   type: Type<any> = MinerComponent;
 
-  constraints = new WindowConstraints({ resizable: false, maximizable: false });
+  constraints = new WindowConstraints({ singleInstance: true, resizable: false, maximizable: false });
 
   constructor() {
     super();

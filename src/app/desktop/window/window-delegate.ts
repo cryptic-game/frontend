@@ -27,6 +27,8 @@ export class WindowConstraints {
     Object.assign(this, constraints);
   }
 
+  singleInstance = false;
+
   resizable = true;
   maximizable = true;
 
