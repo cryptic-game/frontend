@@ -4,7 +4,7 @@
   "dataGroups": [
     {
       "name": "api-performance",
-      "urls": ["ws.test.cryptic-game.net"],
+      "urls": ["ws.test.cryptic-game.net", "ws.cryptic-game.net"],
       "cacheConfig": {
         "strategy": "performance",
         "maxSize": 100,
