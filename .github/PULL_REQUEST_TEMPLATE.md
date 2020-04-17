@@ -33,7 +33,7 @@ The title should have the following format:
 <!--- Please put an `x` in the box of the according type of change -->
 
 - [ ] Bug fix
-- [ ] Feature request
+- [ ] New feature
 - [ ] Documenting code
 
 ## Checklists

@@ -1,0 +1,32 @@
+div.cart {
+  display: flex;
+  flex-direction: column;
+
+  div.title {
+    display: flex;
+    justify-content: space-between;
+
+    border-bottom: 2px solid lighten(#000000, 10%);
+
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+
+    h1 {
+      font-size: 22px;
+      margin: 0;
+    }
+
+    div.control {
+      display: flex;
+      align-items: center;
+
+      span {
+        margin-left: 10px;
+      }
+    }
+  }
+
+  hr {
+    width: 100%;
+  }
+}

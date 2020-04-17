@@ -1,0 +1,52 @@
+@import "variables";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  min-height: 70%;
+
+  form {
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      width: 320px;
+
+      input {
+        border: none;
+        outline: none;
+      }
+
+      input[type=text] {
+        border-bottom: 1px solid $red;
+        background-color: transparent;
+        padding: 3px;
+        width: 200px;
+
+        &.correct {
+          border-color: $green;
+        }
+      }
+
+      input[type=submit] {
+        width: 100%;
+        padding: 5px;
+      }
+    }
+  }
+
+  p.error {
+    color: $red;
+  }
+}
