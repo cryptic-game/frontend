@@ -1,8 +1,8 @@
 {
   "name": "Cryptic - Hacker Browser Game",
   "short_name": "Cryptic",
-  "theme_color": "##37654D",
-  "background_color": "##37654D",
+  "theme_color": "#1F271B",
+  "background_color": "#347552",
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
