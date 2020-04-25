@@ -5,7 +5,6 @@
     <input [formControl]="walletControl" id="miner-wallet" placeholder="Wallet UUID" type="text">
     <span *ngIf="errorMessage" class="error-message">{{errorMessage}}</span>
   </div>
-  {{wallet}}
   <div *ngIf="wallet" id="miner-window">
     <div class="miner-power">
       <label>
@@ -13,10 +12,12 @@
       </label>
       <span class="miner-power-value">{{power ? power + '%' : 'Deactivated'}}</span>
     </div>
-    <div *ngIf="active" id="miner-state">
-      {{miningRate}} MC/s
-      <br>
-      {{miningRate * 60 * 60 * 24}} MC/d
+    <div *ngIf="active" class="miner-state">
+     <span>
+       {{miningRate}} MC/s
+       <br>
+       {{miningRate * 60 * 60 * 24}} MC/d
+     </span>
     </div>
   </div>
 </div>

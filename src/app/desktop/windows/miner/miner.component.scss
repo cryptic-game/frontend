@@ -1,4 +1,4 @@
-@import "~src/constants";
+@import "src/global-styles/variables";
 
 :host {
   flex-basis: 100%;
@@ -12,7 +12,6 @@
   flex-direction: column;
 
   div.miner-container {
-
     padding: 2rem;
 
     div.miner-wallet-control {
@@ -21,7 +20,8 @@
 
       label {
         color: #fff;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.8rem;
+        text-align: center;
       }
 
       input {
@@ -29,7 +29,9 @@
         padding: 0.5rem;
         background-color: transparent;
         color: #fff;
-        border: 0.1rem solid #fff;
+        border: 0.1rem solid #b6b6b6;
+        font-size: 1rem;
+        font-family: $default-font;
       }
 
       span.error-message {
@@ -45,6 +47,7 @@
       flex-direction: row;
       width: 100%;
       justify-content: center;
+      margin-top: 1rem;
 
       label {
         flex-grow: 1;
@@ -79,138 +82,10 @@
       }
     }
 
-    #miner-window {
-      padding: 10px;
-    }
-
-    #miner-control {
-      margin-top: 5%;
-      margin-bottom: 15%;
-    }
-
-    #switch {
-      float: left;
-    }
-
-    #state {
-      font-size: 1.5rem;
-      float: right;
-      color: white;
-    }
-
-    #miner-power {
-      margin-bottom: 5%;
-    }
-
-    #miner-power h4 {
-      text-align: center;
-      color: $window_font_color;
-    }
-
-    #miner-state {
-      text-align: center;
+    div.miner-state {
       font-size: 2rem;
       color: $window_font_color;
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 60px;
-      height: 34px;
-
-      input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgb(197, 0, 0);
-      -webkit-transition: 0.4s;
-      transition: 0.4s;
-
-      &:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: $white;
-        -webkit-transition: 0.4s;
-        transition: 0.4s;
-      }
-    }
-
-    input:checked + .slider {
-      background-color: $green;
-    }
-
-    input:focus + .slider {
-      box-shadow: 0 0 1px $green;
-    }
-
-    input:checked + .slider:before {
-      -webkit-transform: translateX(26px);
-      -ms-transform: translateX(26px);
-      transform: translateX(26px);
-    }
-
-    .slider.round {
-      border-radius: 34px;
-    }
-
-    .slider.round:before {
-      border-radius: 50%;
-    }
-
-    .range {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 15px;
-      border-radius: 5px;
-      background: $gray;
-      outline: none;
-      opacity: 0.7;
-      -webkit-transition: 0.2s;
-      transition: opacity 0.2s;
-    }
-
-    .range::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      background: $green;
-      cursor: pointer;
-    }
-
-    .range::-moz-range-thumb {
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      background: $green;
-      cursor: pointer;
-    }
-
-    .range:disabled::-moz-range-thumb {
-      background: $gray !important;
-      cursor: not-allowed;
-    }
-
-    .range:disabled::-webkit-slider-thumb {
-      background: $gray !important;
-      cursor: not-allowed;
+      text-align: center;
     }
   }
-
 }

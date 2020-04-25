@@ -166,15 +166,15 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
 }
 
 export class MinerWindowDelegate extends WindowDelegate {
-  title = 'Miner';
-  icon = 'assets/desktop/img/morphcoin_dark.svg';
-  type: Type<any> = MinerComponent;
+  public title = 'Miner';
+  public icon = 'assets/desktop/img/morphcoin_dark.svg';
+  public type: Type<any> = MinerComponent;
 
-  constraints = new WindowConstraints({ singleInstance: true, resizable: false, maximizable: false });
+  public constraints = new WindowConstraints({ singleInstance: true, resizable: false, maximizable: false });
 
   constructor() {
     super();
     this.position.width = 450;
-    this.position.height = 360;
+    this.position.height = 320;
   }
 }
