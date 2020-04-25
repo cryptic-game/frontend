@@ -21,7 +21,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   gpu: { name?: string, frequency: number } = { name: '', frequency: 0 };
   ram = { totalMemory: 0, type: '' };
   diskName = '';
-  utilization: Utilization = new Utilization();
+  utilization: DeviceUtilization = new DeviceUtilization();
 
   constructor(private webSocket: WebsocketService, private hardwareService: HardwareService) {
     super();
@@ -86,13 +86,4 @@ export class TaskManagerWindowDelegate extends WindowDelegate {
     super();
     this.position.height = 550;
   }
-}
-
-class Utilization {
-  cpu = 0;
-  gpu = 0;
-  ram = 0;
-  disk = 0;
-  network = 0;
-  // temperature = 0;  // later
 }
