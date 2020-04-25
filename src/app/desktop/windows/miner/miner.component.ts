@@ -77,7 +77,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
       this.websocketService.ms('service', ['miner', 'get'], {
         'service_uuid': this.miner.uuid,
       }).subscribe(data => {
-        this.setWallet(data['wallet'], true);
+        this.setWallet(data['wallet']);
         this.started = data['started'];
         this.setPower(Math.round(data['power'] * 100));
         this.active = this.power > 0 && this.started != null;
@@ -133,7 +133,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
         'service_uuid': this.miner.uuid,
         'power': power / 100,
       }).subscribe((data: { power: number }) => {
-        this.setPower(Math.round(data.power * 100));
+        this.setPower(Math.round(data.power * 100), false);
         this.websocketService.ms('service', ['private_info'], {
           'device_uuid': this.miner.device,
           'service_uuid': this.miner.uuid
@@ -151,16 +151,18 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
     setTimeout(() => this.errorMessage = undefined, 5000);
   }
 
-  private setWallet(uuid: string, syncSlider: boolean = false): void {
+  private setWallet(uuid: string): void {
     this.wallet = uuid;
-    if (uuid && syncSlider) {
+    if (uuid) {
       this.walletControl.setValue(uuid, { emitEvent: false });
     }
   }
 
-  private setPower(power: number): void {
+  private setPower(power: number, syncSlider: boolean = true): void {
     this.power = power;
-    this.minerPower.setValue(power, { emitEvent: false });
+    if (syncSlider) {
+      this.minerPower.setValue(power, { emitEvent: false });
+    }
   }
 }
 

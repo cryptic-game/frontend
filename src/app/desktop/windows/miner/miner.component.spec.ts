@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MinerComponent } from './miner.component';
 
 describe('MinerComponent', () => {
@@ -10,7 +10,7 @@ describe('MinerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [MinerComponent],
-      imports: [FormsModule],
+      imports: [ReactiveFormsModule],
     }).compileComponents();
   }));
 
