@@ -153,7 +153,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
 
   private setWallet(uuid: string, slider?: boolean): void {
     this.wallet = uuid;
-    if (uuid && slider) {
+    if (uuid && !slider) {
       this.walletControl.setValue(uuid, { emitEvent: false });
     }
   }
