@@ -1,10 +1,10 @@
-@import "src/global-styles/variables";
+@import "variables";
 
 :host {
   flex-basis: 100%;
   width: 100%;
   height: 100%;
-  background-color: $window_background;
+  background-color: $window-background;
   user-select: none;
   overflow: auto;
 
@@ -103,7 +103,7 @@
 
     div.miner-state {
       font-size: 2rem;
-      color: $window_font_color;
+      color: $window-font-color;
       text-align: center;
     }
   }
