@@ -1,46 +1,78 @@
 import { Injectable } from '@angular/core';
-import { webSocket } from 'rxjs/webSocket';
-import { first } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import { catchError, first, map } from 'rxjs/operators';
+import { Observable, of, Subject, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
+import { v4 as randomUUID } from 'uuid';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
 
-  private socket;
-  public online = 0;
+  public onlinePlayers = 0;
+
+  private socketSubject: WebSocketSubject<any>;
   private open = {};
   private notification_subjects: { [notify_id: string]: Subject<Notification> } = {};
+  private connectedOnce = false;
+  private keepAliveHandle: any;
 
   constructor() {
     this.init();
+    console.log(this);
   }
 
-  public init() {
-    this.socket = webSocket(environment.api);
-    this.socket.subscribe(
-      (message) => this.receive(message),
-      (error) => console.error(error));
+  init() {
+    // rxjs webSocket automatically reconnects when subscribed again, so no need to recreate
+    if (!this.socketSubject) {
+      this.socketSubject = webSocket({
+        url: environment.api,
+        openObserver: {
+          next: () => {
+            if (this.connectedOnce) {
+              console.log('Reconnected to the server.');
+            } else {
+              this.connectedOnce = true;
+            }
 
-    setInterval(() => {
-      this.send({
-        'action': 'info'
+            clearInterval(this.keepAliveHandle);
+            this.keepAliveHandle = setInterval(() => {
+              this.socketSubject.next({
+                'action': 'info'
+              });
+            }, 1000 * 30);
+          }
+        },
+        closeObserver: {
+          next: (event) => {
+            if (event.code !== 4000) {
+              console.log('Lost connection to the server. Trying to reconnect in 10 seconds.');
+              setTimeout(this.init.bind(this), 10000);
+              clearInterval(this.keepAliveHandle);
+              this.keepAliveHandle = null;
+            }
+          }
+        }
       });
-    }, 1000 * 30);
+    }
+
+    this.socketSubject.subscribe({
+      next: this.handleMessage.bind(this),
+      error: console.error
+    });
   }
 
-  private send(json) {
-    this.socket.next(json);
+  close() {
+    this.socketSubject.error({ code: 4000, reason: 'client-close' });
   }
 
-  public request(json) {
-    this.send(json);
-    return this.socket.pipe(first());
+  reconnect() {
+    this.close();
+    this.init();
   }
 
-  public register_notification(notify_id: string): Subject<Notification> {
+  subscribe_notification(notify_id: string): Subject<Notification> {
     if (this.notification_subjects[notify_id] != null) {
       return this.notification_subjects[notify_id];
     }
@@ -50,55 +82,47 @@ export class WebsocketService {
     return subject;
   }
 
-  public close() {
-    this.socket.complete();
+  request(json): Observable<any> {
+    this.socketSubject.next(json);
+    return this.socketSubject.pipe(first());  // this will soon get tags too
   }
 
-  public reconnect() {
-    this.close();
-    this.init();
-  }
-
-  private generateUUID() {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
+  ms(name, endpoint, data): Observable<any> {
+    const tag = randomUUID();
+    if (this.socketSubject.closed || this.socketSubject.hasError) {
+      return throwError(new Error('socket-closed'));
     }
 
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-      s4() + '-' + s4() + s4() + s4();
-  }
-
-  public ms(name, endpoint, data): Subject<any> {
-    const tag = this.generateUUID();
-
-    const payload = {
+    this.socketSubject.next({
       'ms': name,
       'endpoint': endpoint,
       'data': data,
       'tag': tag,
-    };
+    });
 
-    this.send(payload);
-
-    this.open[tag] = new Subject();
-    return this.open[tag];
+    return this.open[tag] = new Subject();
   }
 
-  private receive(json) {
+  msPromise(name, endpoint, data): Promise<any> {
+    return this.ms(name, endpoint, data).toPromise();
+  }
+
+  private handleMessage(json) {
     if (json['error'] != null) {
       this.open = {};
     } else if (json['online'] != null) {
-      this.online = json['online'];
+      this.onlinePlayers = json['online'];
     } else if (json['tag'] != null && json['data'] != null) {
       const tag = json['tag'];
 
       if (this.open[tag] != null) {
         this.open[tag].next(json['data']);
+        this.open[tag].complete();
+        delete this.open[tag];
       }
     } else if (json['notify-id'] != null && json['data'] != null) {
       const subject = this.notification_subjects[json['notify-id']];
+
       if (subject != null) {
         subject.next({ data: json['data'], device_uuid: json['device_uuid'], origin: json['origin'] });
       }

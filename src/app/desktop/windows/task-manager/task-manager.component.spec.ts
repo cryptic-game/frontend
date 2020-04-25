@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TaskManagerComponent, TaskManagerWindowDelegate } from './task-manager.component';
-import { DeviceHardware, HardwareService } from '../../../hardware/hardware.service';
+import { DeviceHardware, HardwareService } from '../../../api/hardware/hardware.service';
 import * as rxjs from 'rxjs';
 import { Subject } from 'rxjs';
 import { WebsocketService } from '../../../websocket.service';
@@ -14,10 +14,10 @@ describe('TaskManagerComponent', () => {
   let fixture: ComponentFixture<TaskManagerComponent>;
 
   beforeEach(async(() => {
-    webSocket = jasmine.createSpyObj('WebsocketService', ['ms', 'register_notification']);
+    webSocket = jasmine.createSpyObj('WebsocketService', ['ms', 'subscribe_notification']);
     webSocket.ms.and.returnValue(rxjs.of({}));
     notification_subject = new Subject();
-    webSocket.register_notification.and.returnValue(notification_subject);
+    webSocket.subscribe_notification.and.returnValue(notification_subject);
 
     hardwareService = jasmine.createSpyObj('HardwareService', ['getDeviceParts']);
     const hardware = new DeviceHardware();
@@ -72,7 +72,7 @@ describe('TaskManagerComponent', () => {
       component.deviceUUID = deviceUUID;
 
       fixture.whenStable().then(() => {
-        expect(webSocket.register_notification).toHaveBeenCalledWith('resource-usage');
+        expect(webSocket.subscribe_notification).toHaveBeenCalledWith('resource-usage');
 
         notification_subject.next({ 'device_uuid': deviceUUID, 'data': { cpu: cpuUtilization } });
         expect(component.utilization.cpu).toEqual(cpuUtilization);
