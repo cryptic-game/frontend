@@ -117,7 +117,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
       }).subscribe((walletData) => {
         if (!('error' in walletData)) {
           this.errorMessage = undefined;
-          this.setWallet(wallet);
+          this.setWallet(wallet, false);
           this.setPower(walletData.power);
           this.get();
         } else {
@@ -151,9 +151,9 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
     setTimeout(() => this.errorMessage = undefined, 5000);
   }
 
-  private setWallet(uuid: string): void {
+  private setWallet(uuid: string, slider?: boolean): void {
     this.wallet = uuid;
-    if (uuid) {
+    if (uuid && slider) {
       this.walletControl.setValue(uuid, { emitEvent: false });
     }
   }
