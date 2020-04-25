@@ -47,7 +47,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
       }
     });
 
-    this.minerPower.valueChanges.pipe(debounce(() => timer(300))).subscribe(data => {
+    this.minerPower.valueChanges.pipe(debounce(() => timer(500))).subscribe(data => {
       if (this.minerPower.valid) {
         this.update(data);
       } else {
@@ -117,7 +117,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
       }).subscribe((walletData) => {
         if (!('error' in walletData)) {
           this.errorMessage = undefined;
-          this.setWallet(wallet, false);
+          this.setWallet(wallet);
           this.setPower(walletData.power);
           this.get();
         } else {
@@ -151,9 +151,9 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
     setTimeout(() => this.errorMessage = undefined, 5000);
   }
 
-  private setWallet(uuid: string, slider?: boolean): void {
+  private setWallet(uuid: string): void {
     this.wallet = uuid;
-    if (uuid && !slider) {
+    if (uuid) {
       this.walletControl.setValue(uuid, { emitEvent: false });
     }
   }
