@@ -77,7 +77,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
       this.websocketService.ms('service', ['miner', 'get'], {
         'service_uuid': this.miner.uuid,
       }).subscribe(data => {
-        this.setWallet(data['wallet']);
+        this.setWallet(data['wallet'], true);
         this.started = data['started'];
         this.setPower(Math.round(data['power'] * 100));
         this.active = this.power > 0 && this.started != null;
@@ -151,9 +151,9 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
     setTimeout(() => this.errorMessage = undefined, 5000);
   }
 
-  private setWallet(uuid: string): void {
+  private setWallet(uuid: string, syncSlider: boolean = false): void {
     this.wallet = uuid;
-    if (uuid) {
+    if (uuid && syncSlider) {
       this.walletControl.setValue(uuid, { emitEvent: false });
     }
   }
