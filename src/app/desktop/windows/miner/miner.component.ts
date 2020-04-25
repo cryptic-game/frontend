@@ -5,7 +5,6 @@ import { FormControl, Validators } from '@angular/forms';
 import { Observable, timer } from 'rxjs';
 import { debounce, map } from 'rxjs/operators';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-miner',
   templateUrl: './miner.component.html',

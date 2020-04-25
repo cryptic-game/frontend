@@ -8,7 +8,7 @@
   <div *ngIf="wallet" id="miner-window">
     <div class="miner-power">
       <label>
-        <input type="range" [formControl]="minerPower" min="0" max="100" class="miner-power-range">
+        <input [formControl]="minerPower" class="miner-power-range" max="100" min="0" type="range">
       </label>
       <span class="miner-power-value">{{power ? power + '%' : 'Deactivated'}}</span>
     </div>
