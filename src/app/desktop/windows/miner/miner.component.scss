@@ -2,166 +2,109 @@
 
 :host {
   flex-basis: 100%;
-}
-
-#miner-window-container {
   width: 100%;
   height: 100%;
   background-color: $window-background;
   user-select: none;
   overflow: auto;
-}
 
-#miner-prepare {
-  text-align: center;
-  padding: 5%;
+  display: flex;
+  flex-direction: column;
 
-  input {
-    width: 98%;
-    padding: 1.5%;
-    outline: none;
-    color: $window-input-font-color;
-    background-color: $window-input-background;
+  div.miner-container {
+    padding: 2rem;
+
+    div.miner-wallet-control {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        color: #fff;
+        margin-bottom: 0.8rem;
+        text-align: center;
+      }
+
+      input {
+        outline: none;
+        padding: 0.5rem;
+        background-color: transparent;
+        color: #fff;
+        border: 0.1rem solid #b6b6b6;
+        font-size: 1rem;
+        font-family: $default-font;
+      }
+
+      span.error-message {
+        color: $red;
+        text-align: center;
+        margin-top: 1rem;
+        font-size: 1.2rem;
+      }
+    }
+
+    div.miner-power {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      justify-content: center;
+      margin-top: 1rem;
+
+      label {
+        flex-grow: 1;
+
+        input.miner-power-range {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 100%;
+          height: 15px;
+          border-radius: 5px;
+          background: $gray;
+          outline: none;
+          opacity: 0.7;
+          transition: opacity 0.2s;
+
+          &::-webkit-slider-thumb {
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: $green;
+            cursor: pointer;
+          }
+
+          &::-moz-range-thumb {
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: $green;
+            cursor: pointer;
+          }
+
+          &::-ms-thumb {
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: $green;
+            cursor: pointer;
+          }
+        }
+      }
+
+      span.miner-power-value {
+        color: #ffF;
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-left: 0.7rem;
+        line-height: 0.9;
+      }
+    }
+
+    div.miner-state {
+      font-size: 2rem;
+      color: $window-font-color;
+      text-align: center;
+    }
   }
-}
-
-#miner-window {
-  padding: 10px;
-}
-
-#miner-control {
-  margin-top: 5%;
-  margin-bottom: 15%;
-}
-
-#switch {
-  float: left;
-}
-
-#state {
-  font-size: 1.5rem;
-  float: right;
-  color: white;
-}
-
-#miner-power {
-  margin-bottom: 5%;
-}
-
-#miner-power h4 {
-  text-align: center;
-  color: $window-font-color;
-}
-
-#miner-state {
-  text-align: center;
-  font-size: 2rem;
-  color: $window-font-color;
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-
-  input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgb(197, 0, 0);
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-
-  &:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: $white;
-    -webkit-transition: 0.4s;
-    transition: 0.4s;
-  }
-}
-
-input:checked + .slider {
-  background-color: $green;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px $green;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-.range {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 15px;
-  border-radius: 5px;
-  background: $gray;
-  outline: none;
-  opacity: 0.7;
-  -webkit-transition: 0.2s;
-  transition: opacity 0.2s;
-}
-
-.range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: $green;
-  cursor: pointer;
-}
-
-.range::-moz-range-thumb {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: $green;
-  cursor: pointer;
-}
-
-.range:disabled::-moz-range-thumb {
-  background: $gray !important;
-  cursor: not-allowed;
-}
-
-.range:disabled::-webkit-slider-thumb {
-  background: $gray !important;
-  cursor: not-allowed;
-}
-
-#error-message {
-  margin-top: -2.5%;
-  margin-bottom: -5%;
-  color: $red;
-  text-align: center;
-  font-size: 1.5rem;
 }
