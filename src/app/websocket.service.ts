@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { catchError, first, map } from 'rxjs/operators';
-import { Observable, of, Subject, throwError } from 'rxjs';
+import { first, map } from 'rxjs/operators';
+import { Observable, Subject, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 import { v4 as randomUUID } from 'uuid';
 
@@ -20,7 +20,6 @@ export class WebsocketService {
 
   constructor() {
     this.init();
-    console.log(this);
   }
 
   init() {
@@ -84,7 +83,7 @@ export class WebsocketService {
 
   request(json): Observable<any> {
     this.socketSubject.next(json);
-    return this.socketSubject.pipe(first());  // this will soon get tags too
+    return this.socketSubject.pipe(first(), map(checkResponseError));  // this will soon get tags too
   }
 
   ms(name, endpoint, data): Observable<any> {
@@ -100,7 +99,7 @@ export class WebsocketService {
       'tag': tag,
     });
 
-    return this.open[tag] = new Subject();
+    return this.open[tag] = new Subject().pipe(map(checkResponseError));
   }
 
   msPromise(name, endpoint, data): Promise<any> {
@@ -129,6 +128,14 @@ export class WebsocketService {
     }
   }
 
+}
+
+function checkResponseError(obj) {
+  if (obj['error']) {
+    throw new Error(obj['error']);
+  } else {
+    return obj;
+  }
 }
 
 export interface Notification {

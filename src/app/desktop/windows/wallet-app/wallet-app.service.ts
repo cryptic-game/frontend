@@ -56,19 +56,14 @@ export class WalletAppService {
   }
 
   private loadWallet(uuid: string, key: string): Promise<any> {
-    return new Promise<any>((resolve => {
-      this.websocketService.ms('currency', ['get'], { source_uuid: uuid, key: key })
-        .subscribe(data => {
-          if ('error' in data) {
-            resolve(null);
-          } else {
-            resolve(data);
-          }
-        });
-      if (this.checkWalletUuidFormat(uuid) && this.checkWalletKeyFormat(key)) {
-      } else {
-        resolve(null);
-      }
-    }));
+    return this.websocketService.msPromise('currency', ['get'], { source_uuid: uuid, key: key })
+      .then(data => {
+        if (!this.checkWalletUuidFormat(uuid) || !this.checkWalletKeyFormat(key)) {
+          return null;
+        } else {
+          return data;
+        }
+      })
+      .catch(() => null);
   }
 }

@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit, Type } from '@angular/core';
 import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { WebsocketService } from '../../../websocket.service';
 import { FormControl, Validators } from '@angular/forms';
-import { Observable, timer } from 'rxjs';
-import { debounce, map } from 'rxjs/operators';
+import { Observable, of, timer } from 'rxjs';
+import { catchError, debounce, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-miner',
@@ -91,18 +91,19 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
         'device_uuid': this.activeDevice,
         'name': 'miner',
         'wallet_uuid': wallet,
-      }).pipe(map(createData => {
-        if (!('error' in createData)) {
+      }).pipe(
+        map(createData => {
           this.errorMessage = null;
 
           this.miner = createData;
           this.miningRate = createData.speed;
           this.setWallet(wallet);
           this.get();
-        } else {
+        }),
+        catchError(() => {
           this.setError('Invalid wallet');
-        }
-      }));
+          return of<void>();
+        }));
     }
     return undefined;
   }
@@ -115,14 +116,12 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
         'service_uuid': this.miner.uuid,
         'wallet_uuid': wallet,
       }).subscribe((walletData) => {
-        if (!('error' in walletData)) {
-          this.errorMessage = undefined;
-          this.setWallet(wallet);
-          this.setPower(walletData.power);
-          this.get();
-        } else {
-          this.setError('Invalid wallet');
-        }
+        this.errorMessage = undefined;
+        this.setWallet(wallet);
+        this.setPower(walletData.power);
+        this.get();
+      }, () => {
+        this.setError('Invalid wallet');
       });
     }
   }

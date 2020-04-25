@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AccountPageBaseComponent } from '../account-page-base/account-page-base.component';
 import { AccountService } from '../account.service';
 import * as rxjs from 'rxjs';
+import { throwError } from 'rxjs';
 
 describe('SignUpComponent', () => {
   let accountService;
@@ -121,7 +122,7 @@ describe('SignUpComponent', () => {
     } as any;
 
     const testError = 'This is a non-standard test error.';
-    accountService.signUp.and.returnValue(rxjs.of({ error: testError }));
+    accountService.signUp.and.callFake(() => throwError(new Error(testError)));
 
     component.signUp();
     expect(accountService.signUp).toHaveBeenCalled();
@@ -135,7 +136,7 @@ describe('SignUpComponent', () => {
     };
 
     for (const [errorName, translation] of Object.entries(knownErrors)) {
-      accountService.signUp.and.returnValue(rxjs.of({ error: errorName }));
+      accountService.signUp.and.callFake(() => throwError(new Error(errorName)));
       component.errorLive = 0;
 
       component.signUp();

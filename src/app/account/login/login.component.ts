@@ -38,18 +38,15 @@ export class LoginComponent {
       const value: { username: string, password: string } = this.form.value;
 
       this.accountService.login(value.username, value.password).subscribe(data => {
-        if (data.error) {
-          if (data.error === 'permissions denied') {
-            this.error = 'This username and password could not be found.';
-          } else {
-            this.error = data.error;
-          }
-
-          this.errorLive = 10;
-          return;
+        this.accountService.finalLogin(data.token);
+      }, error => {
+        if (error.message === 'permissions denied') {
+          this.error = 'This username and password could not be found.';
+        } else {
+          this.error = error.message;
         }
 
-        this.accountService.finalLogin(data.token);
+        this.errorLive = 10;
       });
     }
   }

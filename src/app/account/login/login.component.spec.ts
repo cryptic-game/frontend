@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AccountPageBaseComponent } from '../account-page-base/account-page-base.component';
 import { AccountService } from '../account.service';
 import * as rxjs from 'rxjs';
+import { throwError } from 'rxjs';
 
 describe('LoginComponent', () => {
   let accountService;
@@ -70,7 +71,7 @@ describe('LoginComponent', () => {
   it('#login() should set an error message if the server responds with an error', () => {
     component.form = { valid: true, value: { username: 'testUser', password: 'testPassword' } } as any;
 
-    accountService.login.and.returnValue(rxjs.of({ error: 'permissions denied' }));
+    accountService.login.and.callFake(() => throwError(new Error('permissions denied')));
 
     component.login();
     expect(accountService.login).toHaveBeenCalled();
@@ -79,7 +80,7 @@ describe('LoginComponent', () => {
     expect(component.errorLive).toEqual(10);
 
     const testError = 'This is a non-standard test error.';
-    accountService.login.and.returnValue(rxjs.of({ error: testError }));
+    accountService.login.and.callFake(() => throwError(new Error(testError)));
 
     component.login();
     expect(accountService.login).toHaveBeenCalled();

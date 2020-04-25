@@ -4,7 +4,7 @@ import { DesktopGuard } from './desktop.guard';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { WebsocketService } from '../websocket.service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 describe('DesktopGuard', () => {
   beforeEach(() => {
@@ -50,7 +50,7 @@ describe('DesktopGuard', () => {
     inject([DesktopGuard, WebsocketService], (guard: DesktopGuard, webSocket: WebsocketService) => {
       const testToken = '00000000-0000-0000-0000-000000000000';
       const getItemSpy = spyOn(localStorage, 'getItem').and.returnValue(testToken);
-      (webSocket.request as jasmine.Spy).and.returnValues(of({ error: 'unknown action' }), of({ token: testToken }));
+      (webSocket.request as jasmine.Spy).and.returnValues(throwError(new Error('unknown action')), of({ token: testToken }));
 
       const result = guard.canActivate(null, null) as Observable<boolean>;
       result.subscribe(allow => {
@@ -62,10 +62,9 @@ describe('DesktopGuard', () => {
 
   it('should remove the current token and navigate back to the login page if the login with the token failed',
     inject([DesktopGuard, WebsocketService, Router], (guard: DesktopGuard, webSocket: WebsocketService, router: Router) => {
-      (webSocket.request as jasmine.Spy).and.returnValue(of({ error: 'unknown action' }));
       const testToken = '00000000-0000-0000-0000-000000000000';
       spyOn(localStorage, 'getItem').and.returnValue(testToken);
-      (webSocket.request as jasmine.Spy).and.returnValues(of({ error: 'unknown action' }), of({ error: 'invalid_credentials' }));
+      (webSocket.request as jasmine.Spy).and.returnValues(throwError(new Error('unknown action')), throwError(new Error('invalid_credentials')));
 
       const result = guard.canActivate(null, null) as Observable<boolean>;
       result.subscribe(allow => {

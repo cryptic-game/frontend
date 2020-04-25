@@ -3,7 +3,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { FileService } from './file.service';
 import * as rxjs from 'rxjs';
 import { Observable } from 'rxjs';
-import { WebsocketService } from '../../../websocket.service';
+import { WebsocketService } from '../../websocket.service';
 import { File } from './file';
 import { Path } from './path';
 
@@ -74,24 +74,14 @@ describe('FileService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('#getFiles() should make a request to device/file/all ' +
-    'and throw an error if the response contains an error or else return files of the response',
+  it('#getFiles() should make a request to device/file/all and return files of the response',
     inject([FileService], (service: FileService) => {
       const data = ['123', '24536', '6342'] as any;
-      const testError = 'some_test_error';
       webSocket.ms.and.returnValue(rxjs.of({ files: data }));
 
       service.getFiles(testUUIDs[0], testUUIDs[1]).subscribe(files => {
         expect(files).toEqual(data);
         expect(webSocket.ms).toHaveBeenCalledWith('device', ['file', 'all'], { device_uuid: testUUIDs[0], parent_dir_uuid: testUUIDs[1] });
-      });
-
-      webSocket.ms.and.returnValue(rxjs.of({ error: testError }));
-
-      service.getFiles(testUUIDs[0], testUUIDs[1]).subscribe(() => {
-        fail('getFiles() unexpectedly returned a value instead of an error');
-      }, err => {
-        expect(err.message).toEqual(testError);
       });
     })
   );
@@ -150,24 +140,15 @@ describe('FileService', () => {
     })
   );
 
-  it('#getFile() should make a request to device/file/info ' +
-    'and throw an error if the response contains an error or else return the response',
+  it('#getFile() should make a request to device/file/info and return the response',
     inject([FileService], (service: FileService) => {
       const data = { a: 'b', c: 'd', e: 'f', ghi: 'jkl' } as any;
-      const testError = 'some_test_error';
       webSocket.ms.and.returnValue(rxjs.of(data));
 
 
       service.getFile(testUUIDs[0], testUUIDs[1]).subscribe(response => {
         expect(response).toEqual(data);
         expect(webSocket.ms).toHaveBeenCalledWith('device', ['file', 'info'], { device_uuid: testUUIDs[0], file_uuid: testUUIDs[1] });
-      });
-
-      webSocket.ms.and.returnValue(rxjs.of({ error: testError }));
-
-      service.getFile(testUUIDs[0], testUUIDs[1]).subscribe(() => {
-      }, err => {
-        expect(err.message).toEqual(testError);
       });
     })
   );
@@ -194,12 +175,10 @@ describe('FileService', () => {
     })
   );
 
-  it('#move() should make a request to device/file/move ' +
-    'and throw an error if the response contains an error or else return the response',
+  it('#move() should make a request to device/file/move and return the response',
     inject([FileService], (service: FileService) => {
       const fileName = 'testfilename_xyz';
       const data = { a: 'b', c: 'd', e: 'f', ghi: 'jkl' } as any;
-      const testError = 'some_test_error';
       webSocket.ms.and.returnValue(rxjs.of(data));
 
       service.move(testUUIDs[0], testUUIDs[1], testUUIDs[2], fileName).subscribe(response => {
@@ -211,23 +190,13 @@ describe('FileService', () => {
           new_filename: fileName
         });
       });
-
-      webSocket.ms.and.returnValue(rxjs.of({ error: testError }));
-
-      service.move(testUUIDs[0], testUUIDs[1], testUUIDs[2], fileName).subscribe(() => {
-        fail('move() unexpectedly returned a value instead of an error');
-      }, err => {
-        expect(err.message).toEqual(testError);
-      });
     })
   );
 
-  it('#changeFileContent() should make a request to device/file/update ' +
-    'and throw an error if the response contains an error or else return the response',
+  it('#changeFileContent() should make a request to device/file/update and return the response',
     inject([FileService], (service: FileService) => {
       const fileContent = 'This is the content of a test file.';
       const data = { a: 'b', c: 'd', e: 'f', ghi: 'jkl' } as any;
-      const testError = 'some_test_error';
       webSocket.ms.and.returnValue(rxjs.of(data));
 
       service.changeFileContent(testUUIDs[0], testUUIDs[1], fileContent).subscribe(response => {
@@ -238,46 +207,26 @@ describe('FileService', () => {
           content: fileContent
         });
       });
-
-      webSocket.ms.and.returnValue(rxjs.of({ error: testError }));
-
-      service.changeFileContent(testUUIDs[0], testUUIDs[1], fileContent).subscribe(() => {
-        fail('changeFileContent() unexpectedly returned a value instead of an error');
-      }, err => {
-        expect(err.message).toEqual(testError);
-      });
     })
   );
 
-  it('#deleteFile() should make a request to device/file/delete ' +
-    'and throw an error if the response contains an error or else return the response',
+  it('#deleteFile() should make a request to device/file/delete and return the response',
     inject([FileService], (service: FileService) => {
       const data = { a: 'b', c: 'd', e: 'f', ghi: 'jkl' } as any;
-      const testError = 'some_test_error';
       webSocket.ms.and.returnValue(rxjs.of(data));
 
       service.deleteFile(testUUIDs[0], testUUIDs[1]).subscribe(response => {
         expect(response).toEqual(data);
         expect(webSocket.ms).toHaveBeenCalledWith('device', ['file', 'delete'], { device_uuid: testUUIDs[0], file_uuid: testUUIDs[1] });
       });
-
-      webSocket.ms.and.returnValue(rxjs.of({ error: testError }));
-
-      service.deleteFile(testUUIDs[0], testUUIDs[1]).subscribe(() => {
-        fail('deleteFile() unexpectedly returned a value instead of an error');
-      }, err => {
-        expect(err.message).toEqual(testError);
-      });
     })
   );
 
-  it('#createFile() should make a request to device/file/create with is_directory set to false ' +
-    'and throw an error if the response contains an error or else return the response',
+  it('#createFile() should make a request to device/file/create with is_directory set to false and return the response',
     inject([FileService], (service: FileService) => {
       const fileName = 'some_file_name';
       const fileContent = 'This is an example file content.';
       const data = { a: 'b', c: 'd', e: 'f', ghi: 'jkl' } as any;
-      const testError = 'some_test_error';
       webSocket.ms.and.returnValue(rxjs.of(data));
 
       service.createFile(testUUIDs[0], fileName, fileContent, testUUIDs[1]).subscribe(response => {
@@ -290,19 +239,10 @@ describe('FileService', () => {
           is_directory: false
         });
       });
-
-      webSocket.ms.and.returnValue(rxjs.of({ error: testError }));
-
-      service.createFile(testUUIDs[0], fileName, fileContent, testUUIDs[1]).subscribe(() => {
-        fail('createFile() unexpectedly returned a value instead of an error');
-      }, err => {
-        expect(err.message).toEqual(testError);
-      });
     })
   );
 
-  it('#createFile() should use Path.ROOT as default if parentUUID is not specified ' +
-    'and an empty string as default for the file content',
+  it('#createFile() should use Path.ROOT as default if parentUUID is not specified and an empty string as default for the file content',
     inject([FileService], (service: FileService) => {
       const fileName = 'example_file_name';
       service.createFile(testUUIDs[2], fileName);
@@ -316,12 +256,10 @@ describe('FileService', () => {
     })
   );
 
-  it('#createDirectory() should make a request to device/file/create with is_directory set to true and content set empty' +
-    'and throw an error if the response contains an error or else return the response',
+  it('#createDirectory() should make a request to device/file/create with is_directory set to true and content set empty and return the response',
     inject([FileService], (service: FileService) => {
       const dirName = 'some_directory_name';
       const data = { a: 'b', c: 'd', e: 'f', ghi: 'jkl' } as any;
-      const testError = 'some_test_error';
       webSocket.ms.and.returnValue(rxjs.of(data));
 
       service.createDirectory(testUUIDs[0], dirName, testUUIDs[1]).subscribe(response => {
@@ -333,14 +271,6 @@ describe('FileService', () => {
           parent_dir_uuid: testUUIDs[1],
           is_directory: true
         });
-      });
-
-      webSocket.ms.and.returnValue(rxjs.of({ error: testError }));
-
-      service.createDirectory(testUUIDs[0], dirName, testUUIDs[1]).subscribe(() => {
-        fail('createDirectory() unexpectedly returned a value instead of an error');
-      }, err => {
-        expect(err.message).toEqual(testError);
       });
     })
   );

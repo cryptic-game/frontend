@@ -1,11 +1,11 @@
 import { TerminalAPI, TerminalState } from './terminal-api';
 import { WebsocketService } from '../../../websocket.service';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SecurityContext } from '@angular/core';
 import { SettingsService } from '../settings/settings.service';
-import { FileService } from '../../api/files/file.service';
-import { Path } from '../../api/files/path';
+import { FileService } from '../../../api/files/file.service';
+import { Path } from '../../../api/files/path';
 import { of } from 'rxjs';
 
 
@@ -18,6 +18,9 @@ function escapeHtml(html) {
     .replace(/'/g, '&#039;');
 }
 
+function reportError(error) {
+  console.warn(new Error(error.message));
+}
 
 export abstract class CommandTerminalState implements TerminalState {
   abstract commands: { [name: string]: (args: string[]) => void };
@@ -103,7 +106,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   private static promptAppenderListener(evt: MouseEvent) {
     evt.stopPropagation();
-    const this_ = <HTMLElement>evt.target;
+    const this_ = evt.target as HTMLElement;
     const cmdline: HTMLInputElement = this_.closest('#terminal-window').querySelector('#cmdline');
     if (cmdline.selectionStart != null) {
       const startPos = cmdline.selectionStart;
@@ -179,28 +182,24 @@ export class DefaultTerminalState extends CommandTerminalState {
         device_uuid: this.activeDevice['uuid'],
         name: hostname
       }).subscribe(newDevice => {
-        if (newDevice['uuid'] != null && newDevice['name'] != null) {
-          this.activeDevice = newDevice;
-          this.refreshPrompt();
+        this.activeDevice = newDevice;
+        this.refreshPrompt();
 
-          if (this.activeDevice['uuid'] === JSON.parse(sessionStorage.getItem('activeDevice'))['uuid']) {
-            sessionStorage.setItem('activeDevice', JSON.stringify(newDevice));
-          }
-        } else {
-          this.terminal.outputText('The hostname couldn\'t be changed');
+        if (this.activeDevice['uuid'] === JSON.parse(sessionStorage.getItem('activeDevice'))['uuid']) {
+          sessionStorage.setItem('activeDevice', JSON.stringify(newDevice));
         }
+      }, () => {
+        this.terminal.outputText('The hostname couldn\'t be changed');
       });
     } else {
       this.websocket.ms('device', ['device', 'info'], { device_uuid: this.activeDevice['uuid'] }).subscribe(device => {
-        if (device['uuid'] == null || device['name'] == null) {
-          this.terminal.outputText(this.activeDevice['name']);
-        } else {
-          if (device['name'] !== this.activeDevice['name']) {
-            this.activeDevice = device;
-            this.refreshPrompt();
-          }
-          this.terminal.outputText(device['name']);
+        if (device['name'] !== this.activeDevice['name']) {
+          this.activeDevice = device;
+          this.refreshPrompt();
         }
+        this.terminal.outputText(device['name']);
+      }, () => {
+        this.terminal.outputText(this.activeDevice['name']);
       });
     }
   }
@@ -225,7 +224,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         if (error.message === 'file_not_found') {
           this.terminal.outputText('That directory does not exist');
         } else {
-          console.warn(error.message);
+          reportError(error);
         }
       });
     }
@@ -257,7 +256,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         if (error.message === 'file_not_found') {
           this.terminal.outputText('That directory does not exist');
         } else {
-          console.warn(error.message);
+          reportError(error);
         }
       });
     } else {
@@ -289,7 +288,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           if (err.message === 'file_already_exists') {
             this.terminal.outputText('That file already exists');
           } else {
-            console.warn(err.message);
+            reportError(err);
           }
         }
       });
@@ -318,7 +317,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         if (error.message === 'file_not_found') {
           this.terminal.outputText('That file does not exist');
         } else {
-          console.warn(error.message);
+          reportError(error);
         }
       });
     } else {
@@ -348,29 +347,28 @@ export class DefaultTerminalState extends CommandTerminalState {
           const uuid = walletCred[0];
           const key = walletCred[1];
           if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
-            this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(wallet => {
-              if (wallet.error == null) {
-                this.terminal.pushState(new YesNoTerminalState(this.terminal,
-                  '<span class="errorText">Are you sure you want to delete your wallet? [yes|no]</span>', answer => {
+            this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(() => {
+              this.terminal.pushState(
+                new YesNoTerminalState(
+                  this.terminal,
+                  '<span class="errorText">Are you sure you want to delete your wallet? [yes|no]</span>',
+                  answer => {
                     if (answer) {
-                      this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(r => {
-                        if (r.error == null) {
-                          this.websocket.ms('device', ['file', 'delete'], {
-                            device_uuid: this.activeDevice['uuid'],
-                            file_uuid: file.uuid
-                          });
-                        } else {
-                          this.terminal.output('<span class="errorText"">The wallet couldn\'t be deleted successfully. ' +
-                            'Please report this bug.</span>');
-                        }
+                      this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(() => {
+                        this.websocket.ms('device', ['file', 'delete'], {
+                          device_uuid: this.activeDevice['uuid'],
+                          file_uuid: file.uuid
+                        });
+                      }, error => {
+                        this.terminal.output('<span class="errorText"">The wallet couldn\'t be deleted successfully. ' +
+                          'Please report this bug.</span>');
+                        reportError(error);
                       });
                     }
-                  })
-                );
-              } else {
-                deleteFile();
-              }
-            });
+                  }
+                )
+              );
+            }, () => deleteFile());
           } else {
             deleteFile();
           }
@@ -381,7 +379,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         if (error.message === 'file_not_found') {
           this.terminal.outputText('That file does not exist');
         } else {
-          console.warn(error.message);
+          reportError(error);
         }
       });
     } else {
@@ -403,16 +401,17 @@ export class DefaultTerminalState extends CommandTerminalState {
       const deviceUUID = this.activeDevice['uuid'];
 
       this.fileService.getFromPath(deviceUUID, srcPath).subscribe(source => {
-        this.fileService.copyFile(source, destPath).subscribe(file => {
-        }, error => {
-          if (error.message === 'file_already_exists') {
-            this.terminal.outputText('That file already exists');
-          } else if (error.message === 'cannot_copy_directory') {
-            this.terminal.outputText('Cannot copy directories');
-          } else if (error.message === 'destination_not_found') {
-            this.terminal.outputText('The destination folder was not found');
-          } else {
-            console.warn(error.message);
+        this.fileService.copyFile(source, destPath).subscribe({
+          error: error => {
+            if (error.message === 'file_already_exists') {
+              this.terminal.outputText('That file already exists');
+            } else if (error.message === 'cannot_copy_directory') {
+              this.terminal.outputText('Cannot copy directories');
+            } else if (error.message === 'destination_not_found') {
+              this.terminal.outputText('The destination folder was not found');
+            } else {
+              reportError(error);
+            }
           }
         });
       }, error => {
@@ -452,7 +451,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             } else if (err.message === 'file_not_found') {
               this.terminal.outputText('The destination directory does not exist');
             } else {
-              console.warn(err.message);
+              reportError(err);
             }
           }
         });
@@ -460,7 +459,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         if (error.message === 'file_not_found') {
           this.terminal.outputText('That file does not exist');
         } else {
-          console.warn(error.message);
+          reportError(error);
         }
       });
 
@@ -497,7 +496,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             if (err.message === 'file_already_exists') {
               this.terminal.outputText('A file with the specified name already exists');
             } else {
-              console.warn(err.message);
+              reportError(err);
             }
           }
         });
@@ -505,7 +504,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         if (error.message === 'file_not_found') {
           this.terminal.outputText('That file does not exist');
         } else {
-          console.warn(error.message);
+          reportError(error);
         }
       });
 
@@ -532,7 +531,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           if (err.message === 'file_already_exists') {
             this.terminal.outputText('A file with the specified name already exists');
           } else {
-            console.warn(err.message);
+            reportError(err);
           }
         }
       });
@@ -582,11 +581,9 @@ export class DefaultTerminalState extends CommandTerminalState {
             const key = walletCred[1];
             if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
               this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(wallet => {
-                if (wallet.error == null) {
-                  this.terminal.outputText(wallet.amount / 1000 + ' morphcoin');
-                } else {
-                  this.terminal.outputText('That file is not connected with a wallet');
-                }
+                this.terminal.outputText(wallet.amount / 1000 + ' morphcoin');
+              }, () => {
+                this.terminal.outputText('That file is not connected with a wallet');
               });
             } else {
               this.terminal.outputText('That file is not a wallet file');
@@ -598,7 +595,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           if (error.message === 'file_not_found') {
             this.terminal.outputText('That file does not exist');
           } else {
-            console.warn(error.message);
+            reportError(error);
           }
         });
 
@@ -612,33 +609,33 @@ export class DefaultTerminalState extends CommandTerminalState {
           }, error => {
             if (error.message === 'file_not_found') {
               this.websocket.ms('currency', ['create'], {}).subscribe(wallet => {
-                if (wallet.error != null) {
-                  if (wallet.error === 'already_own_a_wallet') {
-                    this.terminal.outputText('You already own a wallet');
-                  } else {
-                    this.terminal.outputText(wallet.error);
-                  }
-                } else {
-                  const credentials = wallet.source_uuid + ' ' + wallet.key;
+                const credentials = wallet.source_uuid + ' ' + wallet.key;
 
-                  this.fileService.createFile(this.activeDevice['uuid'], path.path[path.path.length - 1], credentials, this.working_dir)
-                    .subscribe({
-                      error: () => {
-                        this.terminal.outputText('That file couldn\'t be created. Please note your wallet credentials ' +
-                          'and put them in a new file with \'touch\' or contact the support: \'' + credentials + '\'');
-                      }
-                    });
+                this.fileService.createFile(this.activeDevice['uuid'], path.path[path.path.length - 1], credentials, this.working_dir)
+                  .subscribe({
+                    error: err => {
+                      this.terminal.outputText('That file couldn\'t be created. Please note your wallet credentials ' +
+                        'and put them in a new file with \'touch\' or contact the support: \'' + credentials + '\'');
+                      reportError(err);
+                    }
+                  });
+              }, error1 => {
+                if (error1.message === 'already_own_a_wallet') {
+                  this.terminal.outputText('You already own a wallet');
+                } else {
+                  this.terminal.outputText(error1.message);
+                  reportError(error1);
                 }
               });
             } else {
-              console.warn(error.message);
+              reportError(error);
             }
           });
         }, error => {
           if (error.message === 'file_not_found') {
             this.terminal.outputText('That path does not exist');
           } else {
-            console.warn(error.message);
+            reportError(error);
           }
         });
       }
@@ -678,26 +675,21 @@ export class DefaultTerminalState extends CommandTerminalState {
             const uuid = walletCred[0];
             const key = walletCred[1];
             if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
-              this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(wallet => {
-                if (wallet.error != null) {
-                  this.terminal.outputText('That file is not connected with a wallet');
-                  return;
-                }
-
+              this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(() => {
                 this.websocket.ms('currency', ['send'], {
                   source_uuid: uuid,
                   key: key,
                   send_amount: Math.floor(parseFloat(amount) * 1000),
                   destination_uuid: receiver,
                   usage: usage
-                }).subscribe(response => {
-                    if (response.error == null) {
-                      this.terminal.outputText('Successfully sent ' + amount + ' to ' + receiver);
-                    } else {
-                      this.terminal.outputText(response.error);
-                    }
-                  }
-                );
+                }).subscribe(() => {
+                  this.terminal.outputText('Successfully sent ' + amount + ' to ' + receiver);
+                }, error => {
+                  this.terminal.outputText(error.message);
+                  reportError(error);
+                });
+              }, () => {
+                this.terminal.outputText('That file is not connected with a wallet');
               });
             } else {
               this.terminal.outputText('That file is not a wallet file');
@@ -709,7 +701,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           if (error.message === 'file_not_found') {
             this.terminal.outputText('That file does not exist');
           } else {
-            console.warn(error.message);
+            reportError(error);
           }
         });
       }
@@ -723,15 +715,10 @@ export class DefaultTerminalState extends CommandTerminalState {
 
     const getServices = () =>
       this.websocket.ms('service', ['list'], { device_uuid: activeDevice }).pipe(map(data => {
-        if (data['error'] != null) {
-          console.warn(data['error']);
-          return [];
-        } else if (!Array.isArray(data['services'])) {
-          console.warn(data);
-          return [];
-        } else {
-          return data['services'];
-        }
+        return data['services'];
+      }), catchError(error => {
+        reportError(error);
+        return [];
       }));
 
     const getService = name => getServices().pipe(map(services => {
@@ -750,11 +737,13 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.terminal.outputText('Unknown service. Available services: ' + services.join(', '));
         return;
       }
-      this.websocket.ms('service', ['create'], { name: service, device_uuid: activeDevice }).subscribe(data => {
-        if (data['error'] == null) {
-          this.terminal.outputText('Service was created');
+      this.websocket.ms('service', ['create'], { name: service, device_uuid: activeDevice }).subscribe(() => {
+        this.terminal.outputText('Service was created');
+      }, error => {
+        if (error === 'already_own_this_service') {
+          this.terminal.outputText('You already created this service');
         } else {
-          this.terminal.outputText('You already created this service');  // TODO: more detailed errors
+          reportError(error);
         }
       });
     } else if (args.length >= 1 && args[0] === 'list') {
@@ -800,41 +789,40 @@ export class DefaultTerminalState extends CommandTerminalState {
 
         this.websocket.ms('service', ['bruteforce', 'status'], {
           service_uuid: bruteforceService['uuid'], device_uuid: activeDevice
-        }).subscribe(statusData => {
-          if ('error' in statusData) {
-            if (statusData['error'] === 'attack_not_running') {
-              this.websocket.ms('service', ['bruteforce', 'attack'], {
-                service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
-                target_device: targetDevice, target_service: targetService
-              }).subscribe(attackData => {
-                if (attackData['ok'] === true) {
-                  this.terminal.outputText('You started a bruteforce attack');
-                  this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
-                    if (stop) {
-                      this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
-                    }
-                  }));
-                } else if (attackData['error'] === 'could_not_start_service') {
-                  this.terminal.outputText('There was an error while starting the bruteforce attack');
-                } else {
-                  console.warn(attackData);
-                }
-              });
+        }).subscribe(() => {
+          this.websocket.ms('service', ['bruteforce', 'stop'], {
+            service_uuid: bruteforceService['uuid'], device_uuid: activeDevice
+          }).subscribe(stopData => {
+            if (stopData['access'] === true) {
+              this.terminal.outputText('Access granted - use `connect <device>`');
             } else {
-              this.terminal.outputText('Error: ' + statusData['error']);
+              this.terminal.outputText('Access denied. The bruteforce attack was not successful');
             }
-          } else if ('uuid' in statusData) {
-            this.websocket.ms('service', ['bruteforce', 'stop'], {
-              service_uuid: bruteforceService['uuid'], device_uuid: activeDevice
-            }).subscribe(stopData => {
-              if (stopData['access'] === true) {
-                this.terminal.outputText('Access granted - use `connect <device>`');
-              } else {
-                this.terminal.outputText('Access denied. The bruteforce attack was not successful');
+          });
+        }, error => {
+          if (error.message === 'attack_not_running') {
+            this.websocket.ms('service', ['bruteforce', 'attack'], {
+              service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
+              target_device: targetDevice, target_service: targetService
+            }).subscribe(() => {
+                this.terminal.outputText('You started a bruteforce attack');
+                this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
+                  if (stop) {
+                    this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
+                  }
+                }));
+              }, error1 => {
+                if (error1.message === 'could_not_start_service') {
+                  this.terminal.outputText('There was an error while starting the bruteforce attack');
+                } else if (error1.message === 'invalid_input_data') {
+                  this.terminal.outputText('The specified UUID is not valid');
+                } else {
+                  reportError(error1);
+                }
               }
-            });
+            );
           } else {
-            this.terminal.outputText('Your attack couldn\'t be started');
+            reportError(error);
           }
         });
       });
@@ -875,7 +863,6 @@ export class DefaultTerminalState extends CommandTerminalState {
 
           this.terminal.outputNode(list);
           DefaultTerminalState.registerPromptAppenders(list);
-
         });
       });
     } else {
@@ -885,11 +872,6 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   spot() {
     this.websocket.ms('device', ['device', 'spot'], {}).subscribe(random_device => {
-      if (random_device['uuid'] == null) {
-        this.terminal.output('<span class="errorText">An error occurred</span>');
-        return;
-      }
-
       this.websocket.ms('service', ['list'], { 'device_uuid': this.activeDevice['uuid'] }).subscribe(localServices => {
         const portScanner = (localServices['services'] || []).filter(service => service.name === 'portscan')[0];
         if (portScanner == null || portScanner['uuid'] == null) {
@@ -905,11 +887,6 @@ export class DefaultTerminalState extends CommandTerminalState {
           'device_uuid': this.activeDevice['uuid'],
           'service_uuid': portScanner['uuid'], 'target_device': random_device['uuid']
         }).subscribe(remoteServices => {
-          if (remoteServices == null || remoteServices['services'] == null) {
-            this.terminal.output('<span class="errorText">An error occurred</span>');
-            return;
-          }
-
           this.terminal.outputText('\'' + escapeHtml(random_device['name']) + '\':');
           const list = document.createElement('ul');
           list.innerHTML = '<li>UUID: ' + DefaultTerminalState.promptAppender(random_device['uuid']) + '</li>' +
@@ -921,6 +898,10 @@ export class DefaultTerminalState extends CommandTerminalState {
             '</ul>';
           this.terminal.outputNode(list);
           DefaultTerminalState.registerPromptAppenders(list);
+        }, error => {
+          this.terminal.output('<span class="errorText">An error occurred</span>');
+          reportError(error);
+          return;
         });
       });
     });
@@ -933,17 +914,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     }
 
     this.websocket.ms('device', ['device', 'info'], { device_uuid: args[0] }).subscribe(infoData => {
-      if (infoData.error != null) {
-        this.terminal.outputText(infoData.error);
-        return;
-      }
-
       this.websocket.ms('service', ['part_owner'], { device_uuid: args[0] }).subscribe(partOwnerData => {
-        if (partOwnerData.error != null) {
-          this.terminal.outputText(partOwnerData.error);
-          return;
-        }
-
         const user_uuid = JSON.parse(sessionStorage.getItem('activeDevice'))['owner'];
         if (infoData['owner'] === user_uuid || partOwnerData['ok'] === true) {
           this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.fileService, this.domSanitizer,
@@ -951,7 +922,13 @@ export class DefaultTerminalState extends CommandTerminalState {
         } else {
           this.terminal.outputText('Access denied');
         }
+      }, error => {
+        this.terminal.outputText(error.message);
+        reportError(error);
       });
+    }, error => {
+      this.terminal.outputText(error.message);
+      reportError(error);
     });
   }
 
@@ -1021,31 +998,33 @@ export class DefaultTerminalState extends CommandTerminalState {
         };
 
         this.websocket.ms('network', ['invitations'], data).subscribe(invitationsData => {
-          if (!('error' in invitationsData) && invitationsData['invitations']) {
-            const invitations = invitationsData['invitations'];
+          const invitations = invitationsData['invitations'];
 
-            if (invitations.length === 0) {
-              this.terminal.outputText('No invitations found');
-            } else {
-              this.terminal.outputText('Found ' + invitations.length + ' invitations: ');
-
-              const element = document.createElement('div');
-              element.innerHTML = '';
-
-              invitations.forEach(invitation => {
-                this.websocket.ms('network', ['get'], { 'uuid': invitation['network'] }).subscribe(network => {
-                  element.innerHTML += '<br>Invitation: ' + '<span style="color: grey">' +
-                    DefaultTerminalState.promptAppender(invitation['uuid']) + '</span><br>' +
-                    'Network: ' + escapeHtml(network['name']) + '<br>' +
-                    'Owner: ' + '<span style="color: grey">' + DefaultTerminalState.promptAppender(network['owner']) + '</span><br>';
-                  DefaultTerminalState.registerPromptAppenders(element);
-                });
-              });
-
-              this.terminal.outputNode(element);
-            }
+          if (invitations.length === 0) {
+            this.terminal.outputText('No invitations found');
           } else {
+            this.terminal.outputText('Found ' + invitations.length + ' invitations: ');
+
+            const element = document.createElement('div');
+            element.innerHTML = '';
+
+            invitations.forEach(invitation => {
+              this.websocket.ms('network', ['get'], { 'uuid': invitation['network'] }).subscribe(network => {
+                element.innerHTML += '<br>Invitation: ' + '<span style="color: grey">' +
+                  DefaultTerminalState.promptAppender(invitation['uuid']) + '</span><br>' +
+                  'Network: ' + escapeHtml(network['name']) + '<br>' +
+                  'Owner: ' + '<span style="color: grey">' + DefaultTerminalState.promptAppender(network['owner']) + '</span><br>';
+                DefaultTerminalState.registerPromptAppenders(element);
+              });
+            });
+
+            this.terminal.outputNode(element);
+          }
+        }, error => {
+          if (error.message === 'no_permissions') {
             this.terminal.outputText('Access denied');
+          } else {
+            reportError(error);
           }
         });
 
@@ -1058,12 +1037,10 @@ export class DefaultTerminalState extends CommandTerminalState {
           device: this.activeDevice['uuid']
         };
 
-        this.websocket.ms('network', ['delete'], data).subscribe(deleteData => {
-          if (!('error' in deleteData) && deleteData['result']) {
-            this.terminal.outputText('Network deleted');
-          } else {
-            this.terminal.outputText('Access denied');
-          }
+        this.websocket.ms('network', ['delete'], data).subscribe(() => {
+          this.terminal.outputText('Network deleted');
+        }, () => {
+          this.terminal.outputText('Access denied');
         });
 
         return;
@@ -1074,19 +1051,17 @@ export class DefaultTerminalState extends CommandTerminalState {
         };
 
         this.websocket.ms('network', ['request'], data).subscribe(requestData => {
-          if (!('error' in requestData)) {
-            this.terminal.outputText('Request send:');
-            this.terminal.outputText(this.activeDevice['name'] + ' -> ' + requestData['network']);
+          this.terminal.outputText('Request sent:');
+          this.terminal.outputText(this.activeDevice['name'] + ' -> ' + requestData['network']);
+        }, error => {
+          if (error.message === 'network_not_found') {
+            this.terminal.outputText('Network not found: ' + args[1]);
+          } else if (error.message === 'already_member_of_network') {
+            this.terminal.outputText('You are already a member of this network');
+          } else if (error.message === 'invitation_already_exists') {
+            this.terminal.outputText('You already requested to enter this network');
           } else {
-            if (requestData['error'] === 'network_not_found') {
-              this.terminal.outputText('Network not found: ' + args[1]);
-            } else if (requestData['error'] === 'already_member_of_network') {
-              this.terminal.outputText('You are already a member of this network');
-            } else if (requestData['error'] === 'invitation_already_exists') {
-              this.terminal.outputText('You already requested to enter this network');
-            } else {
-              this.terminal.outputText('Access denied');
-            }
+            this.terminal.outputText('Access denied');
           }
         });
 
@@ -1097,31 +1072,29 @@ export class DefaultTerminalState extends CommandTerminalState {
         };
 
         this.websocket.ms('network', ['requests'], data).subscribe(requestsData => {
-          if (!('error' in requestsData) && requestsData['requests']) {
-            const requests = requestsData['requests'];
+          const requests = requestsData['requests'];
 
-            if (requests.length === 0) {
-              this.terminal.outputText('No requests found');
-            } else {
-              this.terminal.outputText('Found ' + requests.length + ' requests: ');
-
-              const element = document.createElement('div');
-              element.innerHTML = '';
-
-              requests.forEach(request => {
-                element.innerHTML += '<br>Request: <span style="color: grey;">' +
-                  DefaultTerminalState.promptAppender(request['uuid']) + '</span><br>' +
-                  'Device: <span style="color: grey;">' +
-                  DefaultTerminalState.promptAppender(request['device']) + '</span><br>';
-              });
-
-              this.terminal.outputNode(element);
-
-              DefaultTerminalState.registerPromptAppenders(element);
-            }
+          if (requests.length === 0) {
+            this.terminal.outputText('No requests found');
           } else {
-            this.terminal.outputText('Access denied');
+            this.terminal.outputText('Found ' + requests.length + ' requests: ');
+
+            const element = document.createElement('div');
+            element.innerHTML = '';
+
+            requests.forEach(request => {
+              element.innerHTML += '<br>Request: <span style="color: grey;">' +
+                DefaultTerminalState.promptAppender(request['uuid']) + '</span><br>' +
+                'Device: <span style="color: grey;">' +
+                DefaultTerminalState.promptAppender(request['device']) + '</span><br>';
+            });
+
+            this.terminal.outputNode(element);
+
+            DefaultTerminalState.registerPromptAppenders(element);
           }
+        }, () => {
+          this.terminal.outputText('Access denied');
         });
 
         return;
@@ -1130,15 +1103,13 @@ export class DefaultTerminalState extends CommandTerminalState {
           'uuid': args[1]
         };
 
-        this.websocket.ms('network', [args[0]], data).subscribe(updateData => {
-          if (!('error' in updateData) && updateData['result']) {
-            this.terminal.outputText(args[1] + ' -> ' + args[0]);
+        this.websocket.ms('network', [args[0]], data).subscribe(() => {
+          this.terminal.outputText(args[1] + ' -> ' + args[0]);
+        }, error => {
+          if (error.message === 'invitation_not_found') {
+            this.terminal.outputText('Invitation not found');
           } else {
-            if (updateData['error'] === 'invitation_not_found') {
-              this.terminal.outputText('Invitation not found');
-            } else {
-              this.terminal.outputText('Access denied');
-            }
+            this.terminal.outputText('Access denied');
           }
         });
 
@@ -1149,15 +1120,13 @@ export class DefaultTerminalState extends CommandTerminalState {
           'device': this.activeDevice['uuid']
         };
 
-        this.websocket.ms('network', ['leave'], data).subscribe(leaveData => {
-          if (!('error' in leaveData) && leaveData['result']) {
-            this.terminal.outputText('You left the network: ' + args[1]);
+        this.websocket.ms('network', ['leave'], data).subscribe(() => {
+          this.terminal.outputText('You left the network: ' + args[1]);
+        }, error => {
+          if (error.message === 'cannot_leave_own_network') {
+            this.terminal.outputText('You cannot leave your own network');
           } else {
-            if (leaveData['error'] === 'cannot_leave_own_network') {
-              this.terminal.outputText('You can not leave your own network');
-            } else {
-              this.terminal.outputText('Access denied');
-            }
+            this.terminal.outputText('Access denied');
           }
         });
 
@@ -1167,19 +1136,17 @@ export class DefaultTerminalState extends CommandTerminalState {
         data[args[0] === 'info' ? 'uuid' : 'name'] = args[1];
 
         this.websocket.ms('network', [args[0] === 'info' ? 'get' : 'name'], data).subscribe(getData => {
-          if (!('error' in getData)) {
-            const element = document.createElement('div');
-            element.innerHTML = 'UUID: <span style="color: grey;">' + DefaultTerminalState.promptAppender(getData['uuid']) + '</span><br>';
-            element.innerHTML += 'Name: ' + escapeHtml(getData['name']) + '<br>';
-            element.innerHTML += 'Hidden: ' + (getData['hidden'] ? 'private' : 'public') + '<br>';
-            element.innerHTML += 'Owner: <span style="color: grey;">' + DefaultTerminalState.promptAppender(getData['owner']) + '</span>';
+          const element = document.createElement('div');
+          element.innerHTML = 'UUID: <span style="color: grey;">' + DefaultTerminalState.promptAppender(getData['uuid']) + '</span><br>';
+          element.innerHTML += 'Name: ' + escapeHtml(getData['name']) + '<br>';
+          element.innerHTML += 'Hidden: ' + (getData['hidden'] ? 'private' : 'public') + '<br>';
+          element.innerHTML += 'Owner: <span style="color: grey;">' + DefaultTerminalState.promptAppender(getData['owner']) + '</span>';
 
-            this.terminal.outputNode(element);
+          this.terminal.outputNode(element);
 
-            DefaultTerminalState.registerPromptAppenders(element);
-          } else {
-            this.terminal.outputText('Network not found: ' + args[1]);
-          }
+          DefaultTerminalState.registerPromptAppenders(element);
+        }, () => {
+          this.terminal.outputText('Network not found: ' + args[1]);
         });
 
         return;
@@ -1189,32 +1156,30 @@ export class DefaultTerminalState extends CommandTerminalState {
         };
 
         this.websocket.ms('network', ['members'], data).subscribe(membersData => {
-          if (!('error' in membersData)) {
-            const members = membersData['members'];
+          const members = membersData['members'];
 
-            if (members != null && members.length > 0) {
-              this.terminal.outputText('Found ' + members.length + ' members: ');
-              this.terminal.outputText('');
+          if (members != null && members.length > 0) {
+            this.terminal.outputText('Found ' + members.length + ' members: ');
+            this.terminal.outputText('');
 
-              const element = document.createElement('div');
-              element.innerHTML = '';
+            const element = document.createElement('div');
+            element.innerHTML = '';
 
-              members.forEach(member => {
-                this.websocket.ms('device', ['device', 'info'], { 'device_uuid': member['device'] }).subscribe(deviceData => {
-                  element.innerHTML += ' <span style="color: grey">' + DefaultTerminalState.promptAppender(member['device']) + '</span> '
-                    + deviceData['name'] + '<br>';
-                });
+            members.forEach(member => {
+              this.websocket.ms('device', ['device', 'info'], { 'device_uuid': member['device'] }).subscribe(deviceData => {
+                element.innerHTML += ' <span style="color: grey">' + DefaultTerminalState.promptAppender(member['device']) + '</span> '
+                  + deviceData['name'] + '<br>';
               });
+            });
 
-              this.terminal.outputNode(element);
+            this.terminal.outputNode(element);
 
-              DefaultTerminalState.registerPromptAppenders(element);
-            } else {
-              this.terminal.outputText('This network has no members');
-            }
+            DefaultTerminalState.registerPromptAppenders(element);
           } else {
-            this.terminal.outputText('Access denied');
+            this.terminal.outputText('This network has no members');
           }
+        }, () => {
+          this.terminal.outputText('Access denied');
         });
 
         return;
@@ -1232,17 +1197,15 @@ export class DefaultTerminalState extends CommandTerminalState {
           };
 
           this.websocket.ms('network', ['create'], data).subscribe(createData => {
-            if (!('error' in createData)) {
-              this.terminal.outputText('Name: ' + createData['name']);
-              this.terminal.outputText('Visibility: ' + (createData['hidden'] ? 'private' : 'public'));
+            this.terminal.outputText('Name: ' + createData['name']);
+            this.terminal.outputText('Visibility: ' + (createData['hidden'] ? 'private' : 'public'));
+          }, error => {
+            if (error.message === 'invalid_name') {
+              this.terminal.outputText('Name is invalid: Use 5 - 20 characters');
+            } else if (error.message === 'name_already_in_use') {
+              this.terminal.outputText('Name already in use');
             } else {
-              if (createData['error'] === 'invalid_name') {
-                this.terminal.outputText('Name is invalid: Use 5 - 20 characters');
-              } else if (createData['error'] === 'name_already_in_use') {
-                this.terminal.outputText('Name already in use');
-              } else {
-                this.terminal.outputText('Access denied');
-              }
+              this.terminal.outputText('Access denied');
             }
           });
         } else {
@@ -1256,19 +1219,17 @@ export class DefaultTerminalState extends CommandTerminalState {
           'device': args[2]
         };
 
-        this.websocket.ms('network', ['invite'], data).subscribe(inviteData => {
-          if (!('error' in inviteData)) {
-            this.terminal.outputText(args[2] + ' invited to ' + args[1]);
+        this.websocket.ms('network', ['invite'], data).subscribe(() => {
+          this.terminal.outputText(args[2] + ' invited to ' + args[1]);
+        }, error => {
+          if (error.message === 'network_not_found') {
+            this.terminal.outputText('Network not found: ' + args[1]);
+          } else if (error.message === 'already_member_of_network') {
+            this.terminal.outputText('This device is already a member of this network');
+          } else if (error.message === 'invitation_already_exists') {
+            this.terminal.outputText('You already invited this device');
           } else {
-            if (inviteData['error'] === 'network_not_found') {
-              this.terminal.outputText('Network not found: ' + args[1]);
-            } else if (inviteData['error'] === 'already_member_of_network') {
-              this.terminal.outputText('This device is already a member of this network');
-            } else if (inviteData['error'] === 'invitation_already_exists') {
-              this.terminal.outputText('You already invited this device');
-            } else {
-              this.terminal.outputText('Access denied');
-            }
+            this.terminal.outputText('Access denied');
           }
         });
 
@@ -1285,14 +1246,16 @@ export class DefaultTerminalState extends CommandTerminalState {
         }
 
         this.websocket.ms('network', ['kick'], data).subscribe(kickData => {
-          if (!('error' in kickData) && kickData['result']) {
+          if (kickData['result']) {
             this.terminal.outputText('Kicked successfully');
           } else {
-            if (kickData['error'] === 'cannot_kick_owner') {
-              this.terminal.outputText('You can not kick the owner of the network');
-            } else {
-              this.terminal.outputText('Access denied');
-            }
+            this.terminal.outputText('The device is not a member of the network');
+          }
+        }, error => {
+          if (error.message === 'cannot_kick_owner') {
+            this.terminal.outputText('You cannot kick the owner of the network');
+          } else {
+            this.terminal.outputText('Access denied');
           }
         });
 
@@ -1315,7 +1278,6 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.terminal.outputText('network revoke <uuid> # revoke an invitation');
     this.terminal.outputText('network kick <uuid> <device> # kick device out of network');
     this.terminal.outputText('network create <name> <private|public>   # create a network');
-
   }
 
   info(args: string[]) {

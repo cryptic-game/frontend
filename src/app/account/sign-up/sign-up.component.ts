@@ -56,20 +56,17 @@ export class SignUpComponent {
       }
 
       this.accountService.signUp(value.username, value.email, value.password).subscribe(data => {
-        if (data.error) {
-          if (data.error === 'invalid email') {
-            this.error = 'The email address is not valid.';
-          } else if (data.error === 'username already exists') {
-            this.error = 'This username is already taken.';
-          } else {
-            this.error = data.error;
-          }
-
-          this.errorLive = 10;
-          return;
+        this.accountService.finalLogin(data.token);
+      }, error => {
+        if (error.message === 'invalid email') {
+          this.error = 'The email address is not valid.';
+        } else if (error.message === 'username already exists') {
+          this.error = 'This username is already taken.';
+        } else {
+          this.error = error.message;
         }
 
-        this.accountService.finalLogin(data.token);
+        this.errorLive = 10;
       });
     }
   }

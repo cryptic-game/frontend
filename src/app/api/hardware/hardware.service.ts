@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { WebsocketService } from '../websocket.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { WebsocketService } from '../../websocket.service';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import * as Parts from './hardware-parts';
 
 @Injectable({
@@ -17,24 +17,23 @@ export class HardwareService {
 
   updateParts() {
     this.webSocket.ms('device', ['hardware', 'list'], {}).subscribe((data: HardwareList) => {
-      if (data != null && data['error'] == null) {
-        this.hardwareAvailable = data;
-        for (const partCategory of [
-          data.mainboard,
-          data.cpu,
-          data.gpu,
-          data.ram,
-          data.disk,
-          data.processorCooler,
-          data.powerPack
-        ]) {
-          if (partCategory) {
-            for (const [name, part] of Object.entries(partCategory)) {
-              part.name = name;
-            }
+      this.hardwareAvailable = data;
+      for (const partCategory of [
+        data.mainboard,
+        data.cpu,
+        data.gpu,
+        data.ram,
+        data.disk,
+        data.processorCooler,
+        data.powerPack
+      ]) {
+        if (partCategory) {
+          for (const [name, part] of Object.entries(partCategory)) {
+            part.name = name;
           }
         }
       }
+    }, () => {
     });
   }
 
@@ -46,42 +45,40 @@ export class HardwareService {
     return this.webSocket.ms('device', ['device', 'info'], { device_uuid: device }).pipe(map(data => {
       const hardware = new DeviceHardware();
 
-      if (data['hardware'] instanceof Array) {
-        for (const { hardware_element, hardware_type } of data['hardware']) {
-          switch (hardware_type) {
-            case 'mainboard':
-              hardware.mainboard = this.hardwareAvailable.mainboard[hardware_element];
-              break;
-            case 'cpu':
-              hardware.cpu.push(this.hardwareAvailable.cpu[hardware_element]);
-              break;
-            case 'gpu':
-              hardware.gpu.push(this.hardwareAvailable.gpu[hardware_element]);
-              break;
-            case 'ram':
-              hardware.ram.push(this.hardwareAvailable.ram[hardware_element]);
-              break;
-            case 'disk':
-              hardware.disk.push(this.hardwareAvailable.disk[hardware_element]);
-              break;
-            case 'processorCooler':
-              hardware.processorCooler.push(this.hardwareAvailable.processorCooler[hardware_element]);
-              break;
-            case 'powerPack':
-              hardware.powerPack = this.hardwareAvailable.powerPack[hardware_element];
-              break;
-            case 'case':
-              hardware.case = hardware_element;
-              break;
-            default:
-              console.warn('Unknown hardware part type: ' + hardware_type);
-          }
+      for (const { hardware_element, hardware_type } of data['hardware']) {
+        switch (hardware_type) {
+          case 'mainboard':
+            hardware.mainboard = this.hardwareAvailable.mainboard[hardware_element];
+            break;
+          case 'cpu':
+            hardware.cpu.push(this.hardwareAvailable.cpu[hardware_element]);
+            break;
+          case 'gpu':
+            hardware.gpu.push(this.hardwareAvailable.gpu[hardware_element]);
+            break;
+          case 'ram':
+            hardware.ram.push(this.hardwareAvailable.ram[hardware_element]);
+            break;
+          case 'disk':
+            hardware.disk.push(this.hardwareAvailable.disk[hardware_element]);
+            break;
+          case 'processorCooler':
+            hardware.processorCooler.push(this.hardwareAvailable.processorCooler[hardware_element]);
+            break;
+          case 'powerPack':
+            hardware.powerPack = this.hardwareAvailable.powerPack[hardware_element];
+            break;
+          case 'case':
+            hardware.case = hardware_element;
+            break;
+          default:
+            console.warn('Unknown hardware part type: ' + hardware_type);
         }
-      } else {
-        console.warn('Unknown device info response: ' + data);
       }
 
       return hardware;
+    }), catchError(() => {
+      return of(new DeviceHardware());
     }));
   }
 
@@ -114,6 +111,10 @@ export class DeviceHardware {
     'totalPower': 0
   };
   'case': string;
+
+  getTotalMemory(): number {
+    return this.ram.reduce((previousValue, currentValue) => previousValue + currentValue.ramSize, 0);
+  }
 }
 
 export class HardwareList {

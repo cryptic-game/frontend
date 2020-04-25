@@ -1,8 +1,9 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { DeviceHardware, HardwareList, HardwareService } from './hardware.service';
-import { WebsocketService } from '../websocket.service';
+import { WebsocketService } from '../../websocket.service';
 import * as rxjs from 'rxjs';
+import { throwError } from 'rxjs';
 
 describe('HardwareService', () => {
   let webSocket;
@@ -44,11 +45,8 @@ describe('HardwareService', () => {
 
   it('#updateParts() should call /hardware/list and do nothing if there was an error',
     inject([HardwareService], (service: HardwareService) => {
-      const data = {
-        error: 'Test error'
-      };
       service.hardwareAvailable = null;
-      const msSpy = webSocket.ms.and.returnValue(rxjs.of(data));
+      const msSpy = webSocket.ms.and.callFake(() => throwError(new Error('Test error')));
 
       service.updateParts();
       expect(service.hardwareAvailable).toEqual(null);
@@ -125,13 +123,11 @@ describe('HardwareService', () => {
 
   it('#getDeviceParts() should return an empty new DeviceHardware if the response from /device/info is invalid',
     inject([HardwareService], (service: HardwareService) => {
-      const msSpy = webSocket.ms.and.returnValue(rxjs.of({ 'error': 'Test error' }));
-      spyOn(console, 'warn');
+      const msSpy = webSocket.ms.and.callFake(() => throwError(new Error(('Test error'))));
 
       service.getDeviceParts('00000000-0000-0000-0000-000000000000').subscribe(data => {
         expect(msSpy).toHaveBeenCalled();
         expect(data).toEqual(new DeviceHardware());
-        expect(console.warn).toHaveBeenCalled();
       });
     }));
 

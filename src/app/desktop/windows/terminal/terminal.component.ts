@@ -6,7 +6,7 @@ import { WindowManagerService } from '../../window-manager/window-manager.servic
 import { DefaultTerminalState } from './terminal-states';
 import { WebsocketService } from '../../../websocket.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { FileService } from '../../api/files/file.service';
+import { FileService } from '../../../api/files/file.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({

@@ -65,7 +65,7 @@ export class HardwareShopService {
 
   public removeCartItem(item: HardwarePart): void {
     item.containsInCart = false;
-    this.setCartItems(this.getCartItems().filter(function (ele) {
+    this.setCartItems(this.getCartItems().filter((ele) => {
       return ele.name !== item.name;
     }));
   }
@@ -74,14 +74,11 @@ export class HardwareShopService {
   public updateHardwareParts(): void {
     this.websocketService.ms('inventory', ['shop', 'list'], {})
       .subscribe(data => {
-        if ('error' in data) {
-          console.error('[HardwareShopService] Error while loading items:');
-          console.error(data);
-        } else {
-          this.categories = this.loadCategories(data.categories);
-          this.updateCartItems(this.getItems(this.categories));
-          this.updateGridView.emit();
-        }
+        this.categories = this.loadCategories(data.categories);
+        this.updateCartItems(this.getItems(this.categories));
+        this.updateGridView.emit();
+      }, error => {
+        console.error('[HardwareShopService] Error while loading items: ' + error.message);
       });
   }
 
@@ -96,14 +93,11 @@ export class HardwareShopService {
       products: JSON.parse('{' + parts.substring(1) + '}'),
       wallet_uuid: this.walletAppService.wallet.source_uuid,
       key: this.walletAppService.wallet.key
-    }).subscribe(data => {
-      if (!('error' in data)) {
-        this.setCartItems([]);
-        this.updateCartView.emit();
-      } else {
-        console.error('[HardwareShopService] Error while buy items:');
-        console.error(data);
-      }
+    }).subscribe(() => {
+      this.setCartItems([]);
+      this.updateCartView.emit();
+    }, error => {
+      console.error('[HardwareShopService] Error while buy items: ' + error.message);
     });
   }
 

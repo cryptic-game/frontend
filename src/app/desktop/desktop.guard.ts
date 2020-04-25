@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { WebsocketService } from '../websocket.service';
-import { map, mergeMap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -24,27 +24,24 @@ export class DesktopGuard implements CanActivate {
       return false;
     }
 
-    return this.websocket.request({
-      'action': 'info'
-    }).pipe(mergeMap(infoResponse => {
-      if (infoResponse['error'] == null) {
-        return of(true);
-      } else {
+    return this.websocket.request({ action: 'info' }).pipe(
+      map(() => {
+        return true;
+      }), catchError(() => {
         return this.websocket.request({
           'action': 'session',
           'token': localStorage.getItem('token')
-        }).pipe(map(sessionResponse => {
-          if (sessionResponse['error'] == null && sessionResponse['token'] != null) {
+        }).pipe(
+          map(sessionResponse => {
             localStorage.setItem('token', sessionResponse['token']);
             return true;
-          } else {
+          }), catchError(() => {
             localStorage.removeItem('token');
             this.goToLogin();
-            return false;
-          }
-        }));
-      }
-    }));
+            return of(false);
+          }));
+      })
+    );
 
   }
 

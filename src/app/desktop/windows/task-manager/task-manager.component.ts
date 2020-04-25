@@ -3,7 +3,8 @@ import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window
 import { WebsocketService } from '../../../websocket.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { DeviceHardware, HardwareService } from '../../../hardware/hardware.service';
+import { DeviceHardware, HardwareService } from '../../../api/hardware/hardware.service';
+import { DeviceUtilization } from '../../../api/devices/device';
 
 @Component({
   selector: 'app-task-manager',
@@ -31,7 +32,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   }
 
   ngOnInit() {
-    this.resourceNotifySubscription = this.webSocket.register_notification('resource-usage')
+    this.resourceNotifySubscription = this.webSocket.subscribe_notification('resource-usage')
       .pipe(filter(x => x.device_uuid === this.deviceUUID))
       .subscribe(notification => this.updateUtilization(notification['data']));
   }
@@ -44,7 +45,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
     this.hardwareService.getDeviceParts(this.deviceUUID).subscribe(data => {
       this.deviceHardware = data;
 
-      this.ram.totalMemory = data.ram.reduce((previousValue, currentValue) => previousValue + currentValue.ramSize, 0);
+      this.ram.totalMemory = data.getTotalMemory();
       this.ram.type = data.ram.length >= 1 ? data.ram[0].ramTyp.join(' ') : '';
 
       this.cpu = data.cpu[0];

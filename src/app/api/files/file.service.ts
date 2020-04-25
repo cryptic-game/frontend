@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { WebsocketService } from '../../../websocket.service';
+import { WebsocketService } from '../../websocket.service';
 import { combineLatest, Observable, of, throwError } from 'rxjs';
 import { catchError, flatMap, map, take } from 'rxjs/operators';
 import { File } from './file';
@@ -16,9 +16,6 @@ export class FileService {
   getFiles(deviceUUID: string, parentUUID: string = Path.ROOT): Observable<File[]> {
     return this.webSocket.ms('device', ['file', 'all'], { device_uuid: deviceUUID, parent_dir_uuid: parentUUID })
       .pipe(map((response: any) => {
-        if ('error' in response) {
-          throw new Error(response['error']);
-        }
         return response['files'];
       }));
   }
@@ -45,12 +42,7 @@ export class FileService {
       return of(this.getRootFile(deviceUUID));
     }
 
-    return this.webSocket.ms('device', ['file', 'info'], { device_uuid: deviceUUID, file_uuid: fileUUID }).pipe(map((response: any) => {
-      if ('error' in response) {
-        throw new Error(response['error']);
-      }
-      return response;
-    }));
+    return this.webSocket.ms('device', ['file', 'info'], { device_uuid: deviceUUID, file_uuid: fileUUID });
   }
 
   move(deviceUUID: string, fileUUID: string, parentUUID: string, filename: string): Observable<File> {
@@ -59,31 +51,15 @@ export class FileService {
       file_uuid: fileUUID,
       new_parent_dir_uuid: parentUUID,
       new_filename: filename
-    }).pipe(map((response: any) => {
-      if ('error' in response) {
-        throw new Error(response['error']);
-      }
-      return response;
-    }));
+    });
   }
 
   changeFileContent(deviceUUID: string, fileUUID: string, content: string): Observable<File> {
-    return this.webSocket.ms('device', ['file', 'update'], { device_uuid: deviceUUID, file_uuid: fileUUID, content: content })
-      .pipe(map((response: any) => {
-        if ('error' in response) {
-          throw new Error(response['error']);
-        }
-        return response;
-      }));
+    return this.webSocket.ms('device', ['file', 'update'], { device_uuid: deviceUUID, file_uuid: fileUUID, content: content });
   }
 
   deleteFile(deviceUUID: string, fileUUID: string): Observable<any> {
-    return this.webSocket.ms('device', ['file', 'delete'], { device_uuid: deviceUUID, file_uuid: fileUUID }).pipe(map((response: any) => {
-      if ('error' in response) {
-        throw new Error(response['error']);
-      }
-      return response;
-    }));
+    return this.webSocket.ms('device', ['file', 'delete'], { device_uuid: deviceUUID, file_uuid: fileUUID });
   }
 
   createFile(deviceUUID: string, name: string, content: string = '', parentUUID: string = Path.ROOT): Observable<File> {
@@ -93,12 +69,7 @@ export class FileService {
       content: content,
       parent_dir_uuid: parentUUID,
       is_directory: false
-    }).pipe(map((response: any) => {
-      if ('error' in response) {
-        throw new Error(response['error']);
-      }
-      return response;
-    }));
+    });
   }
 
   createDirectory(deviceUUID: string, name: string, parentUUID: string = Path.ROOT) {
@@ -108,12 +79,7 @@ export class FileService {
       content: '',
       parent_dir_uuid: parentUUID,
       is_directory: true
-    }).pipe(map((response: any) => {
-      if ('error' in response) {
-        throw new Error(response['error']);
-      }
-      return response;
-    }));
+    });
   }
 
   getAbsolutePath(deviceUUID: string, fileId: string): Observable<string[]> {
