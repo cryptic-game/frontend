@@ -1,7 +1,4 @@
-@import "~src/constants";
-
-$active-window-color: $active_w;
-$inactive-window-color: $inactive_w;
+@import "variables";
 
 .window {
   display: flex;
@@ -24,28 +21,30 @@ $inactive-window-color: $inactive_w;
     height: 94.5vh !important;
 
     border: none;
+    box-shadow: none;
+
+    .window-header {
+      border-radius: 0;
+    }
   }
 }
 
 .window-header {
   padding: 1px;
   display: flex;
-  border-bottom-style: solid white 1px;
-  border-radius: 5px 5px 0px 0px;
+  border-radius: 5px 5px 0 0;
   flex-direction: row;
   background-color: $inactive-window-color;
   user-select: none;
   height: 2rem;
   align-items: center;
-  border-width: 0px 0px 1px 0px;
-  border-style: solid solid solid solid;
-  border-color: #5ffffb #5ffffb #1d1588 #5ffffb;
+  border-bottom: 1px solid #262626;
 
   .window-title {
     padding-bottom: 3px;
     line-height: 2em;
     margin-left: 8px;
-    color: $window_title_color;
+    color: $window-title-color;
   }
 
   .window-icons {

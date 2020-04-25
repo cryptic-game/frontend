@@ -10,10 +10,7 @@ import { Router } from '@angular/router';
 })
 export class AccountService {
 
-  constructor(
-    private websocket: WebsocketService,
-    private router: Router
-  ) {
+  constructor(private websocket: WebsocketService, private router: Router) {
   }
 
   public login(username: string, password: string): Observable<LoginResponse> {

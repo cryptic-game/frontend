@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
+import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { WebsocketService } from '../../../websocket.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -16,7 +16,10 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
 
   deviceName: string;
   deviceHardware: DeviceHardware = new DeviceHardware();
-  ramTotal = 0;
+  cpu: { name?: string, frequencyMax: number } = { name: '', frequencyMax: 0 };
+  gpu: { name?: string, frequency: number } = { name: '', frequency: 0 };
+  ram = { totalMemory: 0, type: '' };
+  diskName = '';
   utilization: Utilization = new Utilization();
 
   constructor(private webSocket: WebsocketService, private hardwareService: HardwareService) {
@@ -40,7 +43,21 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   update() {
     this.hardwareService.getDeviceParts(this.deviceUUID).subscribe(data => {
       this.deviceHardware = data;
-      this.ramTotal = data.ram.reduce((previousValue, currentValue) => previousValue + currentValue.ramSize, 0);
+
+      this.ram.totalMemory = data.ram.reduce((previousValue, currentValue) => previousValue + currentValue.ramSize, 0);
+      this.ram.type = data.ram.length >= 1 ? data.ram[0].ramTyp.join(' ') : '';
+
+      this.cpu = data.cpu[0];
+
+      if (data.gpu.length >= 1) {
+        this.gpu = data.gpu[0];
+      } else if (data.cpu.length >= 1 && data.cpu[0].graphicUnit) {
+        this.gpu = data.cpu[0].graphicUnit;
+      } else if (data.mainboard.graphicUnitOnBoard) {
+        this.gpu = data.mainboard.graphicUnitOnBoard;
+      }
+
+      this.diskName = data.disk.length >= 1 ? data.disk[0].name : 'Disk';
 
       this.webSocket.ms('device', ['hardware', 'resources'], { device_uuid: this.deviceUUID })
         .subscribe(resourceData => this.updateUtilization(resourceData));
@@ -50,7 +67,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   updateUtilization(resourceUsage: any) {
     this.utilization.cpu = resourceUsage['cpu'];
     this.utilization.gpu = resourceUsage['gpu'];
-    this.utilization.ram = resourceUsage['ram'] * this.ramTotal;
+    this.utilization.ram = resourceUsage['ram'] * this.ram.totalMemory;
     this.utilization.disk = resourceUsage['disk'];
     this.utilization.network = resourceUsage['network'];
   }
@@ -62,9 +79,11 @@ export class TaskManagerWindowDelegate extends WindowDelegate {
   icon = '../../assets/desktop/img/task-manager.svg';
   type = TaskManagerComponent;
 
+  constraints = new WindowConstraints({ minWidth: 400, minHeight: 350 });
+
   constructor() {
     super();
-    this.position.height = 500;
+    this.position.height = 550;
   }
 }
 

@@ -1,3 +1,9 @@
+import { Injectable } from '@angular/core';
+import { WebsocketService } from '../websocket.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import * as Parts from './hardware-parts';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,6 +19,21 @@ export class HardwareService {
     this.webSocket.ms('device', ['hardware', 'list'], {}).subscribe((data: HardwareList) => {
       if (data != null && data['error'] == null) {
         this.hardwareAvailable = data;
+        for (const partCategory of [
+          data.mainboard,
+          data.cpu,
+          data.gpu,
+          data.ram,
+          data.disk,
+          data.processorCooler,
+          data.powerPack
+        ]) {
+          if (partCategory) {
+            for (const [name, part] of Object.entries(partCategory)) {
+              part.name = name;
+            }
+          }
+        }
       }
     });
   }
@@ -23,191 +44,104 @@ export class HardwareService {
 
   getDeviceParts(device: string): Observable<DeviceHardware> {
     return this.webSocket.ms('device', ['device', 'info'], { device_uuid: device }).pipe(map(data => {
-      let mainboard: Parts.Mainboard;
-      let cpu: Parts.CPU;
-      let gpu: Parts.GPU;
-      const ram: Parts.RAM[] = [];
-      const disks: Parts.Disk[] = [];
+      const hardware = new DeviceHardware();
 
       if (data['hardware'] instanceof Array) {
         for (const { hardware_element, hardware_type } of data['hardware']) {
           switch (hardware_type) {
             case 'mainboard':
-              mainboard = this.hardwareAvailable.mainboards[hardware_element];
+              hardware.mainboard = this.hardwareAvailable.mainboard[hardware_element];
               break;
             case 'cpu':
-              cpu = this.hardwareAvailable.cpu[hardware_element];
+              hardware.cpu.push(this.hardwareAvailable.cpu[hardware_element]);
               break;
             case 'gpu':
-              gpu = this.hardwareAvailable.gpu[hardware_element];
+              hardware.gpu.push(this.hardwareAvailable.gpu[hardware_element]);
               break;
             case 'ram':
-              ram.push(this.hardwareAvailable.ram[hardware_element]);
+              hardware.ram.push(this.hardwareAvailable.ram[hardware_element]);
               break;
             case 'disk':
-              disks.push(this.hardwareAvailable.disk[hardware_element]);
+              hardware.disk.push(this.hardwareAvailable.disk[hardware_element]);
+              break;
+            case 'processorCooler':
+              hardware.processorCooler.push(this.hardwareAvailable.processorCooler[hardware_element]);
+              break;
+            case 'powerPack':
+              hardware.powerPack = this.hardwareAvailable.powerPack[hardware_element];
+              break;
+            case 'case':
+              hardware.case = hardware_element;
               break;
             default:
               console.warn('Unknown hardware part type: ' + hardware_type);
           }
         }
       } else {
-        return new DeviceHardware();
+        console.warn('Unknown device info response: ' + data);
       }
 
-      return {
-        mainboard: mainboard,
-        cpu: cpu,
-        gpu: gpu,
-        ram: ram,
-        disk: disks
-      };
+      return hardware;
     }));
   }
 
 
 }
 
-import { Injectable } from '@angular/core';
-import { WebsocketService } from '../websocket.service';
-import { Observable } from 'rxjs';
-
-import { map } from 'rxjs/operators';
-
-namespace Parts {
-  export interface Mainboard {
-    'name': string;
-    'case': string;
-    'sockel': string;
-    'coreTemperatureControl': boolean;
-    'usbPorts': number;
-    'power': number;
-    'ram': { 'ramSlots': number, 'ramSize': number, 'typ': string, 'frequency': number[] };
-    'graphicUnit': { 'onBoard': boolean, 'interfaceSlots': null /* TODO: ? */, 'interface': string };
-    'diskStorage': { 'hdSlots': number, 'typ': string, 'interface': string };
-    'networkCard': { 'name': string, 'interface': string, 'speed': number };
-  }
-
-  export interface CPU {
-    'name': string;
-    'frequencyMin': number;
-    'frequencyMax': number;
-    'socket': string;
-    'cores': number;
-    'turboSpeed': boolean;
-    'overClock': boolean;
-    'maxTemperature': number;
-    'power': number;
-    'graphicUnitExist': boolean;
-    'graphicUnit': {
-      'name': string;
-      'ramSize': number;
-      'frequency': number;
-    };
-  }
-
-  export interface GPU {
-    'name': string;
-    'ramSize': number;
-    'ramTyp': string;
-    'frequency': number;
-    'interface': string;
-    'power': number;
-  }
-
-  export interface RAM {
-    'name': string;
-    'ramSize': number;
-    'ramTyp': string;
-    'frequency': number;
-    'power': number;
-  }
-
-  export interface Disk {
-    'name': string;
-    'diskTyp': string;
-    'capacity': number;
-    'writingSpeed': number;
-    'readingSpeed': number;
-    'interface': string;
-    'power': number;
-  }
-
-  export interface ProcessorCooler {
-    'name': string;
-    'coolerSpeed': number;
-    'sockel': string;
-    'power': number;
-  }
-
-  export interface PowerPack {
-    'name': string;
-    'totalPower': number;
-  }
-
-  export interface Case {
-    'name': string;
-  }
-}
 
 export class DeviceHardware {
   'mainboard': Parts.Mainboard = {
-    'name': '',
+    'id': 0,
     'case': '',
-    'sockel': '',
+    'cpuSocket': '',
+    'cpuSlots': 0,
     'coreTemperatureControl': false,
     'usbPorts': 0,
-    'power': 0,
-    'ram': { 'ramSlots': 0, 'ramSize': 0, 'typ': '', 'frequency': [] },
-    'graphicUnit': { 'onBoard': false, 'interfaceSlots': null /* TODO: ? */, 'interface': '' },
-    'diskStorage': { 'hdSlots': 0, 'typ': '', 'interface': '' },
-    'networkCard': { 'name': '', 'interface': '', 'speed': 0 },
+    'ram': { 'ramSlots': 0, 'maxRamSize': 0, 'ramTyp': [], 'frequency': [] },
+    'graphicUnitOnBoard': null,
+    'expansionSlots': [],
+    'diskStorage': { 'diskSlots': 0, 'interface': [] },
+    'networkPort': { 'name': '', 'interface': '', 'speed': 0 },
+    'power': 0
   };
-  'cpu': Parts.CPU = {
-    'name': '',
-    'cores': 0,
-    'frequencyMax': 0,
-    'frequencyMin': 0,
-    'graphicUnit': { name: '', frequency: 0, ramSize: 0 },
-    'graphicUnitExist': false,
-    'maxTemperature': 0,
-    'overClock': false,
-    'power': 0,
-    'socket': '',
-    'turboSpeed': false
-  };
-  'gpu': Parts.GPU = {
-    'name': '',
-    'frequency': 0,
-    'interface': '',
-    'power': 0,
-    'ramSize': 0,
-    'ramTyp': ''
-  };
+  'cpu': Parts.CPU[] = [];
+  'gpu': Parts.GPU[] = [];
   'ram': Parts.RAM[] = [];
   'disk': Parts.Disk[] = [];
+  'processorCooler': Parts.ProcessorCooler[] = [];
+  'powerPack': Parts.PowerPack = {
+    'id': 0,
+    'totalPower': 0
+  };
+  'case': string;
 }
 
 export class HardwareList {
   'start_pc': {
-    'motherboard': string,
-    'cpu': string,
-    'gpu': string,
+    'mainboard': string,
+    'cpu': string[],
+    'processorCooler': string[],
+    'gpu': string[],
     'ram': string[],
     'disk': string[]
+    'powerPack': string,
+    'case': string
   } = {
-    motherboard: '',
-    cpu: '',
-    gpu: '',
-    ram: [],
-    disk: []
+    'mainboard': '',
+    'cpu': [],
+    'processorCooler': [],
+    'gpu': [],
+    'ram': [],
+    'disk': [],
+    'powerPack': '',
+    'case': '',
   };
 
-  'mainboards': { [name: string]: Parts.Mainboard } = {};
+  'mainboard': { [name: string]: Parts.Mainboard } = {};
 
   'cpu': { [name: string]: Parts.CPU } = {};
 
-  'processorCooler': Parts.ProcessorCooler[] = [];
+  'processorCooler': { [name: string]: Parts.ProcessorCooler } = {};
 
   'ram': { [name: string]: Parts.RAM } = {};
 
@@ -215,8 +149,8 @@ export class HardwareList {
 
   'disk': { [name: string]: Parts.Disk } = {};
 
-  'powerPack': Parts.PowerPack[] = [];
+  'powerPack': { [name: string]: Parts.PowerPack } = {};
 
-  'case': Parts.Case[] = [];
+  'case': string[] = [];
 
 }

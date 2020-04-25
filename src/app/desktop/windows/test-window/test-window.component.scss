@@ -1,4 +1,4 @@
-@import "~src/constants";
+@import "variables";
 
 :host {
   flex-basis: 100%;
@@ -7,9 +7,10 @@
 #test-window-container {
   width: 100%;
   height: 100%;
-  background-color: $window_background;
+  background-color: $window-background;
 }
 
 #test-window {
   padding: 5px;
+  color: $window-font-color;
 }

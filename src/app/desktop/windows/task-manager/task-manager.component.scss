@@ -1,4 +1,4 @@
-@import "~src/constants";
+@import "variables";
 
 :host {
   flex-basis: 100%;
@@ -7,10 +7,10 @@
 #task-manager-container {
   width: 100%;
   height: 100%;
-  background-color: $window_background;
+  background-color: $window-background;
   user-select: none;
   overflow: auto;
-  color: $window_font_color;
+  color: $window-font-color;
 }
 
 #resource-usage-table {
@@ -36,19 +36,19 @@
         position: relative;
         width: 100%;
         height: 6em;
-        background-color: $task_manager_chart_back;
+        background-color: $task-manager-chart-back;
         border: solid;
-        border-color: $task_manager_chart_border;
+        border-color: $task-manager-chart-border;
         border-width: 1.5px;
 
         &#temp-chart {
           background-image: linear-gradient(
-            to bottom,
-            #cf2610,
-            #f5c415 28%,
-            #d9cc31 47%,
-            #86b377 65%,
-            #088ce4
+              to bottom,
+              #cf2610,
+              #f5c415 28%,
+              #d9cc31 47%,
+              #86b377 65%,
+              #088ce4
           );
         }
 
@@ -81,7 +81,7 @@
       line-height: 1.4em;
 
       .description {
-        color: $window_font_color;
+        color: $window-font-color;
       }
 
       .value {

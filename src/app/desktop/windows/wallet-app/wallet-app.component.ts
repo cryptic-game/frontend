@@ -1,5 +1,5 @@
 import { Component, OnInit, Type } from '@angular/core';
-import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
+import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { WalletAppService } from './wallet-app.service';
 import { Wallet } from './wallet';
 import { interval } from 'rxjs';
@@ -41,7 +41,7 @@ export class WalletAppComponent extends WindowComponent implements OnInit {
         this.setWalletEditStatus(false);
         this.pages = Math.ceil(this.wallet.transactions / this.itemsPerPage);
         if (loading) {
-          this.walletAppService.getTransactions(this.currentPage * this.itemsPerPage, this.itemsPerPage)
+          this.walletAppService.getTransactions(0, this.itemsPerPage)
             .subscribe((data) => this.transactions = data);
         }
         loading = false;
@@ -79,4 +79,6 @@ export class WalletAppWindowDelegate extends WindowDelegate {
   title = 'Wallet';
   icon = 'assets/desktop/img/wallet_app.svg';
   type: Type<any> = WalletAppComponent;
+
+  constraints = new WindowConstraints({ minWidth: 485, minHeight: 325 });
 }

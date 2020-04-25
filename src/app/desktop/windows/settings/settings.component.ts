@@ -1,5 +1,5 @@
 import { Component, OnInit, Type } from '@angular/core';
-import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
+import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { Settings } from '../../../../dataclasses/settings';
 import { SettingsService } from './settings.service';
 
@@ -43,4 +43,6 @@ export class SettingsWindowDelegate extends WindowDelegate {
   title = 'Settings';
   icon = 'assets/desktop/img/gear.svg';
   type: Type<any> = SettingsComponent;
+
+  constraints = new WindowConstraints({ minWidth: 300, minHeight: 200 });
 }

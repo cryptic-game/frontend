@@ -13,6 +13,14 @@ export class WindowManagerService {
   }
 
   openWindow(win: WindowDelegate) {
+    if (win.constraints.singleInstance) {
+      const instance = this.windows.find(win_ => win_.type === win.type);
+      if (instance) {
+        this.focusWindow(instance);
+        return;
+      }
+    }
+
     this.windows.push(win);
     this.taskList.push(win);
     if (this.activeWindow) {
