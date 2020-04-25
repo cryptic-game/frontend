@@ -73,6 +73,19 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
   ngOnDestroy() {
   }
 
+  get() {
+    if (this.miner) {
+      this.websocketService.ms('service', ['miner', 'get'], {
+        'service_uuid': this.miner.uuid,
+      }).subscribe(data => {
+        this.setWallet(data['wallet']);
+        this.started = data['started'];
+        this.setPower(Math.round(data['power'] * 100));
+        this.active = this.power > 0 && this.started != null;
+      });
+    }
+  }
+
   private createMiner(wallet: string): Observable<void> {
     if (!this.miner) {
       return this.websocketService.ms('service', ['create'], {
@@ -88,8 +101,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
           this.setWallet(wallet);
           this.get();
         } else {
-          this.errorMessage = 'Invalid wallet';
-          this.wallet = undefined;
+          this.setError('Invalid wallet');
         }
       }));
     }
@@ -106,28 +118,12 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
       }).subscribe((walletData) => {
         if (!('error' in walletData)) {
           this.errorMessage = undefined;
-          this.minerPower = walletData.speed;
-
-          // this.miner = walletData;
           this.setWallet(wallet);
+          this.setPower(walletData.power);
+          this.get();
         } else {
-          this.errorMessage = 'Invalid wallet';
-          this.wallet = undefined;
+          this.setError('Invalid wallet');
         }
-        this.get();
-      });
-    }
-  }
-
-  get() {
-    if (this.miner) {
-      this.websocketService.ms('service', ['miner', 'get'], {
-        'service_uuid': this.miner.uuid,
-      }).subscribe(data => {
-        this.setWallet(data['wallet']);
-        this.started = data['started'];
-        this.power = Math.round(data['power'] * 100);
-        this.active = this.power > 0 && this.started != null;
       });
     }
   }
@@ -138,22 +134,34 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
         'service_uuid': this.miner.uuid,
         'power': power / 100,
       }).subscribe((data: { power: number }) => {
-        console.log(data.power);
+        this.setPower(Math.round(data.power * 100));
         this.websocketService.ms('service', ['private_info'], {
           'device_uuid': this.miner.device,
           'service_uuid': this.miner.uuid
         }).subscribe(service => {
           this.miner = service;
           this.miningRate = service.speed;
-          console.log(service);
         });
       });
     }
   }
 
+  private setError(error: string): void {
+    this.errorMessage = error;
+    this.wallet = undefined;
+    setTimeout(() => this.errorMessage = undefined, 5000);
+  }
+
   private setWallet(uuid: string): void {
     this.wallet = uuid;
-    this.walletControl.setValue(uuid, { emitEvent: false });
+    if (uuid) {
+      this.walletControl.setValue(uuid, { emitEvent: false });
+    }
+  }
+
+  private setPower(power: number): void {
+    this.power = power;
+    this.minerPower.setValue(power, { emitEvent: false });
   }
 }
 
