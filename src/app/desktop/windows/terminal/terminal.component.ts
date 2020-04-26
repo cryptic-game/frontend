@@ -43,8 +43,7 @@ export class TerminalComponent extends WindowComponent
         this.fileService,
         this.domSanitizer,
         this,
-        JSON.parse(sessionStorage.getItem('activeDevice')),
-        sessionStorage.getItem('username')
+        JSON.parse(sessionStorage.getItem('activeDevice'))
       )
     );
     this.getState().refreshPrompt();

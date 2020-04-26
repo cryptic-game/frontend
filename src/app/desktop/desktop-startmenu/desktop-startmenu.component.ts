@@ -1,8 +1,7 @@
-import { Account } from '../../../dataclasses/account';
-import { UserService } from '../user.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { DesktopComponent } from '../desktop.component';
 import { WebsocketService } from 'src/app/websocket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-desktop-startmenu',
@@ -14,19 +13,11 @@ export class DesktopStartmenuComponent implements OnInit {
   @Input() target;
 
   searchTerm = '';
-  token: string = sessionStorage.getItem('token');
-  user: Account = { name: '', email: '', created: 0, last: 0 };
 
-  constructor(
-    public userService: UserService,
-    public websocket: WebsocketService
-  ) {}
+  constructor(public websocket: WebsocketService, private router: Router) {
+  }
 
   ngOnInit() {
-    this.user.name = sessionStorage.getItem('username');
-    this.user.email = sessionStorage.getItem('email');
-    this.user.created = parseInt(sessionStorage.getItem('created'), 10);
-    this.user.last = parseInt(sessionStorage.getItem('last'), 10);
   }
 
   search(term: string) {
@@ -38,11 +29,17 @@ export class DesktopStartmenuComponent implements OnInit {
     );
   }
 
+  logout() {
+    this.parent.windowManager.closeAllWindows();
+    this.websocket.logout();
+    this.router.navigate(['login']).then();
+  }
+
   openBugReportPageGitHub() {
-    window.open("https://github.com/cryptic-game/cryptic/issues/new/choose");
+    window.open('https://github.com/cryptic-game/cryptic/issues/new/choose');
   }
 
   openBugReportPageForm() {
-    window.open("https://docs.google.com/forms/d/e/1FAIpQLSey6IZg-zJliAO4zNRmEdplqPkyqw-qmfKp4hARaBZHgNZSgQ/viewform");
+    window.open('https://docs.google.com/forms/d/e/1FAIpQLSey6IZg-zJliAO4zNRmEdplqPkyqw-qmfKp4hARaBZHgNZSgQ/viewform');
   }
 }

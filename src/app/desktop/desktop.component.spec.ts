@@ -61,25 +61,6 @@ describe('DesktopComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#initSession() should get username, email, account creation time and last login time and save it to the session-storage',
-    inject([WebsocketService], (webSocket: WebsocketService) => {
-      const infoResponse = {
-        name: 'somebody',
-        mail: 'somebody@example.com',
-        created: 0,
-        last: 0
-      };
-      const requestSpy = spyOn(webSocket, 'request').and.returnValue(of(infoResponse));
-      const setItemSpy = spyOn(sessionStorage, 'setItem');
-
-      component.initSession();
-      expect(requestSpy).toHaveBeenCalledWith({ action: 'info' });
-      expect(setItemSpy).toHaveBeenCalledWith('username', infoResponse.name);
-      expect(setItemSpy).toHaveBeenCalledWith('email', infoResponse.mail);
-      expect(setItemSpy).toHaveBeenCalledWith('created', infoResponse.created as any);
-      expect(setItemSpy).toHaveBeenCalledWith('last', infoResponse.last as any);
-    }));
-
   it('#initSession() should save all devices to the session-storage', inject([WebsocketService], (webSocket: WebsocketService) => {
     spyOn(webSocket, 'request').and.returnValue(of({ name: '', mail: '', created: 0, last: 0 }));
     const firstDevice = {

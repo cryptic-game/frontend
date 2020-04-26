@@ -31,6 +31,7 @@ export class AccountService {
   }
 
   public finalLogin(token: string): void {
+    this.websocket.loggedIn = true;
     localStorage.setItem('token', token);
     setTimeout(() => this.router.navigateByUrl('/'), 500);
   }

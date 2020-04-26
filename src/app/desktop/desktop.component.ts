@@ -26,9 +26,6 @@ export class DesktopComponent implements OnInit {
   dragElement: HTMLElement;
   dragCursorLock: number;
 
-  token: string = localStorage.getItem('token');
-  username: string = sessionStorage.getItem('username');
-
   constructor(
     private router: Router,
     private websocket: WebsocketService,
@@ -47,31 +44,19 @@ export class DesktopComponent implements OnInit {
   }
 
   initSession(): void {
-    this.websocket.request({
-      action: 'info'
-    }).subscribe(response => {
-      sessionStorage.setItem('username', response.name);
-      this.username = response.name;
-      sessionStorage.setItem('email', response.mail);
-      sessionStorage.setItem('created', response.created);
-      sessionStorage.setItem('last', response.last);
-      this.websocket.ms('device', ['device', 'all'], {}).subscribe(r => {
-        let devices = r.devices;
+    this.websocket.ms('device', ['device', 'all'], {}).subscribe(r => {
+      let devices = r.devices;
 
-        if (devices == null || devices.length === 0) {
-          this.websocket.ms('device', ['device', 'starter_device'], {}).subscribe(r2 => {
-            devices = [r2];
-            sessionStorage.setItem('devices', JSON.stringify(devices));
-            sessionStorage.setItem('activeDevice', JSON.stringify(devices[0]));
-
-            // just to make the pre-alpha 1.0 full of action
-            this.websocket.ms('service', ['create'], { name: 'ssh', device_uuid: devices[0]['uuid'] });
-          });
-        } else {
+      if (devices == null || devices.length === 0) {
+        this.websocket.ms('device', ['device', 'starter_device'], {}).subscribe(r2 => {
+          devices = [r2];
           sessionStorage.setItem('devices', JSON.stringify(devices));
           sessionStorage.setItem('activeDevice', JSON.stringify(devices[0]));
-        }
-      });
+        });
+      } else {
+        sessionStorage.setItem('devices', JSON.stringify(devices));
+        sessionStorage.setItem('activeDevice', JSON.stringify(devices[0]));
+      }
     });
   }
 

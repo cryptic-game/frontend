@@ -1,16 +1,25 @@
 import { Injectable } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { first, map } from 'rxjs/operators';
-import { Observable, Subject, throwError } from 'rxjs';
+import { catchError, first, flatMap, map } from 'rxjs/operators';
+import { Observable, of, Subject, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 import { v4 as randomUUID } from 'uuid';
+import { Account } from '../dataclasses/account';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
 
-  public onlinePlayers = 0;
+  onlinePlayers = 0;
+  account: Account = {
+    uuid: '',
+    name: '',
+    mail: '',
+    created: 0,
+    last: 0
+  };
+  loggedIn = false;
 
   private socketSubject: WebSocketSubject<any>;
   private open = {};
@@ -31,6 +40,7 @@ export class WebsocketService {
           next: () => {
             if (this.connectedOnce) {
               console.log('Reconnected to the server.');
+              this.trySession().subscribe();
             } else {
               this.connectedOnce = true;
             }
@@ -51,6 +61,7 @@ export class WebsocketService {
               clearInterval(this.keepAliveHandle);
               this.keepAliveHandle = null;
             }
+            this.loggedIn = false;
           }
         }
       });
@@ -66,11 +77,6 @@ export class WebsocketService {
     this.socketSubject.error({ code: 4000, reason: 'client-close' });
   }
 
-  reconnect() {
-    this.close();
-    this.init();
-  }
-
   subscribe_notification(notify_id: string): Subject<Notification> {
     if (this.notification_subjects[notify_id] != null) {
       return this.notification_subjects[notify_id];
@@ -81,12 +87,12 @@ export class WebsocketService {
     return subject;
   }
 
-  request(json): Observable<any> {
-    this.socketSubject.next(json);
+  request(data: object): Observable<any> {
+    this.socketSubject.next(data);
     return this.socketSubject.pipe(first(), map(checkResponseError));  // this will soon get tags too
   }
 
-  ms(name, endpoint, data): Observable<any> {
+  ms(name: string, endpoint: string[], data: object): Observable<any> {
     const tag = randomUUID();
     if (this.socketSubject.closed || this.socketSubject.hasError) {
       return throwError(new Error('socket-closed'));
@@ -102,29 +108,65 @@ export class WebsocketService {
     return this.open[tag] = new Subject().pipe(map(checkResponseError));
   }
 
-  msPromise(name, endpoint, data): Promise<any> {
+  msPromise(name: string, endpoint: string[], data: object): Promise<any> {
     return this.ms(name, endpoint, data).toPromise();
   }
 
-  private handleMessage(json) {
-    if (json['error'] != null) {
+  private handleMessage(message: object) {
+    if (message['error'] != null) {
       this.open = {};
-    } else if (json['online'] != null) {
-      this.onlinePlayers = json['online'];
-    } else if (json['tag'] != null && json['data'] != null) {
-      const tag = json['tag'];
+    } else if (message['tag'] != null && message['data'] != null) {
+      const tag = message['tag'];
 
       if (this.open[tag] != null) {
-        this.open[tag].next(json['data']);
+        this.open[tag].next(message['data']);
         this.open[tag].complete();
         delete this.open[tag];
       }
-    } else if (json['notify-id'] != null && json['data'] != null) {
-      const subject = this.notification_subjects[json['notify-id']];
+    } else if (message['notify-id'] != null && message['data'] != null) {
+      const subject = this.notification_subjects[message['notify-id']];
 
       if (subject != null) {
-        subject.next({ data: json['data'], device_uuid: json['device_uuid'], origin: json['origin'] });
+        subject.next({ data: message['data'], device_uuid: message['device_uuid'], origin: message['origin'] });
       }
+    }
+  }
+
+  logout(): void {
+    localStorage.clear();
+    sessionStorage.clear();
+    this.request({ action: 'logout' });
+    this.loggedIn = false;
+  }
+
+  refreshAccountInfo(): Observable<Account> {
+    return this.request({ action: 'info' }).pipe(map(data => {
+      this.account.name = data['name'];
+      this.account.uuid = data['uuid'];
+      this.account.mail = data['mail'];
+      this.account.created = data['created'];
+      this.account.last = data['last'];
+      this.onlinePlayers = data['online'];
+      return this.account;
+    }));
+  }
+
+  trySession(): Observable<boolean> {
+    if (this.loggedIn) {
+      return of(true);
+    } else if (localStorage.getItem('token') == null) {
+      return of(false);
+    } else {
+      return this.request({ action: 'session', token: localStorage.getItem('token') }).pipe(
+        flatMap(() => this.refreshAccountInfo().pipe(map(() => {
+          this.loggedIn = true;
+          return true;
+        }))),
+        catchError(() => {
+          localStorage.removeItem('token');
+          return of(false);
+        })
+      );
     }
   }
 

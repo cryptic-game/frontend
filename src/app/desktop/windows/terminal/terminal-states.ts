@@ -137,7 +137,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
               private domSanitizer: DomSanitizer, protected terminal: TerminalAPI, protected activeDevice: object,
-              protected username: string, public promptColor: string = null) {
+              public promptColor: string = null) {
     super();
   }
 
@@ -150,7 +150,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       const color = this.domSanitizer.sanitize(SecurityContext.STYLE, this.promptColor || this.settings.getTPC());
       const prompt = this.domSanitizer.bypassSecurityTrustHtml(
         `<span style="color: ${color}">` +
-        `${escapeHtml(this.username)}@${escapeHtml(this.activeDevice['name'])}` +
+        `${escapeHtml(this.websocket.account.name)}@${escapeHtml(this.activeDevice['name'])}` +
         `<span style="color: white">:</span>` +
         `<span style="color: #0089ff;">/${path.join('/')}</span>$` +
         `</span>`
@@ -918,7 +918,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         const user_uuid = JSON.parse(sessionStorage.getItem('activeDevice'))['owner'];
         if (infoData['owner'] === user_uuid || partOwnerData['ok'] === true) {
           this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.fileService, this.domSanitizer,
-            this.terminal, infoData, this.username, '#DD2C00'));
+            this.terminal, infoData, '#DD2C00'));
         } else {
           this.terminal.outputText('Access denied');
         }
@@ -1281,7 +1281,7 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
   info(args: string[]) {
-    this.terminal.outputText('Username: ' + this.username);
+    this.terminal.outputText('Username: ' + this.websocket.account.name);
     this.terminal.outputText('Host: ' + this.activeDevice['name']);
 
     const element = document.createElement('div');
