@@ -9,6 +9,7 @@ import { WebsocketService } from './websocket.service';
 export class AppComponent implements OnDestroy {
 
   constructor(private websocket: WebsocketService) {
+    websocket.init();
   }
 
   ngOnDestroy() {

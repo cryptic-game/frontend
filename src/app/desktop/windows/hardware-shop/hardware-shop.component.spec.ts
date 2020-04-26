@@ -5,6 +5,8 @@ import { HardwareShopHeaderComponent } from './hardware-shop-header/hardware-sho
 import { HardwareShopSidebarComponent } from './hardware-shop-sidebar/hardware-shop-sidebar.component';
 import { HardwareShopItemListComponent } from './hardware-shop-item-list/hardware-shop-item-list.component';
 import { HardwareShopCartComponent } from './hardware-shop-cart/hardware-shop-cart.component';
+import { WebsocketService } from '../../../websocket.service';
+import { webSocketMock } from '../../../test-utils';
 
 describe('HardwareShopComponent', () => {
   let component: HardwareShopComponent;
@@ -12,6 +14,7 @@ describe('HardwareShopComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      providers: [{ provide: WebsocketService, useValue: webSocketMock() }],
       declarations: [
         HardwareShopComponent,
         HardwareShopHeaderComponent,
@@ -33,3 +36,4 @@ describe('HardwareShopComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

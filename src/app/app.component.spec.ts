@@ -12,12 +12,13 @@ import { WebsocketService } from './websocket.service';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
+import { webSocketMock } from './test-utils';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       providers: [
-        WebsocketService
+        { provide: WebsocketService, useValue: webSocketMock() }
       ],
       imports: [
         HttpClientModule,
@@ -44,11 +45,15 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should close the websocket when it gets destroyed', inject([WebsocketService], (webSocket) => {
-    const closeSpy = spyOn(webSocket, 'close');
+  it('should initialize the websocket', inject([WebsocketService], (webSocket: WebsocketService) => {
+    TestBed.createComponent(AppComponent);
+    expect(webSocket.init).toHaveBeenCalled();
+  }));
+
+  it('should close the websocket when it gets destroyed', inject([WebsocketService], (webSocket: WebsocketService) => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.destroy();
-    expect(closeSpy).toHaveBeenCalled();
+    expect(webSocket.close).toHaveBeenCalled();
   }));
 
 });

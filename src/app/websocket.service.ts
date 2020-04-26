@@ -28,7 +28,6 @@ export class WebsocketService {
   private keepAliveHandle: any;
 
   constructor() {
-    this.init();
   }
 
   init() {
@@ -51,6 +50,7 @@ export class WebsocketService {
                 'action': 'info'
               });
             }, 1000 * 30);
+
           }
         },
         closeObserver: {

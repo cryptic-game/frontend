@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HardwareShopCartItemComponent } from './hardware-shop-cart-item.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HardwareShopService } from '../hardware-shop.service';
 
 describe('HardwareShopCartItemComponent', () => {
   let component: HardwareShopCartItemComponent;
@@ -9,6 +10,7 @@ describe('HardwareShopCartItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      providers: [{ provide: HardwareShopService, useValue: {} }],
       declarations: [HardwareShopCartItemComponent],
       imports: [ReactiveFormsModule]
     })

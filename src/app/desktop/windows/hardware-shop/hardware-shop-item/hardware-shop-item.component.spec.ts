@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HardwareShopItemComponent } from './hardware-shop-item.component';
+import { WebsocketService } from '../../../../websocket.service';
+import { webSocketMock } from '../../../../test-utils';
 
 describe('HardwareShopItemComponent', () => {
   let component: HardwareShopItemComponent;
@@ -8,6 +10,7 @@ describe('HardwareShopItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      providers: [{ provide: WebsocketService, useValue: webSocketMock() }],
       declarations: [HardwareShopItemComponent]
     })
       .compileComponents();
