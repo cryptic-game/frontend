@@ -188,7 +188,8 @@ export class WindowFrameComponent implements OnInit {
         if (this.resizeDirection === 2 || this.resizeDirection === 5 || this.resizeDirection === 6) {
           this.delegate.position.height = Math.min(
             Math.max(this.resizeStartSize[1] + event.clientY - this.dragStartPos[1], constraints.minHeight),
-            constraints.maxHeight
+            constraints.maxHeight,
+            window.innerHeight - this.dragStartWindowPos[1]
           );
         }
 
@@ -196,7 +197,8 @@ export class WindowFrameComponent implements OnInit {
         if (this.resizeDirection === 1 || this.resizeDirection === 5 || this.resizeDirection === 8) {
           this.delegate.position.width = Math.min(
             Math.max(this.resizeStartSize[0] + event.clientX - this.dragStartPos[0], constraints.minWidth),
-            constraints.maxWidth
+            constraints.maxWidth,
+            window.innerWidth - this.dragStartWindowPos[0]
           );
         }
 
