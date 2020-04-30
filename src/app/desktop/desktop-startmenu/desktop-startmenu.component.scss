@@ -1,17 +1,17 @@
 @import "variables";
 
-
 #startmenu {
   width: 25%;
   height: 65%;
   position: fixed;
-  bottom: 5.7%;
+  bottom: 5.2%;
   padding: 1.5% 1.5% 5.5% 2%;
+  border-radius: 0px 10px 0px 0px;
   background-color: $start-menu-background;
   color: $white;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.7);
-  border-top: 1px solid rgba(199, 199, 199, 0.5);
-  border-right: 1px solid rgba(199, 199, 199, 0.5);
+  box-shadow: 0 0 3px rgba(20, 20, 20, 0.87);
+  border-top: 1px solid rgba(63, 63, 63, 0.89);
+  border-right: 1px solid rgba(63, 63, 63, 0.89);
 
   img {
     height: auto;
@@ -105,7 +105,6 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-
 
     .icon {
       margin-right: 9px;

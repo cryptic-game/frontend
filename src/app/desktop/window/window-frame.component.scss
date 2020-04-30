@@ -19,10 +19,8 @@
   &.maximized {
     width: 100vw !important;
     height: 94.5vh !important;
-
     border: none;
     box-shadow: none;
-
     .window-header {
       border-radius: 0;
     }
@@ -36,9 +34,9 @@
   flex-direction: row;
   background-color: $inactive-window-color;
   user-select: none;
-  height: 2rem;
+  height: 1.2rem;
   align-items: center;
-  border-bottom: 1px solid #262626;
+  border-bottom: 1px solid #000000;
 
   .window-title {
     padding-bottom: 3px;
@@ -61,9 +59,19 @@
       }
     }
 
-    .close-icon {
+    .close {
       &:hover {
-        stroke: #ff3333;
+        stroke: #a7a7a7;
+      }
+    }
+    .maximize-icon {
+      &:hover {
+        stroke: #e94e07;
+      }
+    }
+    .minimize-icon {
+      &:hover {
+        stroke: #059c26;
       }
     }
   }
