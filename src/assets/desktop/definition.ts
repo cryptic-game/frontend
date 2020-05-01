@@ -9,7 +9,6 @@ import { WalletAppWindowDelegate } from '../../app/desktop/windows/wallet-app/wa
 import { HardwareShopWindowDelegate } from '../../app/desktop/windows/hardware-shop/hardware-shop.component';
 
 export const programWindows = {
-  'browser': TestWindowDelegate,
   'file-manager': TestWindowDelegate,
   'terminal': TerminalWindowDelegate,
   'miner': MinerWindowDelegate,
@@ -23,20 +22,12 @@ export const desktopDefinition = {
   username: localStorage.getItem('username'),
   programs: [
     new Program(
-      'browser',
-      programWindows['browser'],
-      'Browser',
-      '../../assets/desktop/img/browser.svg',
-      true,
-      new Position(20, 10)
-    ),
-    new Program(
       'file-manager',
       programWindows['file-manager'],
       'File-Manager',
       '../../assets/desktop/img/filemanager.svg',
       true,
-      new Position(20, 110)
+      new Position(20, 30)
     ),
     new Program(
       'terminal',
@@ -44,7 +35,7 @@ export const desktopDefinition = {
       'Terminal',
       '../../assets/desktop/img/terminal.svg',
       true,
-      new Position(20, 230)
+      new Position(20, 130)
     ),
     new Program(
       'miner',
@@ -52,7 +43,7 @@ export const desktopDefinition = {
       'Miner',
       '../../assets/desktop/img/morphcoin_dark.svg',
       true,
-      new Position(20, 330)
+      new Position(20, 230)
     ),
     new Program(
       'settings',
@@ -60,7 +51,7 @@ export const desktopDefinition = {
       'Settings',
       '../../assets/desktop/img/gear.svg',
       true,
-      new Position(20, 430)
+      new Position(20, 330)
     ),
     new Program(
       'task-manager',
@@ -68,7 +59,7 @@ export const desktopDefinition = {
       'Task-Manager',
       '../../assets/desktop/img/task-manager.svg',
       true,
-      new Position(20, 530)
+      new Position(20, 430)
     ),
     new Program(
       'wallet-app',
@@ -76,7 +67,7 @@ export const desktopDefinition = {
       'Wallet-App',
       '../../assets/desktop/img/wallet_app.svg',
       true,
-      new Position(20, 630)
+      new Position(20, 530)
     ),
     new Program(
       'hardware-shop-app',
@@ -84,7 +75,7 @@ export const desktopDefinition = {
       'Hardware-Shop-App',
       '../../assets/desktop/img/hardware_shop_app.svg',
       true,
-      new Position(20, 730)
+      new Position(20, 630)
     )
   ]
 };
