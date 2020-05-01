@@ -30,7 +30,7 @@ export abstract class CommandTerminalState implements TerminalState {
   executeCommand(command: string, args: string[]) {
     command = command.toLowerCase();
     if (this.commands.hasOwnProperty(command)) {
-      this.commands[command](args);
+      Object(this.commands[command]).executor(args);
     } else if (command !== '') {
       this.commandNotFound(command);
     }
@@ -69,36 +69,112 @@ export abstract class CommandTerminalState implements TerminalState {
 
 export class DefaultTerminalState extends CommandTerminalState {
 
-  commands = {
-    'help': this.help.bind(this),
-    'status': this.status.bind(this),
-    'hostname': this.hostname.bind(this),
-    'cd': this.cd.bind(this),
-    'ls': this.ls.bind(this),
-    'l': this.ls.bind(this),
-    'dir': this.ls.bind(this),
-    'touch': this.touch.bind(this),
-    'cat': this.cat.bind(this),
-    'rm': this.rm.bind(this),
-    'cp': this.cp.bind(this),
-    'mv': this.mv.bind(this),
-    'rename': this.rename.bind(this),
-    'mkdir': this.mkdir.bind(this),
-    'exit': this.exit.bind(this),
-    'quit': this.exit.bind(this),
-    'clear': this.clear.bind(this),
-    'history': this.history.bind(this),
-    'morphcoin': this.morphcoin.bind(this),
-    'pay': this.pay.bind(this),
-    'service': this.service.bind(this),
-    'spot': this.spot.bind(this),
-    'connect': this.connect.bind(this),
-    'network': this.network.bind(this),
-    'info': this.info.bind(this),
+  commands: any = {
+    'help': {
+      executor: this.help.bind(this),
+      description: 'list of all commands'
+    },
+    'status': {
+      executor: this.status.bind(this),
+      description: 'displays the number of online plyers'
+    },
+    'hostname': {
+      executor: this.hostname.bind(this),
+      description: 'changes the name of the device'
+    },
+    'cd': {
+      executor: this.cd.bind(this),
+      description: 'changes the working directory'
+    },
+    'ls': {
+      executor: this.ls.bind(this),
+      description: 'shows files of the current working directory'
+    },
+    'l': {
+      executor: this.ls.bind(this),
+      description: 'shows files of the current working directory'
+    },
+    'dir': {
+      executor: this.ls.bind(this),
+      description: 'shows files of the current working directory'
+    },
+    'touch': {
+      executor: this.touch.bind(this),
+      description: 'create a file'
+    },
+    'cat': {
+      executor: this.cat.bind(this),
+      description: 'reads out a file'
+    },
+    'rm': {
+      executor: this.rm.bind(this),
+      description: 'deletes a file or a directory'
+    },
+    'cp': {
+      executor: this.cp.bind(this),
+      description: 'copys a file'
+    },
+    'mv': {
+      executor: this.mv.bind(this),
+      description: 'moves a file'
+    },
+    'rename': {
+      executor: this.rename.bind(this),
+      description: 'renames a file'
+    },
+    'mkdir': {
+      executor: this.mkdir.bind(this),
+      description: 'creates a direcotry'
+    },
+    'exit': {
+      executor: this.exit.bind(this),
+      description: 'closes the terminal or leaves another device'
+    },
+    'quit': {
+      executor: this.exit.bind(this),
+      description: 'closes the terminal or leaves another device'
+    },
+    'clear': {
+      executor: this.clear.bind(this),
+      description: 'clears the terminal'
+    },
+    'history': {
+      executor: this.history.bind(this),
+      description: 'shows the command history of the current terminal session'
+    },
+    'morphcoin': {
+      executor: this.morphcoin.bind(this),
+      description: 'shows wallet'
+    },
+    'pay': {
+      executor: this.pay.bind(this),
+      description: 'sends money to another wallet'
+    },
+    'service': {
+      executor: this.service.bind(this),
+      description: 'creates or uses services'
+    },
+    'spot': {
+      executor: this.spot.bind(this),
+      description: 'spots other devices'
+    },
+    'connect': {
+      executor: this.connect.bind(this),
+      description: 'connects to other device'
+    },
+    'network': {
+      executor: this.network.bind(this),
+      description: 'type `network` for further information'
+    },
+    'info': {
+      executor: this.info.bind(this),
+      description: 'shows info of the current device'
+    },
 
     // easter egg
-    'chaozz': () => {
-      this.terminal.outputText('"mess with the best, die like the rest :D`" - chaozz');
+    'chaozz': {
+      executor: () => this.terminal.outputText('"mess with the best, die like the rest :D`" - chaozz'),
+      description: ''
     }
   };
 
@@ -161,9 +237,10 @@ export class DefaultTerminalState extends CommandTerminalState {
 
 
   help(args: string[]) {
-    const commands: string = Object.keys(this.commands)
-      .filter(n => !['chaozz', 'help'].includes(n))
-      .join('<br />');
+    const commands: string = Object.entries(this.commands)
+      .filter(([n, value]) => !['chaozz'].includes(n))
+      .map(([n, value]) => `${n} # ${Object(value).description}`)
+      .join('<br>');
     this.terminal.output(commands);
   }
 
@@ -1305,7 +1382,7 @@ export abstract class ChoiceTerminalState implements TerminalState {
     }
 
     if (this.choices[command]) {
-      this.choices[command]();
+      Object(this.choices[command]).executor();
     } else {
       this.invalidChoice(command);
     }
