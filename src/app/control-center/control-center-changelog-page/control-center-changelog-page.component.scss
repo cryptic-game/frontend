@@ -1,3 +1,52 @@
+@import "../control-center-style";
+@import "variables";
+
 h1 {
   margin-top: 0;
+  text-align: center;
+}
+
+.changelog-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .changelog {
+    border-left: 1px solid $button-border-color;
+    padding: 0 2rem;
+
+    .version-container {
+      margin-bottom: 3em;
+      text-align: left;
+      width: 25em;
+
+      p {
+        margin: 0.5em 0
+      }
+
+      .version-box {
+        display: inline-block;
+        transform: translateX(calc(-50% - 2rem));
+        padding: 0.75em;
+        background-color: $page-background;
+        border-radius: 5px;
+        border: 1px solid red;
+        font-size: 14pt;
+      }
+
+      .start-box {
+        border: 1px solid green;
+      }
+
+      .date {
+        color: gray;
+        font-size: 14pt;
+      }
+    }
+
+    .start-container {
+      margin-bottom: 0;
+    }
+  }
+
 }
