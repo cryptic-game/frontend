@@ -1,0 +1,19 @@
+<div id="control-center">
+  <header>
+    <h1>Control-Center</h1>
+  </header>
+  <div class="body">
+    <div class="sidebar">
+      <app-control-center-sidebar (menuSelect)="menuSelect($event)" [menus]="menus"></app-control-center-sidebar>
+    </div>
+    <div class="main-page">
+      <ng-container [ngSwitch]="activePage">
+        <app-control-center-device-page *ngSwitchCase="1"></app-control-center-device-page>
+        <app-control-center-create-device-page *ngSwitchCase="2"></app-control-center-create-device-page>
+        <app-control-center-settings-page *ngSwitchCase="3"></app-control-center-settings-page>
+        <app-control-center-sound-page *ngSwitchCase="4"></app-control-center-sound-page>
+        <app-control-center-changelog-page *ngSwitchCase="5"></app-control-center-changelog-page>
+      </ng-container>
+    </div>
+  </div>
+</div>

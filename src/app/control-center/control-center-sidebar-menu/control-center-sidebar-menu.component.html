@@ -1,0 +1,14 @@
+<div class="sub-menu">
+  <div class="title" (click)="menuClicked()">
+    <ng-content class="icon" select="[icon]"></ng-content>
+    <span>{{menu.title}}{{menu.displayCount ? ' (' + menu.items.length + ')' : ''}}</span>
+    <svg *ngIf="menu.items.length !== 0" [@arrowUpwardsDownwards]="expanded ? 'downwards' : 'upwards'" class="arrow"
+         viewBox="0 0 15 15" width="25px" height="25px" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 7 3 L 13 10 L 1 10 Z" fill="white"/>
+    </svg>
+  </div>
+  <div *ngIf="expanded" [@expandCollapse] class="children">
+    <div *ngFor="let item of menu.items" (click)="itemClicked(item)"
+         [class.active]="item === activeItem" class="child">{{item.title}}</div>
+  </div>
+</div>

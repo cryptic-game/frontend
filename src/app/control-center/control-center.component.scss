@@ -1,0 +1,55 @@
+@import "control-center-style";
+@import "variables";
+
+#control-center {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  color: $font-color;
+
+  header {
+    flex: 0 0 auto;
+    background-color: $header-background;
+
+    h1 {
+      margin: 0;
+      padding-left: 3rem;
+      line-height: 5rem;
+      vertical-align: middle;
+    }
+  }
+
+  .body {
+    flex: 1 1 auto;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: row;
+
+    .sidebar {
+      flex: 0 1 auto;
+
+      width: 20rem;
+      height: 100%;
+
+      overflow-y: auto;
+
+      background-color: $sidebar-background;
+    }
+
+    .main-page {
+      flex: 1 1 auto;
+      height: 100%;
+
+      box-sizing: border-box;
+      padding: 1.5rem 3rem;
+
+      overflow-y: auto;
+
+      background-color: $page-background;
+    }
+
+  }
+
+}

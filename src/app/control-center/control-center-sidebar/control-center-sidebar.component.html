@@ -1,0 +1,6 @@
+<div id="sidebar-container">
+  <app-control-center-sidebar-menu *ngFor="let menu of menus" [menu]="menu"
+                                   (menuSelect)="menuSelected($event)"></app-control-center-sidebar-menu>
+  <button (click)="logout()" class="logout-button">Logout</button>
+  <span class="username">Logged in as {{apiService.account.name}}</span>
+</div>

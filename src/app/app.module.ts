@@ -40,6 +40,8 @@ import { WalletAppHeaderComponent } from './desktop/windows/wallet-app/wallet-ap
 import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-edit/wallet-app-edit.component';
 import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wallet-app-transaction/wallet-app-transaction.component';
 import { HardwareShopSidebarComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar/hardware-shop-sidebar.component';
+import { ControlCenterComponent } from './control-center/control-center.component';
+import { ControlCenterModule } from './control-center/control-center.module';
 // tslint:enable:max-line-length
 
 const routes: Routes = [
@@ -88,6 +90,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes),
     BrowserModule,
+    ControlCenterModule,
     HttpClientModule,
     FormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
