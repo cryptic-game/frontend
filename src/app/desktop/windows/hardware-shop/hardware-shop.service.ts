@@ -64,10 +64,8 @@ export class HardwareShopService {
   }
 
   public removeCartItem(item: HardwarePart): void {
-    item.containsInCart = false;
-    this.setCartItems(this.getCartItems().filter((ele) => {
-      return ele.name !== item.name;
-    }));
+    this.categories.forEach(category => this.updateCategory(category));
+    this.setCartItems(this.getCartItems().filter((ele: HardwarePart) => ele.name !== item.name));
   }
 
   /* Loading HardwareShop Items */
@@ -87,18 +85,14 @@ export class HardwareShopService {
     let parts = '';
     this.getCartItems().forEach(part => parts += `,"${part.name}": ${part.number === undefined ? 1 : part.number}`);
 
-    console.log(this.walletAppService.wallet);
-
     this.websocketService.ms('inventory', ['shop', 'buy'], {
       products: JSON.parse('{' + parts.substring(1) + '}'),
       wallet_uuid: this.walletAppService.wallet.source_uuid,
       key: this.walletAppService.wallet.key
     }).subscribe(() => {
       this.setCartItems([]);
-      this.updateCartView.emit();
-    }, error => {
-      console.error('[HardwareShopService] Error while buy items: ' + error.message);
-    });
+      this.categories.forEach(category => this.updateCategory(category));
+    }, error => console.error('[HardwareShopService] Error while buy items: ' + error.message));
   }
 
   /* Utils */
@@ -124,6 +118,11 @@ export class HardwareShopService {
       }
     }
     return undefined;
+  }
+
+  private updateCategory(category: Category): void {
+    category.items.forEach(item => item.containsInCart = false);
+    category.categories.forEach(item => this.updateCategory(item));
   }
 
   private loadItems(data: any): HardwarePart[] {
