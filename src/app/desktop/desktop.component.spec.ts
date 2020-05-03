@@ -20,18 +20,25 @@ import { By } from '@angular/platform-browser';
 import { WindowManagerService } from './window-manager/window-manager.service';
 import { WindowDelegate } from './window/window-delegate';
 import { webSocketMock } from '../test-utils';
+import { DeviceService } from '../api/devices/device.service';
+import { ActivatedRoute } from '@angular/router';
 
 describe('DesktopComponent', () => {
   let component: DesktopComponent;
   let fixture: ComponentFixture<DesktopComponent>;
-
-  localStorage.setItem('token', '');
-  localStorage.setItem('desktop', '');
+  const activeDeviceTestUUID = 'b8a67b5c-7aaa-4acb-805d-3d86af7a6fb7';
+  let activatedRouteParamMapGetSpy;
 
   beforeEach(async(() => {
+    const deviceService = jasmine.createSpyObj('DeviceService', ['getDeviceInfo']);
+    deviceService.getDeviceInfo.and.returnValue(of({ name: '', owner: '', powered_on: false, uuid: '' }));
+    activatedRouteParamMapGetSpy = jasmine.createSpy('get').and.returnValue(activeDeviceTestUUID);
+
     TestBed.configureTestingModule({
       providers: [
         { provide: WebsocketService, useValue: webSocketMock() },
+        { provide: DeviceService, useValue: deviceService },
+        { provide: ActivatedRoute, useValue: { queryParamMap: of({ get: activatedRouteParamMapGetSpy }) } },
         ProgramService
       ],
       imports: [
@@ -61,44 +68,6 @@ describe('DesktopComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('#initSession() should save all devices to the session-storage', inject([WebsocketService], (webSocket: WebsocketService) => {
-    const firstDevice = {
-      owner: '00000000-0000-0000-0000-000000000000',
-      name: 'some device',
-      power: 1,
-      uuid: '00000000-0000-0000-0000-000000000000',
-      powered_on: true
-    };
-    const secondDevice = Object.assign({}, firstDevice);
-    secondDevice.name = 'another device';
-    (webSocket.ms as jasmine.Spy).and.returnValue(of({ devices: [firstDevice, secondDevice] }) as any);
-    spyOn(sessionStorage, 'setItem');
-
-    component.initSession();
-    expect(webSocket.ms).toHaveBeenCalledWith('device', ['device', 'all'], {});
-    expect(sessionStorage.setItem).toHaveBeenCalledWith('devices', JSON.stringify([firstDevice, secondDevice]));
-    expect(sessionStorage.setItem).toHaveBeenCalledWith('activeDevice', JSON.stringify(firstDevice));
-  }));
-
-  it('#initSession() should create a device and save it to the session-storage if there is none',
-    inject([WebsocketService], (webSocket: WebsocketService) => {
-      const testDevice = {
-        owner: '00000000-0000-0000-0000-000000000000',
-        name: 'some device',
-        power: 1,
-        uuid: '00000000-0000-0000-0000-000000000000',
-        powered_on: true
-      };
-      (webSocket.ms as jasmine.Spy).and.returnValues(of({ devices: [] }) as any, of(testDevice) as any);
-      spyOn(sessionStorage, 'setItem');
-
-      component.initSession();
-      expect(webSocket.ms).toHaveBeenCalledWith('device', ['device', 'all'], {});
-      expect(webSocket.ms).toHaveBeenCalledWith('device', ['device', 'starter_device'], {});
-      expect(sessionStorage.setItem).toHaveBeenCalledWith('devices', JSON.stringify([testDevice]));
-      expect(sessionStorage.setItem).toHaveBeenCalledWith('activeDevice', JSON.stringify(testDevice));
-    }));
 
   it('#onDesktop() should return all desktop shortcuts which have the onDesktop property set to true', () => {
     component.linkages = [

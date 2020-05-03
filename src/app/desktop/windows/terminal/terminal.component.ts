@@ -7,6 +7,7 @@ import { DefaultTerminalState } from './terminal-states';
 import { WebsocketService } from '../../../websocket.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FileService } from '../../../api/files/file.service';
+import { DesktopDeviceService } from '../../desktop-device.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -30,7 +31,8 @@ export class TerminalComponent extends WindowComponent
     private settings: SettingsService,
     private fileService: FileService,
     private windowManager: WindowManagerService,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private desktopDeviceService: DesktopDeviceService
   ) {
     super();
   }
@@ -42,8 +44,9 @@ export class TerminalComponent extends WindowComponent
         this.settings,
         this.fileService,
         this.domSanitizer,
-        this,
-        JSON.parse(sessionStorage.getItem('activeDevice'))
+        this.desktopDeviceService,
+        this.desktopDeviceService.activeDevice,
+        this
       )
     );
     this.getState().refreshPrompt();

@@ -20,12 +20,10 @@ describe('WebsocketService', () => {
   it('#logout() should clear local and session storage and send a log out request',
     inject([WebsocketService], (service: WebsocketService) => {
       spyOn(localStorage, 'clear');
-      spyOn(sessionStorage, 'clear');
       spyOn(service, 'request');
 
       service.logout();
       expect(localStorage.clear).toHaveBeenCalled();
-      expect(sessionStorage.clear).toHaveBeenCalled();
       expect(service.request).toHaveBeenCalledWith({ action: 'logout' });
     })
   );

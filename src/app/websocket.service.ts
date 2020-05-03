@@ -134,7 +134,6 @@ export class WebsocketService {
 
   logout(): void {
     localStorage.clear();
-    sessionStorage.clear();
     this.request({ action: 'logout' });
     this.loggedIn = false;
   }

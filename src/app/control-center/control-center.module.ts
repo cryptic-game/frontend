@@ -9,6 +9,7 @@ import { ControlCenterCreateDevicePageComponent } from './control-center-create-
 import { ControlCenterSettingsPageComponent } from './control-center-settings-page/control-center-settings-page.component';
 import { ControlCenterChangelogPageComponent } from './control-center-changelog-page/control-center-changelog-page.component';
 import { ControlCenterSoundPageComponent } from './control-center-sound-page/control-center-sound-page.component';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { ControlCenterSoundPageComponent } from './control-center-sound-page/con
   ],
   imports: [
     CommonModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    RouterModule
   ]
 })
 export class ControlCenterModule {

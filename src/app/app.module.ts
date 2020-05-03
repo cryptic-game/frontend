@@ -42,10 +42,12 @@ import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wall
 import { HardwareShopSidebarComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar/hardware-shop-sidebar.component';
 import { ControlCenterComponent } from './control-center/control-center.component';
 import { ControlCenterModule } from './control-center/control-center.module';
+import { ControlCenterGuard } from './control-center/control-center.guard';
 // tslint:enable:max-line-length
 
 const routes: Routes = [
-  { path: '', component: DesktopComponent, canActivate: [DesktopGuard] },
+  { path: '', component: ControlCenterComponent, canActivate: [ControlCenterGuard] },
+  { path: 'desktop', component: DesktopComponent, canActivate: [DesktopGuard] },
   { path: 'login', component: LoginComponent, canActivate: [AccountGuard] },
   { path: 'signup', component: SignUpComponent, canActivate: [AccountGuard] },
   { path: '**', redirectTo: '/' }

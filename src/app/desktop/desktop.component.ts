@@ -2,12 +2,13 @@ import { Position } from '../../dataclasses/position';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Program } from '../../dataclasses/program';
 import { ProgramService } from './program.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { WindowManagerService } from './window-manager/window-manager.service';
 import { WebsocketService } from '../websocket.service';
 import { GlobalCursorService } from '../global-cursor.service';
 import { SettingsService } from './windows/settings/settings.service';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { DeviceService } from '../api/devices/device.service';
 
 @Component({
   selector: 'app-desktop',
@@ -27,8 +28,10 @@ export class DesktopComponent implements OnInit {
   dragCursorLock: number;
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private websocket: WebsocketService,
+    private deviceService: DeviceService,
     private programService: ProgramService,
     private cursorService: GlobalCursorService,
     private settings: SettingsService,
@@ -39,25 +42,6 @@ export class DesktopComponent implements OnInit {
 
   ngOnInit(): void {
     this.linkages = this.programService.list();
-
-    this.initSession();
-  }
-
-  initSession(): void {
-    this.websocket.ms('device', ['device', 'all'], {}).subscribe(r => {
-      let devices = r.devices;
-
-      if (devices == null || devices.length === 0) {
-        this.websocket.ms('device', ['device', 'starter_device'], {}).subscribe(r2 => {
-          devices = [r2];
-          sessionStorage.setItem('devices', JSON.stringify(devices));
-          sessionStorage.setItem('activeDevice', JSON.stringify(devices[0]));
-        });
-      } else {
-        sessionStorage.setItem('devices', JSON.stringify(devices));
-        sessionStorage.setItem('activeDevice', JSON.stringify(devices[0]));
-      }
-    });
   }
 
   onDesktop(): Program[] {
