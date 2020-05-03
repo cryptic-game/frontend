@@ -1,3 +1,73 @@
-h1 {
-  margin-top: 0;
+@import "../control-center-style";
+@import "variables";
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .computer-logo {
+    margin-right: 3rem;
+    width: 256px;
+    height: 160px;
+
+    &.online {
+      cursor: pointer;
+    }
+  }
+
+  h1 {
+    margin: 0;
+  }
+
+  .rename-button {
+    padding: 12px;
+    margin-top: 2rem;
+    background-color: $sidebar-background;
+    color: white;
+    border: 2px solid $button-border-color;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $button-hover-color;
+    }
+  }
+
+  .power-button {
+    margin-left: 3rem;
+
+    cursor: pointer;
+  }
+}
+
+.table-container {
+  margin-top: 1rem;
+
+  table {
+    th {
+      font-size: 18pt;
+      color: $table-header-color;
+      text-align: left;
+      line-height: 2em;
+      padding-top: 0.5em;
+    }
+
+    td {
+      font-size: 13pt;
+      padding-right: 3rem;
+      line-height: 1.5em;
+    }
+
+    td:last-child {
+      padding-right: 0;
+    }
+  }
+
+  .separator {
+    width: 50%;
+    margin-top: 1em;
+    border-top: 1px solid $button-border-color
+  }
 }

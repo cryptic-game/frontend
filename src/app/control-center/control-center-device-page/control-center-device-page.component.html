@@ -1,1 +1,74 @@
-<h1>Device page coming soon!</h1>
+<div class="header">
+  <img class="computer-logo online" [hidden]="!device.device.powered_on"
+       src="../assets/device/desktop_computer_online.svg"
+       [routerLink]="['desktop']" [queryParams]="{'device': device.device.uuid}" alt="Online-Computer"
+       draggable="false">
+  <img class="computer-logo" [hidden]="device.device.powered_on" src="../assets/device/desktop_computer_offline.svg"
+       alt="Offline-Computer" draggable="false">
+  <div>
+    <h1 #deviceName (keypress)="deviceNameKeyPressed($event)" (paste)="false">{{device.device.name}}</h1>
+    <button class="rename-button" (click)="startRenaming()">Rename this PC</button>
+  </div>
+  <svg class="power-button" (click)="togglePower()" viewBox="0 0 60 60" width="65" height="65"
+       xmlns="http://www.w3.org/2000/svg">
+    <circle cx="30" cy="30" r="29" [attr.stroke]="device.device.powered_on ? 'green' : 'red'" stroke-width="2"
+            fill="black"></circle>
+    <circle cx="30" cy="30" r="23" [attr.stroke]="device.device.powered_on ? 'green' : 'red'" stroke-width="6"
+            fill="none"></circle>
+    <circle cx="30" cy="30" r="9" [attr.stroke]="device.device.powered_on ? 'green' : 'red'" stroke-width="2"
+            fill="none"></circle>
+    <line x1="30" y1="28" x2="30" y2="18" [attr.stroke]="device.device.powered_on ? 'green' : 'red'"
+          stroke-width="2"></line>
+  </svg>
+</div>
+<div class="table-container">
+  <table>
+    <tr>
+      <th colspan="2">Device specifications</th>
+    </tr>
+    <tr>
+      <td>Device name</td>
+      <td>{{device.device.name}}</td>
+    </tr>
+    <tr>
+      <td>Processor</td>
+      <td>{{device.hardware.cpu[0].name}}</td>
+    </tr>
+    <tr>
+      <td>Installed RAM</td>
+      <td>{{device.hardware.getTotalMemory()}} MB</td>
+    </tr>
+    <tr>
+      <td>Device-UUID</td>
+      <td>{{device.device.uuid}}</td>
+    </tr>
+
+    <tr>
+      <th colspan="2">Specific factors</th>
+    </tr>
+    <tr>
+      <td>Speed</td>
+      <td>not available</td>
+    </tr>
+    <tr>
+      <td>Security</td>
+      <td>not available</td>
+    </tr>
+    <tr>
+      <td>Efficiency</td>
+      <td>not available</td>
+    </tr>
+  </table>
+
+  <div class="separator"></div>
+
+  <table>
+    <tr>
+      <th colspan="2">Running processes</th>
+    </tr>
+    <tr *ngFor="let service of services">
+      <td>{{service.service.name}}</td>
+      <td>{{service.usage.average() | number:'1.0-1'}}</td>
+    </tr>
+  </table>
+</div>

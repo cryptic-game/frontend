@@ -54,7 +54,7 @@ export class DeviceService {
   }
 
   togglePower(deviceUUID: string): Observable<Device> {
-    return this.deviceRequest(['device', 'power'], {});
+    return this.deviceRequest(['device', 'power'], { device_uuid: deviceUUID });
   }
 
   renameDevice(deviceUUID: string, newName: string): Observable<Device> {
