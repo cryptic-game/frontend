@@ -2,17 +2,16 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TerminalComponent } from './terminal.component';
 import { HttpClientModule } from '@angular/common/http';
+import { DesktopDeviceService } from '../../desktop-device.service';
 
 describe('TerminalComponent', () => {
   let component: TerminalComponent;
   let fixture: ComponentFixture<TerminalComponent>;
 
-  sessionStorage.setItem('username', '');
-  sessionStorage.setItem('activeDevice', JSON.stringify({name: ''}));
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [TerminalComponent],
+      providers: [DesktopDeviceService],
       imports: [HttpClientModule]
     }).compileComponents();
   }));

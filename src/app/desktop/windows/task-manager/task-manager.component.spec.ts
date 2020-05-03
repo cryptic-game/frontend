@@ -5,6 +5,7 @@ import { DeviceHardware, HardwareService } from '../../../api/hardware/hardware.
 import * as rxjs from 'rxjs';
 import { Subject } from 'rxjs';
 import { WebsocketService } from '../../../websocket.service';
+import { DesktopDeviceService } from '../../desktop-device.service';
 
 describe('TaskManagerComponent', () => {
   let webSocket;
@@ -42,11 +43,10 @@ describe('TaskManagerComponent', () => {
     });
     hardwareService.getDeviceParts.and.returnValue(rxjs.of(hardware));
 
-    spyOn(sessionStorage, 'getItem').and.returnValue('{}');
-
     TestBed.configureTestingModule({
       declarations: [TaskManagerComponent],
       providers: [
+        DesktopDeviceService,
         { provide: WebsocketService, useValue: webSocket },
         { provide: HardwareService, useValue: hardwareService }
       ]
@@ -57,6 +57,7 @@ describe('TaskManagerComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TaskManagerComponent);
     component = fixture.componentInstance;
+    component.device = { owner: '', powered_on: true, name: '', uuid: '' };
     fixture.detectChanges();
   });
 
@@ -69,7 +70,7 @@ describe('TaskManagerComponent', () => {
       const deviceUUID = 'test123-456';
       const cpuUtilization = 6226;
 
-      component.deviceUUID = deviceUUID;
+      component.device = { uuid: deviceUUID, name: '', powered_on: true, owner: '' };
 
       fixture.whenStable().then(() => {
         expect(webSocket.subscribe_notification).toHaveBeenCalledWith('resource-usage');
@@ -80,7 +81,7 @@ describe('TaskManagerComponent', () => {
     }));
 
   it('should not update the utilization if the device uuid does not match', async(() => {
-    component.deviceUUID = '123456';
+    component.device = { uuid: '123456', name: '', powered_on: true, owner: '' };
     const cpuUtilBefore = 15;
     component.utilization.cpu = cpuUtilBefore;
 

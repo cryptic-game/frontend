@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MinerComponent } from './miner.component';
 import { WebsocketService } from '../../../websocket.service';
 import { webSocketMock } from '../../../test-utils';
+import { DesktopDeviceService } from '../../desktop-device.service';
 
 describe('MinerComponent', () => {
   let component: MinerComponent;
@@ -11,7 +12,10 @@ describe('MinerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [{ provide: WebsocketService, useValue: webSocketMock() }],
+      providers: [
+        DesktopDeviceService,
+        { provide: WebsocketService, useValue: webSocketMock() }
+      ],
       declarations: [MinerComponent],
       imports: [ReactiveFormsModule],
     }).compileComponents();

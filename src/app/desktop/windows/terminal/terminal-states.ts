@@ -7,6 +7,8 @@ import { SettingsService } from '../settings/settings.service';
 import { FileService } from '../../../api/files/file.service';
 import { Path } from '../../../api/files/path';
 import { of } from 'rxjs';
+import { Device } from '../../../api/devices/device';
+import { DesktopDeviceService } from '../../desktop-device.service';
 
 
 function escapeHtml(html) {
@@ -212,8 +214,8 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-              private domSanitizer: DomSanitizer, protected terminal: TerminalAPI, protected activeDevice: object,
-              public promptColor: string = null) {
+              private domSanitizer: DomSanitizer, protected desktopDeviceService: DesktopDeviceService, protected activeDevice: Device,
+              protected terminal: TerminalAPI, public promptColor: string = null) {
     super();
   }
 
@@ -262,8 +264,8 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.activeDevice = newDevice;
         this.refreshPrompt();
 
-        if (this.activeDevice['uuid'] === JSON.parse(sessionStorage.getItem('activeDevice'))['uuid']) {
-          sessionStorage.setItem('activeDevice', JSON.stringify(newDevice));
+        if (this.activeDevice.uuid === this.desktopDeviceService.activeDevice.uuid) {
+          Object.assign(this.desktopDeviceService.activeDevice, newDevice);
         }
       }, () => {
         this.terminal.outputText('The hostname couldn\'t be changed');
@@ -992,10 +994,9 @@ export class DefaultTerminalState extends CommandTerminalState {
 
     this.websocket.ms('device', ['device', 'info'], { device_uuid: args[0] }).subscribe(infoData => {
       this.websocket.ms('service', ['part_owner'], { device_uuid: args[0] }).subscribe(partOwnerData => {
-        const user_uuid = JSON.parse(sessionStorage.getItem('activeDevice'))['owner'];
-        if (infoData['owner'] === user_uuid || partOwnerData['ok'] === true) {
+        if (infoData['owner'] === this.websocket.account.uuid || partOwnerData['ok'] === true) {
           this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.fileService, this.domSanitizer,
-            this.terminal, infoData, '#DD2C00'));
+            this.desktopDeviceService, infoData, this.terminal, '#DD2C00'));
         } else {
           this.terminal.outputText('Access denied');
         }
@@ -1382,7 +1383,7 @@ export abstract class ChoiceTerminalState implements TerminalState {
     }
 
     if (this.choices[command]) {
-      Object(this.choices[command]).executor();
+      this.choices[command]();
     } else {
       this.invalidChoice(command);
     }
