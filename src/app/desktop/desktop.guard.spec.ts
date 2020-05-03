@@ -41,7 +41,7 @@ describe('DesktopGuard', () => {
 
   it('should try to login, allow activation, and save the device to the service if it succeeded, the device is online, and the user owns the device',
     inject([DesktopGuard, DesktopDeviceService], (guard: DesktopGuard, desktopDeviceService: DesktopDeviceService) => {
-      const testDevice = { powered_on: true, owner: accountUUID };
+      const testDevice = { powered_on: true, owner: accountUUID, name: '', uuid: '' };
       webSocketService.trySession.and.returnValue(of(true));
       deviceService.getDeviceInfo.and.returnValue(of(testDevice));
       desktopDeviceService.activeDevice = null;
