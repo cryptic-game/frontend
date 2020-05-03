@@ -16,7 +16,7 @@ describe('ControlCenterSubMenuComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ControlCenterSidebarMenuComponent);
     component = fixture.componentInstance;
-    component.menu = new SidebarMenu('');
+    component.menu = new SidebarMenu('', '');
     fixture.detectChanges();
   });
 

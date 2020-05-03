@@ -23,10 +23,13 @@
 
     .icon {
       flex: 0 0 auto;
+      width: 2em;
+      height: 2em;
     }
 
     span {
       flex: 1 1 auto;
+      margin-left: 1em;
     }
 
     .arrow {
