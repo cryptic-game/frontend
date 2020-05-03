@@ -23,11 +23,11 @@ export class ControlCenterComponent implements OnInit {
   activeDevice?: DeviceSidebarMenuItem = null;
 
   menus: SidebarMenu[] = [
-    new SidebarMenu('Computers', this.devices, true),
-    new SidebarMenu('Servers', [], true),
-    new SidebarMenu('Settings'),
-    new SidebarMenu('Sound'),
-    new SidebarMenu('Changelog')
+    new SidebarMenu('Computers', 'menu_computers.svg', this.devices, true),
+    new SidebarMenu('Servers', 'menu_servers.svg', [], true),
+    new SidebarMenu('Settings', 'menu_settings.svg'),
+    new SidebarMenu('Sound', 'menu_sound.svg'),
+    new SidebarMenu('Changelog', 'menu_changelog.svg')
   ];
 
   constructor(private hardwareService: HardwareService, private deviceService: DeviceService) {

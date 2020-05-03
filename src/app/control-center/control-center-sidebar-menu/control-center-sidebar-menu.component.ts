@@ -64,12 +64,14 @@ export class ControlCenterSidebarMenuComponent implements OnInit {
 
 export class SidebarMenu {
   title: string;
+  icon: string;
   items: SidebarMenuItem[];
   expandable: boolean;
   displayCount: boolean;
 
-  constructor(title: string, items?: SidebarMenuItem[], displayCount: boolean = false) {
+  constructor(title: string, icon: string, items?: SidebarMenuItem[], displayCount: boolean = false) {
     this.title = title;
+    this.icon = icon;
     if (items instanceof Array) {
       this.expandable = true;
       this.items = items;
