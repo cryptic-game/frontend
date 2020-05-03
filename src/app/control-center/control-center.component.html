@@ -8,7 +8,7 @@
     </div>
     <div class="main-page">
       <ng-container [ngSwitch]="activePage">
-        <app-control-center-device-page *ngSwitchCase="1"></app-control-center-device-page>
+        <app-control-center-device-page *ngSwitchCase="1" [device]="activeDevice"></app-control-center-device-page>
         <app-control-center-create-device-page *ngSwitchCase="2"></app-control-center-create-device-page>
         <app-control-center-settings-page *ngSwitchCase="3"></app-control-center-settings-page>
         <app-control-center-sound-page *ngSwitchCase="4"></app-control-center-sound-page>
