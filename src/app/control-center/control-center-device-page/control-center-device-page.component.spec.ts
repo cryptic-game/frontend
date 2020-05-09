@@ -6,6 +6,7 @@ import { WebsocketService } from '../../websocket.service';
 import { webSocketMock } from '../../test-utils';
 import { DeviceSidebarMenuItem } from '../control-center.component';
 import { DeviceHardware } from '../../api/hardware/hardware.service';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ControlCenterDevicePageComponent', () => {
   let component: ControlCenterDevicePageComponent;
@@ -14,7 +15,7 @@ describe('ControlCenterDevicePageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ControlCenterDevicePageComponent],
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule, NoopAnimationsModule],
       providers: [{ provide: WebsocketService, useValue: webSocketMock() }]
     })
       .compileComponents();
