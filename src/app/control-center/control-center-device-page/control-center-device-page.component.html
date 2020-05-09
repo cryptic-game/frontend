@@ -9,17 +9,32 @@
     <h1 #deviceName (keypress)="deviceNameKeyPressed($event)" (paste)="false">{{device.device.name}}</h1>
     <button class="rename-button" (click)="startRenaming()">Rename this PC</button>
   </div>
-  <svg class="power-button" (click)="togglePower()" viewBox="0 0 60 60" width="65" height="65"
-       xmlns="http://www.w3.org/2000/svg">
-    <circle cx="30" cy="30" r="29" [attr.stroke]="device.device.powered_on ? 'green' : 'red'" stroke-width="2"
-            fill="black"></circle>
-    <circle cx="30" cy="30" r="23" [attr.stroke]="device.device.powered_on ? 'green' : 'red'" stroke-width="6"
-            fill="none"></circle>
-    <circle cx="30" cy="30" r="9" [attr.stroke]="device.device.powered_on ? 'green' : 'red'" stroke-width="2"
-            fill="none"></circle>
-    <line x1="30" y1="28" x2="30" y2="18" [attr.stroke]="device.device.powered_on ? 'green' : 'red'"
-          stroke-width="2"></line>
+  <svg class="power-button" (click)="powerButtonClicked()" width="80" height="80" viewBox="0 0 1080 1080"
+       xmlns="http://www.w3.org/2000/svg" [@powerButton]="powerButton.power"
+       (@powerButton.start)="powerButton.animating = true" (@powerButton.done)="powerButton.animating = false"
+       [class.disabled]="powerButton.animating">
+    <g filter="url(#_Blur)">
+      <circle cx="540" cy="540" r="480" [@powerButtonFill]="powerButton.power"/>
+    </g>
+    <circle cx="540" cy="540" r="448" fill="#181f23"/>
+    <path d="M540 76a464 464 0 100 928 464 464 0 000-928zm0 16a448 448 0 110 896 448 448 0 010-896z"
+          [@powerButtonFill]="powerButton.power"/>
+    <circle cx="540" cy="540" r="354" fill="none" stroke-width="128" stroke-linecap="butt"
+            stroke-dasharray="2224.24759874"
+            [@powerButtonStroke]="powerButton.power"
+            [@powerButtonProgress]="powerButton.power"/>
+    <path fill="none" stroke="#1bd41f" stroke-linecap="round" stroke-width="36" d="M491 400a144 144 0 1098 0"
+          [@powerButtonStroke]="powerButton.power"/>
+    <path fill="none" stroke="#1bd41f" stroke-linecap="round" stroke-linejoin="miter" stroke-width="36" d="M540 504V360"
+          [@powerButtonStroke]="powerButton.power"/>
+    <defs>
+      <filter id="_Blur" width="1344" height="1344" x="-132" y="-132" filterUnits="userSpaceOnUse">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="32"/>
+      </filter>
+    </defs>
   </svg>
+
+
 </div>
 <div class="table-container">
   <table>

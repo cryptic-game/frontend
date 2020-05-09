@@ -39,6 +39,10 @@
     margin-left: 3rem;
 
     cursor: pointer;
+
+    &.disabled {
+      cursor: not-allowed;
+    }
   }
 }
 
