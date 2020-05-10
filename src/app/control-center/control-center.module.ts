@@ -9,7 +9,34 @@ import { ControlCenterCreateDevicePageComponent } from './control-center-create-
 import { ControlCenterSettingsPageComponent } from './control-center-settings-page/control-center-settings-page.component';
 import { ControlCenterChangelogPageComponent } from './control-center-changelog-page/control-center-changelog-page.component';
 import { ControlCenterSoundPageComponent } from './control-center-sound-page/control-center-sound-page.component';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { ControlCenterGuard } from './control-center.guard';
+import { ControlCenterService } from './control-center.service';
+import { ControlCenterDevicePageHardwareResolverService } from './control-center-device-page/control-center-device-page-hardware-resolver.service';
+
+
+const routes: Routes = [
+  {
+    path: '',
+    component: ControlCenterComponent,
+    canActivate: [ControlCenterGuard],
+    resolve: {
+      devices: ControlCenterService
+    },
+    children: [
+      {
+        path: 'device',
+        component: ControlCenterDevicePageComponent,
+        runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+        resolve: { hardware: ControlCenterDevicePageHardwareResolverService }
+      },
+      { path: 'create-device', component: ControlCenterCreateDevicePageComponent },
+      { path: 'settings', component: ControlCenterSettingsPageComponent },
+      { path: 'sound', component: ControlCenterSoundPageComponent },
+      { path: 'changelog', component: ControlCenterChangelogPageComponent }
+    ]
+  }
+];
 
 
 @NgModule({
@@ -26,7 +53,7 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     BrowserAnimationsModule,
-    RouterModule
+    RouterModule.forChild(routes)
   ]
 })
 export class ControlCenterModule {

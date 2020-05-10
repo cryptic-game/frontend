@@ -6,6 +6,7 @@ import { webSocketMock } from '../test-utils';
 import { ControlCenterSidebarComponent } from './control-center-sidebar/control-center-sidebar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ControlCenterSidebarMenuComponent } from './control-center-sidebar-menu/control-center-sidebar-menu.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ControlCenterComponent', () => {
   let component: ControlCenterComponent;
@@ -15,7 +16,7 @@ describe('ControlCenterComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ControlCenterComponent, ControlCenterSidebarComponent, ControlCenterSidebarMenuComponent],
       providers: [{ provide: WebsocketService, useValue: webSocketMock() }],
-      imports: [RouterTestingModule]
+      imports: [RouterTestingModule, NoopAnimationsModule]
     })
       .compileComponents();
   }));

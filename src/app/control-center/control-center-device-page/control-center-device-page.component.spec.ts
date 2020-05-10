@@ -4,19 +4,24 @@ import { ControlCenterDevicePageComponent } from './control-center-device-page.c
 import { RouterTestingModule } from '@angular/router/testing';
 import { WebsocketService } from '../../websocket.service';
 import { webSocketMock } from '../../test-utils';
-import { DeviceSidebarMenuItem } from '../control-center.component';
-import { DeviceHardware } from '../../api/hardware/hardware.service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { DeviceHardware } from '../../api/hardware/hardware.service';
+import { ActivatedRoute } from '@angular/router';
 
 describe('ControlCenterDevicePageComponent', () => {
   let component: ControlCenterDevicePageComponent;
   let fixture: ComponentFixture<ControlCenterDevicePageComponent>;
+  let activatedRoute;
 
   beforeEach(async(() => {
+    activatedRoute = { queryParamMap: jasmine.createSpyObj(['subscribe']), data: jasmine.createSpyObj(['subscribe']) };
     TestBed.configureTestingModule({
       declarations: [ControlCenterDevicePageComponent],
       imports: [RouterTestingModule, NoopAnimationsModule],
-      providers: [{ provide: WebsocketService, useValue: webSocketMock() }]
+      providers: [
+        { provide: WebsocketService, useValue: webSocketMock() },
+        { provide: ActivatedRoute, useValue: activatedRoute }
+      ],
     })
       .compileComponents();
   }));
@@ -24,8 +29,9 @@ describe('ControlCenterDevicePageComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ControlCenterDevicePageComponent);
     component = fixture.componentInstance;
-    component['_device'] = new DeviceSidebarMenuItem({ name: '', owner: '', powered_on: false, uuid: '' }, new DeviceHardware());
-    component.device.hardware.cpu.push({ name: '' } as any);
+    component.device = { name: '', owner: '', powered_on: false, uuid: '' };
+    component.hardware = new DeviceHardware();
+    component.hardware.cpu.push({ name: '' } as any);
     fixture.detectChanges();
   });
 
