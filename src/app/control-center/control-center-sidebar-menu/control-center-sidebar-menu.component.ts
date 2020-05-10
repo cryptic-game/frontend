@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Params, Router } from '@angular/router';
 
 @Component({
   selector: 'app-control-center-sidebar-menu',
@@ -34,30 +35,35 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class ControlCenterSidebarMenuComponent implements OnInit {
   expanded = false;
-  activeItem?: SidebarMenuItem = null;
 
   @Input() menu: SidebarMenu;
-  @Output() menuSelect: EventEmitter<SidebarSelectEvent> = new EventEmitter<SidebarSelectEvent>();
 
-  constructor() {
+  constructor(private router: Router) {
   }
 
   ngOnInit(): void {
   }
 
   menuClicked() {
-    if (this.menu.expandable) {
-      if (this.menu.items.length !== 0) {
-        this.expanded = !this.expanded;
-      }
-    } else {
-      this.menuSelect.emit(new SidebarMenuSelectEvent(this.menu));
+    if (this.menu.items.length !== 0) {
+      this.expanded = !this.expanded;
+    }
+
+    if (this.menu.routerLink) {
+      this.router.navigateByUrl(this.menu.routerLink, { queryParams: this.menu.queryParams }).then();
     }
   }
 
   itemClicked(item: SidebarMenuItem) {
-    this.menuSelect.emit(new SidebarMenuItemSelectEvent(this.menu, item));
-    this.activeItem = item;
+    this.router.navigate([item.routerLink], { queryParams: item.queryParams }).then();
+  }
+
+  isItemActive(item: SidebarMenuItem) {
+    // had to do this without routerLinkActive because of the lack of https://github.com/angular/angular/issues/31154
+    if (!item.routerLink) {
+      return false;
+    }
+    return this.router.isActive(this.router.createUrlTree([item.routerLink], { queryParams: item.queryParams }), false);
   }
 
 }
@@ -66,46 +72,23 @@ export class SidebarMenu {
   title: string;
   icon: string;
   items: SidebarMenuItem[];
-  expandable: boolean;
   displayCount: boolean;
+  routerLink?: string;
+  queryParams?: Params;
 
-  constructor(title: string, icon: string, items?: SidebarMenuItem[], displayCount: boolean = false) {
+  constructor(title: string, icon: string,
+              options: { items?: SidebarMenuItem[], displayCount?: boolean, routerLink?: string, queryParams?: Params } = {}) {
     this.title = title;
     this.icon = icon;
-    if (items instanceof Array) {
-      this.expandable = true;
-      this.items = items;
-    } else {
-      this.expandable = false;
-      this.items = [];
-    }
-    this.displayCount = displayCount;
+    this.items = options.items ? options.items : [];
+    this.displayCount = options.displayCount === true;
+    this.routerLink = options.routerLink;
+    this.queryParams = options.queryParams;
   }
 }
 
 export interface SidebarMenuItem {
   title: string;
-}
-
-export interface SidebarSelectEvent {
-  menu: SidebarMenu;
-}
-
-export class SidebarMenuSelectEvent implements SidebarSelectEvent {
-  menu: SidebarMenu;
-
-  constructor(menu: SidebarMenu) {
-    this.menu = menu;
-  }
-
-}
-
-export class SidebarMenuItemSelectEvent implements SidebarSelectEvent {
-  menu: SidebarMenu;
-  item: SidebarMenuItem;
-
-  constructor(menu: SidebarMenu, item: SidebarMenuItem) {
-    this.menu = menu;
-    this.item = item;
-  }
+  routerLink?: string;
+  queryParams?: Params;
 }

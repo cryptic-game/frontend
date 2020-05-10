@@ -8,7 +8,7 @@
     </svg>
   </div>
   <div *ngIf="expanded" [@expandCollapse] class="children">
-    <div *ngFor="let item of menu.items" (click)="itemClicked(item)"
-         [class.active]="item === activeItem" class="child">{{item.title}}</div>
+    <div *ngFor="let item of menu.items" (click)="itemClicked(item)" [class.active]="isItemActive(item)"
+         class="child">{{item.title}}</div>
   </div>
 </div>

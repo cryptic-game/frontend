@@ -1,11 +1,13 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { DeviceSidebarMenuItem } from '../control-center.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { WebsocketService } from '../../websocket.service';
 import { DeviceService } from '../../api/devices/device.service';
 import { from } from 'rxjs';
 import { filter, flatMap, map, switchMap, toArray } from 'rxjs/operators';
-import { DeviceUtilization } from '../../api/devices/device';
+import { Device, DeviceUtilization } from '../../api/devices/device';
 import { animate, animateChild, keyframes, query, state, style, transition, trigger } from '@angular/animations';
+import { ActivatedRoute } from '@angular/router';
+import { ControlCenterService } from '../control-center.service';
+import { DeviceHardware } from '../../api/hardware/hardware.service';
 
 
 function powerButtonColorAnimation(triggerName, property) {
@@ -61,7 +63,8 @@ function powerButtonColorAnimation(triggerName, property) {
   styleUrls: ['./control-center-device-page.component.scss']
 })
 export class ControlCenterDevicePageComponent implements OnInit {
-  private _device: DeviceSidebarMenuItem;
+  device: Device;
+  hardware: DeviceHardware;
   services: {
     service: { uuid: string, name: string, running: boolean },
     usage: DeviceUtilization
@@ -73,12 +76,26 @@ export class ControlCenterDevicePageComponent implements OnInit {
 
   @ViewChild('deviceName') deviceNameField;
 
-  @Input()
-  set device(device: DeviceSidebarMenuItem) {
-    this._device = device;
-    this.powerButton.power = device.device.powered_on;
-    if (device && device.device.powered_on) {
-      this.webSocket.ms('service', ['list'], { device_uuid: device.device.uuid }).pipe(
+  constructor(private webSocket: WebsocketService,
+              private deviceService: DeviceService,
+              private controlCenterService: ControlCenterService,
+              private activatedRoute: ActivatedRoute) {
+    this.activatedRoute.queryParamMap.subscribe(queryParamMap => {
+      this.device = this.controlCenterService.getDevice(queryParamMap.get('device'));
+      this.updateServices();
+    });
+    this.activatedRoute.data.subscribe(data => {
+      this.hardware = data['hardware'];
+    });
+  }
+
+  ngOnInit(): void {
+  }
+
+  updateServices(): void {
+    this.powerButton.power = this.device.powered_on;
+    if (this.device.powered_on) {
+      this.webSocket.ms('service', ['list'], { device_uuid: this.device.uuid }).pipe(
         switchMap(response => from(response.services as { uuid: string, name: string, running: boolean }[])),
         filter(service => service.running),
         flatMap(service =>
@@ -97,21 +114,14 @@ export class ControlCenterDevicePageComponent implements OnInit {
     }
   }
 
-  get device() {
-    return this._device;
-  }
-
-  constructor(private webSocket: WebsocketService, private deviceService: DeviceService) {
-  }
-
-  ngOnInit(): void {
-  }
-
   deviceNameKeyPressed(event: KeyboardEvent): boolean {
     const nameLength = this.deviceNameField.nativeElement.innerText.length;
     if ((event.key === 'Enter' || event.key === 'NumpadEnter') && nameLength >= 1) {
-      this.deviceService.renameDevice(this.device.device.uuid, this.deviceNameField.nativeElement.innerText).subscribe(response => {
-        this.device.device.name = response['name'];
+      const newName = this.deviceNameField.nativeElement.innerText
+        .replace(/[^a-zA-Z0-9\-_]+/g, '')
+        .substr(0, 15);
+      this.deviceService.renameDevice(this.device.uuid, newName).subscribe(response => {
+        this.device.name = response['name'];
       });
       this.deviceNameField.nativeElement.contentEditable = false;
       return false;
@@ -133,9 +143,9 @@ export class ControlCenterDevicePageComponent implements OnInit {
   }
 
   togglePower() {
-    this.deviceService.togglePower(this._device.device.uuid).subscribe(device => {
-      this._device.device = device;
-      this.device = this._device;  // update running processes
+    this.deviceService.togglePower(this.device.uuid).subscribe(device => {
+      Object.assign(this.device, device);
+      this.updateServices();
     });
   }
 }

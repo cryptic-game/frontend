@@ -16,6 +16,7 @@
 
     cursor: pointer;
     user-select: none;
+    outline: none;
 
     &:hover {
       background-color: $button-hover-color;
@@ -48,6 +49,7 @@
 
       cursor: pointer;
       user-select: none;
+      outline: none;
 
       &:hover {
         background-color: $button-hover-color;
