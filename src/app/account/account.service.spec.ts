@@ -6,7 +6,7 @@ import * as rxjs from 'rxjs';
 import { Router } from '@angular/router';
 
 describe('AccountService', () => {
-  const testCredentials = { username: 'testUsername', password: 'testPassword', email: 'test@email.com', token: '1234567654321' };
+  const testCredentials = { username: 'testUsername', password: 'testPassword', token: '1234567654321' };
   let webSocket;
 
   beforeEach(() => {
@@ -38,11 +38,10 @@ describe('AccountService', () => {
   it('#signUp() should make a register websocket request', inject([AccountService], (service: AccountService) => {
     webSocket.request.and.returnValue(rxjs.of({}));
 
-    service.signUp(testCredentials.username, testCredentials.email, testCredentials.password);
+    service.signUp(testCredentials.username, testCredentials.password);
     expect(webSocket.request).toHaveBeenCalledWith({
       action: 'register',
       name: testCredentials.username,
-      mail: testCredentials.email,
       password: testCredentials.password
     });
   }));
