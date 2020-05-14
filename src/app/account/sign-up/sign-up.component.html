@@ -8,11 +8,11 @@
 
     <form [formGroup]="form">
       <label>
-        <input formControlName="username" placeholder="Username" type="text">
+        <input autocomplete="username" formControlName="username" placeholder="Username" type="text">
       </label>
 
       <label>
-        <input formControlName="password" placeholder="Password" type="password">
+        <input autocomplete="new-password" formControlName="password" placeholder="Password" type="password">
       </label>
 
       <label class="strength">
@@ -24,7 +24,8 @@
       </label>
 
       <label>
-        <input formControlName="passwordConfirm" placeholder="Confirm Password" type="password">
+        <input autocomplete="new-password" formControlName="passwordConfirm" placeholder="Confirm Password"
+               type="password">
       </label>
 
       <label>
