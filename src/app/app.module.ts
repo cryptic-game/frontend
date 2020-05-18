@@ -40,6 +40,8 @@ import { WalletAppHeaderComponent } from './desktop/windows/wallet-app/wallet-ap
 import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-edit/wallet-app-edit.component';
 import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wallet-app-transaction/wallet-app-transaction.component';
 import { HardwareShopSidebarComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar/hardware-shop-sidebar.component';
+import { EditorComponent } from './desktop/windows/editor/editor.component';
+
 // tslint:enable:max-line-length
 
 const routes: Routes = [
@@ -83,7 +85,8 @@ const routes: Routes = [
     WalletAppHeaderComponent,
     WalletAppEditComponent,
     WalletAppTransactionComponent,
-    HardwareShopSidebarComponent
+    HardwareShopSidebarComponent,
+    EditorComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
