@@ -43,6 +43,8 @@ import { HardwareShopSidebarComponent } from './desktop/windows/hardware-shop/ha
 import { ControlCenterModule } from './control-center/control-center.module';
 import { AppRouteReuseStrategy } from './app-route-reuse-strategy';
 import { DesktopDeviceResolver } from './desktop/desktop-device.resolver';
+import { EditorComponent } from './desktop/windows/editor/editor.component';
+
 // tslint:enable:max-line-length
 
 const routes: Routes = [
@@ -93,7 +95,8 @@ const routes: Routes = [
     WalletAppHeaderComponent,
     WalletAppEditComponent,
     WalletAppTransactionComponent,
-    HardwareShopSidebarComponent
+    HardwareShopSidebarComponent,
+    EditorComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
