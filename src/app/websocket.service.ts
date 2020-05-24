@@ -15,7 +15,6 @@ export class WebsocketService {
   account: Account = {
     uuid: '',
     name: '',
-    mail: '',
     created: 0,
     last: 0
   };
@@ -143,7 +142,6 @@ export class WebsocketService {
     return this.request({ action: 'info' }).pipe(map(data => {
       this.account.name = data['name'];
       this.account.uuid = data['uuid'];
-      this.account.mail = data['mail'];
       this.account.created = data['created'];
       this.account.last = data['last'];
       this.onlinePlayers = data['online'];
