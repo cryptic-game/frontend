@@ -3,7 +3,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { DeviceHardware, HardwareList, HardwareService } from './hardware.service';
 import { WebsocketService } from '../../websocket.service';
 import * as rxjs from 'rxjs';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 describe('HardwareService', () => {
   let webSocket;
@@ -38,9 +38,10 @@ describe('HardwareService', () => {
       const msSpy = webSocket.ms.and.returnValue(rxjs.of(data));
       service.hardwareAvailable = null;
 
-      service.updateParts();
-      expect(service.hardwareAvailable).toEqual(data);
-      expect(msSpy).toHaveBeenCalledWith('device', ['hardware', 'list'], {});
+      service.updateParts().subscribe(() => {
+        expect(service.hardwareAvailable).toEqual(data);
+        expect(msSpy).toHaveBeenCalledWith('device', ['hardware', 'list'], {});
+      });
     }));
 
   it('#updateParts() should call /hardware/list and do nothing if there was an error',
@@ -48,13 +49,22 @@ describe('HardwareService', () => {
       service.hardwareAvailable = null;
       const msSpy = webSocket.ms.and.callFake(() => throwError(new Error('Test error')));
 
-      service.updateParts();
-      expect(service.hardwareAvailable).toEqual(null);
-      expect(msSpy).toHaveBeenCalledWith('device', ['hardware', 'list'], {});
+      service.updateParts().subscribe(() => {
+        fail('Expected an error but got a success');
+      }, () => {
+        expect(service.hardwareAvailable).toEqual(null);
+        expect(msSpy).toHaveBeenCalledWith('device', ['hardware', 'list'], {});
+      });
     }));
 
-  it('#getHardwareParts() should return the saved hardware parts',
+  it('#getAvailableParts() should return the saved hardware parts',
     inject([HardwareService], (service: HardwareService) => {
+      spyOn(service, 'updateParts').and.returnValue(new Observable(subscriber => {
+        fail('updateParts() was called even though there already were saved hardware parts');
+        subscriber.next();
+        subscriber.complete();
+      }));
+
       const hardware = new HardwareList();
       hardware.ram['test'] = {
         id: 156,
@@ -65,7 +75,37 @@ describe('HardwareService', () => {
       };
       service.hardwareAvailable = hardware;
 
-      expect(service.getAvailableParts()).toEqual(hardware);
+      service.getAvailableParts().subscribe(parts => {
+        expect(service.updateParts).not.toHaveBeenCalled();
+        expect(parts).toEqual(hardware);
+      }, error => {
+        fail(error);
+      });
+    }));
+
+  it('#getAvailableParts() should call updateParts() if there are no saved hardware parts yet',
+    inject([HardwareService], (service: HardwareService) => {
+      const hardware = new HardwareList();
+      hardware.ram['test'] = {
+        id: 156,
+        ramSize: 987,
+        ramTyp: ['test-type', 4],
+        frequency: 123,
+        power: 321,
+      };
+
+      spyOn(service, 'updateParts').and.callFake(() => {
+        return new Observable(subscriber => {
+          service.hardwareAvailable = hardware;
+          subscriber.next();
+          subscriber.complete();
+        });
+      });
+
+      service.getAvailableParts().subscribe(parts => {
+        expect(service.updateParts).toHaveBeenCalled();
+        expect(parts).toEqual(hardware);
+      });
     }));
 
   it('#getDeviceParts() should call /device/info and return the corresponding hardware parts from hardwareAvailable',
