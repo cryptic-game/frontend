@@ -59,7 +59,7 @@ describe('SignUpComponent', () => {
   });
 
   it('should call accountService.checkPassword() when a form value gets changed', () => {
-    component.form.setValue({ username: 'testUsername', email: 'testEmail', password: 'testPassword', passwordConfirm: 'testPassword' });
+    component.form.setValue({ username: 'testUsername', password: 'testPassword', passwordConfirm: 'testPassword' });
 
     expect(accountService.checkPassword).toHaveBeenCalledWith('testPassword');
   });
@@ -75,7 +75,7 @@ describe('SignUpComponent', () => {
   it('#signUp() should set an error and cancel if the password do not match', () => {
     component.form = {
       valid: true,
-      value: { username: 'testUsername', email: 'testEmail', password: 'testPassword', passwordConfirm: 'notMatching' }
+      value: { username: 'testUsername', password: 'testPassword', passwordConfirm: 'notMatching' }
     } as any;
 
     component.signUp();
@@ -88,7 +88,7 @@ describe('SignUpComponent', () => {
   it('#singUp() should call signUp from the account service if the form is valid', () => {
     component.form = {
       valid: true,
-      value: { username: 'testUsername', email: 'testEmail', password: 'testPassword', passwordConfirm: 'testPassword' }
+      value: { username: 'testUsername', password: 'testPassword', passwordConfirm: 'testPassword' }
     } as any;
 
     accountService.signUp.and.returnValue(rxjs.of({}));
@@ -96,7 +96,6 @@ describe('SignUpComponent', () => {
     component.signUp();
     expect(accountService.signUp).toHaveBeenCalledWith(
       component.form.value.username,
-      component.form.value.email,
       component.form.value.password
     );
   });
@@ -104,7 +103,7 @@ describe('SignUpComponent', () => {
   it('#singUp() should call finalLogin from the account service if the server responds with no error', () => {
     component.form = {
       valid: true,
-      value: { username: 'testUsername', email: 'testEmail', password: 'testPassword', passwordConfirm: 'testPassword' }
+      value: { username: 'testUsername', password: 'testPassword', passwordConfirm: 'testPassword' }
     } as any;
 
     const testToken = '654321123456';
@@ -118,7 +117,7 @@ describe('SignUpComponent', () => {
   it('#singUp() should set an error message and cancel if the server responds with an error', () => {
     component.form = {
       valid: true,
-      value: { username: 'testUsername', email: 'testEmail', password: 'testPassword', passwordConfirm: 'testPassword' }
+      value: { username: 'testUsername', password: 'testPassword', passwordConfirm: 'testPassword' }
     } as any;
 
     const testError = 'This is a non-standard test error.';
@@ -131,7 +130,6 @@ describe('SignUpComponent', () => {
 
 
     const knownErrors = {
-      'invalid email': 'The email address is not valid.',
       'username already exists': 'This username is already taken.'
     };
 

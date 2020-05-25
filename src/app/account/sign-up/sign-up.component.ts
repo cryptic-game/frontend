@@ -20,7 +20,6 @@ export class SignUpComponent {
 
     this.form = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(4)]],
-      email: ['', [Validators.required, Validators.email]],
       password: ['', [
         Validators.required,
         Validators.minLength(8),
@@ -48,19 +47,17 @@ export class SignUpComponent {
 
   signUp(): void {
     if (this.form.valid) {
-      const value: { username: string, email: string, password: string, passwordConfirm: string } = this.form.value;
+      const value: { username: string, password: string, passwordConfirm: string } = this.form.value;
       if (value.password !== value.passwordConfirm) {
         this.error = 'The passwords do not match.';
         this.errorLive = 10;
         return;
       }
 
-      this.accountService.signUp(value.username, value.email, value.password).subscribe(data => {
+      this.accountService.signUp(value.username, value.password).subscribe(data => {
         this.accountService.finalLogin(data.token);
       }, error => {
-        if (error.message === 'invalid email') {
-          this.error = 'The email address is not valid.';
-        } else if (error.message === 'username already exists') {
+        if (error.message === 'username already exists') {
           this.error = 'This username is already taken.';
         } else {
           this.error = error.message;
@@ -70,5 +67,4 @@ export class SignUpComponent {
       });
     }
   }
-
 }
