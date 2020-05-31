@@ -24,7 +24,8 @@ export class HardwareService {
         [data.ram, PartCategory.RAM],
         [data.disk, PartCategory.DISK],
         [data.processorCooler, PartCategory.PROCESSOR_COOLER],
-        [data.powerPack, PartCategory.POWER_PACK]
+        [data.powerPack, PartCategory.POWER_PACK],
+        [data.case, PartCategory.CASE]
       ] as [{ [name: string]: Part }, PartCategory][]) {
         if (parts) {
           for (const [name, part] of Object.entries(parts)) {
@@ -77,7 +78,7 @@ export class HardwareService {
               hardware.powerPack = this.hardwareAvailable.powerPack[hardware_element];
               break;
             case 'case':
-              hardware.case = hardware_element;
+              hardware.case = this.hardwareAvailable.case[hardware_element];
               break;
             default:
               console.warn('Unknown hardware part type: ' + hardware_type);
@@ -123,7 +124,7 @@ export class DeviceHardware {
     'id': 0,
     'totalPower': 0
   };
-  'case' = '';
+  'case': Parts.Case = { id: 0, size: 'small' };
 
   getTotalMemory(): number {
     return this.ram.reduce((previousValue, currentValue) => previousValue + currentValue.ramSize, 0);
@@ -165,10 +166,13 @@ export class HardwareList {
 
   'powerPack': { [name: string]: Parts.PowerPack } = {};
 
-  'case': string[] = [];
+  'case': { [name: string]: Parts.Case } = {};
 
   getAllParts(): { [name: string]: Part } {
-    return { ...this.powerPack, ...this.disk, ...this.gpu, ...this.ram, ...this.processorCooler, ...this.cpu, ...this.mainboard };
+    return {
+      ...this.case, ...this.powerPack, ...this.disk, ...this.gpu,
+      ...this.ram, ...this.processorCooler, ...this.cpu, ...this.mainboard
+    };
   }
 
   getByName(name: string): Part {
