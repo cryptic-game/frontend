@@ -135,17 +135,18 @@ describe('HardwareService', () => {
         'disk': [{ test: '6442812494' }, { test: '3385206386' }],
         'processorCooler': [{ test: '9981571654' }],
         'powerPack': { test: '1684526384' },
-        'case': 'test_case'
+        'case': { test: '8798526145' }
       });
 
       service.hardwareAvailable = {
-        mainboard: { test_mainboard: expected.mainboard },
-        cpu: { test_cpu: expected.cpu[0] },
-        gpu: { test_gpu1: expected.gpu[0], test_gpu2: expected.gpu[1] },
-        ram: { test_ram1: expected.ram[0], test_ram2: expected.ram[1] },
-        disk: { test_disk1: expected.disk[0], test_disk2: expected.disk[1] },
-        processorCooler: { test_cooler: expected.processorCooler[0] },
-        powerPack: { test_psu: expected.powerPack }
+        'mainboard': { test_mainboard: expected.mainboard },
+        'cpu': { test_cpu: expected.cpu[0] },
+        'gpu': { test_gpu1: expected.gpu[0], test_gpu2: expected.gpu[1] },
+        'ram': { test_ram1: expected.ram[0], test_ram2: expected.ram[1] },
+        'disk': { test_disk1: expected.disk[0], test_disk2: expected.disk[1] },
+        'processorCooler': { test_cooler: expected.processorCooler[0] },
+        'powerPack': { test_psu: expected.powerPack },
+        'case': { test_case: expected.case }
       } as any;
 
       const warnSpy = spyOn(console, 'warn');
