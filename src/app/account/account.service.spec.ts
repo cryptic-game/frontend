@@ -3,14 +3,17 @@ import { inject, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { WebsocketService } from '../websocket.service';
 import * as rxjs from 'rxjs';
+import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { webSocketMock } from '../test-utils';
+import { Account } from '../../dataclasses/account';
 
 describe('AccountService', () => {
   const testCredentials = { username: 'testUsername', password: 'testPassword', token: '1234567654321' };
   let webSocket;
 
   beforeEach(() => {
-    webSocket = jasmine.createSpyObj('WebsocketService', ['request']);
+    webSocket = webSocketMock();
 
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
@@ -46,20 +49,19 @@ describe('AccountService', () => {
     });
   }));
 
-  it('#finalLogin() should save the token to the localStorage and after half a second navigate to /',
+  it('#finalLogin() should save the token to the localStorage and navigate to / after updating of the account information',
     inject([AccountService, Router], (service: AccountService, router: Router) => {
-      jasmine.clock().install();
       spyOn(localStorage, 'setItem');
+      const refreshAccountInfoSubject = new Subject<Account>();
+      webSocket.refreshAccountInfo.and.returnValue(refreshAccountInfoSubject);
       spyOn(router, 'navigateByUrl').and.returnValue(Promise.resolve(true));
 
       service.finalLogin(testCredentials.token);
       expect(localStorage.setItem).toHaveBeenCalledWith('token', testCredentials.token);
       expect(router.navigateByUrl).not.toHaveBeenCalled();
 
-      jasmine.clock().tick(501);
+      refreshAccountInfoSubject.next({ uuid: '', name: '', created: 0, last: 0 });
       expect(router.navigateByUrl).toHaveBeenCalledWith('/');
-
-      jasmine.clock().uninstall();
     })
   );
 
