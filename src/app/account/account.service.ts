@@ -24,7 +24,9 @@ export class AccountService {
   public finalLogin(token: string): void {
     this.websocket.loggedIn = true;
     localStorage.setItem('token', token);
-    setTimeout(() => this.router.navigateByUrl('/'), 500);
+    this.websocket.refreshAccountInfo().subscribe(() => {
+      this.router.navigateByUrl('/').then();
+    });
   }
 
   public checkPassword(password: string): number {
