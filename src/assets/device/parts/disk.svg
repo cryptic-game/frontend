@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 534 534" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+  <rect id="Disk" x="0" y="0.507" width="533.333" height="533.333" style="fill:none;"/>
+  <rect x="104.714" y="18.748" width="323.905" height="489.503" style="fill:#171c1f;stroke:#fff;stroke-width:10px;"/>
+  <circle cx="266.667" cy="346.299" r="146.747" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <circle cx="266.667" cy="346.299" r="46.953" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <circle cx="266.667" cy="346.299" r="8.94" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <path d="M383.662,157.569l-26.777,0l-74.506,68.424c2.297,12.476 9.689,20.059 22.118,22.808l79.165,-64.454l0,-26.778Z"
+        style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <path d="M285.42,229.035l-18.753,27.369l35.479,-9.123" style="fill:#171c1f;stroke:#fff;stroke-width:4.17px;"/>
+  <circle cx="370.274" cy="170.958" r="13.389" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <text x="169.295px" y="137.326px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:83.333px;fill:#fff;">
+    DISK
+  </text>
+</svg>

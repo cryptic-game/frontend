@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 534 534" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+  <rect id="Mainboard" x="0" y="0.507" width="533.333" height="533.333" style="fill:none;"/>
+  <rect x="49.503" y="125.32" width="454.081" height="372.346" style="fill:#171c1f;stroke:#fff;stroke-width:12.25px;"/>
+  <rect x="293.344" y="186.621" width="102.168" height="102.168" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <rect x="313.778" y="207.054" width="61.301" height="61.301" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <rect x="29.75" y="151.202" width="42.23" height="237.03" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <path d="M441.147,165.733l0,143.944" style="fill:none;stroke:#fff;stroke-width:8.33px;"/>
+  <path d="M458.175,165.733l0,143.944" style="fill:none;stroke:#fff;stroke-width:8.33px;"/>
+  <rect x="121.701" y="197.519" width="77.648" height="72.199" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <rect x="417.762" y="433.187" width="26.337" height="26.337" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <rect x="368.721" y="433.187" width="26.337" height="26.337" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <rect x="317.41" y="433.187" width="26.337" height="26.337" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <rect x="478.609" y="395.044" width="24.974" height="102.622" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
+  <path d="M113.528,422.289l140.311,0" style="fill:none;stroke:#fff;stroke-width:8.33px;"/>
+  <path d="M113.528,389.595l140.311,0" style="fill:none;stroke:#fff;stroke-width:8.33px;"/>
+  <path d="M113.528,356.901l140.311,0" style="fill:none;stroke:#fff;stroke-width:8.33px;"/>
+  <text x="78.319px" y="83.319px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:83.333px;fill:#fff;">
+    Mainboard
+  </text>
+</svg>
