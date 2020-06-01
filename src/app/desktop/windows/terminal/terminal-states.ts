@@ -720,8 +720,24 @@ export class DefaultTerminalState extends CommandTerminalState {
           }
         });
       }
+    } else if (args.length === 1 && args[0] === 'list') {
+      this.websocket.ms('currency', ['list'], {}).subscribe(data => {
+        if (data.wallets.length === 0) {
+          this.terminal.outputText('You don\'t own any wallet.');
+        } else {
+          this.terminal.outputText('Your wallets:');
+
+          const el = document.createElement('ul');
+          el.innerHTML = data.wallets
+            .map(wallet => '<li>' + DefaultTerminalState.promptAppender(wallet) + '</li>')
+            .join((''));
+
+          this.terminal.outputNode(el);
+          DefaultTerminalState.registerPromptAppenders(el);
+        }
+      });
     } else {
-      this.terminal.outputText('usage: morphcoin look|create <filename>');
+      this.terminal.outputText('usage: morphcoin look|create|list [<filename>]');
     }
   }
 
