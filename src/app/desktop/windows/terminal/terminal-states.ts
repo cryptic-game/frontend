@@ -641,6 +641,22 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   morphcoin(args: string[]) {
     if (args.length === 2) {
+      if (args[0] === 'reset') {
+        this.websocket.ms('currency', ['reset'], { source_uuid: args[1] }).subscribe(
+          () => {
+            this.terminal.outputText('Wallet has been deleted successfully.');
+          },
+          error => {
+            if (error.message === 'permission_denied') {
+              this.terminal.outputText('Permission denied.');
+            } else {
+              this.terminal.outputText('Wallet does not exist.');
+            }
+          }
+        );
+        return;
+      }
+
       let path: Path;
       try {
         path = Path.fromString(args[1], this.working_dir);
@@ -737,7 +753,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         }
       });
     } else {
-      this.terminal.outputText('usage: morphcoin look|create|list [<filename>]');
+      this.terminal.outputText('usage: morphcoin look|create|list|reset [<filename>|<uuid>]');
     }
   }
 
