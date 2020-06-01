@@ -124,7 +124,7 @@ export class DeviceHardware {
     'id': 0,
     'totalPower': 0
   };
-  'case': Parts.Case = { id: 0, size: 'small' };
+  'case': Parts.Case = { 'name': '', 'id': 0, 'size': 'small' };
 
   getTotalMemory(): number {
     return this.ram.reduce((previousValue, currentValue) => previousValue + currentValue.ramSize, 0);
