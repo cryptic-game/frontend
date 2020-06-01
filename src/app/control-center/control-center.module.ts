@@ -13,6 +13,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ControlCenterGuard } from './control-center.guard';
 import { ControlCenterService } from './control-center.service';
 import { ControlCenterDevicePageHardwareResolverService } from './control-center-device-page/control-center-device-page-hardware-resolver.service';
+import { ControlCenterInventoryPageComponent } from './control-center-inventory-page/control-center-inventory-page.component';
+import { ControlCenterInventoryPageItemsResolverService } from './control-center-inventory-page/control-center-inventory-page-items-resolver.service';
 
 
 const routes: Routes = [
@@ -31,6 +33,11 @@ const routes: Routes = [
         resolve: { hardware: ControlCenterDevicePageHardwareResolverService }
       },
       { path: 'create-device', component: ControlCenterCreateDevicePageComponent },
+      {
+        path: 'inventory',
+        component: ControlCenterInventoryPageComponent,
+        resolve: { items: ControlCenterInventoryPageItemsResolverService }
+      },
       { path: 'settings', component: ControlCenterSettingsPageComponent },
       { path: 'sound', component: ControlCenterSoundPageComponent },
       { path: 'changelog', component: ControlCenterChangelogPageComponent }
@@ -48,7 +55,8 @@ const routes: Routes = [
     ControlCenterCreateDevicePageComponent,
     ControlCenterSettingsPageComponent,
     ControlCenterSoundPageComponent,
-    ControlCenterChangelogPageComponent
+    ControlCenterChangelogPageComponent,
+    ControlCenterInventoryPageComponent
   ],
   imports: [
     CommonModule,

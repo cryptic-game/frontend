@@ -1,0 +1,28 @@
+<h1>Inventory</h1>
+<div id="inventory">
+  <div class="item" *ngFor="let item of items" draggable="true" (dragstart)="dragStart($event, item)">
+    <img [src]="'../assets/device/parts/' + getCategoryIconName(item.properties.category)"
+         width="128" height="128" [alt]="getCategoryIconName(item.properties.category)" draggable="false">
+    <p>{{item.properties.name}}</p>
+  </div>
+</div>
+
+<div id="trade">
+  <form (submit)="sendTradeItem(tradeDestination); $event.preventDefault()">
+    <label for="inventory">
+      Send
+      <input id="item-input" type="text" name="item" placeholder="Drag item here" [value]="tradeItem?.properties.name"
+             readonly (dragover)="dragOver($event)" (drop)="dragDrop($event)">
+    </label>
+    <input type="hidden" name="item-uuid" [value]="tradeItem?.element_uuid">
+    <label>
+      to
+      <input #tradeDestination id="destination-input" type="text" name="destination" placeholder="Player UUID"
+             maxlength="36"
+             pattern="^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89AB][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$" required
+             (dragover)="$event.preventDefault()">
+    </label>
+    <input type="submit" value="!" [disabled]="tradeItem == null">
+    <span *ngIf="tradeErrorMessage" class="error-message">{{tradeErrorMessage}}</span>
+  </form>
+</div>
