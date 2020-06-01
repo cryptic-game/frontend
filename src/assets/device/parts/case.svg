@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 534 534" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+  <rect id="Case" x="0" y="0" width="533.333" height="533.333" style="fill:none;"/>
+  <rect x="126.851" y="24.748" width="279.632" height="489.503" style="fill:#171c1f;stroke:#fff;stroke-width:10px;"/>
+  <rect x="126.851" y="24.748" width="279.632" height="44.99" style="fill:#171c1f;stroke:#fff;stroke-width:10px;"/>
+  <rect x="126.851" y="69.738" width="279.632" height="71.988" style="fill:#171c1f;stroke:#fff;stroke-width:10px;"/>
+  <rect x="126.851" y="141.726" width="279.632" height="71.988" style="fill:#171c1f;stroke:#fff;stroke-width:10px;"/>
+  <circle cx="266.667" cy="402.725" r="30.912" style="fill:#fff;"/>
+  <text x="149.169px" y="312.867px" style="font-family:'ArialMT', 'Arial', sans-serif;font-size:86.404px;fill:#fff;">
+    CASE
+  </text>
+  <path d="M153.193,39.613l0,15.26" style="fill:none;stroke:#fff;stroke-width:10px;"/>
+  <path d="M171.975,39.613l0,15.26" style="fill:none;stroke:#fff;stroke-width:10px;"/>
+  <path d="M191.93,39.613l0,15.26" style="fill:none;stroke:#fff;stroke-width:10px;"/>
+</svg>
