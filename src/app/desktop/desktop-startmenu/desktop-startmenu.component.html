@@ -1,6 +1,10 @@
 <div id="startmenu">
   <div id="info">
-    <img id="profile-icon" src="../../../assets/desktop/img/user_1.svg" alt="">
+    <img
+      id="profile-icon"
+      src="../../../assets/desktop/img/user_1.svg"
+      alt=""
+    />
     <div>
       <p id="user">{{ user.name }}</p>
       <p id="online">online: {{ websocket.online }}</p>
@@ -8,13 +12,40 @@
   </div>
   <div id="programs">
     <div id="linkages">
-      <span (click)="parent.openProgramWindow(linkage); parent.hideStartMenu()"
-            *ngFor="let linkage of search(searchTerm)" class="button">
-        <img [src]="linkage.icon" alt="" class="icon"/>{{linkage.displayName}}
+      <span
+        (click)="parent.openProgramWindow(linkage); parent.hideStartMenu()"
+        *ngFor="let linkage of search(searchTerm)"
+        class="button"
+      >
+        <img [src]="linkage.icon" alt="" class="icon" />{{
+          linkage.displayName
+        }}
       </span>
     </div>
-    <input [(ngModel)]="searchTerm" class="search" placeholder="Search">
+    <input [(ngModel)]="searchTerm" class="search" placeholder="Search" />
   </div>
-  <span (click)="userService.logout(token); parent.windowManager.closeAllWindows()" class="button" id="logout">
-    <img src="../../../assets/desktop/img/logoutbutton.svg" alt="" class="icon"/>Logout</span>
+
+  <span
+    (click)="userService.logout(token); parent.windowManager.closeAllWindows()"
+    class="button"
+    id="logout"
+  >
+    <img
+      src="../../../assets/desktop/img/logoutbutton.svg"
+      alt=""
+      class="icon"
+    />Logout</span
+  >
+
+  <span
+    (click)="parent.windowManager.closeAllWindows()"
+    class="button"
+    id="shutdown"
+  >
+    <img
+      src="../../../assets/desktop/img/computer_on_off.svg"
+      alt=""
+      class="icon"
+    />Herunterfahren</span
+  >
 </div>

@@ -1,6 +1,5 @@
 @import "~src/constants";
 
-
 #startmenu {
   width: 25%;
   height: 65%;
@@ -9,7 +8,7 @@
   padding: 1.5% 1.5% 5.5% 2%;
   background-color: rgba(28, 28, 28, 0.95);
   color: $white;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.70);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.7);
 
   img {
     height: auto;
@@ -84,7 +83,6 @@
     align-items: center;
     cursor: pointer;
 
-
     .icon {
       margin-right: 9px;
     }
@@ -92,7 +90,12 @@
 
   #logout {
     padding-left: 2%;
-    height: 5.5%;
+    height: 4.6%;
+  }
+
+  #shutdown {
+    padding-left: 2%;
+    height: 4.6%;
   }
 
   input {
