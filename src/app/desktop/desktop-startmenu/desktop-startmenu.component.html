@@ -16,16 +16,30 @@
   </div>
   <div id="programs">
     <div id="linkages">
-      <span (click)="parent.openProgramWindow(linkage); parent.hideStartMenu()"
-            *ngFor="let linkage of search(searchTerm)" class="button">
+      <div class="button">
+        <img src="../../../assets/device/laptop_front.svg" alt="" class="icon">
+        Computer
+        <div class="sub-menu">
+          <div *ngFor="let device of devices" routerLink="/desktop" class="device" [class.disabled]="!device.powered_on"
+               [queryParams]="{ device: device.uuid }" routerLinkActive="active">
+            {{device.name}} /
+            <span class="power" [class.online]="device.powered_on">{{device.powered_on ? 'Online' : 'Offline'}}</span>
+          </div>
+          <div class="device" routerLink="/device" [queryParams]="{ device: desktopDeviceService.activeDevice.uuid }">
+            Control Center
+          </div>
+        </div>
+      </div>
+      <div (click)="parent.openProgramWindow(linkage); parent.hideStartMenu()"
+           *ngFor="let linkage of search(searchTerm)" class="button">
         <img [src]="linkage.icon" alt="" class="icon"/>
         {{linkage.displayName}}
-      </span>
+      </div>
     </div>
     <input [(ngModel)]="searchTerm" class="search" placeholder="Search"/>
   </div>
-  <span (click)="logout()" class="button" id="logout">
+  <div (click)="logout()" class="button" id="logout">
     <img src="../../../assets/desktop/img/logoutbutton.svg" alt="" class="icon"/>
     Logout
-  </span>
+  </div>
 </div>
