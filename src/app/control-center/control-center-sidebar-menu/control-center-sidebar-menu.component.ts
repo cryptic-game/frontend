@@ -73,15 +73,24 @@ export class SidebarMenu {
   icon: string;
   items: SidebarMenuItem[];
   displayCount: boolean;
+  specialItems: number;
   routerLink?: string;
   queryParams?: Params;
 
+  getDisplayCount(): number {
+    return this.items.length - this.specialItems;
+  }
+
   constructor(title: string, icon: string,
-              options: { items?: SidebarMenuItem[], displayCount?: boolean, routerLink?: string, queryParams?: Params } = {}) {
+              options: {
+                items?: SidebarMenuItem[], displayCount?: boolean, specialItems?: number,
+                routerLink?: string, queryParams?: Params
+              } = {}) {
     this.title = title;
     this.icon = icon;
-    this.items = options.items ? options.items : [];
-    this.displayCount = options.displayCount === true;
+    this.items = options.items ?? [];
+    this.displayCount = options.displayCount ?? false;
+    this.specialItems = options.specialItems ?? 0;
     this.routerLink = options.routerLink;
     this.queryParams = options.queryParams;
   }

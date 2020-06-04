@@ -16,7 +16,7 @@ export class ControlCenterComponent implements OnInit {
   devices: SidebarMenuItem[] = [];
 
   menus: SidebarMenu[] = [
-    new SidebarMenu('Computers', 'menu_computers.svg', { items: this.devices, displayCount: true }),
+    new SidebarMenu('Computers', 'menu_computers.svg', { items: this.devices, displayCount: true, specialItems: 1 }),
     new SidebarMenu('Servers', 'menu_servers.svg', { items: [], displayCount: true }),
     new SidebarMenu('Inventory', 'menu_inventory.svg', { routerLink: '/inventory' }),
     new SidebarMenu('Settings', 'menu_settings.svg', { routerLink: '/settings' }),
