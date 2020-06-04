@@ -10,25 +10,24 @@
     <button class="rename-button" (click)="startRenaming()">Rename this PC</button>
   </div>
   <svg class="power-button" (click)="powerButtonClicked()" width="80" height="80" viewBox="0 0 1080 1080"
-       xmlns="http://www.w3.org/2000/svg" [@powerButton]="powerButton.power"
-       (@powerButton.start)="powerButton.animating = true" (@powerButton.done)="powerButton.animating = false"
-       [class.disabled]="powerButton.animating">
+       xmlns="http://www.w3.org/2000/svg" [@powerButton]="powerButton.state"
+       (@powerButton.done)="powerAnimationDone()" [class.disabled]="powerButton.animating">
     <g filter="url(#_Blur)">
-      <circle cx="540" cy="540" r="480" [@powerButtonFill]="powerButton.power"/>
+      <circle cx="540" cy="540" r="480" [@powerButtonFill]="powerButton.state"/>
     </g>
     <circle cx="540" cy="540" r="448" fill="#181f23"/>
     <path d="M540 76a464 464 0 100 928 464 464 0 000-928zm0 16a448 448 0 110 896 448 448 0 010-896z"
-          [@powerButtonFill]="powerButton.power"/>
+          [@powerButtonFill]="powerButton.state"/>
     <circle cx="540" cy="540" r="354" fill="none" stroke-width="128" stroke-linecap="butt"
             stroke-dasharray="2224.24759874"
-            [@powerButtonStroke]="powerButton.power"
-            [@powerButtonProgress]="powerButton.power"/>
+            [@powerButtonStroke]="powerButton.state"
+            [@powerButtonProgress]="powerButton.state"/>
     <path fill="none" stroke="#1bd41f" stroke-linecap="round" stroke-width="36" d="M491 400a144 144 0 1098 0"
-          [@powerButtonStroke]="powerButton.power"/>
+          [@powerButtonStroke]="powerButton.state"/>
     <path fill="none" stroke="#1bd41f" stroke-linecap="round" stroke-linejoin="miter" stroke-width="36" d="M540 504V360"
-          [@powerButtonStroke]="powerButton.power"/>
+          [@powerButtonStroke]="powerButton.state"/>
     <defs>
-      <filter id="_Blur" width="1344" height="1344" x="-132" y="-132" filterUnits="userSpaceOnUse">
+      <filter id="_Blur" width="1344" height="1344" x="-132" y="-132">
         <feGaussianBlur in="SourceGraphic" stdDeviation="32"/>
       </filter>
     </defs>

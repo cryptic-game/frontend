@@ -12,16 +12,18 @@ import { DeviceHardware } from '../../api/hardware/hardware.service';
 
 function powerButtonColorAnimation(triggerName, property) {
   return trigger(triggerName, [
-    state('0', style({ [property]: '#D41C1C' })),
-    state('1', style({ [property]: '#1BD41F' })),
-    transition('0 => 1', [
+    state('off', style({ [property]: '#D41C1C' })),
+    state('fast-off', style({ [property]: '#D41C1C' })),
+    state('on', style({ [property]: '#1BD41F' })),
+    state('fast-on', style({ [property]: '#1BD41F' })),
+    transition('* => on', [
       animate('20s', keyframes([
         style({ [property]: '#D41C1C', 'offset': 0.0 }),
         style({ [property]: '#d4691e', 'offset': 0.3 }),
         style({ [property]: '#1BD41F', 'offset': 1.0 })
       ]))
     ]),
-    transition('1 => 0', [
+    transition('* => off', [
       animate('30s', keyframes([
         style({ [property]: '#1BD41F', 'offset': 0.0 }),
         style({ [property]: '#d4691e', 'offset': 0.3 }),
@@ -36,7 +38,7 @@ function powerButtonColorAnimation(triggerName, property) {
   selector: 'app-control-center-device-page',
   animations: [
     trigger('powerButton', [
-      transition('0 <=> 1', [
+      transition('* <=> *', [
         query('@powerButtonFill, @powerButtonStroke, @powerButtonProgress', [
           animateChild()
         ])
@@ -45,16 +47,14 @@ function powerButtonColorAnimation(triggerName, property) {
     powerButtonColorAnimation('powerButtonFill', 'fill'),
     powerButtonColorAnimation('powerButtonStroke', 'stroke'),
     trigger('powerButtonProgress', [
-      state('0', style({
-        'stroke-dashoffset': '2224.24759874'
-      })),
-      state('1', style({
-        'stroke-dashoffset': '0'
-      })),
-      transition('0 => 1', [
+      state('off', style({ 'stroke-dashoffset': '2224.24759874' })),
+      state('fast-off', style({ 'stroke-dashoffset': '2224.24759874' })),
+      state('on', style({ 'stroke-dashoffset': '0' })),
+      state('fast-on', style({ 'stroke-dashoffset': '0' })),
+      transition('* => on', [
         animate('20s')
       ]),
-      transition('1 => 0', [
+      transition('* => off', [
         animate('30s')
       ])
     ])
@@ -69,8 +69,11 @@ export class ControlCenterDevicePageComponent implements OnInit {
     service: { uuid: string, name: string, running: boolean },
     usage: DeviceUtilization
   }[] = [];
-  powerButton = {
-    power: false,
+  powerButton: {
+    state: 'off' | 'fast-off' | 'on' | 'fast-on';
+    animating: boolean;
+  } = {
+    state: 'fast-off',
     animating: false
   };
 
@@ -82,6 +85,7 @@ export class ControlCenterDevicePageComponent implements OnInit {
               private activatedRoute: ActivatedRoute) {
     this.activatedRoute.queryParamMap.subscribe(queryParamMap => {
       this.device = this.controlCenterService.getDevice(queryParamMap.get('device'));
+      this.powerButton.animating = false;
       this.updateServices();
     });
     this.activatedRoute.data.subscribe(data => {
@@ -93,7 +97,7 @@ export class ControlCenterDevicePageComponent implements OnInit {
   }
 
   updateServices(): void {
-    this.powerButton.power = this.device.powered_on;
+    this.powerButton.state = this.device.powered_on ? 'fast-on' : 'fast-off';
     if (this.device.powered_on) {
       this.webSocket.ms('service', ['list'], { device_uuid: this.device.uuid }).pipe(
         switchMap(response => from(response.services as { uuid: string, name: string, running: boolean }[])),
@@ -136,16 +140,19 @@ export class ControlCenterDevicePageComponent implements OnInit {
 
   powerButtonClicked() {
     if (!this.powerButton.animating) {
-      this.powerButton.power = !this.powerButton.power;
-
-      setTimeout(this.togglePower.bind(this), this.powerButton.power ? 20000 : 30000);
+      this.powerButton.animating = true;
+      this.powerButton.state =
+        (this.powerButton.state === 'fast-off' || this.powerButton.state === 'off') ? 'on' : 'off';
     }
   }
 
-  togglePower() {
-    this.deviceService.togglePower(this.device.uuid).subscribe(device => {
-      Object.assign(this.device, device);
-      this.updateServices();
-    });
+  powerAnimationDone() {
+    if (this.powerButton.animating) {
+      this.powerButton.animating = false;
+      this.deviceService.togglePower(this.device.uuid).subscribe(device => {
+        Object.assign(this.device, device);
+        this.updateServices();
+      });
+    }
   }
 }
