@@ -1,3 +1,4 @@
+@use 'sass:color';
 @import "variables";
 
 
@@ -85,7 +86,73 @@
       &::-webkit-scrollbar {
         display: none;
       }
+
+      .button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        line-height: 36px;
+        cursor: pointer;
+
+        .icon {
+          margin-right: 9px;
+        }
+
+        .sub-menu {
+          display: none;
+          position: absolute;
+          top: 0;
+          left: 50%;
+          box-sizing: border-box;
+          width: 50%;
+          line-height: 36px;
+          color: $white;
+          box-shadow: 0 0 3px rgba(0, 0, 0, 0.7);
+          border: 1px solid rgba(199, 199, 199, 0.5);
+          z-index: 1;
+          cursor: default;
+
+          .device {
+            outline: none;
+            padding: 0 5px;
+            cursor: pointer;
+
+            &:hover {
+              background-color: #111;
+            }
+
+            &.disabled {
+              pointer-events: none;
+
+              &:hover {
+                background-color: unset;
+              }
+            }
+
+            &.active {
+              color: green;
+            }
+
+            .power {
+              color: red;
+
+              &.online {
+                color: green;
+              }
+            }
+
+          }
+
+        }
+
+        &:hover > .sub-menu {
+          display: block;
+        }
+
+      }
+
     }
+
   }
 
   .search {
@@ -100,21 +167,18 @@
     border-radius: 2px;
   }
 
-  .button {
-    height: 36px;
+  #logout {
+    padding-left: 2%;
+    height: 5.5%;
+
     display: flex;
     align-items: center;
+    line-height: 36px;
     cursor: pointer;
-
 
     .icon {
       margin-right: 9px;
     }
-  }
-
-  #logout {
-    padding-left: 2%;
-    height: 5.5%;
   }
 
   input {
