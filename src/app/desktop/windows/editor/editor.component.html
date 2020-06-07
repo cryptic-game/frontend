@@ -1,5 +1,9 @@
 <div id="editor-container">
   <div id="editor">
-    <span>Test</span>
+    <div id="editor-menu">
+      Datei: <input #fileInput (keydown.enter)="$event.preventDefault(); enter(fileInput.value)" type="text" id="fileInput"></div>
+    <div #editorTextfield [innerHTML]="editorHtml" id="editorTextfield">
+      no file opened
+    </div>
   </div>
 </div>
