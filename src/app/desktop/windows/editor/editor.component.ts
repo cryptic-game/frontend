@@ -2,9 +2,7 @@ import { Component, ElementRef, OnInit, Type, ViewChild } from '@angular/core';
 import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { FileService } from '../../../api/files/file.service';
 import { Path } from '../../../api/files/path';
-import { SafeHtml } from '@angular/platform-browser';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
@@ -15,18 +13,19 @@ export class EditorComponent extends WindowComponent implements OnInit {
   @ViewChild('editorTextfield', { static: true }) editorTextfield: ElementRef;
   @ViewChild('fileInput', { static: true }) fileInput: ElementRef;
 
-  editorHtml: SafeHtml;
   error: string;
+  fileContent: string;
+  fileOpened: boolean;
 
   constructor(private fileService: FileService) {
     super();
   }
 
   ngOnInit() {
+    this.fileOpened = false;
   }
 
   enter(inputPath: string) {
-    console.log(inputPath);
     let path: Path;
     try {
       path = Path.fromString(inputPath);
@@ -40,7 +39,8 @@ export class EditorComponent extends WindowComponent implements OnInit {
         this.error = 'Not a file';
       } else {
         this.error = '';
-        this.editorHtml = file.content;
+        this.fileOpened = true;
+        this.fileContent = file.content;
       }
     }, error => {
       if (error.message === 'file_not_found') {
