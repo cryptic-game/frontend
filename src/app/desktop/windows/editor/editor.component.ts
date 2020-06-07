@@ -13,8 +13,10 @@ import { SafeHtml } from '@angular/platform-browser';
 export class EditorComponent extends WindowComponent implements OnInit {
 
   @ViewChild('editorTextfield', { static: true }) editorTextfield: ElementRef;
+  @ViewChild('fileInput', { static: true }) fileInput: ElementRef;
 
   editorHtml: SafeHtml;
+  error: string;
 
   constructor(private fileService: FileService) {
     super();
@@ -29,23 +31,22 @@ export class EditorComponent extends WindowComponent implements OnInit {
     try {
       path = Path.fromString(inputPath);
     } catch {
-      console.log('The specified path is not valid');
+      this.error = 'Path not valid';
       return;
     }
 
     this.fileService.getFromPath(JSON.parse(sessionStorage.getItem('activeDevice')).uuid, path).subscribe(file => {
       if (file.is_directory) {
-        console.log('That is not a file');
+        this.error = 'Not a file';
       } else {
-        // TODO
-        console.log(file.content);
+        this.error = '';
         this.editorHtml = file.content;
       }
     }, error => {
       if (error.message === 'file_not_found') {
-        console.log('That file does not exist');
+        this.error = 'file non-existent';
       } else {
-        console.log(error);
+        this.error = error.toString();
       }
     });
   }
