@@ -1,7 +1,10 @@
 <div id="editor-container">
   <div id="editor">
     <div id="editor-menu">
-      Datei: <input #fileInput (keydown.enter)="$event.preventDefault(); enter(fileInput.value)" type="text" id="fileInput"></div>
+      Datei: <input #fileInput (keydown.enter)="$event.preventDefault(); enter(fileInput.value)" [style.border-color]="(!error)?'black':'red'" type="text" id="fileInput">
+      <label for="fileInput" id="labelForInputField">{{error}}</label>
+    </div>
+
     <div #editorTextfield [innerHTML]="editorHtml" id="editorTextfield">
       no file opened
     </div>
