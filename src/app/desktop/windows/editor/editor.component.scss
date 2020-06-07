@@ -11,6 +11,13 @@
 }
 
 #editor {
-  padding: 5px;
+  padding: 0px;
   color: $window-font-color;
+  background-color: #4e4e4e;
+  height: 100%;
+}
+
+#editor-menu{
+  background-color: #2f2f2f;
+  min-height: 1em;
 }
