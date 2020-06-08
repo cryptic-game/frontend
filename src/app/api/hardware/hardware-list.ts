@@ -36,7 +36,7 @@ export class HardwareList {
 
   'powerPack': { [name: string]: Parts.PowerPack } = {};
 
-  'case': string[] = [];
+  'case': { [name: string]: Parts.Case } = {};
 
 
   constructor(availableParts: Partial<HardwareList> = {}) {
@@ -44,7 +44,10 @@ export class HardwareList {
   }
 
   getAllParts(): { [name: string]: Part } {
-    return { ...this.powerPack, ...this.disk, ...this.gpu, ...this.ram, ...this.processorCooler, ...this.cpu, ...this.mainboard };
+    return {
+      ...this.case, ...this.powerPack, ...this.disk, ...this.gpu,
+      ...this.ram, ...this.processorCooler, ...this.cpu, ...this.mainboard
+    };
   }
 
   getByName(name: string): Part {
