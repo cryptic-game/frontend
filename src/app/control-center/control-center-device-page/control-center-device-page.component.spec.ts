@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { WebsocketService } from '../../websocket.service';
 import { webSocketMock } from '../../test-utils';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DeviceHardware } from '../../api/hardware/hardware.service';
+import { DeviceHardware } from '../../api/hardware/device-hardware';
 import { ActivatedRoute } from '@angular/router';
 
 describe('ControlCenterDevicePageComponent', () => {
@@ -30,7 +30,7 @@ describe('ControlCenterDevicePageComponent', () => {
     fixture = TestBed.createComponent(ControlCenterDevicePageComponent);
     component = fixture.componentInstance;
     component.device = { name: '', owner: '', powered_on: false, uuid: '' };
-    component.hardware = new DeviceHardware();
+    component.hardware = new DeviceHardware(component.device);
     component.hardware.cpu.push({ name: '' } as any);
     fixture.detectChanges();
   });

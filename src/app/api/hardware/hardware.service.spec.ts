@@ -1,16 +1,19 @@
 import { inject, TestBed } from '@angular/core/testing';
 
-import { DeviceHardware, HardwareList, HardwareService } from './hardware.service';
+import { HardwareService } from './hardware.service';
 import { WebsocketService } from '../../websocket.service';
 import * as rxjs from 'rxjs';
 import { Observable, throwError } from 'rxjs';
+import { DeviceHardware } from './device-hardware';
+import { HardwareList } from './hardware-list';
+import { webSocketMock } from '../../test-utils';
+import { DeviceWithHardware } from '../devices/device';
 
 describe('HardwareService', () => {
   let webSocket;
 
   beforeEach(() => {
-    webSocket = jasmine.createSpyObj('WebsocketService', ['ms']);
-    webSocket.ms.and.returnValue(rxjs.of({}));
+    webSocket = webSocketMock();
 
     TestBed.configureTestingModule({
       providers: [
@@ -110,24 +113,27 @@ describe('HardwareService', () => {
 
   it('#getDeviceParts() should call /device/info and return the corresponding hardware parts from hardwareAvailable',
     inject([HardwareService], (service: HardwareService) => {
-      const inputData = {
+      const deviceResponse: DeviceWithHardware = {
+        uuid: '',
+        name: '',
+        powered_on: false,
+        owner: '',
         hardware: [
-          { hardware_element: 'test_mainboard', hardware_type: 'mainboard' },
-          { hardware_element: 'test_cpu', hardware_type: 'cpu' },
-          { hardware_element: 'test_gpu1', hardware_type: 'gpu' },
-          { hardware_element: 'test_gpu2', hardware_type: 'gpu' },
-          { hardware_element: 'test_ram1', hardware_type: 'ram' },
-          { hardware_element: 'test_ram2', hardware_type: 'ram' },
-          { hardware_element: 'test_disk1', hardware_type: 'disk' },
-          { hardware_element: 'test_disk2', hardware_type: 'disk' },
-          { hardware_element: 'test_non_existing', hardware_type: 'non-existing' },
-          { hardware_element: 'test_cooler', hardware_type: 'processorCooler' },
-          { hardware_element: 'test_psu', hardware_type: 'powerPack' },
-          { hardware_element: 'test_case', hardware_type: 'case' }
+          { uuid: '', device_uuid: '', hardware_element: 'test_mainboard', hardware_type: 'mainboard' },
+          { uuid: '', device_uuid: '', hardware_element: 'test_cpu', hardware_type: 'cpu' },
+          { uuid: '', device_uuid: '', hardware_element: 'test_gpu1', hardware_type: 'gpu' },
+          { uuid: '', device_uuid: '', hardware_element: 'test_gpu2', hardware_type: 'gpu' },
+          { uuid: '', device_uuid: '', hardware_element: 'test_ram1', hardware_type: 'ram' },
+          { uuid: '', device_uuid: '', hardware_element: 'test_ram2', hardware_type: 'ram' },
+          { uuid: '', device_uuid: '', hardware_element: 'test_disk1', hardware_type: 'disk' },
+          { uuid: '', device_uuid: '', hardware_element: 'test_disk2', hardware_type: 'disk' },
+          { uuid: '', device_uuid: '', hardware_element: 'test_non_existing', hardware_type: 'non-existing' },
+          { uuid: '', device_uuid: '', hardware_element: 'test_cooler', hardware_type: 'processorCooler' },
+          { uuid: '', device_uuid: '', hardware_element: 'test_psu', hardware_type: 'powerPack' },
+          { uuid: '', device_uuid: '', hardware_element: 'test_case', hardware_type: 'case' }
         ]
       };
-      const expected = new DeviceHardware();
-      Object.assign(expected, {
+      const expected = new DeviceHardware(deviceResponse, {
         'mainboard': { test: '1235352326' },
         'cpu': [{ test: '2495229568' }],
         'gpu': [{ test: '2189593264' }, { test: '1214895938' }],
@@ -136,7 +142,7 @@ describe('HardwareService', () => {
         'processorCooler': [{ test: '9981571654' }],
         'powerPack': { test: '1684526384' },
         'case': { test: '8798526145' }
-      });
+      } as any);
 
       service.hardwareAvailable = {
         'mainboard': { test_mainboard: expected.mainboard },
@@ -151,7 +157,7 @@ describe('HardwareService', () => {
 
       const warnSpy = spyOn(console, 'warn');
 
-      const msSpy = webSocket.ms.and.returnValue(rxjs.of(inputData));
+      const msSpy = webSocket.ms.and.returnValue(rxjs.of(deviceResponse));
       const testUUID = '00000000-0000-0000-0000-000000000000';
 
       const devicePartsObservable = service.getDeviceParts(testUUID);
@@ -159,16 +165,6 @@ describe('HardwareService', () => {
       devicePartsObservable.subscribe(data => {
         expect(data as any).toEqual(expected);
         expect(warnSpy).toHaveBeenCalledTimes(1);
-      });
-    }));
-
-  it('#getDeviceParts() should return an empty new DeviceHardware if the response from /device/info is invalid',
-    inject([HardwareService], (service: HardwareService) => {
-      const msSpy = webSocket.ms.and.callFake(() => throwError(new Error(('Test error'))));
-
-      service.getDeviceParts('00000000-0000-0000-0000-000000000000').subscribe(data => {
-        expect(msSpy).toHaveBeenCalled();
-        expect(data).toEqual(new DeviceHardware());
       });
     }));
 

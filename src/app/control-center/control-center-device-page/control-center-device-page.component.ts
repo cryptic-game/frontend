@@ -7,7 +7,7 @@ import { Device, DeviceUtilization } from '../../api/devices/device';
 import { animate, animateChild, keyframes, query, state, style, transition, trigger } from '@angular/animations';
 import { ActivatedRoute } from '@angular/router';
 import { ControlCenterService } from '../control-center.service';
-import { DeviceHardware } from '../../api/hardware/hardware.service';
+import { DeviceHardware } from '../../api/hardware/device-hardware';
 
 
 function powerButtonColorAnimation(triggerName, property) {
