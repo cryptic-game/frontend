@@ -38,7 +38,7 @@
   >
 
   <span
-    (click)="parent.windowManager.closeAllWindows()"
+    (click)="userService.logout(token); parent.windowManager.closeAllWindows()"
     class="button"
     id="shutdown"
   >
