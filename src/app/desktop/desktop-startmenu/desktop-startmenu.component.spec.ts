@@ -11,15 +11,25 @@ import { WindowManagerComponent } from '../window-manager/window-manager.compone
 import { ContextMenuComponent } from '../context-menu/context-menu.component';
 import { WindowFrameComponent } from '../window/window-frame.component';
 import { DesktopMenuComponent } from '../desktop-menu/desktop-menu.component';
+import { emptyDevice, windowManagerMock } from '../../test-utils';
+import { RouteReuseStrategy } from '@angular/router';
 
 describe('DesktopStartmenuComponent', () => {
   let component: DesktopStartmenuComponent;
   let fixture: ComponentFixture<DesktopStartmenuComponent>;
-
-  localStorage.setItem('token', '');
+  let desktop;
 
   beforeEach(async(() => {
+    desktop = jasmine.createSpyObj('DesktopComponent', ['openProgramWindow', 'hideStartMenu']);
+    desktop.activeDevice = emptyDevice();
+    desktop.devices = [];
+    desktop.linkages = [];
+    desktop.windowManager = windowManagerMock();
+
     TestBed.configureTestingModule({
+      providers: [
+        { provide: RouteReuseStrategy, useValue: {} }
+      ],
       imports: [FormsModule, HttpClientModule, RouterTestingModule],
       declarations: [
         DesktopStartmenuComponent,
@@ -38,7 +48,7 @@ describe('DesktopStartmenuComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DesktopStartmenuComponent);
     component = fixture.componentInstance;
-    component.parent = TestBed.createComponent(DesktopComponent).componentInstance;
+    component.parent = desktop;
     fixture.detectChanges();
   });
 

@@ -3,25 +3,30 @@ import { WebsocketService } from '../websocket.service';
 import { Observable } from 'rxjs';
 import { LoginResponse } from './interfaces/login-response';
 import { SignUpResponse } from './interfaces/sign-up-response';
-import { Router } from '@angular/router';
+import { Router, RouteReuseStrategy } from '@angular/router';
+import { WindowManagerService } from '../desktop/window-manager/window-manager.service';
+import { AppRouteReuseStrategy } from '../app-route-reuse-strategy';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
 
-  constructor(private websocket: WebsocketService, private router: Router) {
+  constructor(private websocket: WebsocketService,
+              private router: Router,
+              private routeReuseStrategy: RouteReuseStrategy,
+              private windowManagerService: WindowManagerService) {
   }
 
-  public login(username: string, password: string): Observable<LoginResponse> {
+  login(username: string, password: string): Observable<LoginResponse> {
     return this.websocket.request({ action: 'login', name: username, password });
   }
 
-  public signUp(username: string, password: string): Observable<SignUpResponse> {
+  signUp(username: string, password: string): Observable<SignUpResponse> {
     return this.websocket.request({ action: 'register', name: username, password });
   }
 
-  public finalLogin(token: string): void {
+  finalLogin(token: string): void {
     this.websocket.loggedIn = true;
     localStorage.setItem('token', token);
     this.websocket.refreshAccountInfo().subscribe(() => {
@@ -29,7 +34,7 @@ export class AccountService {
     });
   }
 
-  public checkPassword(password: string): number {
+  checkPassword(password: string): number {
     let strength = 0;
 
     if (password.match(/[0-9]/)) {
@@ -58,4 +63,17 @@ export class AccountService {
 
     return strength;
   }
+
+  logout() {
+    localStorage.clear();
+    this.windowManagerService.reset();
+
+    this.websocket.request({ action: 'logout' });
+    this.websocket.loggedIn = false;
+
+    this.router.navigateByUrl('/login').then(() => {
+      (this.routeReuseStrategy as AppRouteReuseStrategy).storedPaths = {};
+    });
+  }
+
 }

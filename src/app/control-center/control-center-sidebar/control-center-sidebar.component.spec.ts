@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ControlCenterSidebarComponent } from './control-center-sidebar.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { RouteReuseStrategy } from '@angular/router';
 
 describe('ControlCenterSidebarComponent', () => {
   let component: ControlCenterSidebarComponent;
@@ -9,6 +10,7 @@ describe('ControlCenterSidebarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      providers: [{ provide: RouteReuseStrategy, useValue: {} }],
       declarations: [ControlCenterSidebarComponent],
       imports: [RouterTestingModule]
     })

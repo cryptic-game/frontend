@@ -12,9 +12,9 @@ import { ControlCenterSoundPageComponent } from './control-center-sound-page/con
 import { RouterModule, Routes } from '@angular/router';
 import { ControlCenterGuard } from './control-center.guard';
 import { ControlCenterService } from './control-center.service';
-import { ControlCenterDevicePageHardwareResolverService } from './control-center-device-page/control-center-device-page-hardware-resolver.service';
+import { ControlCenterDevicePageHardwareResolver } from './control-center-device-page/control-center-device-page-hardware.resolver';
 import { ControlCenterInventoryPageComponent } from './control-center-inventory-page/control-center-inventory-page.component';
-import { ControlCenterInventoryPageItemsResolverService } from './control-center-inventory-page/control-center-inventory-page-items-resolver.service';
+import { ControlCenterInventoryPageItemsResolver } from './control-center-inventory-page/control-center-inventory-page-items.resolver';
 
 
 const routes: Routes = [
@@ -30,13 +30,13 @@ const routes: Routes = [
         path: 'device',
         component: ControlCenterDevicePageComponent,
         runGuardsAndResolvers: 'paramsOrQueryParamsChange',
-        resolve: { hardware: ControlCenterDevicePageHardwareResolverService }
+        resolve: { hardware: ControlCenterDevicePageHardwareResolver }
       },
       { path: 'create-device', component: ControlCenterCreateDevicePageComponent },
       {
         path: 'inventory',
         component: ControlCenterInventoryPageComponent,
-        resolve: { items: ControlCenterInventoryPageItemsResolverService }
+        resolve: { items: ControlCenterInventoryPageItemsResolver }
       },
       { path: 'settings', component: ControlCenterSettingsPageComponent },
       { path: 'sound', component: ControlCenterSoundPageComponent },

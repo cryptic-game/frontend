@@ -131,12 +131,6 @@ export class WebsocketService {
     }
   }
 
-  logout(): void {
-    localStorage.clear();
-    this.request({ action: 'logout' });
-    this.loggedIn = false;
-  }
-
   refreshAccountInfo(): Observable<Account> {
     return this.request({ action: 'info' }).pipe(map(data => {
       this.account.name = data['name'];

@@ -83,13 +83,11 @@ export class ControlCenterDevicePageComponent implements OnInit {
               private deviceService: DeviceService,
               private controlCenterService: ControlCenterService,
               private activatedRoute: ActivatedRoute) {
-    this.activatedRoute.queryParamMap.subscribe(queryParamMap => {
-      this.device = this.controlCenterService.getDevice(queryParamMap.get('device'));
-      this.powerButton.animating = false;
-      this.updateServices();
-    });
     this.activatedRoute.data.subscribe(data => {
       this.hardware = data['hardware'];
+      this.device = this.hardware.device;
+      this.powerButton.animating = false;
+      this.updateServices();
     });
   }
 

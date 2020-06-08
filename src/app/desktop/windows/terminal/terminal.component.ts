@@ -2,12 +2,11 @@ import { SettingsService } from '../settings/settings.service';
 import { Component, ElementRef, OnInit, SecurityContext, Type, ViewChild } from '@angular/core';
 import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { TerminalAPI, TerminalState } from './terminal-api';
-import { WindowManagerService } from '../../window-manager/window-manager.service';
 import { DefaultTerminalState } from './terminal-states';
 import { WebsocketService } from '../../../websocket.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FileService } from '../../../api/files/file.service';
-import { DesktopDeviceService } from '../../desktop-device.service';
+import { WindowManager } from '../../window-manager/window-manager';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -15,8 +14,7 @@ import { DesktopDeviceService } from '../../desktop-device.service';
   templateUrl: './terminal.component.html',
   styleUrls: ['./terminal.component.scss']
 })
-export class TerminalComponent extends WindowComponent
-  implements OnInit, TerminalAPI {
+export class TerminalComponent extends WindowComponent implements OnInit, TerminalAPI {
   @ViewChild('history', { static: true }) history: ElementRef;
   @ViewChild('prompt', { static: true }) prompt: ElementRef;
   @ViewChild('cmdLine', { static: true }) cmdLine: ElementRef;
@@ -30,9 +28,8 @@ export class TerminalComponent extends WindowComponent
     private websocket: WebsocketService,
     private settings: SettingsService,
     private fileService: FileService,
-    private windowManager: WindowManagerService,
-    private domSanitizer: DomSanitizer,
-    private desktopDeviceService: DesktopDeviceService
+    private windowManager: WindowManager,
+    private domSanitizer: DomSanitizer
   ) {
     super();
   }
@@ -44,8 +41,8 @@ export class TerminalComponent extends WindowComponent
         this.settings,
         this.fileService,
         this.domSanitizer,
-        this.desktopDeviceService,
-        this.desktopDeviceService.activeDevice,
+        this.delegate,
+        this.delegate.device,
         this
       )
     );

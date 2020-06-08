@@ -1,5 +1,6 @@
 import { Type } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Device } from '../../api/devices/device';
 
 export abstract class WindowDelegate {
   abstract title: string;
@@ -9,6 +10,7 @@ export abstract class WindowDelegate {
   constraints: WindowConstraints = new WindowConstraints();
 
   component: WindowComponent;
+  device: Device;
 
   position: WindowPosition = {
     x: 0,

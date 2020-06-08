@@ -1,10 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DesktopComponent } from '../desktop.component';
 import { WebsocketService } from 'src/app/websocket.service';
-import { Router } from '@angular/router';
-import { DesktopDeviceService } from '../desktop-device.service';
-import { DeviceService } from '../../api/devices/device.service';
-import { Device } from '../../api/devices/device';
+import { AccountService } from '../../account/account.service';
 
 @Component({
   selector: 'app-desktop-startmenu',
@@ -15,17 +12,9 @@ export class DesktopStartmenuComponent implements OnInit {
   @Input() parent: DesktopComponent;
   @Input() target;
 
-  devices: Device[] = [];
-
   searchTerm = '';
 
-  constructor(public websocket: WebsocketService,
-              private router: Router,
-              public desktopDeviceService: DesktopDeviceService,
-              private deviceService: DeviceService) {
-    deviceService.getDevices().subscribe(response => {
-      this.devices = response.devices;
-    });
+  constructor(public websocket: WebsocketService, private accountService: AccountService) {
   }
 
   ngOnInit() {
@@ -41,9 +30,7 @@ export class DesktopStartmenuComponent implements OnInit {
   }
 
   logout() {
-    this.parent.windowManager.closeAllWindows();
-    this.websocket.logout();
-    this.router.navigate(['login']).then();
+    this.accountService.logout();
   }
 
   openBugReportPageGitHub() {

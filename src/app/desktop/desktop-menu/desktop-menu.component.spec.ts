@@ -1,12 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DesktopMenuComponent } from './desktop-menu.component';
+import { windowManagerMock } from '../../test-utils';
 
 describe('DesktopMenuComponent', () => {
   let component: DesktopMenuComponent;
   let fixture: ComponentFixture<DesktopMenuComponent>;
-
-  localStorage.setItem('token', '');
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -18,6 +17,7 @@ describe('DesktopMenuComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DesktopMenuComponent);
     component = fixture.componentInstance;
+    component.windowManager = windowManagerMock();
     fixture.detectChanges();
   });
 
