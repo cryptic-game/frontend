@@ -8,9 +8,11 @@ import { DeviceHardware } from '../../api/hardware/device-hardware';
 @Injectable({
   providedIn: 'root'
 })
-export class ControlCenterDevicePageHardwareResolverService implements Resolve<DeviceHardware> {
+export class ControlCenterDevicePageHardwareResolver implements Resolve<DeviceHardware> {
 
-  constructor(private router: Router, private hardwareService: HardwareService, private controlCenterService: ControlCenterService) {
+  constructor(private router: Router,
+              private hardwareService: HardwareService,
+              private controlCenterService: ControlCenterService) {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DeviceHardware> | Observable<never> {

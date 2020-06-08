@@ -7,7 +7,7 @@ import { InventoryService } from '../../api/inventory/inventory.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ControlCenterInventoryPageItemsResolverService implements Resolve<InventoryItemWithHardware[]> {
+export class ControlCenterInventoryPageItemsResolver implements Resolve<InventoryItemWithHardware[]> {
 
   constructor(private inventoryService: InventoryService) {
   }

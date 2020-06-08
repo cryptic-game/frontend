@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ControlCenterDevicePageHardwareResolverService } from './control-center-device-page-hardware-resolver.service';
+import { ControlCenterDevicePageHardwareResolver } from './control-center-device-page-hardware.resolver';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HardwareService } from '../../api/hardware/hardware.service';
 import { ControlCenterService } from '../control-center.service';
 
-describe('ControlCenterDevicePageHardwareResolverService', () => {
+describe('ControlCenterDevicePageHardwareResolver', () => {
   let hardwareService;
   let controlCenterService;
-  let service: ControlCenterDevicePageHardwareResolverService;
+  let service: ControlCenterDevicePageHardwareResolver;
 
   beforeEach(() => {
     hardwareService = jasmine.createSpyObj('HardwareService', ['getDeviceParts']);
@@ -20,7 +20,7 @@ describe('ControlCenterDevicePageHardwareResolverService', () => {
         { provide: ControlCenterService, useValue: controlCenterService }
       ]
     });
-    service = TestBed.inject(ControlCenterDevicePageHardwareResolverService);
+    service = TestBed.inject(ControlCenterDevicePageHardwareResolver);
   });
 
   it('should be created', () => {

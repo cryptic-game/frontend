@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ControlCenterInventoryPageItemsResolverService } from './control-center-inventory-page-items-resolver.service';
+import { ControlCenterInventoryPageItemsResolver } from './control-center-inventory-page-items.resolver';
 import { InventoryService } from '../../api/inventory/inventory.service';
 
-describe('ControlCenterInventoryPageItemsResolverService', () => {
-  let service: ControlCenterInventoryPageItemsResolverService;
+describe('ControlCenterInventoryPageItemsResolver', () => {
+  let service: ControlCenterInventoryPageItemsResolver;
   let inventoryService;
 
   beforeEach(() => {
@@ -15,7 +15,7 @@ describe('ControlCenterInventoryPageItemsResolverService', () => {
         { provide: InventoryService, useValue: inventoryService }
       ]
     });
-    service = TestBed.inject(ControlCenterInventoryPageItemsResolverService);
+    service = TestBed.inject(ControlCenterInventoryPageItemsResolver);
   });
 
   it('should be created', () => {

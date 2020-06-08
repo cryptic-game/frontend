@@ -2,13 +2,14 @@ import { Position } from '../../dataclasses/position';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Program } from '../../dataclasses/program';
 import { ProgramService } from './program.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { WindowManagerService } from './window-manager/window-manager.service';
-import { WebsocketService } from '../websocket.service';
 import { GlobalCursorService } from '../global-cursor.service';
 import { SettingsService } from './windows/settings/settings.service';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { DeviceService } from '../api/devices/device.service';
+import { Device } from '../api/devices/device';
+import { WindowManager } from './window-manager/window-manager';
 
 @Component({
   selector: 'app-desktop',
@@ -16,6 +17,9 @@ import { DeviceService } from '../api/devices/device.service';
   styleUrls: ['./desktop.component.scss']
 })
 export class DesktopComponent implements OnInit {
+  activeDevice: Device;
+  devices: Device[] = [];
+  windowManager: WindowManager;
   startMenu = false;
   contextMenu = false;
   contextMenuPosition = new Position(0, 0);
@@ -29,15 +33,20 @@ export class DesktopComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private websocket: WebsocketService,
     private deviceService: DeviceService,
     private programService: ProgramService,
     private cursorService: GlobalCursorService,
     private settings: SettingsService,
     private sanitizer: DomSanitizer,
-    public windowManager: WindowManagerService,
+    private windowManagerService: WindowManagerService
   ) {
+    this.activatedRoute.data.subscribe(data => {
+      this.activeDevice = data['device'];
+      this.windowManager = windowManagerService.forDevice(this.activeDevice);
+      this.deviceService.getDevices().subscribe(response => {
+        this.devices = response.devices;
+      });
+    });
   }
 
   ngOnInit(): void {
@@ -154,4 +163,7 @@ export class DesktopComponent implements OnInit {
       `black url(${this.settings.getBackgroundUrl(this.settings.getSettings().backgroundImage)}) bottom/cover no-repeat`);
   }
 
+  trackByUUID(index: number, device: Device) {
+    return device.uuid;
+  }
 }

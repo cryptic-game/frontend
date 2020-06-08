@@ -4,9 +4,8 @@ import { WebsocketService } from '../../../websocket.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { HardwareService } from '../../../api/hardware/hardware.service';
-import { Device, DeviceUtilization } from '../../../api/devices/device';
+import { DeviceUtilization } from '../../../api/devices/device';
 import { DeviceHardware } from '../../../api/hardware/device-hardware';
-import { DesktopDeviceService } from '../../desktop-device.service';
 
 @Component({
   selector: 'app-task-manager',
@@ -16,25 +15,24 @@ import { DesktopDeviceService } from '../../desktop-device.service';
 export class TaskManagerComponent extends WindowComponent implements OnInit, OnDestroy {
   resourceNotifySubscription: Subscription;
 
-  device: Device;
-  deviceHardware: DeviceHardware = new DeviceHardware(null);
+  deviceHardware: DeviceHardware;
   cpu: { name?: string, frequencyMax: number } = { name: '', frequencyMax: 0 };
   gpu: { name?: string, frequency: number } = { name: '', frequency: 0 };
   ram = { totalMemory: 0, type: '' };
   diskName = '';
   utilization: DeviceUtilization = new DeviceUtilization();
 
-  constructor(private webSocket: WebsocketService,
-              private hardwareService: HardwareService,
-              private desktopDeviceService: DesktopDeviceService) {
+  constructor(public delegate: WindowDelegate,
+              private webSocket: WebsocketService,
+              private hardwareService: HardwareService) {
     super();
-    this.device = desktopDeviceService.activeDevice;
+    this.deviceHardware = new DeviceHardware(delegate.device);
     this.update();
   }
 
   ngOnInit() {
     this.resourceNotifySubscription = this.webSocket.subscribe_notification('resource-usage')
-      .pipe(filter(x => x.device_uuid === this.device.uuid))
+      .pipe(filter(x => x.device_uuid === this.delegate.device.uuid))
       .subscribe(notification => this.updateUtilization(notification['data']));
   }
 
@@ -43,7 +41,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   }
 
   update() {
-    this.hardwareService.getDeviceParts(this.device.uuid).subscribe(data => {
+    this.hardwareService.getDeviceParts(this.delegate.device.uuid).subscribe(data => {
       this.deviceHardware = data;
 
       this.ram.totalMemory = data.getTotalMemory();
@@ -61,7 +59,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
 
       this.diskName = data.disk.length >= 1 ? data.disk[0].name : 'Disk';
 
-      this.webSocket.ms('device', ['hardware', 'resources'], { device_uuid: this.device.uuid })
+      this.webSocket.ms('device', ['hardware', 'resources'], { device_uuid: this.delegate.device.uuid })
         .subscribe(resourceData => this.updateUtilization(resourceData));
     });
   }

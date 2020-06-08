@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { WebsocketService } from '../websocket.service';
-import { catchError, flatMap, map } from 'rxjs/operators';
-import { DeviceService } from '../api/devices/device.service';
-import { DesktopDeviceService } from './desktop-device.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,33 +10,16 @@ import { DesktopDeviceService } from './desktop-device.service';
 export class DesktopGuard implements CanActivate {
 
   constructor(private router: Router,
-              private websocket: WebsocketService,
-              private deviceService: DeviceService,
-              private desktopDeviceService: DesktopDeviceService) {
+              private websocket: WebsocketService) {
   }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this.websocket.trySession().pipe(flatMap(success => {
+    return this.websocket.trySession().pipe(map(success => {
       if (success) {
-        return this.deviceService.getDeviceInfo(next.queryParamMap.get('device')).pipe(
-          map(deviceInfo => {
-            const allowed = deviceInfo.powered_on && deviceInfo.owner === this.websocket.account.uuid;
-            if (allowed) {
-              this.desktopDeviceService.activeDevice = deviceInfo;
-            }
-            return allowed;
-          }),
-          catchError(() => of(false)),
-          map(allowed => {
-            if (!allowed) {
-              this.router.navigate([]).then();
-            }
-            return allowed;
-          })
-        );
+        return true;
       } else {
-        this.router.navigate(['login']).then();
-        return of(false);
+        this.router.navigateByUrl('/login').then();
+        return false;
       }
     }));
   }

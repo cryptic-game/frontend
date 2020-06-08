@@ -8,7 +8,7 @@ import { FileService } from '../../../api/files/file.service';
 import { Path } from '../../../api/files/path';
 import { of } from 'rxjs';
 import { Device } from '../../../api/devices/device';
-import { DesktopDeviceService } from '../../desktop-device.service';
+import { WindowDelegate } from '../../window/window-delegate';
 
 
 function escapeHtml(html) {
@@ -214,7 +214,7 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-              private domSanitizer: DomSanitizer, protected desktopDeviceService: DesktopDeviceService, protected activeDevice: Device,
+              private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
               protected terminal: TerminalAPI, public promptColor: string = null) {
     super();
   }
@@ -268,8 +268,8 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.activeDevice = newDevice;
         this.refreshPrompt();
 
-        if (this.activeDevice.uuid === this.desktopDeviceService.activeDevice.uuid) {
-          Object.assign(this.desktopDeviceService.activeDevice, newDevice);
+        if (this.activeDevice.uuid === this.windowDelegate.device.uuid) {
+          Object.assign(this.windowDelegate.device, newDevice);
         }
       }, () => {
         this.terminal.outputText('The hostname couldn\'t be changed');
@@ -1032,7 +1032,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       this.websocket.ms('service', ['part_owner'], { device_uuid: args[0] }).subscribe(partOwnerData => {
         if (infoData['owner'] === this.websocket.account.uuid || partOwnerData['ok'] === true) {
           this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.fileService, this.domSanitizer,
-            this.desktopDeviceService, infoData, this.terminal, '#DD2C00'));
+            this.windowDelegate, infoData, this.terminal, '#DD2C00'));
         } else {
           this.terminal.outputText('Access denied');
         }
@@ -1394,7 +1394,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.terminal.outputText('network create <name> <private|public>   # create a network');
   }
 
-  info(args: string[]) {
+  info() {
     this.terminal.outputText('Username: ' + this.websocket.account.name);
     this.terminal.outputText('Host: ' + this.activeDevice['name']);
 

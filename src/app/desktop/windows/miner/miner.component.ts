@@ -4,7 +4,6 @@ import { WebsocketService } from '../../../websocket.service';
 import { FormControl, Validators } from '@angular/forms';
 import { Observable, of, timer } from 'rxjs';
 import { catchError, debounce, map } from 'rxjs/operators';
-import { DesktopDeviceService } from '../../desktop-device.service';
 
 @Component({
   selector: 'app-miner',
@@ -30,7 +29,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
 
   miner;
 
-  constructor(private websocketService: WebsocketService, private desktopDeviceService: DesktopDeviceService) {
+  constructor(private websocketService: WebsocketService) {
     super();
   }
 
@@ -56,7 +55,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
     });
 
     this.websocketService.ms('service', ['list'], {
-      'device_uuid': this.desktopDeviceService.activeDevice.uuid,
+      'device_uuid': this.delegate.device.uuid,
     }).subscribe((listData) => {
       listData.services.forEach((service) => {
         if (service.name === 'miner') {
@@ -87,7 +86,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
   private createMiner(wallet: string): Observable<void> {
     if (!this.miner) {
       return this.websocketService.ms('service', ['create'], {
-        'device_uuid': this.desktopDeviceService.activeDevice.uuid,
+        'device_uuid': this.delegate.device.uuid,
         'name': 'miner',
         'wallet_uuid': wallet,
       }).pipe(

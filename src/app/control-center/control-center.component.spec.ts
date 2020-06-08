@@ -7,6 +7,7 @@ import { ControlCenterSidebarComponent } from './control-center-sidebar/control-
 import { RouterTestingModule } from '@angular/router/testing';
 import { ControlCenterSidebarMenuComponent } from './control-center-sidebar-menu/control-center-sidebar-menu.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { RouteReuseStrategy } from '@angular/router';
 
 describe('ControlCenterComponent', () => {
   let component: ControlCenterComponent;
@@ -15,7 +16,10 @@ describe('ControlCenterComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ControlCenterComponent, ControlCenterSidebarComponent, ControlCenterSidebarMenuComponent],
-      providers: [{ provide: WebsocketService, useValue: webSocketMock() }],
+      providers: [
+        { provide: WebsocketService, useValue: webSocketMock() },
+        { provide: RouteReuseStrategy, useValue: {} }
+      ],
       imports: [RouterTestingModule, NoopAnimationsModule]
     })
       .compileComponents();

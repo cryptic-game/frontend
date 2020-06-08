@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChildren } from '@angular/core';
 import { ControlCenterSidebarMenuComponent, SidebarMenu } from '../control-center-sidebar-menu/control-center-sidebar-menu.component';
 import { WebsocketService } from '../../websocket.service';
-import { Router } from '@angular/router';
+import { AccountService } from '../../account/account.service';
 
 @Component({
   selector: 'app-control-center-sidebar',
@@ -13,15 +13,14 @@ export class ControlCenterSidebarComponent implements OnInit {
 
   @Input() menus: SidebarMenu[];
 
-  constructor(public apiService: WebsocketService, private router: Router) {
+  constructor(public apiService: WebsocketService, private accountService: AccountService) {
   }
 
   ngOnInit(): void {
   }
 
   logout(): void {
-    this.apiService.logout();
-    this.router.navigate(['login']).then();
+    this.accountService.logout();
   }
 
 }

@@ -10,7 +10,7 @@ import { DesktopMenuComponent } from './desktop/desktop-menu/desktop-menu.compon
 import { DesktopStartmenuComponent } from './desktop/desktop-startmenu/desktop-startmenu.component';
 import { ContextMenuComponent } from './desktop/context-menu/context-menu.component';
 import { SignUpComponent } from './account/sign-up/sign-up.component';
-import { RouterModule, Routes } from '@angular/router';
+import { RouteReuseStrategy, RouterModule, Routes } from '@angular/router';
 import { DesktopGuard } from './desktop/desktop.guard';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PXtoViewWidthPipe } from './pxto-view-width.pipe';
@@ -41,10 +41,18 @@ import { WalletAppEditComponent } from './desktop/windows/wallet-app/wallet-app-
 import { WalletAppTransactionComponent } from './desktop/windows/wallet-app/wallet-app-transaction/wallet-app-transaction.component';
 import { HardwareShopSidebarComponent } from './desktop/windows/hardware-shop/hardware-shop-sidebar/hardware-shop-sidebar.component';
 import { ControlCenterModule } from './control-center/control-center.module';
+import { AppRouteReuseStrategy } from './app-route-reuse-strategy';
+import { DesktopDeviceResolver } from './desktop/desktop-device.resolver';
 // tslint:enable:max-line-length
 
 const routes: Routes = [
-  { path: 'desktop', component: DesktopComponent, canActivate: [DesktopGuard], runGuardsAndResolvers: 'paramsOrQueryParamsChange' },
+  {
+    path: 'desktop',
+    component: DesktopComponent,
+    canActivate: [DesktopGuard],
+    runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+    resolve: { device: DesktopDeviceResolver }
+  },
   { path: 'login', component: LoginComponent, canActivate: [AccountGuard] },
   { path: 'signup', component: SignUpComponent, canActivate: [AccountGuard] },
   { path: '**', redirectTo: '/' }
@@ -98,7 +106,10 @@ const routes: Routes = [
     ReactiveFormsModule,
     DesignModule
   ],
-  providers: [],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy }
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}
