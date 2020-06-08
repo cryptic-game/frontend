@@ -1,2 +1,4 @@
 <h1 id="version-info">Pre-Alpha 2.0</h1>
-<router-outlet></router-outlet>
+<div id="animation-container" [@routerSlide]="prepareRoute(outlet)">
+  <router-outlet #outlet="outlet"></router-outlet>
+</div>

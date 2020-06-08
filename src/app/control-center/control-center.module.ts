@@ -25,6 +25,7 @@ const routes: Routes = [
     resolve: {
       devices: ControlCenterService
     },
+    data: { animation: 'control-center' },
     children: [
       {
         path: 'device',

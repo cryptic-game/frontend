@@ -51,7 +51,8 @@ const routes: Routes = [
     component: DesktopComponent,
     canActivate: [DesktopGuard],
     runGuardsAndResolvers: 'paramsOrQueryParamsChange',
-    resolve: { device: DesktopDeviceResolver }
+    resolve: { device: DesktopDeviceResolver },
+    data: { animation: 'desktop' }
   },
   { path: 'login', component: LoginComponent, canActivate: [AccountGuard] },
   { path: 'signup', component: SignUpComponent, canActivate: [AccountGuard] },
