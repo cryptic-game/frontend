@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { WebsocketService } from '../../websocket.service';
 import { Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import * as Parts from './hardware-parts';
+import { map, switchMap } from 'rxjs/operators';
 import { Part, PartCategory } from './hardware-parts';
+import { DeviceHardware } from './device-hardware';
+import { HardwareList } from './hardware-list';
 
 @Injectable({
   providedIn: 'root'
@@ -34,8 +35,7 @@ export class HardwareService {
         }
       }
 
-      this.hardwareAvailable = new HardwareList();
-      Object.assign(this.hardwareAvailable, data);
+      this.hardwareAvailable = new HardwareList(data);
     }));
   }
 
@@ -49,9 +49,9 @@ export class HardwareService {
 
   getDeviceParts(device: string): Observable<DeviceHardware> {
     return this.webSocket.ms('device', ['device', 'info'], { device_uuid: device }).pipe(
-      switchMap(data => this.getAvailableParts().pipe(map(() => data))),
+      switchMap(data => this.getAvailableParts().pipe(map(() => data))),  // retrieve available parts if not saved yet
       map(data => {
-        const hardware = new DeviceHardware();
+        const hardware = new DeviceHardware(data);
 
         for (const { hardware_element, hardware_type } of data['hardware']) {
           switch (hardware_type) {
@@ -85,98 +85,9 @@ export class HardwareService {
         }
 
         return hardware;
-      }), catchError(() => {
-        return of(new DeviceHardware());
       })
     );
   }
 
-
-}
-
-
-export class DeviceHardware {
-  'mainboard': Parts.Mainboard = {
-    'name': '',
-    'category': PartCategory.MAINBOARD,
-    'id': 0,
-    'case': '',
-    'cpuSocket': '',
-    'cpuSlots': 0,
-    'coreTemperatureControl': false,
-    'usbPorts': 0,
-    'ram': { 'ramSlots': 0, 'maxRamSize': 0, 'ramTyp': [], 'frequency': [] },
-    'graphicUnitOnBoard': null,
-    'expansionSlots': [],
-    'diskStorage': { 'diskSlots': 0, 'interface': [] },
-    'networkPort': { 'name': '', 'interface': '', 'speed': 0 },
-    'power': 0
-  };
-  'cpu': Parts.CPU[] = [];
-  'gpu': Parts.GPU[] = [];
-  'ram': Parts.RAM[] = [];
-  'disk': Parts.Disk[] = [];
-  'processorCooler': Parts.ProcessorCooler[] = [];
-  'powerPack': Parts.PowerPack = {
-    'name': '',
-    'category': PartCategory.POWER_PACK,
-    'id': 0,
-    'totalPower': 0
-  };
-  'case' = '';
-
-  getTotalMemory(): number {
-    return this.ram.reduce((previousValue, currentValue) => previousValue + currentValue.ramSize, 0);
-  }
-}
-
-export class HardwareList {
-  'start_pc': {
-    'mainboard': string,
-    'cpu': string[],
-    'processorCooler': string[],
-    'gpu': string[],
-    'ram': string[],
-    'disk': string[]
-    'powerPack': string,
-    'case': string
-  } = {
-    'mainboard': '',
-    'cpu': [],
-    'processorCooler': [],
-    'gpu': [],
-    'ram': [],
-    'disk': [],
-    'powerPack': '',
-    'case': '',
-  };
-
-  'mainboard': { [name: string]: Parts.Mainboard } = {};
-
-  'cpu': { [name: string]: Parts.CPU } = {};
-
-  'processorCooler': { [name: string]: Parts.ProcessorCooler } = {};
-
-  'ram': { [name: string]: Parts.RAM } = {};
-
-  'gpu': { [name: string]: Parts.GPU } = {};
-
-  'disk': { [name: string]: Parts.Disk } = {};
-
-  'powerPack': { [name: string]: Parts.PowerPack } = {};
-
-  'case': string[] = [];
-
-  getAllParts(): { [name: string]: Part } {
-    return { ...this.powerPack, ...this.disk, ...this.gpu, ...this.ram, ...this.processorCooler, ...this.cpu, ...this.mainboard };
-  }
-
-  getByName(name: string): Part {
-    return this.getAllParts()[name];
-  }
-
-  getByID(id: number): Part {
-    return Object.values(this.getAllParts()).find(part => part.id === id);
-  }
 
 }
