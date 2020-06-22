@@ -1,7 +1,7 @@
 <div id="editor-container">
   <div id="editor">
     <div id="editor-menu">
-      Path: <input #fileInput (keydown.enter)="$event.preventDefault(); enter(fileInput.value)" [style.border-color]="(!error)?'black':'red'" type="text" id="fileInput">
+      Path: <input #fileInput (keydown.enter)="$event.preventDefault(); enter(fileInput.value)" [style.border-color]="(!error)?'black':'red'" type="text" id="fileInput" placeholder="path/file">
       <label for="fileInput" id="labelForInputField">{{error}}</label>
     </div>
 
