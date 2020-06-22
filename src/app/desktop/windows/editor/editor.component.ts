@@ -28,7 +28,7 @@ export class EditorComponent extends WindowComponent implements OnInit {
   enter(inputPath: string) {
     let path: Path;
     try {
-      path = Path.fromString(inputPath);
+      path = Path.fromString(inputPath, Path.ROOT);
     } catch {
       this.error = 'Path not valid';
       return;
@@ -44,7 +44,7 @@ export class EditorComponent extends WindowComponent implements OnInit {
       }
     }, error => {
       if (error.message === 'file_not_found') {
-        this.error = 'file non-existent';
+        this.error = 'File was not found';
       } else {
         this.error = error.toString();
       }
