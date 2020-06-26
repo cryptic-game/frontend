@@ -1,1 +1,47 @@
-<h1>Device creation page coming soon!</h1>
+<h1>Create a new Device</h1>
+<p>Here you can create new devices, just select the appropriate hardware for the respective hardware type!</p>
+
+<form [formGroup]="form">
+  <div class="group">
+    <div class="group-header">
+      <h3>Mainboard:</h3>
+    </div>
+    <div class="items">
+      <label class="item">
+        <select formControlName="mainboard">
+          <option *ngFor="let item of mainBoards">{{item.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-header">
+      <h3>CPUs:</h3>
+      <span (click)="addCpu()" class="button">add a CPU</span>
+    </div>
+    <div class="items" formArrayName="cpus">
+      <label *ngFor="let item of getCpus().controls; let i = index" class="item">
+        CPU {{i + 1}}:
+        <select [formControl]="item">
+          <option *ngFor="let item of cpus">{{item.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-header">
+      <h3>GPUs:</h3>
+      <span (click)="addGpu()" class="button">add a GPU</span>
+    </div>
+    <div class="items" formArrayName="gpus">
+      <label *ngFor="let item of getGpus().controls; let i = index" class="item">
+        GPUs {{i + 1}}:
+        <select [formControl]="item">
+          <option *ngFor="let item of gpus">{{item.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
+</form>

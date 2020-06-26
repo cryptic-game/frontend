@@ -31,7 +31,7 @@ export class ControlCenterComponent implements OnInit {
               private controlCenterService: ControlCenterService) {
     this.devices.length = 0;
     this.devices.push(...this.controlCenterService.devices.map(device => new DeviceSidebarMenuItem(device)));
-    this.devices.push({ title: '+', routerLink: '/create-device' });
+    this.devices.push({ title: '+ create Device', routerLink: '/create-device' });
   }
 
   ngOnInit(): void {
