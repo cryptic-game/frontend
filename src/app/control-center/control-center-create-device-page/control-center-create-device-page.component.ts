@@ -110,10 +110,23 @@ export class ControlCenterCreateDevicePageComponent {
   }
 
   getCpuCoolers(): FormArray {
-    return this.form.get('cpuCoolers') as FormArray;
+    return this.form.get('processorCoolers') as FormArray;
   }
 
   addCpuCooler(): void {
     this.getCpuCoolers().push(this.formBuilder.control(['', [Validators.required]]));
+  }
+
+  create(): void {
+    this.deviceService.createDevice(
+      this.getGpus().controls.map(control => control.value),
+      this.getCpus().controls.map(control => control.value),
+      this.form.get('mainboard').value,
+      this.getRamSticks().controls.map(control => control.value),
+      this.getDisks().controls.map(control => control.value),
+      this.getCpuCoolers().controls.map(control => control.value),
+      this.form.get('powerSupply').value,
+      this.form.get('case').value
+    ).subscribe(data => console.log(data));
   }
 }
