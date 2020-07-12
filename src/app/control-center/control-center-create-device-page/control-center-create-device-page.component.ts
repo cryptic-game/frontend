@@ -14,6 +14,8 @@ import { Case, CPU, Disk, GPU, Mainboard, PowerPack, ProcessorCooler, RAM } from
 export class ControlCenterCreateDevicePageComponent {
 
   form: FormGroup;
+  info: string;
+  error: string;
 
   mainBoards: Mainboard[] = [];
   cpus: CPU[] = [];
@@ -75,46 +77,61 @@ export class ControlCenterCreateDevicePageComponent {
           }
         });
       });
+
+    let oldMainboard;
+
+    this.form.valueChanges.subscribe(data => {
+
+      const mainboard: Mainboard = this.hardwareService.hardwareAvailable.mainboard[data.mainboard];
+      if (!mainboard || mainboard === oldMainboard) {
+        return;
+      }
+      oldMainboard = mainboard;
+
+      this.getCpus().clear();
+      this.getCpuCoolers().clear();
+      for (let i = 0; i < mainboard.cpuSlots; i++) {
+        this.getCpus().push(this.formBuilder.control(['', [Validators.required]]));
+        this.getCpuCoolers().push(this.formBuilder.control(['', [Validators.required]]));
+      }
+
+      this.getGpus().clear();
+      let gpuCount = 0;
+      mainboard.expansionSlots.map(item => item.interfaceSlots).forEach(i => gpuCount += i);
+      for (let i = 0; i < gpuCount; i++) {
+        this.getGpus().push(this.formBuilder.control(['', [Validators.required]]));
+      }
+
+      this.getRamSticks().clear();
+      for (let i = 0; i < mainboard.ram.ramSlots; i++) {
+        this.getRamSticks().push(this.formBuilder.control(['', [Validators.required]]));
+      }
+
+      this.getDisks().clear();
+      for (let i = 0; i < mainboard.diskStorage.diskSlots; i++) {
+        this.getDisks().push(this.formBuilder.control(['', [Validators.required]]));
+      }
+    });
   }
 
   getCpus(): FormArray {
     return this.form.get('cpus') as FormArray;
   }
 
-  addCpu(): void {
-    this.getCpus().push(this.formBuilder.control(['', [Validators.required]]));
-  }
-
   getGpus(): FormArray {
     return this.form.get('gpus') as FormArray;
-  }
-
-  addGpu(): void {
-    this.getGpus().push(this.formBuilder.control(['', [Validators.required]]));
   }
 
   getRamSticks(): FormArray {
     return this.form.get('ramSticks') as FormArray;
   }
 
-  addRamStick(): void {
-    this.getRamSticks().push(this.formBuilder.control(['', [Validators.required]]));
-  }
-
   getDisks(): FormArray {
     return this.form.get('disks') as FormArray;
   }
 
-  addDisk(): void {
-    this.getDisks().push(this.formBuilder.control(['', [Validators.required]]));
-  }
-
   getCpuCoolers(): FormArray {
     return this.form.get('processorCoolers') as FormArray;
-  }
-
-  addCpuCooler(): void {
-    this.getCpuCoolers().push(this.formBuilder.control(['', [Validators.required]]));
   }
 
   create(): void {
@@ -127,6 +144,14 @@ export class ControlCenterCreateDevicePageComponent {
       this.getCpuCoolers().controls.map(control => control.value),
       this.form.get('powerSupply').value,
       this.form.get('case').value
-    ).subscribe(data => console.log(data));
+    ).subscribe(data => {
+      this.info = 'Your device was successfully created.';
+      setTimeout(() => this.info = undefined, 1000 * 10);
+      this.form.reset();
+    }, err => {
+      this.error = 'You may have selected an element twice.';
+      console.warn(`Error while creating device: ${err}`);
+      setTimeout(() => this.error = undefined, 1000 * 10);
+    });
   }
 }
