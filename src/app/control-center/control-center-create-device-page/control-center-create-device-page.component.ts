@@ -26,6 +26,8 @@ export class ControlCenterCreateDevicePageComponent {
   powerSupplies: PowerPack[] = [];
   cases: Case[] = [];
 
+  private oldMainboard: Mainboard;
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly deviceService: DeviceService,
@@ -76,42 +78,43 @@ export class ControlCenterCreateDevicePageComponent {
             this.cases.push(caseElement);
           }
         });
+
+        this.updateFields(this.form.get('mainboard').value);
       });
 
-    let oldMainboard;
+    this.form.valueChanges.subscribe(data => this.updateFields(data));
+  }
 
-    this.form.valueChanges.subscribe(data => {
+  private updateFields(data: any): void {
+    const mainboard: Mainboard = this.hardwareService.hardwareAvailable.mainboard[data.mainboard];
+    if (!mainboard || mainboard === this.oldMainboard) {
+      return;
+    }
+    this.oldMainboard = mainboard;
 
-      const mainboard: Mainboard = this.hardwareService.hardwareAvailable.mainboard[data.mainboard];
-      if (!mainboard || mainboard === oldMainboard) {
-        return;
-      }
-      oldMainboard = mainboard;
+    this.getCpus().clear();
+    this.getCpuCoolers().clear();
+    for (let i = 0; i < mainboard.cpuSlots; i++) {
+      this.getCpus().push(this.formBuilder.control(['', [Validators.required]]));
+      this.getCpuCoolers().push(this.formBuilder.control(['', [Validators.required]]));
+    }
 
-      this.getCpus().clear();
-      this.getCpuCoolers().clear();
-      for (let i = 0; i < mainboard.cpuSlots; i++) {
-        this.getCpus().push(this.formBuilder.control(['', [Validators.required]]));
-        this.getCpuCoolers().push(this.formBuilder.control(['', [Validators.required]]));
-      }
+    this.getGpus().clear();
+    let gpuCount = 0;
+    mainboard.expansionSlots.map(item => item.interfaceSlots).forEach(i => gpuCount += i);
+    for (let i = 0; i < gpuCount; i++) {
+      this.getGpus().push(this.formBuilder.control(['', [Validators.required]]));
+    }
 
-      this.getGpus().clear();
-      let gpuCount = 0;
-      mainboard.expansionSlots.map(item => item.interfaceSlots).forEach(i => gpuCount += i);
-      for (let i = 0; i < gpuCount; i++) {
-        this.getGpus().push(this.formBuilder.control(['', [Validators.required]]));
-      }
+    this.getRamSticks().clear();
+    for (let i = 0; i < mainboard.ram.ramSlots; i++) {
+      this.getRamSticks().push(this.formBuilder.control(['', [Validators.required]]));
+    }
 
-      this.getRamSticks().clear();
-      for (let i = 0; i < mainboard.ram.ramSlots; i++) {
-        this.getRamSticks().push(this.formBuilder.control(['', [Validators.required]]));
-      }
-
-      this.getDisks().clear();
-      for (let i = 0; i < mainboard.diskStorage.diskSlots; i++) {
-        this.getDisks().push(this.formBuilder.control(['', [Validators.required]]));
-      }
-    });
+    this.getDisks().clear();
+    for (let i = 0; i < mainboard.diskStorage.diskSlots; i++) {
+      this.getDisks().push(this.formBuilder.control(['', [Validators.required]]));
+    }
   }
 
   getCpus(): FormArray {
