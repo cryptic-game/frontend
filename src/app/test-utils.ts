@@ -7,9 +7,9 @@ import { WindowManager } from './desktop/window-manager/window-manager';
 export function webSocketMock(): WebsocketService {
   const mock = jasmine.createSpyObj(
     'WebsocketService',
-    ['init', 'close', 'subscribe_notification', 'request', 'ms', 'msPromise', 'logout', 'refreshAccountInfo', 'trySession']
+    ['init', 'close', 'subscribeNotification', 'request', 'ms', 'msPromise', 'logout', 'refreshAccountInfo', 'trySession']
   );
-  mock.subscribe_notification.and.returnValue(new Subject());
+  mock.subscribeNotification.and.returnValue(new Subject());
   mock.request.and.returnValue(of());
   mock.ms.and.returnValue(of());
   mock.msPromise.and.returnValue(of().toPromise());

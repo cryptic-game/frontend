@@ -31,7 +31,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   }
 
   ngOnInit() {
-    this.resourceNotifySubscription = this.webSocket.subscribe_notification('resource-usage')
+    this.resourceNotifySubscription = this.webSocket.subscribeNotification<DeviceUtilization>('resource-usage')
       .pipe(filter(x => x.device_uuid === this.delegate.device.uuid))
       .subscribe(notification => this.updateUtilization(notification['data']));
   }

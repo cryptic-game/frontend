@@ -17,10 +17,10 @@ describe('TaskManagerComponent', () => {
   let fixture: ComponentFixture<TaskManagerComponent>;
 
   beforeEach(async(() => {
-    webSocket = jasmine.createSpyObj('WebsocketService', ['ms', 'subscribe_notification']);
+    webSocket = jasmine.createSpyObj('WebsocketService', ['ms', 'subscribeNotification']);
     webSocket.ms.and.returnValue(rxjs.of({}));
     notification_subject = new Subject();
-    webSocket.subscribe_notification.and.returnValue(notification_subject);
+    webSocket.subscribeNotification.and.returnValue(notification_subject);
 
     hardwareService = jasmine.createSpyObj('HardwareService', ['getDeviceParts']);
     const hardware = new DeviceHardware(emptyDevice());
@@ -74,7 +74,7 @@ describe('TaskManagerComponent', () => {
       component.delegate.device = { uuid: deviceUUID, name: '', powered_on: true, owner: '' };
 
       fixture.whenStable().then(() => {
-        expect(webSocket.subscribe_notification).toHaveBeenCalledWith('resource-usage');
+        expect(webSocket.subscribeNotification).toHaveBeenCalledWith('resource-usage');
 
         notification_subject.next({ 'device_uuid': deviceUUID, 'data': { cpu: cpuUtilization } });
         expect(component.utilization.cpu).toEqual(cpuUtilization);
