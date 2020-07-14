@@ -1,6 +1,5 @@
 import { Program } from '../../dataclasses/program';
 import { Position } from '../../dataclasses/position';
-import { TestWindowDelegate } from '../../app/desktop/windows/test-window/test-window.component';
 import { TerminalWindowDelegate } from '../../app/desktop/windows/terminal/terminal.component';
 import { MinerWindowDelegate } from '../../app/desktop/windows/miner/miner.component';
 import { SettingsWindowDelegate } from '../../app/desktop/windows/settings/settings.component';
@@ -11,7 +10,7 @@ import { EditorWindowDelegate } from '../../app/desktop/windows/editor/editor.co
 import { FileManagerWindowDelegate } from '../../app/desktop/windows/file-manager/file-manager.component';
 
 export const programWindows = {
-  'fileManager': FileManagerWindowDelegate,
+  'file-manager': FileManagerWindowDelegate,
   'terminal': TerminalWindowDelegate,
   'miner': MinerWindowDelegate,
   'settings': SettingsWindowDelegate,

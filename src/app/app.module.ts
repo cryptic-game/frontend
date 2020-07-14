@@ -108,7 +108,8 @@ const routes: Routes = [
       enabled: environment.production,
     }),
     ReactiveFormsModule,
-    DesignModule
+    DesignModule,
+    ContextMenuModule.forRoot()
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy }

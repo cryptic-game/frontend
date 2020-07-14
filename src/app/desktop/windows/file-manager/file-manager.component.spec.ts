@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FileManagerComponent } from './file-manager.component';
+import { ContextMenuModule } from 'ngx-contextmenu';
+import { FormsModule } from '@angular/forms';
+import { WebsocketService } from '../../../websocket.service';
+import { emptyWindowDelegate, webSocketMock } from '../../../test-utils';
 
 describe('FileManagerComponent', () => {
   let component: FileManagerComponent;
@@ -8,7 +12,16 @@ describe('FileManagerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FileManagerComponent ]
+      providers: [
+        { provide: WebsocketService, useValue: webSocketMock() },
+      ],
+      declarations: [
+        FileManagerComponent
+      ],
+      imports: [
+        ContextMenuModule.forRoot(),
+        FormsModule
+      ]
     })
     .compileComponents();
   }));
@@ -16,6 +29,7 @@ describe('FileManagerComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(FileManagerComponent);
     component = fixture.componentInstance;
+    component.delegate = emptyWindowDelegate();
     fixture.detectChanges();
   });
 

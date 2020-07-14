@@ -2,71 +2,71 @@
   flex-basis: 100%;
 }
 
-#file-manager-window-container {
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 1);
-  overflow: auto;
-  user-select: none;
-}
-
-
-#file-manager-window {
-  padding: 20px;
-}
-
-.category {
-  display: flex;
-  flex-direction: row;
-}
-
-.hr {
-  height: 2px;
-  background: rgba(0, 0, 0, 0.07);
-  border-radius: 3px;
-  margin: auto 50px auto 50px;
-}
-
-h2 {
-  color: rgba(0, 0, 0, 0.4);
-}
-
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
-}
-
-.file-list {
+#file-manager-container {
   display: flex;
   flex-direction: column;
-  margin: 0 40px 0 40px;
-}
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background-color: white;
 
-.file-list .header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: larger;
-}
+  .header {
+    padding: 0.5em 0;
+    border-bottom: 2px solid #dcdcdc;
 
-.file-list .file {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 3px;
-}
+    button {
+      margin-right: 5px;
+      cursor: pointer;
+    }
 
-.file-list .file .name {
-  float: right;
-  overflow: hidden;
-}
+    form {
+      display: inline;
 
-.file-list .file .size {
-  float: right;
-  overflow: hidden;
-}
+      .address-bar {
+        width: 80%;
+      }
+    }
+  }
 
-.selectable {
-  user-select: text;
-}
+  .files-container {
+    --symbol-width: 5em;
 
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, var(--symbol-width)));
+    grid-auto-rows: max-content;
+    grid-gap: 1em;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 1em;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .file {
+      padding: 0.5em;
+      user-select: none;
+      cursor: pointer;
+      line-break: anywhere;
+
+      &:hover {
+        background-color: #ebebeb;
+      }
+
+      &:active {
+        background-color: #dcdcdc;
+      }
+
+      .icon {
+        width: 100%;
+      }
+    }
+  }
+
+  .status-bar {
+    width: 100%;
+    color: #d20000;
+    background-color: #ebebeb;
+    border-top: 2px solid #dcdcdc;
+  }
+}

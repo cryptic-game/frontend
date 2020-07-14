@@ -1,0 +1,57 @@
+$ctx-menu-border: #ebebeb;
+$ctx-menu-item-padding: 0.5em 1em;
+$ctx-menu-item-border-radius: 3px;
+$ctx-menu-active-background: #337ab7;
+
+.ngx-contextmenu .dropdown-menu {
+  border: solid 1px $ctx-menu-border;
+  background-color: white;
+  border-radius: 5px;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+
+  li {
+    display: block;
+    border-top: 1px solid $ctx-menu-border;
+
+    &:first-child {
+      border-top: none;
+
+      a {
+        border-top-left-radius: $ctx-menu-item-border-radius;
+        border-top-right-radius: $ctx-menu-item-border-radius;
+      }
+    }
+
+    &:last-child a {
+      border-bottom-left-radius: $ctx-menu-item-border-radius;
+      border-bottom-right-radius: $ctx-menu-item-border-radius;
+    }
+
+    a {
+      color: black;
+      text-decoration: none;
+      display: block;
+      padding: $ctx-menu-item-padding;
+
+      &:hover {
+        background-color: $ctx-menu-border;
+      }
+
+      &.active {
+        background-color: $ctx-menu-active-background;
+      }
+    }
+
+    span.passive {
+      color: black;
+      display: block;
+      padding: $ctx-menu-item-padding;
+
+      input[type=text] {
+        width: 5em;
+      }
+    }
+  }
+}
