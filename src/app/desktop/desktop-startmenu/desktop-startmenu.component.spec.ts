@@ -8,7 +8,6 @@ import { DesktopComponent } from '../desktop.component';
 import { PXtoViewHeightPipe } from '../../pxto-view-height.pipe';
 import { PXtoViewWidthPipe } from '../../pxto-view-width.pipe';
 import { WindowManagerComponent } from '../window-manager/window-manager.component';
-import { ContextMenuComponent } from '../context-menu/context-menu.component';
 import { WindowFrameComponent } from '../window/window-frame.component';
 import { DesktopMenuComponent } from '../desktop-menu/desktop-menu.component';
 import { emptyDevice, windowManagerMock } from '../../test-utils';
@@ -37,7 +36,6 @@ describe('DesktopStartmenuComponent', () => {
         PXtoViewWidthPipe,
         PXtoViewHeightPipe,
         WindowManagerComponent,
-        ContextMenuComponent,
         WindowFrameComponent,
         DesktopMenuComponent
       ]

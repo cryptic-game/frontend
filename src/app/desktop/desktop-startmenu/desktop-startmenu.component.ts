@@ -11,7 +11,6 @@ import { DeviceService } from '../../api/devices/device.service';
 })
 export class DesktopStartmenuComponent implements OnInit {
   @Input() parent: DesktopComponent;
-  @Input() target;
 
   searchTerm = '';
 

@@ -1,11 +1,11 @@
-<div #surface (contextmenu)="showContextMenu($event)" (mousedown)="checkWindowUnfocus($event); hideStartMenu()"
+<div #surface (contextmenu)="$event.preventDefault()" (mousedown)="checkWindowUnfocus($event); hideStartMenu()"
      [style.background]="getBackground()" id="desktop-surface">
   <h1 id="version-info">Pre-Alpha 2.0</h1>
 
   <div
-    (dblclick)="openProgramWindow(linkage)" (mousedown)="linkageMouseDown($event, i)"
     *ngFor="let linkage of onDesktop(); index as i"
-    [ngStyle]="{'left.vw': linkage.position.x | px2vw, 'top.vh': linkage.position.y | px2vh, zIndex: linkage.position.z }"
+    (dblclick)="openProgramWindow(linkage)" (mousedown)="linkageMouseDown($event, i)"
+    [ngStyle]="{'left.vw': linkage.position.x | px2vw, 'top.vh': linkage.position.y | px2vh, zIndex: linkage.position.z }"
     class="linkage"
   ><img [src]="linkage.icon" alt="">{{linkage.displayName}}</div>
 
@@ -13,10 +13,6 @@
     *ngFor="let device of devices; trackBy: trackByUUID" [device]="device"
     [hidden]="device.uuid !== activeDevice.uuid"
   ></app-window-manager>
-
-  <app-context-menu
-    (mouseleave)="hideContextMenu()" *ngIf="contextMenu" [position]="contextMenuPosition"
-  ></app-context-menu>
 </div>
-<app-desktop-startmenu *ngIf="startMenu" [parent]="this" [target]="contextMenuTarget"></app-desktop-startmenu>
+<app-desktop-startmenu *ngIf="startMenu" [parent]="this"></app-desktop-startmenu>
 <app-desktop-menu (startMenu)="toggleStartMenu()" [windowManager]="windowManager"></app-desktop-menu>

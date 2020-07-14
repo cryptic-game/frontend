@@ -6,7 +6,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PXtoViewHeightPipe } from '../pxto-view-height.pipe';
 import { PXtoViewWidthPipe } from '../pxto-view-width.pipe';
-import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { DesktopStartmenuComponent } from './desktop-startmenu/desktop-startmenu.component';
 import { FormsModule } from '@angular/forms';
 import { WindowManagerComponent } from './window-manager/window-manager.component';
@@ -59,7 +58,6 @@ describe('DesktopComponent', () => {
         DesktopMenuComponent,
         PXtoViewWidthPipe,
         PXtoViewHeightPipe,
-        ContextMenuComponent,
         DesktopStartmenuComponent,
         WindowManagerComponent,
         WindowFrameComponent
@@ -148,18 +146,6 @@ describe('DesktopComponent', () => {
     'when you put your mouse down on anything else but the desktop surface', () => {
     component.checkWindowUnfocus(new MouseEvent('mousedown'));
     expect(windowManager.unfocus).not.toHaveBeenCalled();
-  });
-
-  it('should display a context menu when you right-click on the desktop surface, and should hide it when the cursor leaves it', () => {
-    component.surface.nativeElement.dispatchEvent(new Event('contextmenu'));
-    fixture.detectChanges();
-    const contextMenu = fixture.debugElement.query(By.css('app-context-menu'));
-    expect(contextMenu).toBeTruthy('Context menu was not displayed');
-    if (contextMenu) {
-      contextMenu.nativeElement.dispatchEvent(new Event('mouseleave'));
-    }
-    fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('app-context-menu'))).toBeFalsy('Context menu was not hidden');
   });
 
   it('should display programs from #onDesktop() as shortcuts', () => {
