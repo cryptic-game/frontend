@@ -15,7 +15,7 @@ import { ControlCenterService } from './control-center.service';
 import { ControlCenterDevicePageHardwareResolver } from './control-center-device-page/control-center-device-page-hardware.resolver';
 import { ControlCenterInventoryPageComponent } from './control-center-inventory-page/control-center-inventory-page.component';
 import { ControlCenterInventoryPageItemsResolver } from './control-center-inventory-page/control-center-inventory-page-items.resolver';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 const routes: Routes = [
@@ -64,7 +64,8 @@ const routes: Routes = [
     CommonModule,
     BrowserAnimationsModule,
     RouterModule.forChild(routes),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class ControlCenterModule {
