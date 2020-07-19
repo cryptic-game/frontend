@@ -23,7 +23,7 @@ function reportError(error) {
 }
 
 export abstract class CommandTerminalState implements TerminalState {
-  abstract commands: { [name: string]: { executor: (args: string[]) => void, description: string } };
+  abstract commands: { [name: string]: { executor: (args: string[]) => void, description: string, hidden?: boolean } };
 
   protocol: string[] = [];
 
@@ -51,8 +51,9 @@ export abstract class CommandTerminalState implements TerminalState {
 
   autocomplete(content: string): string {
     return content
-      ? Object.keys(this.commands)
-        .filter(n => !['chaozz'].includes(n))
+      ? Object.entries(this.commands)
+        .filter(command => !('hidden' in command[1]))
+        .map(([name, value]) => name)
         .sort()
         .find(n => n.startsWith(content))
       : '';
@@ -76,7 +77,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     },
     'status': {
       executor: this.status.bind(this),
-      description: 'displays the number of online plyers'
+      description: 'displays the number of online players'
     },
     'hostname': {
       executor: this.hostname.bind(this),
@@ -174,7 +175,8 @@ export class DefaultTerminalState extends CommandTerminalState {
     // easter egg
     'chaozz': {
       executor: () => this.terminal.outputText('"mess with the best, die like the rest :D`" - chaozz'),
-      description: ''
+      description: '',
+      hidden: true
     }
   };
 
@@ -239,8 +241,8 @@ export class DefaultTerminalState extends CommandTerminalState {
   help() {
     const table = document.createElement('table');
     Object.entries(this.commands)
+      .filter(command => !('hidden' in command[1]))
       .map(([name, value]) => ({ name: name, description: value.description }))
-      .filter(command => !['chaozz'].includes(command.name))
       .map(command => `<tr><td>${command.name}</td><td>${command.description}</td></tr>`)
       .forEach(row => {
         table.innerHTML += row;
