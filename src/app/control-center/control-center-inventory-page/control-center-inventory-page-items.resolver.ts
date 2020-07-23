@@ -12,9 +12,8 @@ export class ControlCenterInventoryPageItemsResolver implements Resolve<Inventor
   constructor(private inventoryService: InventoryService) {
   }
 
-
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InventoryItemWithHardware[]> {
+    this.inventoryService.update.emit();
     return this.inventoryService.getInventoryItemsWithHardware();
   }
-
 }

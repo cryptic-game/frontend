@@ -2,114 +2,114 @@
 <p>Here you can create new devices, just select the appropriate hardware for the respective hardware type!</p>
 
 <form [formGroup]="form">
-    <div class="group">
-        <div class="group-header">
-            <h3>Mainboard:</h3>
-        </div>
-        <div class="items">
-            <label class="item">
-                <select formControlName="mainboard">
-                    <option *ngFor="let item of mainBoards">{{item.name}}</option>
-                </select>
-            </label>
-        </div>
+  <div class="group">
+    <div class="group-header">
+      <h3>Mainboard:</h3>
     </div>
+    <div class="items">
+      <label class="item">
+        <select formControlName="mainboard">
+          <option *ngFor="let item of mainBoards">{{item.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
 
-    <div class="group">
-        <div class="group-header">
-            <h3>CPUs:</h3>
-        </div>
-        <div class="items" formArrayName="cpus">
-            <label *ngFor="let item of getCpus().controls; let i = index" class="item">
-                CPU {{i + 1}}:
-                <select [formControl]="item">
-                    <option *ngFor="let item of cpus">{{item.name}}</option>
-                </select>
-            </label>
-        </div>
+  <div class="group">
+    <div class="group-header">
+      <h3>CPUs:</h3>
     </div>
+    <div class="items" formArrayName="cpus">
+      <label *ngFor="let item of getCpus().controls; let i = index" class="item">
+        CPU {{i + 1}}:
+        <select [formControl]="item">
+          <option *ngFor="let item of cpus">{{item.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
 
-    <div class="group">
-        <div class="group-header">
-            <h3>GPUs:</h3>
-        </div>
-        <div class="items" formArrayName="gpus">
-            <label *ngFor="let item of getGpus().controls; let i = index" class="item">
-                GPUs {{i + 1}}:
-                <select [formControl]="item">
-                    <option *ngFor="let item of gpus">{{item.name}}</option>
-                </select>
-            </label>
-        </div>
+  <div class="group">
+    <div class="group-header">
+      <h3>Extensions:</h3>
     </div>
+    <div class="items" formArrayName="extensions">
+      <label *ngFor="let item of getExtensions().controls; let i = index" class="item">
+        Extension {{i + 1}}:
+        <select [formControl]="item">
+          <option *ngFor="let item of extensions">{{item.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
 
-    <div class="group">
-        <div class="group-header">
-            <h3>RAM Sticks:</h3>
-        </div>
-        <div class="items" formArrayName="ramSticks">
-            <label *ngFor="let item of getRamSticks().controls; let i = index" class="item">
-                RAM Stick {{i + 1}}:
-                <select [formControl]="item">
-                    <option *ngFor="let item of ramSticks">{{item.name}}</option>
-                </select>
-            </label>
-        </div>
+  <div class="group">
+    <div class="group-header">
+      <h3>RAM Sticks:</h3>
     </div>
+    <div class="items" formArrayName="ramSticks">
+      <label *ngFor="let item of getRamSticks().controls; let i = index" class="item">
+        RAM Stick {{i + 1}}:
+        <select [formControl]="item">
+          <option *ngFor="let item of ramSticks">{{item.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
 
-    <div class="group">
-        <div class="group-header">
-            <h3>Disks:</h3>
-        </div>
-        <div class="items" formArrayName="ramSticks">
-            <label *ngFor="let item of getDisks().controls; let i = index" class="item">
-                Disk {{i + 1}}:
-                <select [formControl]="item">
-                    <option *ngFor="let item of ramSticks">{{item.name}}</option>
-                </select>
-            </label>
-        </div>
+  <div class="group">
+    <div class="group-header">
+      <h3>Disks:</h3>
     </div>
+    <div class="items" formArrayName="ramSticks">
+      <label *ngFor="let item of getDisks().controls; let i = index" class="item">
+        Disk {{i + 1}}:
+        <select [formControl]="item">
+          <option *ngFor="let item of disks">{{item.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
 
-    <div class="group">
-        <div class="group-header">
-            <h3>Processor Coolers:</h3>
-        </div>
-        <div class="items" formArrayName="ramSticks">
-            <label *ngFor="let item of getCpuCoolers().controls; let i = index" class="item">
-                Processor Cooler {{i + 1}}:
-                <select [formControl]="item">
-                    <option *ngFor="let item of processorCoolers">{{item.name}}</option>
-                </select>
-            </label>
-        </div>
+  <div class="group">
+    <div class="group-header">
+      <h3>Processor Coolers:</h3>
     </div>
+    <div class="items" formArrayName="ramSticks">
+      <label *ngFor="let item of getCpuCoolers().controls; let i = index" class="item">
+        Processor Cooler {{i + 1}}:
+        <select [formControl]="item">
+          <option *ngFor="let item of processorCoolers">{{item.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
 
-    <div class="group">
-        <div class="group-header">
-            <h3>Power Supply:</h3>
-        </div>
-        <div class="items">
-            <label class="item">
-                <select formControlName="powerSupply">
-                    <option *ngFor="let item of powerSupplies">{{item.name}}</option>
-                </select>
-            </label>
-        </div>
+  <div class="group">
+    <div class="group-header">
+      <h3>Power Supply:</h3>
     </div>
+    <div class="items">
+      <label class="item">
+        <select formControlName="powerSupply">
+          <option *ngFor="let item of powerSupplies">{{item.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
 
-    <div class="group">
-        <div class="group-header">
-            <h3>Case:</h3>
-        </div>
-        <div class="items">
-            <label class="item">
-                <select formControlName="case">
-                    <option *ngFor="let item of cases">{{item.name}}</option>
-                </select>
-            </label>
-        </div>
+  <div class="group">
+    <div class="group-header">
+      <h3>Case:</h3>
     </div>
+    <div class="items">
+      <label class="item">
+        <select formControlName="case">
+          <option *ngFor="let item of cases">{{item.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
 </form>
 
 <p *ngIf="info" style="color: green">{{info}}</p>
