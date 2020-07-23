@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DeviceService } from '../../api/devices/device.service';
-import { InventoryService } from '../../api/inventory/inventory.service';
-import { switchMap } from 'rxjs/operators';
 import { HardwareService } from '../../api/hardware/hardware.service';
 import { Case, CPU, Disk, Mainboard, PowerPack, ProcessorCooler, RAM } from '../../api/hardware/hardware-parts';
-import { interval } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { InventoryService } from '../../api/inventory/inventory.service';
+import { InventoryItem } from '../../api/inventory/inventory-item';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-control-center-create-device-page',
@@ -33,7 +34,8 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly deviceService: DeviceService,
     private readonly hardwareService: HardwareService,
-    private readonly inventoryService: InventoryService
+    private readonly inventoryService: InventoryService,
+    private readonly activatedRoute: ActivatedRoute
   ) {
     this.form = this.formBuilder.group({
       cpus: this.formBuilder.array([]),
@@ -47,67 +49,64 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
     });
 
     this.form.valueChanges.subscribe(data => this.updateFields(data));
-    this.inventoryService.update.subscribe(() => this.updateCache());
+    this.activatedRoute.data.subscribe((items: { inventoryItems: InventoryItem[] }) => this.updateCache(items.inventoryItems));
   }
 
   ngOnInit() {
-    this.updateCache();
-    interval(1000 * 10).subscribe(() => this.updateCache());
-  }
-
-  public updateCache(): any {
     this.hardwareService.updateParts()
       .pipe(switchMap(() => this.inventoryService.getInventoryItems()))
-      .subscribe(items => {
-        this.cpus = [];
-        this.mainBoards = [];
-        this.extensions = [];
-        this.ramSticks = [];
-        this.processorCoolers = [];
-        this.disks = [];
-        this.powerSupplies = [];
-        this.cases = [];
+      .subscribe(items => this.updateCache(items));
+  }
 
-        items.forEach(item => {
-          const cpuElement = this.hardwareService.hardwareAvailable.cpu[item.element_name];
-          if (cpuElement) {
-            this.cpus.push(cpuElement);
-          }
-          const mainBoardElement = this.hardwareService.hardwareAvailable.mainboard[item.element_name];
-          if (mainBoardElement) {
-            this.mainBoards.push(mainBoardElement);
-          }
-          const gpuElement = this.hardwareService.hardwareAvailable.gpu[item.element_name];
-          if (gpuElement) {
-            // @ts-ignore
-            this.extensions.push(gpuElement);
-          }
-          const ramStickElement = this.hardwareService.hardwareAvailable.ram[item.element_name];
-          if (ramStickElement) {
-            this.ramSticks.push(ramStickElement);
-          }
-          const processorCoolerElement = this.hardwareService.hardwareAvailable.processorCooler[item.element_name];
-          if (processorCoolerElement) {
-            this.processorCoolers.push(processorCoolerElement);
-          }
-          const diskElement = this.hardwareService.hardwareAvailable.disk[item.element_name];
-          if (diskElement) {
-            console.log(diskElement.interface);
-            // @ts-ignore
-            (diskElement.interface[0] === 'SATA' ? this.disks : this.extensions).push(diskElement);
-          }
-          const powerSupplyElement = this.hardwareService.hardwareAvailable.powerPack[item.element_name];
-          if (powerSupplyElement) {
-            this.powerSupplies.push(powerSupplyElement);
-          }
-          const caseElement = this.hardwareService.hardwareAvailable.case[item.element_name];
-          if (caseElement) {
-            this.cases.push(caseElement);
-          }
-        });
+  public updateCache(items: InventoryItem[]): any {
+    this.cpus = [];
+    this.mainBoards = [];
+    this.extensions = [];
+    this.ramSticks = [];
+    this.processorCoolers = [];
+    this.disks = [];
+    this.powerSupplies = [];
+    this.cases = [];
 
-        this.updateFields(this.form.value);
-      });
+    items.forEach(item => {
+      const cpuElement = this.hardwareService.hardwareAvailable.cpu[item.element_name];
+      if (cpuElement) {
+        this.cpus.push(cpuElement);
+      }
+      const mainBoardElement = this.hardwareService.hardwareAvailable.mainboard[item.element_name];
+      if (mainBoardElement) {
+        this.mainBoards.push(mainBoardElement);
+      }
+      const gpuElement = this.hardwareService.hardwareAvailable.gpu[item.element_name];
+      if (gpuElement) {
+        // @ts-ignore
+        this.extensions.push(gpuElement);
+      }
+      const ramStickElement = this.hardwareService.hardwareAvailable.ram[item.element_name];
+      if (ramStickElement) {
+        this.ramSticks.push(ramStickElement);
+      }
+      const processorCoolerElement = this.hardwareService.hardwareAvailable.processorCooler[item.element_name];
+      if (processorCoolerElement) {
+        this.processorCoolers.push(processorCoolerElement);
+      }
+      const diskElement = this.hardwareService.hardwareAvailable.disk[item.element_name];
+      if (diskElement) {
+        console.log(diskElement.interface);
+        // @ts-ignore
+        (diskElement.interface[0] === 'SATA' ? this.disks : this.extensions).push(diskElement);
+      }
+      const powerSupplyElement = this.hardwareService.hardwareAvailable.powerPack[item.element_name];
+      if (powerSupplyElement) {
+        this.powerSupplies.push(powerSupplyElement);
+      }
+      const caseElement = this.hardwareService.hardwareAvailable.case[item.element_name];
+      if (caseElement) {
+        this.cases.push(caseElement);
+      }
+    });
+
+    this.updateFields(this.form.value);
   }
 
   getCpus(): FormArray {
@@ -156,7 +155,7 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
     if (!mainboard || mainboard === this.oldMainboard) {
       return;
     }
-    this.form.get('mainboard').setValue(mainboard.name);
+    this.form.get('mainboard').setValue(mainboard.name, { emitEvent: false });
     this.oldMainboard = mainboard;
 
     this.getCpus().clear();

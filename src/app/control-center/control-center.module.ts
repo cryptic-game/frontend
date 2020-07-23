@@ -34,7 +34,11 @@ const routes: Routes = [
         runGuardsAndResolvers: 'paramsOrQueryParamsChange',
         resolve: { hardware: ControlCenterDevicePageHardwareResolver }
       },
-      { path: 'create-device', component: ControlCenterCreateDevicePageComponent },
+      {
+        path: 'create-device',
+        component: ControlCenterCreateDevicePageComponent,
+        resolve: { inventoryItems: ControlCenterInventoryPageItemsResolver }
+      },
       {
         path: 'inventory',
         component: ControlCenterInventoryPageComponent,
