@@ -13,7 +13,6 @@ export class ControlCenterInventoryPageItemsResolver implements Resolve<Inventor
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<InventoryItemWithHardware[]> {
-    this.inventoryService.update.emit();
     return this.inventoryService.getInventoryItemsWithHardware();
   }
 }
