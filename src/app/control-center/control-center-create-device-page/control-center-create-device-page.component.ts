@@ -1,17 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DeviceService } from '../../api/devices/device.service';
 import { InventoryService } from '../../api/inventory/inventory.service';
 import { switchMap } from 'rxjs/operators';
 import { HardwareService } from '../../api/hardware/hardware.service';
-import { Case, CPU, Disk, GPU, Mainboard, PowerPack, ProcessorCooler, RAM } from '../../api/hardware/hardware-parts';
+import { Case, CPU, Disk, Mainboard, PowerPack, ProcessorCooler, RAM } from '../../api/hardware/hardware-parts';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-control-center-create-device-page',
   templateUrl: './control-center-create-device-page.component.html',
   styleUrls: ['./control-center-create-device-page.component.scss']
 })
-export class ControlCenterCreateDevicePageComponent {
+export class ControlCenterCreateDevicePageComponent implements OnInit {
 
   form: FormGroup;
   info: string;
@@ -19,7 +20,7 @@ export class ControlCenterCreateDevicePageComponent {
 
   mainBoards: Mainboard[] = [];
   cpus: CPU[] = [];
-  gpus: GPU[] = [];
+  extensions: { name: string, 'interface': [string /* name */, number /* version */] }[] = [];
   ramSticks: RAM[] = [];
   disks: Disk[] = [];
   processorCoolers: ProcessorCooler[] = [];
@@ -36,7 +37,7 @@ export class ControlCenterCreateDevicePageComponent {
   ) {
     this.form = this.formBuilder.group({
       cpus: this.formBuilder.array([]),
-      gpus: this.formBuilder.array([]),
+      extensions: this.formBuilder.array([]),
       mainboard: ['', Validators.required],
       ramSticks: this.formBuilder.array([]),
       disks: this.formBuilder.array([]),
@@ -45,9 +46,28 @@ export class ControlCenterCreateDevicePageComponent {
       case: ['', Validators.required],
     });
 
+    this.form.valueChanges.subscribe(data => this.updateFields(data));
+    this.inventoryService.update.subscribe(() => this.updateCache());
+  }
+
+  ngOnInit() {
+    this.updateCache();
+    interval(1000 * 10).subscribe(() => this.updateCache());
+  }
+
+  public updateCache(): any {
     this.hardwareService.updateParts()
       .pipe(switchMap(() => this.inventoryService.getInventoryItems()))
       .subscribe(items => {
+        this.cpus = [];
+        this.mainBoards = [];
+        this.extensions = [];
+        this.ramSticks = [];
+        this.processorCoolers = [];
+        this.disks = [];
+        this.powerSupplies = [];
+        this.cases = [];
+
         items.forEach(item => {
           const cpuElement = this.hardwareService.hardwareAvailable.cpu[item.element_name];
           if (cpuElement) {
@@ -59,7 +79,8 @@ export class ControlCenterCreateDevicePageComponent {
           }
           const gpuElement = this.hardwareService.hardwareAvailable.gpu[item.element_name];
           if (gpuElement) {
-            this.gpus.push(gpuElement);
+            // @ts-ignore
+            this.extensions.push(gpuElement);
           }
           const ramStickElement = this.hardwareService.hardwareAvailable.ram[item.element_name];
           if (ramStickElement) {
@@ -68,6 +89,12 @@ export class ControlCenterCreateDevicePageComponent {
           const processorCoolerElement = this.hardwareService.hardwareAvailable.processorCooler[item.element_name];
           if (processorCoolerElement) {
             this.processorCoolers.push(processorCoolerElement);
+          }
+          const diskElement = this.hardwareService.hardwareAvailable.disk[item.element_name];
+          if (diskElement) {
+            console.log(diskElement.interface);
+            // @ts-ignore
+            (diskElement.interface[0] === 'SATA' ? this.disks : this.extensions).push(diskElement);
           }
           const powerSupplyElement = this.hardwareService.hardwareAvailable.powerPack[item.element_name];
           if (powerSupplyElement) {
@@ -79,50 +106,16 @@ export class ControlCenterCreateDevicePageComponent {
           }
         });
 
-        this.updateFields(this.form.get('mainboard').value);
+        this.updateFields(this.form.value);
       });
-
-    this.form.valueChanges.subscribe(data => this.updateFields(data));
-  }
-
-  private updateFields(data: any): void {
-    const mainboard: Mainboard = this.hardwareService.hardwareAvailable.mainboard[data.mainboard];
-    if (!mainboard || mainboard === this.oldMainboard) {
-      return;
-    }
-    this.oldMainboard = mainboard;
-
-    this.getCpus().clear();
-    this.getCpuCoolers().clear();
-    for (let i = 0; i < mainboard.cpuSlots; i++) {
-      this.getCpus().push(this.formBuilder.control(['', [Validators.required]]));
-      this.getCpuCoolers().push(this.formBuilder.control(['', [Validators.required]]));
-    }
-
-    this.getGpus().clear();
-    let gpuCount = 0;
-    mainboard.expansionSlots.map(item => item.interfaceSlots).forEach(i => gpuCount += i);
-    for (let i = 0; i < gpuCount; i++) {
-      this.getGpus().push(this.formBuilder.control(['', [Validators.required]]));
-    }
-
-    this.getRamSticks().clear();
-    for (let i = 0; i < mainboard.ram.ramSlots; i++) {
-      this.getRamSticks().push(this.formBuilder.control(['', [Validators.required]]));
-    }
-
-    this.getDisks().clear();
-    for (let i = 0; i < mainboard.diskStorage.diskSlots; i++) {
-      this.getDisks().push(this.formBuilder.control(['', [Validators.required]]));
-    }
   }
 
   getCpus(): FormArray {
     return this.form.get('cpus') as FormArray;
   }
 
-  getGpus(): FormArray {
-    return this.form.get('gpus') as FormArray;
+  getExtensions(): FormArray {
+    return this.form.get('extensions') as FormArray;
   }
 
   getRamSticks(): FormArray {
@@ -139,7 +132,7 @@ export class ControlCenterCreateDevicePageComponent {
 
   create(): void {
     this.deviceService.createDevice(
-      this.getGpus().controls.map(control => control.value),
+      this.getExtensions().controls.map(control => control.value),
       this.getCpus().controls.map(control => control.value),
       this.form.get('mainboard').value,
       this.getRamSticks().controls.map(control => control.value),
@@ -156,5 +149,38 @@ export class ControlCenterCreateDevicePageComponent {
       console.warn(`Error while creating device: ${err}`);
       setTimeout(() => this.error = undefined, 1000 * 10);
     });
+  }
+
+  private updateFields(data: any): void {
+    const mainboard: Mainboard = this.hardwareService.hardwareAvailable.mainboard[data.mainboard] || this.mainBoards[0];
+    if (!mainboard || mainboard === this.oldMainboard) {
+      return;
+    }
+    this.form.get('mainboard').setValue(mainboard.name);
+    this.oldMainboard = mainboard;
+
+    this.getCpus().clear();
+    this.getCpuCoolers().clear();
+    for (let i = 0; i < mainboard.cpuSlots; i++) {
+      this.getCpus().push(this.formBuilder.control(['', [Validators.required]]));
+      this.getCpuCoolers().push(this.formBuilder.control(['', [Validators.required]]));
+    }
+
+    this.getExtensions().clear();
+    let gpuCount = 0;
+    mainboard.expansionSlots.map(item => item.interfaceSlots).forEach(i => gpuCount += i);
+    for (let i = 0; i < gpuCount; i++) {
+      this.getExtensions().push(this.formBuilder.control(['', [Validators.required]]));
+    }
+
+    this.getRamSticks().clear();
+    for (let i = 0; i < mainboard.ram.ramSlots; i++) {
+      this.getRamSticks().push(this.formBuilder.control(['', [Validators.required]]));
+    }
+
+    this.getDisks().clear();
+    for (let i = 0; i < mainboard.diskStorage.diskSlots; i++) {
+      this.getDisks().push(this.formBuilder.control(['', [Validators.required]]));
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { WebsocketService } from '../../websocket.service';
 import { from, Observable } from 'rxjs';
 import { InventoryItem, InventoryItemWithHardware } from './inventory-item';
@@ -9,6 +9,8 @@ import { HardwareService } from '../hardware/hardware.service';
   providedIn: 'root'
 })
 export class InventoryService {
+
+  public update: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private webSocket: WebsocketService, private hardwareService: HardwareService) {
   }
