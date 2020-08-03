@@ -27,26 +27,8 @@ export class DeviceService {
     return this.deviceRequest(['device', 'all'], {});
   }
 
-  createDevice(
-    gpus: string[],
-    cpus: string[],
-    mainboard: string,
-    ramSticks: string[],
-    disks: string[],
-    processorCoolers: string[],
-    powerSupply: string,
-    case_: string
-  ): Observable<Device> {
-    return this.deviceRequest(['device', 'create'], {
-      gpu: gpus,
-      cpu: cpus,
-      mainboard: mainboard,
-      ram: ramSticks,
-      disk: disks,
-      processorCooler: processorCoolers,
-      powerPack: powerSupply,
-      case: case_
-    });
+  createDevice(hardware: DeviceHardwareSpec): Observable<Device> {
+    return this.deviceRequest(['device', 'create'], hardware);
   }
 
   createStarterDevice(): Observable<Device> {
@@ -70,6 +52,13 @@ export class DeviceService {
   }
 
 
+  checkHardwareCompatibility(hardware: DeviceHardwareSpec): Observable<{
+    success: true,
+    performance: [number, number, number, number, number]
+  }> {
+    return this.deviceRequest(['hardware', 'build'], hardware);
+  }
+
   getResourceUsage(deviceUUID): Observable<DeviceUtilization> {
     return this.deviceRequest(['hardware', 'resources'], { device_uuid: deviceUUID });
   }
@@ -78,4 +67,15 @@ export class DeviceService {
     return this.deviceRequest(['hardware', 'process'], { service_uuid: serviceUUID });
   }
 
+}
+
+export interface DeviceHardwareSpec {
+  'case': string;
+  'mainboard': string;
+  'cpu': string[];
+  'processorCooler': string[];
+  'ram': string[];
+  'gpu': string[];
+  'disk': string[];
+  'powerPack': string;
 }

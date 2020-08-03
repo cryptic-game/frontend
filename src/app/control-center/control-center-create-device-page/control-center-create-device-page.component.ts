@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DeviceService } from '../../api/devices/device.service';
-import { HardwareService } from '../../api/hardware/hardware.service';
-import { Case, CPU, Disk, Mainboard, PowerPack, ProcessorCooler, RAM } from '../../api/hardware/hardware-parts';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { DeviceHardwareSpec, DeviceService } from '../../api/devices/device.service';
+import { Case, CPU, Disk, GPU, Mainboard, Part, PartCategory, PowerPack, ProcessorCooler, RAM } from '../../api/hardware/hardware-parts';
 import { ActivatedRoute } from '@angular/router';
-import { InventoryService } from '../../api/inventory/inventory.service';
-import { InventoryItem } from '../../api/inventory/inventory-item';
-import { switchMap } from 'rxjs/operators';
+import { InventoryItemWithHardware } from '../../api/inventory/inventory-item';
+
 
 @Component({
   selector: 'app-control-center-create-device-page',
@@ -19,167 +17,297 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
   info: string;
   error: string;
 
+  // available hardware parts in the inventory
+  cases: Case[] = [];
   mainBoards: Mainboard[] = [];
   cpus: CPU[] = [];
-  extensions: { name: string, 'interface': [string /* name */, number /* version */] }[] = [];
-  ramSticks: RAM[] = [];
-  disks: Disk[] = [];
   processorCoolers: ProcessorCooler[] = [];
+  ramSticks: RAM[] = [];
+  expansions: Expansion[] = [];
+  disks: Disk[] = [];
   powerSupplies: PowerPack[] = [];
-  cases: Case[] = [];
 
-  private oldMainboard: Mainboard;
+  // options of and information about the selects in the form arrays
+  controlInformation: Map<FormControl, ControlInfo> = new Map<FormControl, ControlInfo>();
 
   constructor(
-    private readonly formBuilder: FormBuilder,
-    private readonly deviceService: DeviceService,
-    private readonly hardwareService: HardwareService,
-    private readonly inventoryService: InventoryService,
-    private readonly activatedRoute: ActivatedRoute
+    private formBuilder: FormBuilder,
+    private deviceService: DeviceService,
+    private activatedRoute: ActivatedRoute
   ) {
     this.form = this.formBuilder.group({
+      case: [null, Validators.required],
+      mainboard: [null, Validators.required],
       cpus: this.formBuilder.array([]),
-      extensions: this.formBuilder.array([]),
-      mainboard: ['', Validators.required],
-      ramSticks: this.formBuilder.array([]),
-      disks: this.formBuilder.array([]),
       processorCoolers: this.formBuilder.array([]),
-      powerSupply: ['', Validators.required],
-      case: ['', Validators.required],
+      ramSticks: this.formBuilder.array([]),
+      expansions: this.formBuilder.array([]),
+      disks: this.formBuilder.array([]),
+      powerSupply: [null, Validators.required],
     });
 
-    this.form.valueChanges.subscribe(data => this.updateFields(data));
-    this.activatedRoute.data.subscribe((items: { inventoryItems: InventoryItem[] }) => this.updateCache(items.inventoryItems));
+    this.form.get('mainboard').valueChanges.subscribe(data => this.updateFields(data));
+
+    this.form.get('case').valueChanges.subscribe(data => {
+      // reset the mainboard when the case changes and is not compatible with the mainboard
+      if (data == null || this.form.get('mainboard').value?.case !== data.name) {
+        this.form.get('mainboard').setValue(null);
+      }
+    });
+
+    this.activatedRoute.data.subscribe((items: { inventoryItems: InventoryItemWithHardware[] }) =>
+      this.updateAvailableParts(items.inventoryItems));
   }
 
   ngOnInit() {
-    this.hardwareService.updateParts()
-      .pipe(switchMap(() => this.inventoryService.getInventoryItems()))
-      .subscribe(items => this.updateCache(items));
   }
 
-  public updateCache(items: InventoryItem[]): any {
-    this.cpus = [];
+  updateAvailableParts(items: InventoryItemWithHardware[]): any {
+    this.cases = [];
     this.mainBoards = [];
-    this.extensions = [];
-    this.ramSticks = [];
+    this.cpus = [];
     this.processorCoolers = [];
+    this.ramSticks = [];
+    this.expansions = [];
     this.disks = [];
     this.powerSupplies = [];
-    this.cases = [];
 
     items.forEach(item => {
-      const cpuElement = this.hardwareService.hardwareAvailable.cpu[item.element_name];
-      if (cpuElement) {
-        this.cpus.push(cpuElement);
-      }
-      const mainBoardElement = this.hardwareService.hardwareAvailable.mainboard[item.element_name];
-      if (mainBoardElement) {
-        this.mainBoards.push(mainBoardElement);
-      }
-      const gpuElement = this.hardwareService.hardwareAvailable.gpu[item.element_name];
-      if (gpuElement) {
-        // @ts-ignore
-        this.extensions.push(gpuElement);
-      }
-      const ramStickElement = this.hardwareService.hardwareAvailable.ram[item.element_name];
-      if (ramStickElement) {
-        this.ramSticks.push(ramStickElement);
-      }
-      const processorCoolerElement = this.hardwareService.hardwareAvailable.processorCooler[item.element_name];
-      if (processorCoolerElement) {
-        this.processorCoolers.push(processorCoolerElement);
-      }
-      const diskElement = this.hardwareService.hardwareAvailable.disk[item.element_name];
-      if (diskElement) {
-        console.log(diskElement.interface);
-        // @ts-ignore
-        (diskElement.interface[0] === 'SATA' ? this.disks : this.extensions).push(diskElement);
-      }
-      const powerSupplyElement = this.hardwareService.hardwareAvailable.powerPack[item.element_name];
-      if (powerSupplyElement) {
-        this.powerSupplies.push(powerSupplyElement);
-      }
-      const caseElement = this.hardwareService.hardwareAvailable.case[item.element_name];
-      if (caseElement) {
-        this.cases.push(caseElement);
+      const part = item.properties;
+
+      switch (item.properties.category) {
+        case PartCategory.CASE:
+          this.cases.push(part as Case);
+          break;
+        case PartCategory.MAINBOARD:
+          this.mainBoards.push(part as Mainboard);
+          break;
+        case PartCategory.CPU:
+          this.cpus.push(part as CPU);
+          break;
+        case PartCategory.PROCESSOR_COOLER:
+          this.processorCoolers.push(part as ProcessorCooler);
+          break;
+        case PartCategory.RAM:
+          this.ramSticks.push(part as RAM);
+          break;
+        case PartCategory.GPU:
+          this.expansions.push(part as GPU);
+          break;
+        case PartCategory.DISK:
+          const disk = part as Disk;
+          if (disk.interface[0] === 'SATA' || disk.interface[0] === 'IDE') {
+            this.disks.push(disk);
+          } else {
+            this.expansions.push(disk);
+          }
+          break;
+        case PartCategory.POWER_PACK:
+          this.powerSupplies.push(part as PowerPack);
+          break;
       }
     });
 
-    this.updateFields(this.form.value);
+    this.updateFields(this.form.get('mainboard').value);
   }
 
-  getCpus(): FormArray {
-    return this.form.get('cpus') as FormArray;
+  getFormArray(name: string): FormArray {
+    return this.form.get(name) as FormArray;
   }
 
-  getExtensions(): FormArray {
-    return this.form.get('extensions') as FormArray;
+  getFormArrayControls(name: string): FormControl[] {
+    return this.getFormArray(name).controls as FormControl[];
   }
 
-  getRamSticks(): FormArray {
-    return this.form.get('ramSticks') as FormArray;
+  getControlOptions(control: FormControl): Part[] {
+    return this.controlInformation.get(control).options;
   }
 
-  getDisks(): FormArray {
-    return this.form.get('disks') as FormArray;
+  getControlNumber(control: FormControl): number {
+    return this.controlInformation.get(control).index + 1;
   }
 
-  getCpuCoolers(): FormArray {
-    return this.form.get('processorCoolers') as FormArray;
+  getControlDescription(control: FormControl): string {
+    return this.controlInformation.get(control).description;
   }
 
-  create(): void {
-    this.deviceService.createDevice(
-      this.getExtensions().controls.map(control => control.value),
-      this.getCpus().controls.map(control => control.value),
-      this.form.get('mainboard').value,
-      this.getRamSticks().controls.map(control => control.value),
-      this.getDisks().controls.map(control => control.value),
-      this.getCpuCoolers().controls.map(control => control.value),
-      this.form.get('powerSupply').value,
-      this.form.get('case').value
-    ).subscribe(data => {
-      this.info = 'Your device was successfully created.';
-      setTimeout(() => this.info = undefined, 1000 * 10);
-      this.form.reset();
-    }, err => {
-      this.error = 'You may have selected an element twice.';
-      console.warn(`Error while creating device: ${err}`);
-      setTimeout(() => this.error = undefined, 1000 * 10);
-    });
-  }
+  /**
+   * Update the hardware selection fields based on compatibility with the mainboard
+   * @param mainboard The new mainboard
+   */
+  updateFields(mainboard: Mainboard) {
+    ['cpus', 'processorCoolers', 'ramSticks', 'expansions', 'disks']
+      .map(name => this.getFormArray(name))
+      .forEach(formArray => formArray.clear());
 
-  private updateFields(data: any): void {
-    const mainboard: Mainboard = this.hardwareService.hardwareAvailable.mainboard[data.mainboard] || this.mainBoards[0];
-    if (!mainboard || mainboard === this.oldMainboard) {
+    if (mainboard == null) {
       return;
     }
-    this.form.get('mainboard').setValue(mainboard.name, { emitEvent: false });
-    this.oldMainboard = mainboard;
 
-    this.getCpus().clear();
-    this.getCpuCoolers().clear();
+    const newControl = (options: Part[], index: number, required: boolean, description?: string) => {
+      const control = this.formBuilder.control(null, required ? Validators.required : null);
+      this.controlInformation.set(control, { options, index, description });
+      return control;
+    };
+
+    const compatibleCPUs = this.cpus.filter(cpu => cpu.socket === mainboard.cpuSocket);
+    const compatibleCoolers = this.processorCoolers.filter(cooler => cooler.socket === mainboard.cpuSocket);
+
+    const compatibleRAM = this.ramSticks
+      .filter(ramStick => mainboard.ram.ramTyp.some(type => arraysEqual(type, ramStick.ramTyp)))
+      .filter(ramStick => mainboard.ram.frequency.includes(ramStick.frequency));
+
+    const compatibleDisks = this.disks.filter(disk =>
+      mainboard.diskStorage.interface.some(supported => arraysEqual(disk.interface, supported))
+    );
+
     for (let i = 0; i < mainboard.cpuSlots; i++) {
-      this.getCpus().push(this.formBuilder.control(['', [Validators.required]]));
-      this.getCpuCoolers().push(this.formBuilder.control(['', [Validators.required]]));
+      this.getFormArray('cpus').push(newControl(compatibleCPUs, i, i === 0));
+      this.getFormArray('processorCoolers').push(newControl(compatibleCoolers, i, i === 0));
     }
 
-    this.getExtensions().clear();
-    let gpuCount = 0;
-    mainboard.expansionSlots.map(item => item.interfaceSlots).forEach(i => gpuCount += i);
-    for (let i = 0; i < gpuCount; i++) {
-      this.getExtensions().push(this.formBuilder.control(['', [Validators.required]]));
-    }
-
-    this.getRamSticks().clear();
     for (let i = 0; i < mainboard.ram.ramSlots; i++) {
-      this.getRamSticks().push(this.formBuilder.control(['', [Validators.required]]));
+      this.getFormArray('ramSticks').push(newControl(compatibleRAM, i, i === 0));
     }
 
-    this.getDisks().clear();
     for (let i = 0; i < mainboard.diskStorage.diskSlots; i++) {
-      this.getDisks().push(this.formBuilder.control(['', [Validators.required]]));
+      this.getFormArray('disks').push(newControl(compatibleDisks, i, i === 0));
+    }
+
+    for (const expansionInterface of mainboard.expansionSlots) {
+      const compatibleExpansions = this.expansions
+        .filter(expansion => arraysEqual(expansion.interface, expansionInterface.interface));
+
+      for (let i = 0; i < expansionInterface.interfaceSlots; i++) {
+        this.getFormArray('expansions').push(newControl(compatibleExpansions, i, false, expansionInterface.interface.join(' ')));
+      }
     }
   }
+
+  getSelectedHardware(): DeviceHardwareSpec {
+    const data = this.form.value;
+    const nonNullNames = (parts: Part[]) => parts
+      .filter(part => part != null)
+      .map(part => part.name);
+
+    if (data.case == null) {
+      throw new Error('missing_case');
+    }
+    if (data.mainboard == null) {
+      throw new Error('missing_mainboard');
+    }
+    if (data.powerSupply == null) {
+      throw new Error('missing_power_supply');
+    }
+
+    const disks: string[] = nonNullNames(data.disks).concat(nonNullNames(data.expansions.filter(x => x?.category === PartCategory.DISK)));
+    const gpus: string[] = nonNullNames(data.expansions.filter(x => x?.category === PartCategory.GPU));
+
+    return {
+      'case': data.case?.name,
+      'mainboard': data.mainboard?.name,
+      'cpu': nonNullNames(data.cpus),
+      'processorCooler': nonNullNames(data.processorCoolers),
+      'ram': nonNullNames(data.ramSticks),
+      'gpu': gpus,
+      'disk': disks,
+      'powerPack': data.powerSupply?.name
+    };
+  }
+
+  displayError(error: Error) {
+    this.info = '';
+
+    const message = {
+      'missing_case': 'Missing case',
+      'missing_mainboard': 'Missing mainboard',
+      'missing_power_supply': 'Missing power supply',
+
+      'missing_cpu': 'Missing CPU',
+      'missing_ram': 'Missing RAM',
+      'missing_disk': 'Missing disk',
+      'invalid_amount_of_cpu_coolers': 'A CPU is missing a cooler',
+      'insufficient_power_pack': 'The specified power supply is too weak for your configuration',
+
+      'cpu_not_in_inventory': 'You specified a CPU item multiple times',
+      'processorCooler_not_in_inventory': 'You specified a cooler item multiple times',
+      'gpu_not_in_inventory': 'You specified a GPU item multiple times',
+      'ram_not_in_inventory': 'You specified a RAM item multiple times',
+      'disk_not_in_inventory': 'You specified a disk item multiple times',
+
+      'missing_external_gpu': 'Your configuration requires an external GPU',
+      'maximum_devices_reached': 'You already own the maximum number of devices'
+    }[error.message];
+
+    if (message == null) {
+      this.error = 'Unknown error: ' + error.message;
+    } else {
+      this.error = message;
+    }
+  }
+
+  checkCompatibility() {
+    try {
+      const selectedHardware = this.getSelectedHardware();
+
+      this.deviceService.checkHardwareCompatibility(selectedHardware).subscribe(result => {
+        console.log('Performance: ' + result.performance);
+        this.error = '';
+        this.info = 'The configuration is compatible';
+      }, error => this.displayError(error));
+    } catch (error) {
+      this.displayError(error);
+    }
+  }
+
+  build() {
+    try {
+      const selectedHardware = this.getSelectedHardware();
+
+      this.deviceService.createDevice(selectedHardware).subscribe(() => {
+        // TODO: add the device to the sidebar and navigate to it
+        this.error = '';
+        this.info = 'You successfully built a new device';
+      }, error => this.displayError(error));
+    } catch (error) {
+      this.displayError(error);
+    }
+  }
+}
+
+
+/**
+ * Returns whether two arrays contain the same elements in the same order
+ * @param a First array
+ * @param b Second array
+ */
+function arraysEqual(a, b) {
+  if (a === b) {
+    return true;
+  }
+  if (a == null || b == null || a.length !== b.length) {
+    return false;
+  }
+
+  for (let i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+
+interface Expansion extends Part {
+  'interface': [
+    string /* name */,
+    number /* version */
+  ];
+}
+
+interface ControlInfo {
+  options: Part[];
+  index: number;
+  description?: string;  // name of an expansion interface
 }

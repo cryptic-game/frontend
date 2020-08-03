@@ -1,14 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ControlCenterCreateDevicePageComponent } from './control-center-create-device-page.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 describe('ControlCenterCreateDevicePageComponent', () => {
   let component: ControlCenterCreateDevicePageComponent;
   let fixture: ComponentFixture<ControlCenterCreateDevicePageComponent>;
+  let activatedRoute;
 
   beforeEach(async(() => {
+    activatedRoute = { data: jasmine.createSpyObj(['subscribe']) };
+
     TestBed.configureTestingModule({
-      declarations: [ControlCenterCreateDevicePageComponent]
+      declarations: [ControlCenterCreateDevicePageComponent],
+      imports: [ReactiveFormsModule],
+      providers: [
+        { provide: ActivatedRoute, useValue: activatedRoute }
+      ]
     })
       .compileComponents();
   }));
