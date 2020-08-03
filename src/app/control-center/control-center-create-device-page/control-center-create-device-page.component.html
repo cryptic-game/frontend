@@ -15,10 +15,8 @@
     <label class="item">
       <select formControlName="mainboard">
         <option [ngValue]="null">Choose a mainboard</option>
-        <ng-container *ngFor="let mainboard of mainBoards">
-          <option *ngIf="mainboard.case === form.get('case').value?.name"
-                  [ngValue]="mainboard">{{mainboard.name}}</option>
-        </ng-container>
+        <option *ngFor="let mainboard of mainBoards" [disabled]="mainboard.case !== form.get('case').value?.name"
+                [ngValue]="mainboard">{{mainboard.name}}</option>
       </select>
     </label>
   </div>
@@ -31,7 +29,8 @@
         </ng-container>
         <select [formControl]="control">
           <option [ngValue]="null">{{getControlNumber(control) === 1 ? 'Select a CPU' : ''}}</option>
-          <option *ngFor="let cpu of getControlOptions(control)" [ngValue]="cpu">{{cpu.name}}</option>
+          <option *ngFor="let cpu of cpus" [disabled]="!getControlOptions(control).includes(cpu)"
+                  [ngValue]="cpu">{{cpu.name}}</option>
         </select>
       </label>
     </div>
@@ -45,7 +44,8 @@
         </ng-container>
         <select [formControl]="control">
           <option [ngValue]="null">{{getControlNumber(control) === 1 ? 'Select a cooler' : ''}}</option>
-          <option *ngFor="let cooler of getControlOptions(control)" [ngValue]="cooler">{{cooler.name}}</option>
+          <option *ngFor="let cooler of processorCoolers" [disabled]="!getControlOptions(control).includes(cooler)"
+                  [ngValue]="cooler">{{cooler.name}}</option>
         </select>
       </label>
     </div>
@@ -57,7 +57,8 @@
         RAM stick #{{i + 1}}:
         <select [formControl]="control">
           <option [ngValue]="null">{{getControlNumber(control) === 1 ? 'Select a RAM module' : ''}}</option>
-          <option *ngFor="let ram of getControlOptions(control)" [ngValue]="ram">{{ram.name}}</option>
+          <option *ngFor="let ram of ramSticks" [disabled]="!getControlOptions(control).includes(ram)"
+                  [ngValue]="ram">{{ram.name}}</option>
         </select>
       </label>
     </div>
@@ -69,7 +70,8 @@
         Select {{getControlDescription(control)}} expansion #{{getControlNumber(control)}}:
         <select [formControl]="control">
           <option [ngValue]="null"></option>
-          <option *ngFor="let expansion of getControlOptions(control)" [ngValue]="expansion">{{expansion.name}}</option>
+          <option *ngFor="let expansion of expansions" [disabled]="!getControlOptions(control).includes(expansion)"
+                  [ngValue]="expansion">{{expansion.name}}</option>
         </select>
       </label>
     </div>
@@ -83,7 +85,8 @@
         </ng-container>
         <select [formControl]="control">
           <option [ngValue]="null">{{getControlNumber(control) === 1 ? 'Select a disk' : ''}}</option>
-          <option *ngFor="let disk of getControlOptions(control)" [ngValue]="disk">{{disk.name}}</option>
+          <option *ngFor="let disk of disks" [disabled]="!getControlOptions(control).includes(disk)"
+                  [ngValue]="disk">{{disk.name}}</option>
         </select>
       </label>
     </div>
