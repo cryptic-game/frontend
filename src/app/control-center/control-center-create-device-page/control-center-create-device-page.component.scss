@@ -9,37 +9,10 @@ div.group {
   flex-direction: column;
   margin-bottom: 20px;
 
-  div.group-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid $white;
+  h3 {
+    margin: 0;
     padding-bottom: 5px;
-
-    h3 {
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-
-    span.button {
-      font-family: $default-font;
-      background-color: $green;
-      padding: 3px 10px;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: 200ms background-color;
-
-      &:hover {
-        background-color: $green-dark;
-      }
-    }
-  }
-
-  div.items {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+    border-bottom: 1px solid $white;
   }
 
   label.item {
@@ -57,6 +30,44 @@ div.group {
       padding: 3px;
       border-radius: 5px;
       border: none;
+
+      &.ng-invalid.ng-touched {
+        border: 3px solid red;
+      }
     }
+  }
+}
+
+.info {
+  color: green;
+}
+
+.error {
+  color: red;
+}
+
+span.button {
+  display: inline-block;
+  color: $black;
+  font-family: $default-font;
+  background-color: $green;
+  padding: 3px 10px;
+  margin-right: 2em;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 200ms background-color;
+
+  &:hover {
+    background-color: $green-dark;
+  }
+
+  &.compatibility {
+    background-color: yellow;
+  }
+
+  &.disabled {
+    color: white;
+    background-color: $gray;
+    cursor: default;
   }
 }
