@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DeviceHardwareSpec, DeviceService } from '../../api/devices/device.service';
 import { Case, CPU, Disk, GPU, Mainboard, Part, PartCategory, PowerPack, ProcessorCooler, RAM } from '../../api/hardware/hardware-parts';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InventoryItemWithHardware } from '../../api/inventory/inventory-item';
+import { ControlCenterService } from '../control-center.service';
 
 
 @Component({
@@ -33,7 +34,9 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private deviceService: DeviceService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private controlCenterService: ControlCenterService
   ) {
     this.form = this.formBuilder.group({
       case: [null, Validators.required],
@@ -264,8 +267,10 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
     try {
       const selectedHardware = this.getSelectedHardware();
 
-      this.deviceService.createDevice(selectedHardware).subscribe(() => {
-        // TODO: add the device to the sidebar and navigate to it
+      this.deviceService.createDevice(selectedHardware).subscribe(device => {
+        this.controlCenterService.refreshDevices().subscribe(() => {
+          this.router.navigate(['/device'], { queryParams: { device: device.uuid } }).then();
+        });
         this.error = '';
         this.info = 'You successfully built a new device';
       }, error => this.displayError(error));
