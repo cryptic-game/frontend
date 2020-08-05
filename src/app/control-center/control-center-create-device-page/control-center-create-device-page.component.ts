@@ -28,8 +28,8 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
   disks: Disk[] = [];
   powerSupplies: PowerPack[] = [];
 
-  // options of and information about the selects in the form arrays
-  controlInformation: Map<FormControl, ControlInfo> = new Map<FormControl, ControlInfo>();
+  // options and properties of the selects in the form arrays
+  controlProperties: Map<FormControl, ControlProperties> = new Map<FormControl, ControlProperties>();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -118,20 +118,18 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
     return this.form.get(name) as FormArray;
   }
 
-  getFormArrayControls(name: string): FormControl[] {
-    return this.getFormArray(name).controls as FormControl[];
+  getFormArrayControls(name: string): { control: FormControl, props: ControlProperties }[] {
+    return (this.getFormArray(name).controls as FormControl[])
+      .map(control => ({ control: control, props: this.controlProperties.get(control) }));
   }
 
-  getControlOptions(control: FormControl): Part[] {
-    return this.controlInformation.get(control).options;
-  }
-
-  getControlNumber(control: FormControl): number {
-    return this.controlInformation.get(control).index + 1;
-  }
-
-  getControlDescription(control: FormControl): string {
-    return this.controlInformation.get(control).description;
+  findControl(properties: ControlProperties): FormControl {
+    for (const [key, value] of this.controlProperties.entries()) {
+      if (controlPropertiesEqual(value, properties)) {
+        return key;
+      }
+    }
+    return null;
   }
 
   /**
@@ -143,13 +141,18 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
       .map(name => this.getFormArray(name))
       .forEach(formArray => formArray.clear());
 
+    this.info = '';
+    this.error = '';
+
     if (mainboard == null) {
       return;
     }
 
-    const newControl = (options: Part[], index: number, required: boolean, description?: string) => {
-      const control = this.formBuilder.control(null, required ? Validators.required : null);
-      this.controlInformation.set(control, { options, index, description });
+    const newControl = (options: Part[], category: string, index: number, required: boolean, description?: string) => {
+      const properties = { options, category, index, description };
+      const control = this.findControl(properties) ??
+        this.formBuilder.control(null, required ? Validators.required : null);
+      this.controlProperties.set(control, properties);
       return control;
     };
 
@@ -165,16 +168,16 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
     );
 
     for (let i = 0; i < mainboard.cpuSlots; i++) {
-      this.getFormArray('cpus').push(newControl(compatibleCPUs, i, i === 0));
-      this.getFormArray('processorCoolers').push(newControl(compatibleCoolers, i, i === 0));
+      this.getFormArray('cpus').push(newControl(compatibleCPUs, 'cpus', i, i === 0));
+      this.getFormArray('processorCoolers').push(newControl(compatibleCoolers, 'processorCoolers', i, i === 0));
     }
 
     for (let i = 0; i < mainboard.ram.ramSlots; i++) {
-      this.getFormArray('ramSticks').push(newControl(compatibleRAM, i, i === 0));
+      this.getFormArray('ramSticks').push(newControl(compatibleRAM, 'ramSticks', i, i === 0));
     }
 
     for (let i = 0; i < mainboard.diskStorage.diskSlots; i++) {
-      this.getFormArray('disks').push(newControl(compatibleDisks, i, i === 0));
+      this.getFormArray('disks').push(newControl(compatibleDisks, 'disks', i, i === 0));
     }
 
     for (const expansionInterface of mainboard.expansionSlots) {
@@ -182,7 +185,10 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
         .filter(expansion => arraysEqual(expansion.interface, expansionInterface.interface));
 
       for (let i = 0; i < expansionInterface.interfaceSlots; i++) {
-        this.getFormArray('expansions').push(newControl(compatibleExpansions, i, false, expansionInterface.interface.join(' ')));
+        this.getFormArray('expansions').push(newControl(
+          compatibleExpansions, 'expansions', i,
+          false, expansionInterface.interface.join(' ')
+        ));
       }
     }
   }
@@ -278,6 +284,10 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
       this.displayError(error);
     }
   }
+
+  trackByControl(index, { control }): FormControl {
+    return control;
+  }
 }
 
 
@@ -303,6 +313,19 @@ function arraysEqual(a, b) {
   return true;
 }
 
+function controlPropertiesEqual(a: ControlProperties, b: ControlProperties) {
+  if (a === b) {
+    return true;
+  }
+  if (a == null || b == null) {
+    return false;
+  }
+
+  return arraysEqual(a.options, b.options)
+    && a.category === b.category
+    && a.description === b.description
+    && a.index === b.index;
+}
 
 interface Expansion extends Part {
   'interface': [
@@ -311,8 +334,9 @@ interface Expansion extends Part {
   ];
 }
 
-interface ControlInfo {
+interface ControlProperties {
   options: Part[];
+  category: string;
   index: number;
   description?: string;  // name of an expansion interface
 }
