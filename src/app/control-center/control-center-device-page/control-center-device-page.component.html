@@ -6,7 +6,8 @@
   <img class="computer-logo" [hidden]="device.powered_on" src="../assets/device/desktop_computer_offline.svg"
        alt="Offline-Computer" draggable="false">
   <div>
-    <h1 #deviceName (keypress)="deviceNameKeyPressed($event)" (paste)="false">{{device.name}}</h1>
+    <h1 #deviceName (keypress)="deviceNameKeyPressed($event)" (paste)="$event.preventDefault()"
+        (drop)="$event.preventDefault()">{{device.name}}</h1>
     <button class="rename-button" (click)="startRenaming()">Rename this PC</button>
   </div>
   <svg class="power-button" (click)="powerButtonClicked()" width="80" height="80" viewBox="0 0 1080 1080"
@@ -24,7 +25,8 @@
             [@powerButtonProgress]="powerButton.state"/>
     <path fill="none" stroke="#1bd41f" stroke-linecap="round" stroke-width="36" d="M491 400a144 144 0 1098 0"
           [@powerButtonStroke]="powerButton.state"/>
-    <path fill="none" stroke="#1bd41f" stroke-linecap="round" stroke-linejoin="miter" stroke-width="36" d="M540 504V360"
+    <path fill="none" stroke="#1bd41f" stroke-linecap="round" stroke-linejoin="miter" stroke-width="36"
+          d="M540 504V360"
           [@powerButtonStroke]="powerButton.state"/>
     <defs>
       <filter id="_Blur" width="1344" height="1344" x="-132" y="-132">
@@ -84,4 +86,29 @@
       <td>{{service.usage.average() | number:'1.0-1'}}</td>
     </tr>
   </table>
+</div>
+
+<button class="disassemble-button" (click)="disassembleModal = true">Disassemble computer</button>
+
+<div class="modal-container" *ngIf="disassembleModal" (click)="closeDisassembleModal()">
+  <form class="modal" (click)="$event.stopPropagation()">
+    <svg (click)="closeDisassembleModal()" class="close-icon" role="button" viewBox="0 0 20 20" stroke="white">
+      <line stroke-width="2" x1="2" x2="18" y1="2" y2="18"></line>
+      <line stroke-width="2" x1="18" x2="2" y1="2" y2="18"></line>
+    </svg>
+    <h3>Are you sure you want to disassemble this computer?</h3>
+    <p>
+      This will <strong>delete</strong> all your saved wallet
+      credentials and files and <strong>cannot be undone</strong>.<br>
+      The hardware parts will go back into your inventory.
+    </p>
+    <label>
+      Type in the name of your device to confirm:
+      <input #disassembleConfirm type="text" name="disassemble-confirm" autocomplete="off"
+             (keyup)="checkDisassembleConfirm(disassembleConfirm)">
+    </label>
+    <br>
+    <button class="disassemble-button" (click)="disassembleDevice()" [disabled]="!disassembleConfirmed">Disassemble
+    </button>
+  </form>
 </div>

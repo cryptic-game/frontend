@@ -5,8 +5,9 @@ import { from } from 'rxjs';
 import { filter, flatMap, map, switchMap, toArray } from 'rxjs/operators';
 import { Device, DeviceUtilization } from '../../api/devices/device';
 import { animate, animateChild, keyframes, query, state, style, transition, trigger } from '@angular/animations';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceHardware } from '../../api/hardware/device-hardware';
+import { ControlCenterService } from '../control-center.service';
 
 
 function powerButtonColorAnimation(triggerName, property) {
@@ -75,16 +76,21 @@ export class ControlCenterDevicePageComponent implements OnInit {
     state: 'fast-off',
     animating: false
   };
+  disassembleModal = false;
+  disassembleConfirmed = false;
 
   @ViewChild('deviceName') deviceNameField;
 
   constructor(private webSocket: WebsocketService,
               private deviceService: DeviceService,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private controlCenterService: ControlCenterService,
+              private router: Router) {
     this.activatedRoute.data.subscribe(data => {
       this.hardware = data['hardware'];
       this.device = this.hardware.device;
       this.powerButton.animating = false;
+      this.closeDisassembleModal();
       this.updateServices();
     });
   }
@@ -122,6 +128,7 @@ export class ControlCenterDevicePageComponent implements OnInit {
         .substr(0, 15);
       this.deviceService.renameDevice(this.device.uuid, newName).subscribe(response => {
         this.device.name = response['name'];
+        this.controlCenterService.refreshDevices().subscribe();
       });
       this.deviceNameField.nativeElement.contentEditable = false;
       return false;
@@ -150,5 +157,22 @@ export class ControlCenterDevicePageComponent implements OnInit {
         this.updateServices();
       });
     }
+  }
+
+  closeDisassembleModal() {
+    this.disassembleConfirmed = false;
+    this.disassembleModal = false;
+  }
+
+  checkDisassembleConfirm(input: HTMLInputElement) {
+    this.disassembleConfirmed = input.value === this.device.name;
+  }
+
+  disassembleDevice() {
+    this.deviceService.deleteDevice(this.device.uuid).subscribe(() => {
+      this.controlCenterService.refreshDevices().subscribe();
+      this.router.navigateByUrl('/').then();
+    });
+    this.closeDisassembleModal();
   }
 }
