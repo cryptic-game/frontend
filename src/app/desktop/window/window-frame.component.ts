@@ -55,7 +55,11 @@ export class WindowFrameComponent implements OnInit {
       return 0;
     }
 
-    if (!this.delegate.constraints.resizable || this.dragging || this.delegate.position.maximized || this.resizing) {
+    if (!this.delegate.constraints.resizable
+      || this.dragging
+      || this.delegate.position.maximized
+      || this.resizing
+      || this.delegate.position.minimized) {
       return 0;
     }
 
