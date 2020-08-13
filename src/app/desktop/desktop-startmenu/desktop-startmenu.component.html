@@ -6,14 +6,13 @@
       <p id="online">online: {{ websocket.onlinePlayers }}</p>
     </div>
   </div>
-  <div id="bugreport">
-    <p>
-      Report a bug through
-      <span (click)="openBugReportPageGitHub()" class="button">GitHub</span> or
-      <span (click)="openBugReportPageForm()" class="button">Form</span>.
-      <span><a class="button" href="https://the-morpheus.de/#signup" target="_blank">Imprint</a></span>
-    </p>
-  </div>
+  <span id="bug-report">
+    Report a bug through
+    <a href="https://github.com/cryptic-game/cryptic/issues/new/choose" target="_blank" rel="noopener">GitHub</a> or
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSey6IZg-zJliAO4zNRmEdplqPkyqw-qmfKp4hARaBZHgNZSgQ/viewform"
+       target="_blank" rel="noopener">Form</a>.
+    <a href="https://the-morpheus.de/#signup" target="_blank" rel="noopener">Imprint</a>
+  </span>
   <div id="programs">
     <div id="linkages">
       <div class="button">
@@ -39,8 +38,15 @@
     </div>
     <input [(ngModel)]="searchTerm" aria-label="Search" class="search" placeholder="Search"/>
   </div>
-  <div (click)="logout()" class="button" id="logout">
-    <img src="../../../assets/desktop/img/logoutbutton.svg" alt="" class="icon"/>
-    Logout
+  <div class="buttons">
+    <div (click)="logout()" class="button" id="logout">
+      <img src="../../../assets/desktop/img/logoutbutton.svg" alt="" class="icon"/>
+      Logout
+    </div>
+    <div (click)="shutdown()" class="button" id="shutdown" routerLink="/device"
+         [queryParams]="{ device: parent.activeDevice.uuid }">
+      <img src="../../../assets/desktop/img/computer_on_off.svg" alt="" class="icon"/>
+      Shutdown
+    </div>
   </div>
 </div>
