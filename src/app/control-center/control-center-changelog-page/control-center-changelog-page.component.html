@@ -1,16 +1,29 @@
 <h1>Release notes</h1>
 <div class="changelog-container">
   <div class="changelog">
-    <div *ngFor="let version of versions" class="version-container">
-      <div class="version-box">{{version.name}}</div>
-      <span class="date">{{version.date | date:'longDate'}}</span>
-      <p *ngFor="let addition of version.additions" class="addition">NEW {{addition}}</p>
-      <p *ngFor="let fix of version.fixes" class="fix">FIXED {{fix}}</p>
-      <p *ngFor="let enhancement of version.enhancements" class="enhancement">ENHANCED {{enhancement}}</p>
+    <div *ngFor="let version of changelog?.versions" class="version-container">
+      <div class="version-header">
+        <div class="version-box">{{version.name}}</div>
+        <div class="date">{{version.date | date:'longDate'}}</div>
+      </div>
+      <p *ngFor="let addition of version.additions" class="addition">
+        <span class="change-indicator addition">NEW</span> {{addition}}
+      </p>
+      <p *ngFor="let enhancement of version.enhancements" class="enhancement">
+        <span class="change-indicator enhancement">ENHANCED</span> {{enhancement}}
+      </p>
+      <p *ngFor="let change of version.changes" class="addition">
+        <span class="change-indicator change">CHANGED</span> {{change}}
+      </p>
+      <p *ngFor="let fix of version.fixes" class="fix">
+        <span class="change-indicator fix">FIXED</span> {{fix}}
+      </p>
     </div>
     <div class="version-container start-container">
-      <div class="version-box start-box">Start</div>
-      <span class="date">{{1508018400000 | date:'longDate'}}</span>
+      <div class="version-header">
+        <div class="version-box start-box">Start</div>
+        <div class="date">{{changelog?.start_date | date:'longDate'}}</div>
+      </div>
     </div>
   </div>
 </div>
