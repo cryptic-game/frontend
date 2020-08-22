@@ -38,16 +38,18 @@
       background-color: $sidebar-background;
     }
 
-    .main-page {
+    .main-page-container {
       flex: 1 1 auto;
-      height: 100%;
-
       box-sizing: border-box;
-      padding: 1.5rem 3rem;
+      height: 100%;
 
       overflow-y: auto;
 
       background-color: $page-background;
+
+      .main-page {
+        padding: 1.5rem 3rem;
+      }
     }
 
   }
