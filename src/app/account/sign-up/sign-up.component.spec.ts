@@ -111,7 +111,7 @@ describe('SignUpComponent', () => {
 
     component.signUp();
     expect(accountService.signUp).toHaveBeenCalled();
-    expect(accountService.finalLogin).toHaveBeenCalledWith(testToken);
+    expect(accountService.finalLogin).toHaveBeenCalledWith(testToken, '/create-device');
   });
 
   it('#singUp() should set an error message and cancel if the server responds with an error', () => {

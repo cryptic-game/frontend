@@ -58,19 +58,21 @@ describe('AccountService', () => {
     });
   }));
 
-  it('#finalLogin() should save the token to the localStorage and navigate to / after updating of the account information',
+  it('#finalLogin() should save the token to the localStorage and ' +
+    'navigate to the redirect url after updating the account information',
     inject([AccountService, Router], (service: AccountService) => {
       spyOn(localStorage, 'setItem');
       const refreshAccountInfoSubject = new Subject<Account>();
       webSocket.refreshAccountInfo.and.returnValue(refreshAccountInfoSubject);
       router.navigateByUrl.and.returnValue(Promise.resolve(true));
+      const redirectURL = '/this-is-a/test-url';
 
-      service.finalLogin(testCredentials.token);
+      service.finalLogin(testCredentials.token, redirectURL);
       expect(localStorage.setItem).toHaveBeenCalledWith('token', testCredentials.token);
       expect(router.navigateByUrl).not.toHaveBeenCalled();
 
       refreshAccountInfoSubject.next({ uuid: '', name: '', created: 0, last: 0 });
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/');
+      expect(router.navigateByUrl).toHaveBeenCalledWith(redirectURL);
     })
   );
 

@@ -26,11 +26,11 @@ export class AccountService {
     return this.websocket.request({ action: 'register', name: username, password });
   }
 
-  finalLogin(token: string): void {
+  finalLogin(token: string, redirect: string): void {
     this.websocket.loggedIn = true;
     localStorage.setItem('token', token);
     this.websocket.refreshAccountInfo().subscribe(() => {
-      this.router.navigateByUrl('/').then();
+      this.router.navigateByUrl(redirect).then();
     });
   }
 

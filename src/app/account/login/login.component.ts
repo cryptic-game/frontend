@@ -38,7 +38,7 @@ export class LoginComponent {
       const value: { username: string, password: string } = this.form.value;
 
       this.accountService.login(value.username, value.password).subscribe(data => {
-        this.accountService.finalLogin(data.token);
+        this.accountService.finalLogin(data.token, '/');
       }, error => {
         if (error.message === 'permissions denied') {
           this.error = 'This username and password could not be found.';

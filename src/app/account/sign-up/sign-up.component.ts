@@ -55,7 +55,7 @@ export class SignUpComponent {
       }
 
       this.accountService.signUp(value.username, value.password).subscribe(data => {
-        this.accountService.finalLogin(data.token);
+        this.accountService.finalLogin(data.token, '/create-device');
       }, error => {
         if (error.message === 'username already exists') {
           this.error = 'This username is already taken.';

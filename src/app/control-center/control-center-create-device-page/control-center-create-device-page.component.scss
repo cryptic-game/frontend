@@ -61,6 +61,12 @@ span.button {
     background-color: $green-dark;
   }
 
+  &.starter-device {
+    padding: 5px 12px;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+  }
+
   &.compatibility {
     background-color: yellow;
   }

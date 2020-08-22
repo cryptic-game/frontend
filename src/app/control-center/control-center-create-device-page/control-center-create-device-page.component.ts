@@ -36,7 +36,7 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
     private deviceService: DeviceService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private controlCenterService: ControlCenterService
+    public controlCenterService: ControlCenterService
   ) {
     this.form = this.formBuilder.group({
       case: [null, Validators.required],
@@ -222,6 +222,14 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
       'disk': disks,
       'powerPack': data.powerSupply?.name
     };
+  }
+
+  buildStarterDevice() {
+    this.deviceService.createStarterDevice().subscribe(device => {
+      this.controlCenterService.refreshDevices().subscribe(() => {
+        this.router.navigate(['/device'], { queryParams: { device: device.uuid } }).then();
+      });
+    });
   }
 
   displayError(error: Error) {

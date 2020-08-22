@@ -96,7 +96,7 @@ describe('LoginComponent', () => {
     accountService.login.and.returnValue(rxjs.of({ token: testToken }));
 
     component.login();
-    expect(accountService.finalLogin).toHaveBeenCalledWith(testToken);
+    expect(accountService.finalLogin).toHaveBeenCalledWith(testToken, '/');
   });
 
   it('#login() should do nothing if the form is not valid', () => {

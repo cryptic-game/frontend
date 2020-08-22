@@ -1,5 +1,8 @@
 <h1>Build a new device</h1>
 
+<span class="button starter-device" *ngIf="controlCenterService.deviceSidebarMenuItems.length === 1"
+      (click)="buildStarterDevice()">Build your first device</span>
+
 <form [formGroup]="form">
   <div class="group">
     <h3>Case:</h3>
