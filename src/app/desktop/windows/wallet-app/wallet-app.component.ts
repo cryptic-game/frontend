@@ -20,16 +20,10 @@ export class WalletAppComponent extends WindowComponent implements OnInit {
   itemsPerPage = 3;
 
   constructor(
-    private walletAppService: WalletAppService
+    private readonly walletAppService: WalletAppService
   ) {
     super();
-    walletAppService.updateWallet().then((loaded) => {
-      if (loaded) {
-        this.setWalletEditStatus(false);
-      } else {
-        this.setWalletEditStatus(true);
-      }
-    });
+    walletAppService.update.subscribe(loaded => this.setWalletEditStatus(!loaded));
 
     this.wallet = walletAppService.wallet;
 

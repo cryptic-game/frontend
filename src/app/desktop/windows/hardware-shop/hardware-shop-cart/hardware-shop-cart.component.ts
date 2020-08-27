@@ -26,7 +26,6 @@ export class HardwareShopCartComponent {
       this.items = this.hardwareShopService.getCartItems();
       this.cardMorphCoins = this.getHoleMorphCoins();
     });
-    this.walletAppService.updateWallet();
     this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet.amount);
   }
 

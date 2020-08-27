@@ -26,7 +26,6 @@ export class HardwareShopHeaderComponent {
     private walletAppService: WalletAppService,
     private hardwareShopService: HardwareShopService
   ) {
-    this.walletAppService.updateWallet();
     this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet.amount);
     this.hardwareShopService.updateCartView.subscribe(() => this.loadCardSize());
     this.loadCardSize();

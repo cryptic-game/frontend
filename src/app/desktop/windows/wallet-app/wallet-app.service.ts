@@ -1,9 +1,10 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Wallet } from './wallet';
 import { WebsocketService } from '../../../websocket.service';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { Transaction } from './transaction';
-import { map } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { SettingService } from '../../../api/setting/setting.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,28 +12,50 @@ import { map } from 'rxjs/operators';
 export class WalletAppService {
 
   public wallet: Wallet;
-
-  public update: EventEmitter<Wallet> = new EventEmitter<Wallet>();
+  public readonly update: EventEmitter<Wallet> = new EventEmitter<Wallet>();
 
   constructor(
-    private websocketService: WebsocketService
+    private readonly websocketService: WebsocketService,
+    private readonly settingService: SettingService
   ) {
     this.updateWallet();
   }
 
-  public async updateWallet(): Promise<boolean> {
-    return this.loadNewWallet(localStorage.getItem('wallet_uuid'), localStorage.getItem('wallet_key'));
+  public updateWallet(): Observable<boolean> {
+    return this.getWalletIdentifier()
+      .pipe(
+        switchMap(data => this.loadNewWallet(data.id, data.key)),
+        map(() => true),
+        catchError(() => of(false))
+      );
   }
 
-  public async loadNewWallet(uuid: string, key: string): Promise<boolean> {
-    const wallet: any = await this.loadWallet(uuid, key);
-    if (wallet) {
-      this.setWallet(wallet);
-      this.update.emit(wallet);
-      return true;
-    } else {
-      return false;
-    }
+  public getWalletIdentifier(): Observable<{ id: string, key: string }> {
+    let id: string;
+
+    return this.settingService.get('wallet_id')
+      .pipe(
+        tap(console.log),
+        switchMap(data => {
+          id = data.value;
+          return this.settingService.get('wallet_key');
+        }),
+        tap(console.log),
+        map(data => ({ id, key: data.value })),
+        tap(console.log)
+      );
+  }
+
+  public loadNewWallet(uuid: string, key: string): Observable<boolean> {
+    return this.loadWallet(uuid, key)
+      .pipe(
+        map(wallet => {
+          this.setWallet(wallet);
+          this.update.emit(wallet);
+          return true;
+        }),
+        catchError(() => of(false))
+      );
   }
 
   public checkWalletUuidFormat(uuid: string): boolean {
@@ -49,21 +72,22 @@ export class WalletAppService {
       .pipe(map(data => data.transactions));
   }
 
-  private setWallet(wallet: Wallet) {
+  private setWallet(wallet: Wallet): void {
     this.wallet = wallet;
-    localStorage.setItem('wallet_uuid', wallet.source_uuid);
-    localStorage.setItem('wallet_key', wallet.key);
+    forkJoin({
+      id: this.settingService.save('wallet_id', wallet.source_uuid),
+      key: this.settingService.save('wallet_key', wallet.key)
+    }).subscribe();
   }
 
-  private loadWallet(uuid: string, key: string): Promise<any> {
-    return this.websocketService.msPromise('currency', ['get'], { source_uuid: uuid, key: key })
-      .then(data => {
+  private loadWallet(uuid: string, key: string): Observable<Wallet> {
+    return this.websocketService.ms('currency', ['get'], { source_uuid: uuid, key: key })
+      .pipe(map(data => {
         if (!this.checkWalletUuidFormat(uuid) || !this.checkWalletKeyFormat(key)) {
-          return null;
+          throwError(null);
         } else {
           return data;
         }
-      })
-      .catch(() => null);
+      }));
   }
 }
