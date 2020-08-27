@@ -22,7 +22,7 @@ export class HardwareShopHeaderComponent {
     private walletAppService: WalletAppService,
     private hardwareShopService: HardwareShopService
   ) {
-    this.walletAppService.updateWallet().then();
+    this.walletAppService.updateWallet().then();  // TODO: check
     this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet.amount);
     this.hardwareShopService.updateCartItems.subscribe(() => this.updateCartSize());
     this.updateCartSize();

@@ -34,7 +34,7 @@ export class WalletAppEditComponent {
   save(): void {
     if (this.correctUuid && this.correctKey) {
       this.walletAppService.loadNewWallet(this.form.get('uuid').value, this.form.get('key').value)
-        .then(data => {
+        .subscribe(data => {
           this.error = !data;
           if (!data) {
             setTimeout(() => this.error = false, 5 * 1000);

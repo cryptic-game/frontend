@@ -22,6 +22,8 @@ export class WalletAppComponent extends WindowComponent implements OnInit, OnDes
 
   constructor(private walletAppService: WalletAppService) {
     super();
+    // TODO: check (first: new (issue), second: old (master))
+    walletAppService.update.subscribe(loaded => this.walletEdit = !loaded);
     walletAppService.updateWallet().then(loaded => {
       this.walletEdit = !loaded;
     });
