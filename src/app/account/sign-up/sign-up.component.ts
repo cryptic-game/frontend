@@ -19,7 +19,7 @@ export class SignUpComponent {
     private accountService: AccountService) {
 
     this.form = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(4)]],
+      username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(256)]],
       password: ['', [
         Validators.required,
         Validators.minLength(8),

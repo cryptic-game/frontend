@@ -14,9 +14,9 @@
     </div>
     <div *ngIf="active" class="miner-state">
      <span>
-       {{miningRate}} MC/s
+       {{miningRate * 60 * 60 | number:'1.0-1'}} MC/h
        <br>
-       {{miningRate * 60 * 60 * 24}} MC/d
+       {{miningRate * 60 * 60 * 24 | number:'1.0-1'}} MC/d
      </span>
     </div>
   </div>

@@ -34,7 +34,7 @@
     </form>
 
     <p *ngIf="error" class="error">{{error}}</p>
-    <p>The username must have at least 4 characters.</p>
+    <p>The username must have between 4 and 256 characters.</p>
     <p>Your password has to be at least 8 characters long, it must contain at least one uppercase letter, one lowercase
       letter and one number.</p>
     <p>If you have already created an account, then click <a [routerLink]="['/login']">here</a>.</p>
