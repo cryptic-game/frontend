@@ -25,14 +25,14 @@ function reportError(error) {
 }
 
 export abstract class CommandTerminalState implements TerminalState {
-  abstract commands: { [name: string]: (args: string[]) => void };
+  abstract commands: { [name: string]: { executor: (args: string[]) => void, description: string } };
 
   protocol: string[] = [];
 
   executeCommand(command: string, args: string[]) {
     command = command.toLowerCase();
     if (this.commands.hasOwnProperty(command)) {
-      Object(this.commands[command]).executor(args);
+      this.commands[command].executor(args);
     } else if (command !== '') {
       this.commandNotFound(command);
     }
@@ -71,7 +71,7 @@ export abstract class CommandTerminalState implements TerminalState {
 
 export class DefaultTerminalState extends CommandTerminalState {
 
-  commands: any = {
+  commands = {
     'help': {
       executor: this.help.bind(this),
       description: 'list of all commands'
@@ -238,12 +238,16 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
 
-  help(args: string[]) {
-    const commands: string = Object.entries(this.commands)
-      .filter(([n, value]) => !['chaozz'].includes(n))
-      .map(([n, value]) => `${n} # ${Object(value).description}`)
-      .join('<br>');
-    this.terminal.output(commands);
+  help() {
+    const table = document.createElement('table');
+    Object.entries(this.commands)
+      .map(([name, value]) => ({ name: name, description: value.description }))
+      .filter(command => !['chaozz'].includes(command.name))
+      .map(command => `<tr><td>${command.name}</td><td>${command.description}</td></tr>`)
+      .forEach(row => {
+        table.innerHTML += row;
+      });
+    this.terminal.outputNode(table);
   }
 
   status() {
