@@ -182,6 +182,22 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   working_dir: string = Path.ROOT;  // UUID of the working directory
 
+  constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
+              private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
+              protected terminal: TerminalAPI, public promptColor: string = null) {
+    super();
+  }
+
+  static registerPromptAppenders(element: HTMLElement) {
+    element
+      .querySelectorAll('.promptAppender')
+      .forEach(el => el.addEventListener('click', DefaultTerminalState.promptAppenderListener));
+  }
+
+  static promptAppender(value: string): string {
+    return `<span class="promptAppender" style="text-decoration: underline; cursor: pointer;">${escapeHtml(value)}</span>`;
+  }
+
   private static promptAppenderListener(evt: MouseEvent) {
     evt.stopPropagation();
     const this_ = evt.target as HTMLElement;
@@ -201,22 +217,6 @@ export class DefaultTerminalState extends CommandTerminalState {
       cmdline.value += this_.innerText + ' ';
       cmdline.focus();
     }
-  }
-
-  static registerPromptAppenders(element: HTMLElement) {
-    element
-      .querySelectorAll('.promptAppender')
-      .forEach(el => el.addEventListener('click', DefaultTerminalState.promptAppenderListener));
-  }
-
-  static promptAppender(value: string): string {
-    return `<span class="promptAppender" style="text-decoration: underline; cursor: pointer;">${escapeHtml(value)}</span>`;
-  }
-
-  constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-              private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
-              protected terminal: TerminalAPI, public promptColor: string = null) {
-    super();
   }
 
   commandNotFound(command: string) {
@@ -1466,6 +1466,8 @@ export class YesNoTerminalState extends ChoiceTerminalState {
 
 
 export class BruteforceTerminalState extends ChoiceTerminalState {
+  time = this.startSeconds;
+  intervalHandle;
   choices = {
     'stop': () => {
       clearInterval(this.intervalHandle);
@@ -1478,8 +1480,6 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
       this.callback(false);
     }
   };
-  time = this.startSeconds;
-  intervalHandle;
 
   constructor(terminal: TerminalAPI,
               private domSanitizer: DomSanitizer,

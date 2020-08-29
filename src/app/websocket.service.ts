@@ -111,26 +111,6 @@ export class WebsocketService {
     return this.ms(name, endpoint, data).toPromise();
   }
 
-  private handleMessage(message: object) {
-    if (message['error'] != null) {
-      this.open = {};
-    } else if (message['tag'] != null && message['data'] != null) {
-      const tag = message['tag'];
-
-      if (this.open[tag] != null) {
-        this.open[tag].next(message['data']);
-        this.open[tag].complete();
-        delete this.open[tag];
-      }
-    } else if (message['notify-id'] != null && message['data'] != null) {
-      const subject = this.notification_subjects[message['notify-id']];
-
-      if (subject != null) {
-        subject.next({ data: message['data'], device_uuid: message['device_uuid'], origin: message['origin'] });
-      }
-    }
-  }
-
   refreshAccountInfo(): Observable<Account> {
     return this.request({ action: 'info' }).pipe(map(data => {
       this.account.name = data['name'];
@@ -158,6 +138,26 @@ export class WebsocketService {
           return of(false);
         })
       );
+    }
+  }
+
+  private handleMessage(message: object) {
+    if (message['error'] != null) {
+      this.open = {};
+    } else if (message['tag'] != null && message['data'] != null) {
+      const tag = message['tag'];
+
+      if (this.open[tag] != null) {
+        this.open[tag].next(message['data']);
+        this.open[tag].complete();
+        delete this.open[tag];
+      }
+    } else if (message['notify-id'] != null && message['data'] != null) {
+      const subject = this.notification_subjects[message['notify-id']];
+
+      if (subject != null) {
+        subject.next({ data: message['data'], device_uuid: message['device_uuid'], origin: message['origin'] });
+      }
     }
   }
 

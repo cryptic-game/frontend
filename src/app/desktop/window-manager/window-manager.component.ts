@@ -11,12 +11,12 @@ import { WindowManager } from './window-manager';
 export class WindowManagerComponent implements OnInit {
   windowManager: WindowManager;
 
+  constructor(private windowManagerService: WindowManagerService) {
+  }
+
   @Input()
   set device(device: Device) {
     this.windowManager = this.windowManagerService.forDevice(device);
-  }
-
-  constructor(private windowManagerService: WindowManagerService) {
   }
 
   ngOnInit() {

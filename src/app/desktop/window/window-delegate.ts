@@ -25,20 +25,17 @@ export abstract class WindowDelegate {
 }
 
 export class WindowConstraints {
+  singleInstance = false;
+  resizable = true;
+  maximizable = true;
+  minWidth = 300;
+  minHeight = 150;
+  maxWidth = 2 ** 15;
+  maxHeight = 2 ** 15;
+
   constructor(constraints: Partial<WindowConstraints> = {}) {
     Object.assign(this, constraints);
   }
-
-  singleInstance = false;
-
-  resizable = true;
-  maximizable = true;
-
-  minWidth = 300;
-  minHeight = 150;
-
-  maxWidth = 2 ** 15;
-  maxHeight = 2 ** 15;
 }
 
 export interface WindowPosition {

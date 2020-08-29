@@ -9,17 +9,18 @@
         <path
           d="m504.78-255.36s1.5154 0.51504 1.5154 1.942v29.454c0 3.0963-2.3414 4.058-2.3414 4.058l-13.482 6.4563v-44.271z"
           fill="#171c1f" stroke-width=".17076"/>
-        <rect x="457.22" y="-259.11" width="34.396" height="47.055" rx="3" ry="3.1384" fill="#fff"
-              stroke-width=".23761"/>
+        <rect fill="#fff" height="47.055" rx="3" ry="3.1384" stroke-width=".23761" width="34.396" x="457.22"
+              y="-259.11"/>
       </g>
       <g transform="translate(2.9168)">
-        <rect x="455.64" y="-258.08" width="31.75" height="44.979" rx="3" ry="3" fill="#171c1f" fill-rule="evenodd"
-              stroke-width=".2232"/>
-        <circle cx="471.51" cy="-223.72" r="4.146" fill="#fff"/>
+        <rect fill="#171c1f" fill-rule="evenodd" height="44.979" rx="3" ry="3" stroke-width=".2232" width="31.75"
+              x="455.64"
+              y="-258.08"/>
+        <circle cx="471.51" cy="-223.72" fill="#fff" r="4.146"/>
         <g fill-rule="evenodd">
-          <rect x="459.6" y="-254.1" width="23.812" height="14.817" rx="2" ry="2" fill="#fff" stroke-width=".35481"/>
-          <rect x="460.56" y="-253.11" width="21.907" height="5.8208" ry="1.5" fill="#171c1f" stroke-width=".26537"/>
-          <rect x="460.56" y="-246.13" width="21.907" height="5.8208" ry="1.5" fill="#171c1f" stroke-width=".26537"/>
+          <rect fill="#fff" height="14.817" rx="2" ry="2" stroke-width=".35481" width="23.812" x="459.6" y="-254.1"/>
+          <rect fill="#171c1f" height="5.8208" ry="1.5" stroke-width=".26537" width="21.907" x="460.56" y="-253.11"/>
+          <rect fill="#171c1f" height="5.8208" ry="1.5" stroke-width=".26537" width="21.907" x="460.56" y="-246.13"/>
         </g>
       </g>
       <g transform="matrix(.75089 0 0 .75089 124.1 -51.178)">
@@ -32,7 +33,7 @@
           <ellipse cx="504.48" cy="-240.22" rx="7.9375" ry="3.9688"/>
           <ellipse cx="504.48" cy="-223.57" rx="7.9375" ry="3.9688"/>
         </g>
-        <ellipse cx="504.48" cy="-240.22" rx="6.9048" ry="3.1512" fill="#fff"/>
+        <ellipse cx="504.48" cy="-240.22" fill="#fff" rx="6.9048" ry="3.1512"/>
         <path d="m513.05-235.52c0 2.1672-3.8399 3.924-8.5767 3.924s-8.5767-1.7568-8.5767-3.924" fill="none"
               stroke="#fff" stroke-dashoffset="8.6036" stroke-linecap="round" stroke-linejoin="bevel"
               stroke-width="1.3674"/>

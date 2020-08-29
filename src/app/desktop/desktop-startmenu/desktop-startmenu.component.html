@@ -1,6 +1,6 @@
 <div id="startmenu">
   <div id="info">
-    <img id="profile-icon" src="../../../assets/desktop/img/user_1.svg" alt=""/>
+    <img alt="" id="profile-icon" src="../../../assets/desktop/img/user_1.svg"/>
     <div>
       <p id="user">{{ websocket.account.name }}</p>
       <p id="online">online: {{ websocket.onlinePlayers }}</p>
@@ -8,24 +8,25 @@
   </div>
   <span id="bug-report">
     Report a bug through
-    <a href="https://github.com/cryptic-game/cryptic/issues/new/choose" target="_blank" rel="noopener">GitHub</a> or
+    <a href="https://github.com/cryptic-game/cryptic/issues/new/choose" rel="noopener" target="_blank">GitHub</a> or
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSey6IZg-zJliAO4zNRmEdplqPkyqw-qmfKp4hARaBZHgNZSgQ/viewform"
-       target="_blank" rel="noopener">Form</a>.
-    <a href="https://the-morpheus.de/#signup" target="_blank" rel="noopener">Imprint</a>
+       rel="noopener" target="_blank">Form</a>.
+    <a href="https://the-morpheus.de/#signup" rel="noopener" target="_blank">Imprint</a>
   </span>
   <div id="programs">
     <div id="linkages">
       <div class="button">
-        <img src="../../../assets/device/laptop_front.svg" alt="" class="icon">
+        <img alt="" class="icon" src="../../../assets/device/laptop_front.svg">
         Computer
         <div class="sub-menu">
-          <div *ngFor="let device of parent.devices" class="device" [class.disabled]="!device.powered_on"
-               routerLink="/desktop" [queryParams]="{ device: device.uuid }" routerLinkActive="active">
+          <div *ngFor="let device of parent.devices" [class.disabled]="!device.powered_on"
+               [queryParams]="{ device: device.uuid }"
+               class="device" routerLink="/desktop" routerLinkActive="active">
             {{device.name}} /
-            <span class="power" [class.online]="device.powered_on">{{device.powered_on ? 'Online' : 'Offline'}}</span>
+            <span [class.online]="device.powered_on" class="power">{{device.powered_on ? 'Online' : 'Offline'}}</span>
           </div>
-          <div class="device" (click)="parent.hideStartMenu()" routerLink="/device"
-               [queryParams]="{ device: parent.activeDevice.uuid }">
+          <div (click)="parent.hideStartMenu()" [queryParams]="{ device: parent.activeDevice.uuid }" class="device"
+               routerLink="/device">
             Control Center
           </div>
         </div>
@@ -40,12 +41,12 @@
   </div>
   <div class="buttons">
     <div (click)="logout()" class="button" id="logout">
-      <img src="../../../assets/desktop/img/logoutbutton.svg" alt="" class="icon"/>
+      <img alt="" class="icon" src="../../../assets/desktop/img/logoutbutton.svg"/>
       Logout
     </div>
-    <div (click)="shutdown()" class="button" id="shutdown" routerLink="/device"
-         [queryParams]="{ device: parent.activeDevice.uuid }">
-      <img src="../../../assets/desktop/img/computer_on_off.svg" alt="" class="icon"/>
+    <div (click)="shutdown()" [queryParams]="{ device: parent.activeDevice.uuid }" class="button" id="shutdown"
+         routerLink="/device">
+      <img alt="" class="icon" src="../../../assets/desktop/img/computer_on_off.svg"/>
       Shutdown
     </div>
   </div>

@@ -12,7 +12,7 @@
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
-                <div class="indicator green-indicator" [style.height.%]="utilization.cpu * 100"></div>
+                <div [style.height.%]="utilization.cpu * 100" class="indicator green-indicator"></div>
               </div>
               <p style="text-align: center; margin: 0;">{{utilization.cpu * 100 | number:'1.0-0'}}%</p>
             </div>
@@ -29,7 +29,7 @@
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
-                <div class="indicator green-indicator" [style.height.%]="utilization.gpu * 100"></div>
+                <div [style.height.%]="utilization.gpu * 100" class="indicator green-indicator"></div>
               </div>
               <p style="text-align: center; margin: 0;">{{utilization.gpu * 100 | number:'1.0-0'}}%</p>
             </div>
@@ -48,7 +48,7 @@
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
-                <div class="indicator red-indicator" [style.height.%]="utilization.ram / ram.totalMemory * 100"></div>
+                <div [style.height.%]="utilization.ram / ram.totalMemory * 100" class="indicator red-indicator"></div>
               </div>
               <p style="text-align: center; margin: 0;">{{utilization.ram / ram.totalMemory * 100 | number:'1.0-0'}}
                 %</p>
@@ -66,7 +66,7 @@
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
-                <div class="indicator green-indicator" [style.height.%]="utilization.disk * 100"></div>
+                <div [style.height.%]="utilization.disk * 100" class="indicator green-indicator"></div>
               </div>
               <p style="text-align: center; margin: 0;">{{utilization.disk * 100 | number:'1.0-0'}}%</p>
             </div>
@@ -85,7 +85,7 @@
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
-                <div class="indicator green-indicator" [style.height.%]="utilization.network * 100"></div>
+                <div [style.height.%]="utilization.network * 100" class="indicator green-indicator"></div>
               </div>
               <p style="text-align: center; margin: 0;">{{utilization.network * 100 | number:'1.0-0'}}%</p>
             </div>

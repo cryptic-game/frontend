@@ -11,10 +11,6 @@ export class DeviceService {
   constructor(private webSocket: WebsocketService) {
   }
 
-  private deviceRequest<T>(endpoint: string[], data: object): Observable<T> {
-    return this.webSocket.ms('device', endpoint, data);
-  }
-
   getDeviceInfo(deviceUUID): Observable<DeviceWithHardware> {
     return this.deviceRequest(['device', 'info'], { device_uuid: deviceUUID });
   }
@@ -51,7 +47,6 @@ export class DeviceService {
     return this.deviceRequest(['device', 'spot'], {});
   }
 
-
   checkHardwareCompatibility(hardware: DeviceHardwareSpec): Observable<{
     success: true,
     performance: [number, number, number, number, number]
@@ -65,6 +60,10 @@ export class DeviceService {
 
   getServiceResourceUsage(serviceUUID): Observable<DeviceUtilization> {
     return this.deviceRequest(['hardware', 'process'], { service_uuid: serviceUUID });
+  }
+
+  private deviceRequest<T>(endpoint: string[], data: object): Observable<T> {
+    return this.webSocket.ms('device', endpoint, data);
   }
 
 }

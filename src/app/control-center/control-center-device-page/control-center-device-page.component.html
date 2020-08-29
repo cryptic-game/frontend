@@ -1,35 +1,38 @@
 <div class="header">
-  <img class="computer-logo online" [hidden]="!device.powered_on"
-       src="../assets/device/desktop_computer_online.svg"
-       [routerLink]="'/desktop'" [queryParams]="{'device': device.uuid}" alt="Online-Computer"
-       draggable="false">
-  <img class="computer-logo" [hidden]="device.powered_on" src="../assets/device/desktop_computer_offline.svg"
-       alt="Offline-Computer" draggable="false">
+  <img [hidden]="!device.powered_on" [queryParams]="{'device': device.uuid}"
+       [routerLink]="'/desktop'"
+       alt="Online-Computer" class="computer-logo online" draggable="false"
+       src="../assets/device/desktop_computer_online.svg">
+  <img [hidden]="device.powered_on" alt="Offline-Computer" class="computer-logo"
+       draggable="false" src="../assets/device/desktop_computer_offline.svg">
   <div>
-    <h1 #deviceName (keypress)="deviceNameKeyPressed($event)" (paste)="$event.preventDefault()"
-        (drop)="$event.preventDefault()">{{device.name}}</h1>
-    <button class="rename-button" (click)="startRenaming()">Rename this PC</button>
+    <h1 #deviceName (drop)="$event.preventDefault()" (keypress)="deviceNameKeyPressed($event)"
+        (paste)="$event.preventDefault()">{{device.name}}</h1>
+    <button (click)="startRenaming()" class="rename-button">Rename this PC</button>
   </div>
-  <svg class="power-button" (click)="powerButtonClicked()" width="80" height="80" viewBox="0 0 1080 1080"
-       xmlns="http://www.w3.org/2000/svg" [@powerButton]="powerButton.state"
-       (@powerButton.done)="powerAnimationDone()" [class.disabled]="powerButton.animating">
+  <svg (@powerButton.done)="powerAnimationDone()" (click)="powerButtonClicked()" [@powerButton]="powerButton.state"
+       [class.disabled]="powerButton.animating" class="power-button"
+       height="80" viewBox="0 0 1080 1080"
+       width="80" xmlns="http://www.w3.org/2000/svg">
     <g filter="url(#_Blur)">
-      <circle cx="540" cy="540" r="480" [@powerButtonFill]="powerButton.state"/>
+      <circle [@powerButtonFill]="powerButton.state" cx="540" cy="540" r="480"/>
     </g>
-    <circle cx="540" cy="540" r="448" fill="#181f23"/>
-    <path d="M540 76a464 464 0 100 928 464 464 0 000-928zm0 16a448 448 0 110 896 448 448 0 010-896z"
-          [@powerButtonFill]="powerButton.state"/>
-    <circle cx="540" cy="540" r="354" fill="none" stroke-width="128" stroke-linecap="butt"
+    <circle cx="540" cy="540" fill="#181f23" r="448"/>
+    <path [@powerButtonFill]="powerButton.state"
+          d="M540 76a464 464 0 100 928 464 464 0 000-928zm0 16a448 448 0 110 896 448 448 0 010-896z"/>
+    <circle [@powerButtonProgress]="powerButton.state" [@powerButtonStroke]="powerButton.state" cx="540" cy="540"
+            fill="none" r="354"
             stroke-dasharray="2224.24759874"
-            [@powerButtonStroke]="powerButton.state"
-            [@powerButtonProgress]="powerButton.state"/>
-    <path fill="none" stroke="#1bd41f" stroke-linecap="round" stroke-width="36" d="M491 400a144 144 0 1098 0"
-          [@powerButtonStroke]="powerButton.state"/>
-    <path fill="none" stroke="#1bd41f" stroke-linecap="round" stroke-linejoin="miter" stroke-width="36"
-          d="M540 504V360"
-          [@powerButtonStroke]="powerButton.state"/>
+            stroke-linecap="butt"
+            stroke-width="128"/>
+    <path [@powerButtonStroke]="powerButton.state" d="M491 400a144 144 0 1098 0" fill="none" stroke="#1bd41f"
+          stroke-linecap="round"
+          stroke-width="36"/>
+    <path [@powerButtonStroke]="powerButton.state" d="M540 504V360" fill="none" stroke="#1bd41f" stroke-linecap="round"
+          stroke-linejoin="miter"
+          stroke-width="36"/>
     <defs>
-      <filter id="_Blur" width="1344" height="1344" x="-132" y="-132">
+      <filter height="1344" id="_Blur" width="1344" x="-132" y="-132">
         <feGaussianBlur in="SourceGraphic" stdDeviation="32"/>
       </filter>
     </defs>
@@ -88,11 +91,11 @@
   </table>
 </div>
 
-<button class="disassemble-button" (click)="disassembleModal = true">Disassemble computer</button>
+<button (click)="disassembleModal = true" class="disassemble-button">Disassemble computer</button>
 
-<div class="modal-container" *ngIf="disassembleModal" (click)="closeDisassembleModal()">
-  <form class="modal" (click)="$event.stopPropagation()">
-    <svg (click)="closeDisassembleModal()" class="close-icon" role="button" viewBox="0 0 20 20" stroke="white">
+<div (click)="closeDisassembleModal()" *ngIf="disassembleModal" class="modal-container">
+  <form (click)="$event.stopPropagation()" class="modal">
+    <svg (click)="closeDisassembleModal()" class="close-icon" role="button" stroke="white" viewBox="0 0 20 20">
       <line stroke-width="2" x1="2" x2="18" y1="2" y2="18"></line>
       <line stroke-width="2" x1="18" x2="2" y1="2" y2="18"></line>
     </svg>
@@ -104,11 +107,12 @@
     </p>
     <label>
       Type in the name of your device to confirm:
-      <input #disassembleConfirm type="text" name="disassemble-confirm" autocomplete="off"
-             (keyup)="checkDisassembleConfirm(disassembleConfirm)">
+      <input #disassembleConfirm (keyup)="checkDisassembleConfirm(disassembleConfirm)" autocomplete="off"
+             name="disassemble-confirm"
+             type="text">
     </label>
     <br>
-    <button class="disassemble-button" (click)="disassembleDevice()" [disabled]="!disassembleConfirmed">Disassemble
+    <button (click)="disassembleDevice()" [disabled]="!disassembleConfirmed" class="disassemble-button">Disassemble
     </button>
   </form>
 </div>

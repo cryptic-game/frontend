@@ -1,7 +1,7 @@
 <h1>Build a new device</h1>
 
-<span class="button starter-device" *ngIf="controlCenterService.deviceSidebarMenuItems.length === 1"
-      (click)="buildStarterDevice()">Build your first device</span>
+<span (click)="buildStarterDevice()" *ngIf="controlCenterService.deviceSidebarMenuItems.length === 1"
+      class="button starter-device">Build your first device</span>
 
 <form [formGroup]="form">
   <div class="group">
@@ -108,6 +108,6 @@
   <p *ngIf="info" class="info">{{info}}</p>
   <p *ngIf="error" class="error">{{error}}</p>
 
-  <span class="button compatibility" [class.disabled]="!form.valid" (click)="form.valid && checkCompatibility()">Check compatibility</span>
-  <span class="button" [class.disabled]="!form.valid" (click)="form.valid && build()">Build</span>
+  <span (click)="form.valid && checkCompatibility()" [class.disabled]="!form.valid" class="button compatibility">Check compatibility</span>
+  <span (click)="form.valid && build()" [class.disabled]="!form.valid" class="button">Build</span>
 </form>

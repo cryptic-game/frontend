@@ -3,7 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { InventoryService } from './inventory.service';
 import * as rxjs from 'rxjs';
 import { WebsocketService } from '../../websocket.service';
-import { HardwareList, HardwareService } from '../hardware/hardware.service';
+import { HardwareService } from '../hardware/hardware.service';
+import { HardwareList } from '../hardware/hardware-list';
 
 describe('InventoryService', () => {
   let service: InventoryService;

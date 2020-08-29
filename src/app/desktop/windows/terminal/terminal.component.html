@@ -3,14 +3,14 @@
   <div id="terminal-window">
     <output #history id="terminal-history"></output>
     <div id="input-line">
-      <div #prompt id="prompt" [innerHTML]="promptHtml"></div>
+      <div #prompt [innerHTML]="promptHtml" id="prompt"></div>
       <input #cmdLine
+             (keydown.arrowdown)="$event.preventDefault(); nextFromHistory()"
+             (keydown.arrowup)="$event.preventDefault(); previousFromHistory()"
              (keydown.enter)="$event.preventDefault(); enter(cmdLine.value)"
              (keydown.tab)="$event.preventDefault(); autocomplete(cmdLine.value)"
-             (keydown.arrowup)="$event.preventDefault(); previousFromHistory()"
-             (keydown.arrowdown)="$event.preventDefault(); nextFromHistory()"
-             autocomplete="off" autofocus size="5"
-             id="cmdline" spellcheck="false" type="text">
+             autocomplete="off" autofocus id="cmdline"
+             size="5" spellcheck="false" type="text">
     </div>
   </div>
 </div>

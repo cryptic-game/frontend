@@ -1,8 +1,9 @@
 <h1>Inventory</h1>
 <div id="inventory">
-  <div class="item" *ngFor="let item of items" draggable="true" (dragstart)="dragStart($event, item)">
-    <img [src]="'../assets/device/parts/' + getCategoryIconName(item.properties.category)"
-         width="128" height="128" [alt]="getCategoryIconName(item.properties.category)" draggable="false">
+  <div (dragstart)="dragStart($event, item)" *ngFor="let item of items" class="item" draggable="true">
+    <img [alt]="getCategoryIconName(item.properties.category)"
+         [src]="'../assets/device/parts/' + getCategoryIconName(item.properties.category)" draggable="false"
+         height="128" width="128">
     <p>{{item.properties.name}}</p>
   </div>
 </div>
@@ -11,18 +12,20 @@
   <form (submit)="sendTradeItem(tradeDestination); $event.preventDefault()">
     <label for="inventory">
       Send
-      <input id="item-input" type="text" name="item" placeholder="Drag item here" [value]="tradeItem?.properties.name"
-             readonly (dragover)="dragOver($event)" (drop)="dragDrop($event)">
+      <input (dragover)="dragOver($event)" (drop)="dragDrop($event)" [value]="tradeItem?.properties.name"
+             id="item-input" name="item"
+             placeholder="Drag item here" readonly type="text">
     </label>
-    <input type="hidden" name="item-uuid" [value]="tradeItem?.element_uuid">
+    <input [value]="tradeItem?.element_uuid" name="item-uuid" type="hidden">
     <label>
       to
-      <input #tradeDestination id="destination-input" type="text" name="destination" placeholder="Player UUID"
-             maxlength="36"
-             pattern="^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89AB][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$" required
-             (dragover)="$event.preventDefault()">
+      <input #tradeDestination (dragover)="$event.preventDefault()" id="destination-input" maxlength="36"
+             name="destination"
+             pattern="^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89AB][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
+             placeholder="Player UUID" required
+             type="text">
     </label>
-    <input type="submit" value="!" [disabled]="tradeItem == null">
+    <input [disabled]="tradeItem == null" type="submit" value="!">
     <span *ngIf="tradeErrorMessage" class="error-message">{{tradeErrorMessage}}</span>
   </form>
 </div>

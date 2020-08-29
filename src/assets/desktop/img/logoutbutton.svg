@@ -1,8 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <g stroke="#fff" stroke-linejoin="round" stroke-miterlimit="1.5" clip-rule="evenodd">
-    <path fill-rule="evenodd" stroke-linecap="square" stroke-width="8" d="M48.6 64.2H98v2H48.6z"/>
-    <path fill-rule="evenodd" stroke-linecap="square" stroke-width="9.362755"
-          d="M112.2 65.4L101.6 84h.1l10.7-18.5zm.2-.5l-10.7-18.5h-.1L112.2 65z"/>
-    <path fill="none" stroke-width="13.455" d="M85.3 24.8V13.2H17.7v101.6h67.6v-11.6"/>
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <g clip-rule="evenodd" stroke="#fff" stroke-linejoin="round" stroke-miterlimit="1.5">
+    <path d="M48.6 64.2H98v2H48.6z" fill-rule="evenodd" stroke-linecap="square" stroke-width="8"/>
+    <path d="M112.2 65.4L101.6 84h.1l10.7-18.5zm.2-.5l-10.7-18.5h-.1L112.2 65z" fill-rule="evenodd"
+          stroke-linecap="square"
+          stroke-width="9.362755"/>
+    <path d="M85.3 24.8V13.2H17.7v101.6h67.6v-11.6" fill="none" stroke-width="13.455"/>
   </g>
 </svg>

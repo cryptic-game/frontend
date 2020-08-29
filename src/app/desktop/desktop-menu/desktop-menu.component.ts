@@ -21,7 +21,8 @@ export class DesktopMenuComponent implements OnInit {
     }, 1000);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   activateOrMinimize(window: WindowDelegate) {
     if (window.position.active || window.position.minimized) {

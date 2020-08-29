@@ -3,9 +3,10 @@
   <h1 id="version-info">Pre-Alpha 2.0</h1>
 
   <div
-    class="linkage" *ngFor="let linkage of onDesktop(); index as i"
+    (dblclick)="openProgramWindow(linkage)" (mousedown)="linkageMouseDown($event, i)"
+    *ngFor="let linkage of onDesktop(); index as i"
     [ngStyle]="{'left.vw': linkage.position.x | px2vw, 'top.vh': linkage.position.y | px2vh, zIndex: linkage.position.z }"
-    (mousedown)="linkageMouseDown($event, i)" (dblclick)="openProgramWindow(linkage)"
+    class="linkage"
   ><img [src]="linkage.icon" alt="">{{linkage.displayName}}</div>
 
   <app-window-manager
@@ -18,4 +19,4 @@
   ></app-context-menu>
 </div>
 <app-desktop-startmenu *ngIf="startMenu" [parent]="this" [target]="contextMenuTarget"></app-desktop-startmenu>
-<app-desktop-menu [windowManager]="windowManager" (startMenu)="toggleStartMenu()"></app-desktop-menu>
+<app-desktop-menu (startMenu)="toggleStartMenu()" [windowManager]="windowManager"></app-desktop-menu>
