@@ -1,11 +1,13 @@
 //  GLOBAL COLORS  //
 
 $green: #64dd17;
+$green-dark: darken($green, 10%);
 $red: #dd2c00;
 $black: #212121;
 $blue: #007bff;
 $gray: #424242;
 $white: #fafafa;
+$white-dark: darken($white, 10%);
 $window-title-color: $white;
 $active-window-color: $gray;
 $inactive-window-color: rgba(15, 15, 15, 0.9);

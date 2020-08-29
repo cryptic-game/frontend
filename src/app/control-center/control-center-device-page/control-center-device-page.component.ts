@@ -6,8 +6,7 @@ import { filter, flatMap, map, switchMap, toArray } from 'rxjs/operators';
 import { Device, DeviceUtilization } from '../../api/devices/device';
 import { animate, animateChild, keyframes, query, state, style, transition, trigger } from '@angular/animations';
 import { ActivatedRoute } from '@angular/router';
-import { ControlCenterService } from '../control-center.service';
-import { DeviceHardware } from '../../api/hardware/hardware.service';
+import { DeviceHardware } from '../../api/hardware/device-hardware';
 
 
 function powerButtonColorAnimation(triggerName, property) {
@@ -81,7 +80,6 @@ export class ControlCenterDevicePageComponent implements OnInit {
 
   constructor(private webSocket: WebsocketService,
               private deviceService: DeviceService,
-              private controlCenterService: ControlCenterService,
               private activatedRoute: ActivatedRoute) {
     this.activatedRoute.data.subscribe(data => {
       this.hardware = data['hardware'];

@@ -50,7 +50,7 @@ export class ControlCenterSidebarMenuComponent implements OnInit {
     }
 
     if (this.menu.routerLink) {
-      this.router.navigateByUrl(this.menu.routerLink, { queryParams: this.menu.queryParams }).then();
+      this.router.navigate([this.menu.routerLink], { queryParams: this.menu.queryParams }).then();
     }
   }
 
@@ -77,11 +77,8 @@ export class SidebarMenu {
   routerLink?: string;
   queryParams?: Params;
 
-  getDisplayCount(): number {
-    return this.items.length - this.specialItems;
-  }
-
-  constructor(title: string, icon: string,
+  constructor(title: string,
+              icon: string,
               options: {
                 items?: SidebarMenuItem[], displayCount?: boolean, specialItems?: number,
                 routerLink?: string, queryParams?: Params
@@ -93,6 +90,10 @@ export class SidebarMenu {
     this.specialItems = options.specialItems ?? 0;
     this.routerLink = options.routerLink;
     this.queryParams = options.queryParams;
+  }
+
+  getDisplayCount(): number {
+    return Math.max(this.items.length - this.specialItems, 0);
   }
 }
 

@@ -1,1 +1,110 @@
-<h1>Device creation page coming soon!</h1>
+<h1>Build a new device</h1>
+
+<form [formGroup]="form">
+  <div class="group">
+    <h3>Case:</h3>
+    <label class="item">
+      <select formControlName="case">
+        <option [ngValue]="null">Choose a case</option>
+        <option *ngFor="let case_ of cases" [ngValue]="case_">{{case_.name}}</option>
+      </select>
+    </label>
+  </div>
+  <div class="group">
+    <h3>Mainboard:</h3>
+    <label class="item">
+      <select formControlName="mainboard">
+        <option [ngValue]="null">Choose a mainboard</option>
+        <option *ngFor="let mainboard of mainBoards" [disabled]="mainboard.case !== form.get('case').value?.name"
+                [ngValue]="mainboard">{{mainboard.name}}</option>
+      </select>
+    </label>
+  </div>
+  <div class="group">
+    <h3>Processor:</h3>
+    <div *ngFor="let control of getFormArrayControls('cpus'); trackBy: trackByControl" formArrayName="cpus">
+      <label class="item">
+        <ng-container *ngIf="getFormArray('cpus').length > 1">
+          CPU #{{control.props.index + 1}}:
+        </ng-container>
+        <select [formControl]="control.control">
+          <option [ngValue]="null">{{control.props.index === 0 ? 'Select a CPU' : ''}}</option>
+          <option *ngFor="let cpu of cpus" [disabled]="!control.props.options.includes(cpu)"
+                  [ngValue]="cpu">{{cpu.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="group">
+    <h3>Cooler:</h3>
+    <div *ngFor="let control of getFormArrayControls('processorCoolers'); trackBy: trackByControl"
+         formArrayName="processorCoolers">
+      <label class="item">
+        <ng-container *ngIf="getFormArray('processorCoolers').length > 1">
+          Cooler #{{control.props.index + 1}}:
+        </ng-container>
+        <select [formControl]="control.control">
+          <option [ngValue]="null">{{control.props.index === 0 ? 'Select a cooler' : ''}}</option>
+          <option *ngFor="let cooler of processorCoolers" [disabled]="!control.props.options.includes(cooler)"
+                  [ngValue]="cooler">{{cooler.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="group">
+    <h3>Memory:</h3>
+    <div *ngFor="let control of getFormArrayControls('ramSticks'); trackBy: trackByControl" formArrayName="ramSticks">
+      <label class="item">
+        RAM stick #{{control.props.index + 1}}:
+        <select [formControl]="control.control">
+          <option [ngValue]="null">{{control.props.index === 0 ? 'Select a RAM module' : ''}}</option>
+          <option *ngFor="let ram of ramSticks" [disabled]="!control.props.options.includes(ram)"
+                  [ngValue]="ram">{{ram.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="group">
+    <h3>Expansions:</h3>
+    <div *ngFor="let control of getFormArrayControls('expansions'); trackBy: trackByControl" formArrayName="expansions">
+      <label class="item">
+        Select {{control.props.description}} expansion #{{control.props.index + 1}}:
+        <select [formControl]="control.control">
+          <option [ngValue]="null"></option>
+          <option *ngFor="let expansion of expansions" [disabled]="!control.props.options.includes(expansion)"
+                  [ngValue]="expansion">{{expansion.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="group">
+    <h3>Storage:</h3>
+    <div *ngFor="let control of getFormArrayControls('disks'); trackBy: trackByControl" formArrayName="disks">
+      <label class="item">
+        <ng-container *ngIf="getFormArray('disks').length > 1">
+          Disk #{{control.props.index + 1}}:
+        </ng-container>
+        <select [formControl]="control.control">
+          <option [ngValue]="null">{{control.props.index === 0 ? 'Select a disk' : ''}}</option>
+          <option *ngFor="let disk of disks" [disabled]="!control.props.options.includes(disk)"
+                  [ngValue]="disk">{{disk.name}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="group">
+    <h3>Power Supply:</h3>
+    <label class="item">
+      <select formControlName="powerSupply">
+        <option [ngValue]="null">Choose a power supply</option>
+        <option *ngFor="let supply of powerSupplies" [ngValue]="supply">{{supply.name}}</option>
+      </select>
+    </label>
+  </div>
+
+  <p *ngIf="info" class="info">{{info}}</p>
+  <p *ngIf="error" class="error">{{error}}</p>
+
+  <span class="button compatibility" [class.disabled]="!form.valid" (click)="form.valid && checkCompatibility()">Check compatibility</span>
+  <span class="button" [class.disabled]="!form.valid" (click)="form.valid && build()">Build</span>
+</form>

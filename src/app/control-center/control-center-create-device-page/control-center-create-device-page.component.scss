@@ -1,3 +1,73 @@
+@import "variables";
+
 h1 {
   margin-top: 0;
+}
+
+div.group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+
+  h3 {
+    margin: 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid $white;
+  }
+
+  label.item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin: 5px 0;
+
+    select {
+      margin-left: 5px;
+      flex-grow: 1;
+      font-family: $default-font;
+      background-color: $white;
+      padding: 3px;
+      border-radius: 5px;
+      border: none;
+
+      &.ng-invalid.ng-touched {
+        border: 3px solid red;
+      }
+    }
+  }
+}
+
+.info {
+  color: green;
+}
+
+.error {
+  color: red;
+}
+
+span.button {
+  display: inline-block;
+  color: $black;
+  font-family: $default-font;
+  background-color: $green;
+  padding: 3px 10px;
+  margin-right: 2em;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 200ms background-color;
+
+  &:hover {
+    background-color: $green-dark;
+  }
+
+  &.compatibility {
+    background-color: yellow;
+  }
+
+  &.disabled {
+    color: white;
+    background-color: $gray;
+    cursor: default;
+  }
 }
