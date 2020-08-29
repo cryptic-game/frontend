@@ -3,8 +3,9 @@ import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window
 import { WebsocketService } from '../../../websocket.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { DeviceHardware, HardwareService } from '../../../api/hardware/hardware.service';
+import { HardwareService } from '../../../api/hardware/hardware.service';
 import { Device, DeviceUtilization } from '../../../api/devices/device';
+import { DeviceHardware } from '../../../api/hardware/device-hardware';
 import { DesktopDeviceService } from '../../desktop-device.service';
 
 @Component({
@@ -16,7 +17,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   resourceNotifySubscription: Subscription;
 
   device: Device;
-  deviceHardware: DeviceHardware = new DeviceHardware();
+  deviceHardware: DeviceHardware = new DeviceHardware(null);
   cpu: { name?: string, frequencyMax: number } = { name: '', frequencyMax: 0 };
   gpu: { name?: string, frequency: number } = { name: '', frequency: 0 };
   ram = { totalMemory: 0, type: '' };

@@ -1,10 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TaskManagerComponent, TaskManagerWindowDelegate } from './task-manager.component';
-import { DeviceHardware, HardwareService } from '../../../api/hardware/hardware.service';
+import { HardwareService } from '../../../api/hardware/hardware.service';
 import * as rxjs from 'rxjs';
 import { Subject } from 'rxjs';
 import { WebsocketService } from '../../../websocket.service';
+import { DeviceHardware } from '../../../api/hardware/device-hardware';
 import { DesktopDeviceService } from '../../desktop-device.service';
 
 describe('TaskManagerComponent', () => {
@@ -21,7 +22,7 @@ describe('TaskManagerComponent', () => {
     webSocket.subscribe_notification.and.returnValue(notification_subject);
 
     hardwareService = jasmine.createSpyObj('HardwareService', ['getDeviceParts']);
-    const hardware = new DeviceHardware();
+    const hardware = new DeviceHardware(null);
     hardware.cpu.push({
       name: '',
       cores: 0,
