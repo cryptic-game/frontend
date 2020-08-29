@@ -8,13 +8,10 @@ import * as Particles from 'particlesjs/src/particles.js';
 })
 export class AccountPageBaseComponent implements OnInit, OnDestroy {
 
-  private p: Particles;
-
-  constructor() {
-  }
+  private particles: Particles;
 
   ngOnInit(): void {
-    this.p = Particles.init({
+    this.particles = Particles.init({
       selector: 'canvas',
       maxParticles: 450,
       color: '#007f00',
@@ -23,6 +20,6 @@ export class AccountPageBaseComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.p.destroy();
+    this.particles.destroy();
   }
 }

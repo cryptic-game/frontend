@@ -2,21 +2,21 @@
   <div class="content">
 
     <div class="title">
-      <img src="../../../assets/desktop/img/logo.svg" alt="Cryptic">
+      <img alt="Cryptic" src="../../../assets/desktop/img/logo.svg">
       <span>Log In</span>
     </div>
 
     <form [formGroup]="form">
       <label>
-        <input formControlName="username" placeholder="Username" type="text" autocomplete="username">
+        <input autocomplete="username" formControlName="username" placeholder="Username" type="text">
       </label>
 
       <label>
-        <input formControlName="password" placeholder="Password" type="password" autocomplete="current-password">
+        <input autocomplete="current-password" formControlName="password" placeholder="Password" type="password">
       </label>
 
       <label>
-        <input (click)="login()" disabled [disabled]="!form.valid" type="submit" value="Log In">
+        <input (click)="login()" [disabled]="!form.valid" disabled type="submit" value="Log In">
       </label>
     </form>
 

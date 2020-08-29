@@ -14,20 +14,11 @@ export class AccountService {
   }
 
   public login(username: string, password: string): Observable<LoginResponse> {
-    return this.websocket.request({
-      action: 'login',
-      name: username,
-      password: password
-    });
+    return this.websocket.request({ action: 'login', name: username, password });
   }
 
-  public signUp(username: string, email: string, password: string): Observable<SignUpResponse> {
-    return this.websocket.request({
-      'action': 'register',
-      'name': username,
-      'mail': email,
-      'password': password
-    });
+  public signUp(username: string, password: string): Observable<SignUpResponse> {
+    return this.websocket.request({ action: 'register', name: username, password });
   }
 
   public finalLogin(token: string): void {

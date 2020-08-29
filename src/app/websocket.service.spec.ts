@@ -33,7 +33,6 @@ describe('WebsocketService', () => {
       const testAccount = {
         uuid: '7deb783d-59d6-4ed1-90e9-47898051e31d',
         name: 'test-user',
-        mail: 'user@test.com',
         created: 262476,
         last: 124215
       };

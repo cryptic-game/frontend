@@ -1,6 +1,21 @@
-export interface Mainboard {
-  'name'?: string;
+export enum PartCategory {
+  MAINBOARD,
+  CPU,
+  PROCESSOR_COOLER,
+  GPU,
+  RAM,
+  DISK,
+  POWER_PACK,
+  CASE
+}
 
+export interface Part {
+  name?: string;
+  category?: PartCategory;
+  id: number;
+}
+
+export interface Mainboard extends Part {
   'id': number;
   'case': string;
   'cpuSocket': string;
@@ -15,9 +30,7 @@ export interface Mainboard {
   'power': number;
 }
 
-export interface CPU {
-  'name'?: string;
-
+export interface CPU extends Part {
   'id': number;
   'frequencyMin': number;
   'frequencyMax': number;
@@ -34,18 +47,14 @@ export interface CPU {
   'power': number;
 }
 
-export interface ProcessorCooler {
-  'name'?: string;
-
+export interface ProcessorCooler extends Part {
   'id': number;
   'coolerSpeed': number;
   'socket': string;
   'power': number;
 }
 
-export interface RAM {
-  'name'?: string;
-
+export interface RAM extends Part {
   'id': number;
   'ramSize': number;
   'ramTyp': [string, number];
@@ -53,9 +62,7 @@ export interface RAM {
   'power': number;
 }
 
-export interface GPU {
-  'name'?: string;
-
+export interface GPU extends Part {
   'id': number;
   'ramSize': number;
   'ramTyp': [string, number];
@@ -64,9 +71,7 @@ export interface GPU {
   'power': number;
 }
 
-export interface Disk {
-  'name'?: string;
-
+export interface Disk extends Part {
   'id': number;
   'diskTyp': string;
   'capacity': number;
@@ -76,9 +81,9 @@ export interface Disk {
   'power': number;
 }
 
-export interface PowerPack {
-  'name'?: string;
-
+export interface PowerPack extends Part {
   'id': number;
   'totalPower': number;
 }
+
+export type Case = string;

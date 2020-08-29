@@ -14,7 +14,6 @@ export function webSocketMock() {
   mock.account = {
     uuid: '',
     name: '',
-    mail: '',
     created: 0,
     last: 0
   };
