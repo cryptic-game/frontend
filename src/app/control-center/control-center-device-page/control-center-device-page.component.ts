@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { WebsocketService } from '../../websocket.service';
 import { DeviceService } from '../../api/devices/device.service';
 import { from } from 'rxjs';
@@ -78,8 +78,9 @@ export class ControlCenterDevicePageComponent implements OnInit {
   };
   disassembleModal = false;
   disassembleConfirmed = false;
+  nameChanged = false;
 
-  @ViewChild('deviceName') deviceNameField;
+  @ViewChild('deviceName') deviceNameField: ElementRef<HTMLHeadingElement>;
 
   constructor(private webSocket: WebsocketService,
               private deviceService: DeviceService,
@@ -130,14 +131,18 @@ export class ControlCenterDevicePageComponent implements OnInit {
         this.device.name = response['name'];
         this.controlCenterService.refreshDevices().subscribe();
       });
-      this.deviceNameField.nativeElement.contentEditable = false;
+      this.deviceNameField.nativeElement.contentEditable = 'false';
       return false;
     }
     return event.key.match(/^[a-zA-Z0-9\-_]$/) != null && nameLength < 15;
   }
 
+  deviceNameKeyUp(): void {
+    this.nameChanged = this.deviceNameField.nativeElement.innerText !== this.device.name;
+  }
+
   startRenaming(): void {
-    this.deviceNameField.nativeElement.contentEditable = true;
+    this.deviceNameField.nativeElement.contentEditable = 'true';
     this.deviceNameField.nativeElement.focus();
   }
 

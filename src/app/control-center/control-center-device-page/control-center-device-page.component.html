@@ -7,7 +7,8 @@
        draggable="false" src="../assets/device/desktop_computer_offline.svg">
   <div>
     <h1 #deviceName (drop)="$event.preventDefault()" (keypress)="deviceNameKeyPressed($event)"
-        (paste)="$event.preventDefault()">{{device.name}}</h1>
+        (keyup)="deviceNameKeyUp()" (paste)="$event.preventDefault()"
+        [class.changed]="nameChanged">{{device.name}}</h1>
     <button (click)="startRenaming()" class="rename-button">Rename this PC</button>
   </div>
   <svg (@powerButton.done)="powerAnimationDone()" (click)="powerButtonClicked()" [@powerButton]="powerButton.state"
