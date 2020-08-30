@@ -15,6 +15,10 @@
     &.online {
       cursor: pointer;
     }
+
+    &.disabled {
+      pointer-events: none;
+    }
   }
 
   h1 {

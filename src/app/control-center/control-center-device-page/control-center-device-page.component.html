@@ -1,6 +1,6 @@
 <div class="header">
   <img [hidden]="!device.powered_on" [queryParams]="{'device': device.uuid}"
-       [routerLink]="'/desktop'"
+       [routerLink]="'/desktop'" [class.disabled]="powerButton.animating"
        alt="Online-Computer" class="computer-logo online" draggable="false"
        src="../assets/device/desktop_computer_online.svg">
   <img [hidden]="device.powered_on" alt="Offline-Computer" class="computer-logo"
