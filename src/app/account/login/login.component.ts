@@ -18,8 +18,8 @@ export class LoginComponent {
     private accountService: AccountService) {
 
     this.form = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      username: [history.state?.username ?? '', Validators.required],
+      password: [history.state?.password ?? '', Validators.required]
     });
     this.errorLive = 0;
     setInterval(() => {

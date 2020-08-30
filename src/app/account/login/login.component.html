@@ -21,6 +21,9 @@
     </form>
 
     <p *ngIf="error" class="error">{{error}}</p>
-    <p>If you do not have an account yet, click <a [routerLink]="['/signup']">here</a>.</p>
+    <p>If you do not have an account yet, click
+      <a [routerLink]="['/signup']"
+         [state]="{ username: form.value.username, password: form.value.password }">here</a>.
+    </p>
   </div>
 </app-account-page-base>

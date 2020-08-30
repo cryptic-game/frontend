@@ -14,13 +14,15 @@ export class SignUpComponent {
   errorLive: number;
   passwordStrength: number;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private accountService: AccountService) {
-
+  constructor(private formBuilder: FormBuilder,
+              private accountService: AccountService) {
     this.form = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(256)]],
-      password: ['', [
+      username: [history.state?.username ?? '', [
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(256)]
+      ],
+      password: [history.state?.password ?? '', [
         Validators.required,
         Validators.minLength(8),
         Validators.pattern(/[0-9]/),
@@ -40,7 +42,7 @@ export class SignUpComponent {
         this.error = undefined;
       }
     }, 1000);
-    this.passwordStrength = 0;
+    this.passwordStrength = this.accountService.checkPassword(this.form.value.password);
 
     this.form.valueChanges.subscribe(data => this.passwordStrength = this.accountService.checkPassword(data.password));
   }
