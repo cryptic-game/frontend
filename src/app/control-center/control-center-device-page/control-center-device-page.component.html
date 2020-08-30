@@ -6,9 +6,11 @@
   <img [hidden]="device.powered_on" alt="Offline-Computer" class="computer-logo"
        draggable="false" src="../assets/device/desktop_computer_offline.svg">
   <div>
-    <h1 #deviceName (drop)="$event.preventDefault()" (keypress)="deviceNameKeyPressed($event)"
-        (keyup)="deviceNameKeyUp()" (paste)="$event.preventDefault()"
-        [class.changed]="nameChanged">{{device.name}}</h1>
+    <h1 [hidden]="renamingActive">{{device.name}}</h1>
+    <h1 hidden="hidden" #deviceRename [class.changed]="nameChanged" (keypress)="deviceNameKeyPress($event)"
+        (input)="deviceNameInput()" (blur)="finishRenaming()" (keyup.escape)="stopRenaming()"
+        (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"></h1>
+
     <button (click)="startRenaming()" class="rename-button">Rename this PC</button>
   </div>
   <svg (@powerButton.done)="powerAnimationDone()" (click)="powerButtonClicked()" [@powerButton]="powerButton.state"

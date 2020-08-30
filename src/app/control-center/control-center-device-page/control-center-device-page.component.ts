@@ -78,9 +78,10 @@ export class ControlCenterDevicePageComponent implements OnInit {
   };
   disassembleModal = false;
   disassembleConfirmed = false;
+  renamingActive = false;
   nameChanged = false;
 
-  @ViewChild('deviceName') deviceNameField: ElementRef<HTMLHeadingElement>;
+  @ViewChild('deviceRename') deviceRenameField: ElementRef<HTMLElement>;
 
   constructor(private webSocket: WebsocketService,
               private deviceService: DeviceService,
@@ -92,6 +93,7 @@ export class ControlCenterDevicePageComponent implements OnInit {
       this.device = this.hardware.device;
       this.powerButton.animating = false;
       this.closeDisassembleModal();
+      this.stopRenaming();
       this.updateServices();
     });
   }
@@ -121,29 +123,67 @@ export class ControlCenterDevicePageComponent implements OnInit {
     }
   }
 
-  deviceNameKeyPressed(event: KeyboardEvent): boolean {
-    const nameLength = this.deviceNameField.nativeElement.innerText.length;
+  deviceNameKeyPress(event: KeyboardEvent): void {
+    // This event is deprecated, but the beforeinput event isn't available in Firefox yet
+    // and keydown apparently can't block characters after dead accents. Also, we would
+    // have to explicitly allow everything
+
+    const nameLength = this.deviceRenameField.nativeElement.innerText.length;
+
     if ((event.key === 'Enter' || event.key === 'NumpadEnter') && nameLength >= 1) {
-      const newName = this.deviceNameField.nativeElement.innerText
-        .replace(/[^a-zA-Z0-9\-_]+/g, '')
-        .substr(0, 15);
-      this.deviceService.renameDevice(this.device.uuid, newName).subscribe(response => {
-        this.device.name = response['name'];
-        this.controlCenterService.refreshDevices().subscribe();
-      });
-      this.deviceNameField.nativeElement.contentEditable = 'false';
-      return false;
+      event.preventDefault();
+      this.finishRenaming();
+    } else if (event.key.match(/^[a-zA-Z0-9\-_]$/) == null || nameLength >= 15) {
+      event.preventDefault();
     }
-    return event.key.match(/^[a-zA-Z0-9\-_]$/) != null && nameLength < 15;
   }
 
-  deviceNameKeyUp(): void {
-    this.nameChanged = this.deviceNameField.nativeElement.innerText !== this.device.name;
+  deviceNameInput(): void {
+    this.nameChanged = this.deviceRenameField.nativeElement.innerText !== this.device.name;
   }
 
   startRenaming(): void {
-    this.deviceNameField.nativeElement.contentEditable = 'true';
-    this.deviceNameField.nativeElement.focus();
+    this.renamingActive = true;
+    this.nameChanged = false;
+    this.deviceRenameField.nativeElement.innerText = this.device.name;
+    this.deviceRenameField.nativeElement.hidden = false;
+    this.deviceRenameField.nativeElement.contentEditable = 'true';
+    this.deviceRenameField.nativeElement.focus();
+  }
+
+  finishRenaming(): void {
+    if (!this.renamingActive) {
+      return;
+    }
+    if (!this.nameChanged) {
+      this.stopRenaming();
+      return;
+    }
+
+    const newName = this.deviceRenameField.nativeElement.innerText
+      .replace(/[^a-zA-Z0-9\-_]+/g, '')
+      .substr(0, 15);
+    if (newName.length === 0) {
+      this.stopRenaming();
+      return;
+    }
+
+    this.device.name = newName;
+
+    this.deviceService.renameDevice(this.device.uuid, newName).subscribe(() => {
+      this.controlCenterService.refreshDevices().subscribe();
+    });
+
+    this.stopRenaming();
+  }
+
+  stopRenaming() {
+    this.renamingActive = false;
+    this.nameChanged = false;
+    if (this.deviceRenameField) {
+      this.deviceRenameField.nativeElement.contentEditable = 'false';
+      this.deviceRenameField.nativeElement.hidden = true;
+    }
   }
 
   powerButtonClicked() {
