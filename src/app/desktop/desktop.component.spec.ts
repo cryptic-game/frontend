@@ -19,7 +19,7 @@ import { Position } from '../../dataclasses/position';
 import { By } from '@angular/platform-browser';
 import { WindowManagerService } from './window-manager/window-manager.service';
 import { WindowDelegate } from './window/window-delegate';
-import { emptyDevice, webSocketMock } from '../test-utils';
+import { emptyDevice, webSocketMock, windowManagerMock } from '../test-utils';
 import { DeviceService } from '../api/devices/device.service';
 import { ActivatedRoute, RouteReuseStrategy } from '@angular/router';
 
@@ -36,7 +36,7 @@ describe('DesktopComponent', () => {
     deviceService.getDevices.and.returnValue(of({ 'devices': [testDevice] }));
     activatedRouteDataSubject = new Subject<object>();
 
-    windowManager = jasmine.createSpyObj('WindowManager', ['openWindow', 'unfocus']);
+    windowManager = windowManagerMock();
     windowManagerService = jasmine.createSpyObj('WindowManagerService', ['forDevice']);
     windowManagerService.forDevice.and.returnValue(windowManager);
 

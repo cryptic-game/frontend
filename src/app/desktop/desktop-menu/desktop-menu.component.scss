@@ -16,26 +16,33 @@
   user-select: none;
 }
 
-#startbutton {
-  background: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  border: none;
-  outline: none;
-  color: inherit;
-  font: inherit;
+#startbutton, #cc-button {
   cursor: pointer;
   z-index: 100;
+  padding: 0 6px;
+  outline: none;
+
+  transition: transform 0.3s;
+}
+
+#startbutton {
   height: 85%;
-
-  img {
-    height: 100%;
-  }
-
-  transition: transform 0.5s;
 
   &:hover {
     transform: scale(1.2);
+  }
+
+  &:active {
+    transition: transform 0.2s;
+    transform: scale(1.05);
+  }
+}
+
+#cc-button {
+  height: 82%;
+
+  &:hover {
+    transform: scale(1.15);
   }
 
   &:active {
