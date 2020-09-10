@@ -14,11 +14,13 @@ h1 {
   .changelog {
     border-left: 1px solid $button-border-color;
     padding: 0 2rem;
+	
 
     .version-container {
       margin-bottom: 3em;
       text-align: left;
-      width: 35em;
+	  margin-left: 0,5em;
+      width: 40em;
 
       .version-header {
         position: relative;
@@ -30,11 +32,10 @@ h1 {
         .version-box {
           position: absolute;
           display: inline-block;
-          transform: translateX(calc(-50% - 2rem)); // -half width - version container padding
-          padding: 0.75em;
-          background-color: $page-background;
+          transform: translateX(calc(-60% - 1.50rem)); // -half width - version container padding
+          padding: 0.80em;
+          background-color: #3A4254;
           border-radius: 5px;
-          border: 1px solid red;
           font-size: 14pt;
         }
 
@@ -45,34 +46,48 @@ h1 {
         .date {
           padding: calc(0.75em + 1px); // version box padding + border
           text-align: center;
-          color: gray;
+		  margin-left: -1em;
+		  color: White;
+		  background-color: #3A4254;
           font-size: 14pt;
         }
       }
 
 
+
       p {
-        margin: 0.5em 0;
+		white-space: nowrap;
+		margin: 0,5em 0;
+		position: relative;
+		left: 1em;
 
         .change-indicator {
+		  position: absolute;
+		  text-align:center;
+		  margin-left: -7.5em;
           font-size: 9pt;
           padding: 2px 5px;
-          border-radius: 2px;
+          border-radius: 5px;
+		  
 
           &.addition {
             background-color: green;
+			margin-left: -5.5em;
           }
 
           &.enhancement {
             background-color: teal;
+			margin-left: -7em;
           }
 
           &.change {
             background-color: orangered;
+			margin-left: -6.7em;
           }
 
           &.fix {
             background-color: #e60000;
+			margin-left: -5.7em;
           }
         }
       }
