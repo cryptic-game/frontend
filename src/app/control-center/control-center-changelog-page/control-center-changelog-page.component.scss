@@ -1,6 +1,9 @@
 @import "../control-center-style";
 @import "variables";
 
+$version-text-width: 9rem;
+$version-bar-gap: 2rem;
+
 h1 {
   margin-top: 0;
   text-align: center;
@@ -13,74 +16,123 @@ h1 {
 
   .changelog {
     border-left: 1px solid $button-border-color;
-    padding: 0 2rem;
+    padding: 0 $version-bar-gap;
+    // make sure the extended out header stays inside the page
+    margin: 0 ($version-text-width / 2);
 
-    .version-container {
-      margin-bottom: 3em;
-      text-align: left;
-      width: 35em;
+    table {
+      border-spacing: 0;
+      border-collapse: collapse;
 
-      .version-header {
-        position: relative;
-
-        &:not(:last-child) {
-          margin-bottom: 1em;
-        }
-
-        .version-box {
-          position: absolute;
-          display: inline-block;
-          transform: translateX(calc(-50% - 2rem)); // -half width - version container padding
-          padding: 0.75em;
-          background-color: $page-background;
-          border-radius: 5px;
-          border: 1px solid red;
-          font-size: 14pt;
-        }
-
-        .start-box {
-          border: 1px solid green;
-        }
-
-        .date {
-          padding: calc(0.75em + 1px); // version box padding + border
-          text-align: center;
-          color: gray;
-          font-size: 14pt;
-        }
+      :first-child th .version-header {
+        margin-top: -1px;
       }
 
+      :last-child th .version-header {
+        margin-bottom: -1px;
+      }
 
-      p {
-        margin: 0.5em 0;
+      tr {
+        &.spacer {
+          height: 8px;
+        }
+
+        th {
+          font-weight: normal;
+
+          .version-header {
+            position: relative;
+
+
+            padding: 0.6em 0;
+            // extend the header out of the table                                      2 borders x 1px
+            margin: 3em calc(0px - (#{$version-text-width} / 2 + #{$version-bar-gap} + 2px)) 1em;
+
+            background-color: #2b3840;
+
+            border: 1px solid $header-background;
+            border-radius: 3px;
+
+            font-size: 14pt;
+
+            &.start {
+              border-color: #91a7b6;
+            }
+
+            .version {
+              position: absolute;
+              width: $version-text-width;
+              text-align: center;
+            }
+
+            .date {
+              text-align: center;
+              color: gray;
+            }
+          }
+        }
+
+        td {
+          vertical-align: text-top;
+
+          p {
+            margin: 0.1em 0.2em;
+          }
+        }
 
         .change-indicator {
           font-size: 9pt;
-          padding: 2px 5px;
           border-radius: 2px;
+          text-align: right;
+          user-select: none;
 
-          &.addition {
-            background-color: green;
-          }
+          span {
+            padding: 2px 5px;
+            border-radius: 2px;
 
-          &.enhancement {
-            background-color: teal;
-          }
+            &.addition {
+              background-color: green;
+            }
 
-          &.change {
-            background-color: orangered;
-          }
+            &.enhancement {
+              background-color: teal;
+            }
 
-          &.fix {
-            background-color: #e60000;
+            &.change {
+              background-color: orangered;
+            }
+
+            &.fix {
+              background-color: #e60000;
+            }
           }
         }
       }
     }
-
-    .start-container {
-      margin-bottom: 0;
-    }
   }
 
+}
+
+
+@media screen and (max-width: 1100px) {
+  .changelog-container .changelog {
+    border: none;
+    padding: 0;
+    margin: 0;
+
+    table tr th .version-header {
+      margin-left: 0;
+      margin-right: 0;
+
+      .version {
+        position: static;
+        display: inline;
+        margin-right: 1em;
+      }
+
+      .date {
+        display: inline;
+      }
+    }
+  }
 }
