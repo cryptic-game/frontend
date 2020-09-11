@@ -1,10 +1,10 @@
 <div id="settings-window-container">
-  <div id="settings-window" class="h-100">
+  <div class="h-100" id="settings-window">
     <div class="row">
       <span>Background Image</span>
       <div class="setting">
         <label>
-          <select (change)="onChangeSetting()" size="1" #backgroundSetting>
+          <select #backgroundSetting (change)="onChangeSetting()" size="1">
             <option *ngFor="let bg of current.getBackgroundPossibilities()"
                     [selected]="current.getSettings().backgroundImage == bg">{{bg}}</option>
           </select>
@@ -16,10 +16,10 @@
       <div class="setting">
         <label>
           <input
-            type="color"
+            #terminalPromptColorSetting
             (change)="onChangeSetting()"
             [value]="current.getSettings().tpc"
-            #terminalPromptColorSetting
+            type="color"
           />
         </label>
       </div>

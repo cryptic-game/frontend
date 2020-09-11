@@ -1,0 +1,68 @@
+{
+  "latest": "Pre-Alpha 2.0",
+  "versions": [
+    {
+      "name": "Pre-Alpha 2.0",
+      "date": "2020-09-31T10:00:00.000Z",
+      "additions": [
+        "Computer hardware",
+        "System for building computers",
+        "System workload",
+        "Task-manager app that displays system utilization",
+        "Wallet app that displays balance and transactions",
+        "Hardware-shop app to buy computer components",
+        "File-manager app",
+        "Settings app to set the wallpaper and terminal text color",
+        "CPU miner app that generates in-game cryptocurrency",
+        "Texteditor app",
+        "Basic network system (currently only available in the terminal)",
+        "New terminal commands",
+        "Control-Center",
+        "Base for hardware exchange among players",
+        "Ability to shut down computers",
+        "Ability to switch between computers",
+        "Possibility to report bugs via a link in the start menu",
+        "Changelog",
+        "Progressive web app support",
+        "Ability to change the account password (not available in the frontend yet)",
+        "Ability to stop and delete services, exception: SSH (not available in the frontend yet)"
+      ],
+      "enhancements": [
+        "Login and registration, added a password strength indicator",
+        "Filesystem with directories",
+        "Improved commands in the terminal",
+        "New app icon design"
+      ],
+      "changes": [
+        "Password requirements: no special characters, but instead one upper and lower case character",
+        "Removed the browser app draft",
+        "Removed email addresses at registration"
+      ],
+      "fixes": [
+        "Resizing of app windows",
+        "Several bugs in the start menu and the terminal",
+        "Miner app could be opened multiple times",
+        "Many bugs in the frontend and backend"
+      ]
+    },
+    {
+      "name": "Pre-Alpha 1.0",
+      "date": "2019-05-27T10:00:00.000Z",
+      "additions": [
+        "Login and registration area",
+        "Desktop with taskbar and start menu",
+        "First program: Terminal + 20 basic commands",
+        "In-game cryptocurrency \"Morphcoin\"",
+        "Wallets to store money",
+        "Hacker attack: bruteforce",
+        "Services: ssh, telnet, portscan",
+        "Access to remote systems by entering specific commands",
+        "Basic filesystem: create, open, rename and delete files (e.g. wallet is a file)"
+      ],
+      "enhancements": [],
+      "changes": [],
+      "fixes": []
+    }
+  ],
+  "start_date": "2017-10-15T10:00:00.000Z"
+}

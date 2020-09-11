@@ -1,8 +1,8 @@
-import { Component, ComponentFactoryResolver, HostListener, Input, OnInit, ViewChild } from '@angular/core';
-import { WindowManagerService } from '../window-manager/window-manager.service';
+import { Component, ComponentFactoryResolver, HostListener, Injector, Input, OnInit, ViewChild } from '@angular/core';
 import { WindowDelegate } from './window-delegate';
 import { WindowPlaceDirective } from './window-place.directive';
 import { GlobalCursorService } from '../../global-cursor.service';
+import { WindowManager } from '../window-manager/window-manager';
 
 @Component({
   selector: 'app-window-frame',
@@ -15,6 +15,7 @@ export class WindowFrameComponent implements OnInit {
   @ViewChild(WindowPlaceDirective, { static: true }) windowPlace: WindowPlaceDirective;
 
   @Input() delegate: WindowDelegate;
+  @Input() windowManager: WindowManager;
   dragging = false;
   dragStartWindowPos: [number, number] = [0, 0];
   dragStartPos: [number, number] = [0, 0];
@@ -22,9 +23,9 @@ export class WindowFrameComponent implements OnInit {
   resizeDirection = 0;
   resizeStartSize: [number, number] = [0, 0];
 
-  constructor(public windowManager: WindowManagerService,
-              private cursorService: GlobalCursorService,
-              private componentFactoryResolver: ComponentFactoryResolver) {
+  constructor(private cursorService: GlobalCursorService,
+              private componentFactoryResolver: ComponentFactoryResolver,
+              private injector: Injector) {
   }
 
   ngOnInit() {
@@ -32,8 +33,16 @@ export class WindowFrameComponent implements OnInit {
   }
 
   loadWindowContent() {
+    const inj = Injector.create({
+      providers: [
+        { provide: WindowManager, useValue: this.windowManager },
+        { provide: WindowDelegate, useValue: this.delegate }
+      ],
+      parent: this.injector
+    });
+
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.delegate.type);
-    const componentRef = this.windowPlace.viewContainerRef.createComponent(componentFactory);
+    const componentRef = this.windowPlace.viewContainerRef.createComponent(componentFactory, undefined, inj);
     componentRef.instance.delegate = this.delegate;
     this.delegate.component = componentRef.instance;
   }

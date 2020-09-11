@@ -9,7 +9,8 @@ import { map } from 'rxjs/operators';
 })
 export class DesktopGuard implements CanActivate {
 
-  constructor(private router: Router, private websocket: WebsocketService) {
+  constructor(private router: Router,
+              private websocket: WebsocketService) {
   }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
@@ -17,7 +18,7 @@ export class DesktopGuard implements CanActivate {
       if (success) {
         return true;
       } else {
-        this.router.navigate(['login']).then();
+        this.router.navigateByUrl('/login').then();
         return false;
       }
     }));

@@ -30,7 +30,11 @@ export class DeviceHardware {
     'id': 0,
     'totalPower': 0
   };
-  'case' = '';
+  'case': Parts.Case = {
+    'name': '',
+    'id': 0,
+    'size': 'small'
+  };
 
   constructor(public device: Device, parts: Partial<DeviceHardware> = {}) {
     Object.assign(this, parts);

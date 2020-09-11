@@ -86,4 +86,7 @@ export interface PowerPack extends Part {
   'totalPower': number;
 }
 
-export type Case = string;
+export interface Case extends Part {
+  'id': number;
+  'size': 'small' | 'middle' | 'big';
+}

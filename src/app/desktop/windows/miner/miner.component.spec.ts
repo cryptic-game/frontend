@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MinerComponent } from './miner.component';
 import { WebsocketService } from '../../../websocket.service';
-import { webSocketMock } from '../../../test-utils';
+import { emptyWindowDelegate, webSocketMock } from '../../../test-utils';
 
 describe('MinerComponent', () => {
   let component: MinerComponent;
@@ -11,7 +11,9 @@ describe('MinerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [{ provide: WebsocketService, useValue: webSocketMock() }],
+      providers: [
+        { provide: WebsocketService, useValue: webSocketMock() }
+      ],
       declarations: [MinerComponent],
       imports: [ReactiveFormsModule],
     }).compileComponents();
@@ -20,6 +22,7 @@ describe('MinerComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MinerComponent);
     component = fixture.componentInstance;
+    component.delegate = emptyWindowDelegate();
     fixture.detectChanges();
   });
 

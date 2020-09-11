@@ -27,7 +27,6 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
     Validators.required, Validators.min(0), Validators.max(100)
   ]);
 
-  activeDevice: string;
   miner;
 
   constructor(private websocketService: WebsocketService) {
@@ -55,9 +54,8 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
       }
     });
 
-    this.activeDevice = JSON.parse(sessionStorage.getItem('activeDevice'))['uuid'];
     this.websocketService.ms('service', ['list'], {
-      'device_uuid': this.activeDevice,
+      'device_uuid': this.delegate.device.uuid,
     }).subscribe((listData) => {
       listData.services.forEach((service) => {
         if (service.name === 'miner') {
@@ -88,7 +86,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
   private createMiner(wallet: string): Observable<void> {
     if (!this.miner) {
       return this.websocketService.ms('service', ['create'], {
-        'device_uuid': this.activeDevice,
+        'device_uuid': this.delegate.device.uuid,
         'name': 'miner',
         'wallet_uuid': wallet,
       }).pipe(

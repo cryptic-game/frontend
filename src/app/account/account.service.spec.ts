@@ -1,24 +1,33 @@
 import { AccountService } from './account.service';
 import { inject, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { WebsocketService } from '../websocket.service';
 import * as rxjs from 'rxjs';
 import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
-import { webSocketMock } from '../test-utils';
+import { Router, RouteReuseStrategy } from '@angular/router';
+import { FakePromise, webSocketMock } from '../test-utils';
 import { Account } from '../../dataclasses/account';
+import { WindowManagerService } from '../desktop/window-manager/window-manager.service';
 
 describe('AccountService', () => {
   const testCredentials = { username: 'testUsername', password: 'testPassword', token: '1234567654321' };
   let webSocket;
+  let windowManagerService;
+  let router;
+  let routeReuseStrategy;
 
   beforeEach(() => {
     webSocket = webSocketMock();
+    windowManagerService = jasmine.createSpyObj('WindowManagerService', ['reset']);
+    router = jasmine.createSpyObj('Router', ['navigateByUrl']);
+    router.navigateByUrl.and.returnValue(new Promise(resolve => resolve(true)));
+    routeReuseStrategy = { storedPaths: {} };
 
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
       providers: [
-        { provide: WebsocketService, useValue: webSocket }
+        { provide: WebsocketService, useValue: webSocket },
+        { provide: WindowManagerService, useValue: windowManagerService },
+        { provide: Router, useValue: router },
+        { provide: RouteReuseStrategy, useValue: routeReuseStrategy }
       ]
     });
   });
@@ -49,19 +58,21 @@ describe('AccountService', () => {
     });
   }));
 
-  it('#finalLogin() should save the token to the localStorage and navigate to / after updating of the account information',
-    inject([AccountService, Router], (service: AccountService, router: Router) => {
+  it('#finalLogin() should save the token to the localStorage and ' +
+    'navigate to the redirect url after updating the account information',
+    inject([AccountService, Router], (service: AccountService) => {
       spyOn(localStorage, 'setItem');
       const refreshAccountInfoSubject = new Subject<Account>();
       webSocket.refreshAccountInfo.and.returnValue(refreshAccountInfoSubject);
-      spyOn(router, 'navigateByUrl').and.returnValue(Promise.resolve(true));
+      router.navigateByUrl.and.returnValue(Promise.resolve(true));
+      const redirectURL = '/this-is-a/test-url';
 
-      service.finalLogin(testCredentials.token);
+      service.finalLogin(testCredentials.token, redirectURL);
       expect(localStorage.setItem).toHaveBeenCalledWith('token', testCredentials.token);
       expect(router.navigateByUrl).not.toHaveBeenCalled();
 
       refreshAccountInfoSubject.next({ uuid: '', name: '', created: 0, last: 0 });
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/');
+      expect(router.navigateByUrl).toHaveBeenCalledWith(redirectURL);
     })
   );
 
@@ -105,6 +116,29 @@ describe('AccountService', () => {
       expect(service.checkPassword('8%MPOgltIN5Z2ln&ly^F')).toEqual(5);
       expect(service.checkPassword('OOj!tx$N9sC3GY96hkKUc4!XRi^XR6c52D4jb6JI')).toEqual(5);
       expect(service.checkPassword('4Rs0vb^TsymBTXr@#KmiR8sBWZA1Tyjmj1WV94BD3AhiU!i2n5')).toEqual(5);
+    })
+  );
+
+  it('#logout() should clear local storage, reset all window managers, send a logout request, navigate to /login and reset the stored routes',
+    inject([AccountService], (service: AccountService) => {
+      spyOn(localStorage, 'clear');
+      webSocket.loggedIn = true;
+      routeReuseStrategy.storedPaths = { A: 'B', C: 'D' };
+      const navigateByUrlPromise = new FakePromise();
+      router.navigateByUrl.and.returnValue(navigateByUrlPromise);
+
+      service.logout();
+      expect(localStorage.clear).toHaveBeenCalled();
+      expect(windowManagerService.reset).toHaveBeenCalled();
+
+      expect(webSocket.request).toHaveBeenCalledWith({ action: 'logout' });
+      expect(webSocket.loggedIn).toBeFalse();
+
+      expect(routeReuseStrategy.storedPaths).toEqual({ A: 'B', C: 'D' });
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
+
+      navigateByUrlPromise.resolve(true);
+      expect(routeReuseStrategy.storedPaths).toEqual({});
     })
   );
 

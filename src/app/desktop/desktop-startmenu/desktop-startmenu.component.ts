@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DesktopComponent } from '../desktop.component';
 import { WebsocketService } from 'src/app/websocket.service';
-import { Router } from '@angular/router';
+import { AccountService } from '../../account/account.service';
+import { DeviceService } from '../../api/devices/device.service';
 
 @Component({
   selector: 'app-desktop-startmenu',
@@ -14,7 +15,9 @@ export class DesktopStartmenuComponent implements OnInit {
 
   searchTerm = '';
 
-  constructor(public websocket: WebsocketService, private router: Router) {
+  constructor(public websocket: WebsocketService,
+              private accountService: AccountService,
+              private deviceService: DeviceService) {
   }
 
   ngOnInit() {
@@ -30,16 +33,12 @@ export class DesktopStartmenuComponent implements OnInit {
   }
 
   logout() {
-    this.parent.windowManager.closeAllWindows();
-    this.websocket.logout();
-    this.router.navigate(['login']).then();
+    this.accountService.logout();
+    this.parent.hideStartMenu();
   }
 
-  openBugReportPageGitHub() {
-    window.open('https://github.com/cryptic-game/cryptic/issues/new/choose');
-  }
-
-  openBugReportPageForm() {
-    window.open('https://docs.google.com/forms/d/e/1FAIpQLSey6IZg-zJliAO4zNRmEdplqPkyqw-qmfKp4hARaBZHgNZSgQ/viewform');
+  shutdown() {
+    this.deviceService.togglePower(this.parent.activeDevice.uuid).subscribe();
+    this.parent.hideStartMenu();
   }
 }

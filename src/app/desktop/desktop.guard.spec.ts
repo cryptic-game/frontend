@@ -1,58 +1,59 @@
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { DesktopGuard } from './desktop.guard';
-import { Router } from '@angular/router';
 import { WebsocketService } from '../websocket.service';
 import { Observable, of } from 'rxjs';
+import { webSocketMock } from '../test-utils';
+import { Router } from '@angular/router';
 
 describe('DesktopGuard', () => {
+  let webSocketService;
+  let router;
+  let guard: DesktopGuard;
 
   beforeEach(() => {
-    const router = jasmine.createSpyObj('Router', ['navigate']);
-    router.navigate.and.returnValue(new Promise(resolve => resolve(true)));
-    const webSocketService = jasmine.createSpyObj('WebsocketService', ['trySession']);
+    webSocketService = webSocketMock();
+    router = jasmine.createSpyObj('Router', ['navigateByUrl']);
+    router.navigateByUrl.and.returnValue(new Promise(resolve => resolve(true)));
 
     TestBed.configureTestingModule({
       providers: [
-        DesktopGuard,
-        { provide: Router, useValue: router },
-        { provide: WebsocketService, useValue: webSocketService }
+        { provide: WebsocketService, useValue: webSocketService },
+        { provide: Router, useValue: router }
       ]
     });
+
+    guard = TestBed.inject(DesktopGuard);
   });
 
-  it('should be created', inject([DesktopGuard], (guard: DesktopGuard) => {
+  it('should be created', () => {
     expect(guard).toBeTruthy();
-  }));
+  });
 
-  it('should try to login and allow activation if it succeeded',
-    inject([DesktopGuard, WebsocketService, Router], (guard: DesktopGuard, webSocket: WebsocketService, router: Router) => {
-      (webSocket.trySession as jasmine.Spy).and.returnValue(of(true));
-      (router.navigate as jasmine.Spy).and.returnValue(new Promise(() => {
-      }));
+  it('should try to login and allow activation if it succeeded', () => {
+    webSocketService.trySession.and.returnValue(of(true));
 
-      const observable = guard.canActivate(null, null) as Observable<boolean>;
-      observable.subscribe(canActivate => {
-        expect(webSocket.trySession).toHaveBeenCalled();
-        expect(canActivate).toBeTruthy();
-        expect(router.navigate).not.toHaveBeenCalled();
-      });
-    })
-  );
+    const observable = guard.canActivate(null, null) as Observable<boolean>;
+    expect(observable).toBeInstanceOf(Observable);
 
-  it('should try to login and navigate back to login if it failed',
-    inject([DesktopGuard, WebsocketService, Router], (guard: DesktopGuard, webSocket: WebsocketService, router: Router) => {
-      (webSocket.trySession as jasmine.Spy).and.returnValue(of(false));
-      (router.navigate as jasmine.Spy).and.returnValue(new Promise(() => {
-      }));
+    observable.subscribe(canActivate => {
+      expect(webSocketService.trySession).toHaveBeenCalled();
+      expect(canActivate).toBeTrue();
+      expect(router.navigateByUrl).not.toHaveBeenCalled();
+    }, fail);
+  });
 
-      const observable = guard.canActivate(null, null) as Observable<boolean>;
-      observable.subscribe(canActivate => {
-        expect(webSocket.trySession).toHaveBeenCalled();
-        expect(canActivate).toBeFalsy();
-        expect(router.navigate).toHaveBeenCalledWith(['login']);
-      });
-    })
-  );
+  it('should try to login and navigate back to login if it failed', () => {
+    webSocketService.trySession.and.returnValue(of(false));
+
+    const observable = guard.canActivate(null, null) as Observable<boolean>;
+    expect(observable).toBeInstanceOf(Observable);
+
+    observable.subscribe(canActivate => {
+      expect(webSocketService.trySession).toHaveBeenCalled();
+      expect(canActivate).toBeFalsy();
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
+    }, fail);
+  });
 
 });

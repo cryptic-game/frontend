@@ -13,28 +13,26 @@ import { DeviceHardware } from '../../../api/hardware/device-hardware';
   styleUrls: ['./task-manager.component.scss']
 })
 export class TaskManagerComponent extends WindowComponent implements OnInit, OnDestroy {
-  deviceUUID: string;
   resourceNotifySubscription: Subscription;
 
-  deviceName: string;
-  deviceHardware: DeviceHardware = new DeviceHardware(null);
+  deviceHardware: DeviceHardware;
   cpu: { name?: string, frequencyMax: number } = { name: '', frequencyMax: 0 };
   gpu: { name?: string, frequency: number } = { name: '', frequency: 0 };
   ram = { totalMemory: 0, type: '' };
   diskName = '';
   utilization: DeviceUtilization = new DeviceUtilization();
 
-  constructor(private webSocket: WebsocketService, private hardwareService: HardwareService) {
+  constructor(public delegate: WindowDelegate,
+              private webSocket: WebsocketService,
+              private hardwareService: HardwareService) {
     super();
-    const device = JSON.parse(sessionStorage.getItem('activeDevice'));
-    this.deviceName = device['name'];
-    this.deviceUUID = device['uuid'];
+    this.deviceHardware = new DeviceHardware(delegate.device);
     this.update();
   }
 
   ngOnInit() {
     this.resourceNotifySubscription = this.webSocket.subscribe_notification('resource-usage')
-      .pipe(filter(x => x.device_uuid === this.deviceUUID))
+      .pipe(filter(x => x.device_uuid === this.delegate.device.uuid))
       .subscribe(notification => this.updateUtilization(notification['data']));
   }
 
@@ -43,7 +41,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   }
 
   update() {
-    this.hardwareService.getDeviceParts(this.deviceUUID).subscribe(data => {
+    this.hardwareService.getDeviceParts(this.delegate.device.uuid).subscribe(data => {
       this.deviceHardware = data;
 
       this.ram.totalMemory = data.getTotalMemory();
@@ -61,7 +59,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
 
       this.diskName = data.disk.length >= 1 ? data.disk[0].name : 'Disk';
 
-      this.webSocket.ms('device', ['hardware', 'resources'], { device_uuid: this.deviceUUID })
+      this.webSocket.ms('device', ['hardware', 'resources'], { device_uuid: this.delegate.device.uuid })
         .subscribe(resourceData => this.updateUtilization(resourceData));
     });
   }

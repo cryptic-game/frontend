@@ -25,7 +25,8 @@ export class HardwareService {
         [data.ram, PartCategory.RAM],
         [data.disk, PartCategory.DISK],
         [data.processorCooler, PartCategory.PROCESSOR_COOLER],
-        [data.powerPack, PartCategory.POWER_PACK]
+        [data.powerPack, PartCategory.POWER_PACK],
+        [data.case, PartCategory.CASE]
       ] as [{ [name: string]: Part }, PartCategory][]) {
         if (parts) {
           for (const [name, part] of Object.entries(parts)) {
@@ -77,7 +78,7 @@ export class HardwareService {
               hardware.powerPack = this.hardwareAvailable.powerPack[hardware_element];
               break;
             case 'case':
-              hardware.case = hardware_element;
+              hardware.case = this.hardwareAvailable.case[hardware_element];
               break;
             default:
               console.warn('Unknown hardware part type: ' + hardware_type);

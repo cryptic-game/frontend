@@ -1,4 +1,4 @@
-import { async, ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DesktopComponent } from './desktop.component';
 import { DesktopMenuComponent } from './desktop-menu/desktop-menu.component';
@@ -13,25 +13,40 @@ import { WindowManagerComponent } from './window-manager/window-manager.componen
 import { WindowFrameComponent } from './window/window-frame.component';
 import { WebsocketService } from '../websocket.service';
 import { ProgramService } from './program.service';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { Program } from '../../dataclasses/program';
 import { Position } from '../../dataclasses/position';
 import { By } from '@angular/platform-browser';
 import { WindowManagerService } from './window-manager/window-manager.service';
 import { WindowDelegate } from './window/window-delegate';
-import { webSocketMock } from '../test-utils';
+import { emptyDevice, webSocketMock, windowManagerMock } from '../test-utils';
+import { DeviceService } from '../api/devices/device.service';
+import { ActivatedRoute, RouteReuseStrategy } from '@angular/router';
 
 describe('DesktopComponent', () => {
+  const testDevice = { ...emptyDevice({ uuid: 'b8a67b5c-7aaa-4acb-805d-3d86af7a6fb7' }) };
   let component: DesktopComponent;
   let fixture: ComponentFixture<DesktopComponent>;
-
-  localStorage.setItem('token', '');
-  localStorage.setItem('desktop', '');
+  let activatedRouteDataSubject;
+  let windowManagerService;
+  let windowManager;
 
   beforeEach(async(() => {
+    const deviceService = jasmine.createSpyObj('DeviceService', ['getDevices']);
+    deviceService.getDevices.and.returnValue(of({ 'devices': [testDevice] }));
+    activatedRouteDataSubject = new Subject<object>();
+
+    windowManager = windowManagerMock();
+    windowManagerService = jasmine.createSpyObj('WindowManagerService', ['forDevice']);
+    windowManagerService.forDevice.and.returnValue(windowManager);
+
     TestBed.configureTestingModule({
       providers: [
         { provide: WebsocketService, useValue: webSocketMock() },
+        { provide: DeviceService, useValue: deviceService },
+        { provide: ActivatedRoute, useValue: { data: activatedRouteDataSubject } },
+        { provide: WindowManagerService, useValue: windowManagerService },
+        { provide: RouteReuseStrategy, useValue: {} },
         ProgramService
       ],
       imports: [
@@ -55,6 +70,7 @@ describe('DesktopComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DesktopComponent);
     component = fixture.componentInstance;
+    activatedRouteDataSubject.next({ 'device': testDevice });
     fixture.detectChanges();
   });
 
@@ -62,43 +78,10 @@ describe('DesktopComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#initSession() should save all devices to the session-storage', inject([WebsocketService], (webSocket: WebsocketService) => {
-    const firstDevice = {
-      owner: '00000000-0000-0000-0000-000000000000',
-      name: 'some device',
-      power: 1,
-      uuid: '00000000-0000-0000-0000-000000000000',
-      powered_on: true
-    };
-    const secondDevice = Object.assign({}, firstDevice);
-    secondDevice.name = 'another device';
-    (webSocket.ms as jasmine.Spy).and.returnValue(of({ devices: [firstDevice, secondDevice] }) as any);
-    spyOn(sessionStorage, 'setItem');
-
-    component.initSession();
-    expect(webSocket.ms).toHaveBeenCalledWith('device', ['device', 'all'], {});
-    expect(sessionStorage.setItem).toHaveBeenCalledWith('devices', JSON.stringify([firstDevice, secondDevice]));
-    expect(sessionStorage.setItem).toHaveBeenCalledWith('activeDevice', JSON.stringify(firstDevice));
-  }));
-
-  it('#initSession() should create a device and save it to the session-storage if there is none',
-    inject([WebsocketService], (webSocket: WebsocketService) => {
-      const testDevice = {
-        owner: '00000000-0000-0000-0000-000000000000',
-        name: 'some device',
-        power: 1,
-        uuid: '00000000-0000-0000-0000-000000000000',
-        powered_on: true
-      };
-      (webSocket.ms as jasmine.Spy).and.returnValues(of({ devices: [] }) as any, of(testDevice) as any);
-      spyOn(sessionStorage, 'setItem');
-
-      component.initSession();
-      expect(webSocket.ms).toHaveBeenCalledWith('device', ['device', 'all'], {});
-      expect(webSocket.ms).toHaveBeenCalledWith('device', ['device', 'starter_device'], {});
-      expect(sessionStorage.setItem).toHaveBeenCalledWith('devices', JSON.stringify([testDevice]));
-      expect(sessionStorage.setItem).toHaveBeenCalledWith('activeDevice', JSON.stringify(testDevice));
-    }));
+  it('should get the window manager for the active device', () => {
+    expect(component.windowManager).toEqual(windowManager);
+    expect(windowManagerService.forDevice).toHaveBeenCalledWith(testDevice);
+  });
 
   it('#onDesktop() should return all desktop shortcuts which have the onDesktop property set to true', () => {
     component.linkages = [
@@ -142,36 +125,30 @@ describe('DesktopComponent', () => {
     expect(hideSpy).toHaveBeenCalled();
   });
 
-  it('#openProgramWindow() should open a window using the window manager',
-    inject([WindowManagerService], (windowManager: WindowManagerService) => {
-      const openWindowSpy = spyOn(windowManager, 'openWindow');
-      const testProgram = new Program('testProgram', null, 'Test Program', '', true, new Position(0, 0, 0));
-      const testDelegate = new class extends WindowDelegate {
-        icon = '';
-        title = 'This is a test window';
-        type = null;
-      };
-      const newWindowSpy = spyOn(testProgram, 'newWindow').and.returnValue(testDelegate);
+  it('#openProgramWindow() should open a window using the window manager', () => {
+    const testProgram = new Program('testProgram', null, 'Test Program', '', true, new Position(0, 0, 0));
+    const testDelegate = new class extends WindowDelegate {
+      icon = '';
+      title = 'This is a test window';
+      type = null;
+    };
+    const newWindowSpy = spyOn(testProgram, 'newWindow').and.returnValue(testDelegate);
 
-      component.openProgramWindow(testProgram);
-      expect(newWindowSpy).toHaveBeenCalled();
-      expect(openWindowSpy).toHaveBeenCalledWith(testDelegate);
-    }));
+    component.openProgramWindow(testProgram);
+    expect(newWindowSpy).toHaveBeenCalled();
+    expect(windowManager.openWindow).toHaveBeenCalledWith(testDelegate);
+  });
 
-  it('should call unfocus() from the window manager when you put your mouse down on the empty desktop surface',
-    inject([WindowManagerService], (windowManager: WindowManagerService) => {
-      const unfocusSpy = spyOn(windowManager, 'unfocus');
-      component.surface.nativeElement.dispatchEvent(new Event('mousedown'));
-      expect(unfocusSpy).toHaveBeenCalled();
-    }));
+  it('should call unfocus() from the window manager when you put your mouse down on the empty desktop surface', () => {
+    component.surface.nativeElement.dispatchEvent(new Event('mousedown'));
+    expect(windowManager.unfocus).toHaveBeenCalled();
+  });
 
   it('#checkWindowUnfocus() should not call unfocus() from the window manager ' +
-    'when you put your mouse down on anything else but the desktop surface',
-    inject([WindowManagerService], (windowManager: WindowManagerService) => {
-      const unfocusSpy = spyOn(windowManager, 'unfocus');
-      component.checkWindowUnfocus(new MouseEvent('mousedown'));
-      expect(unfocusSpy).not.toHaveBeenCalled();
-    }));
+    'when you put your mouse down on anything else but the desktop surface', () => {
+    component.checkWindowUnfocus(new MouseEvent('mousedown'));
+    expect(windowManager.unfocus).not.toHaveBeenCalled();
+  });
 
   it('should display a context menu when you right-click on the desktop surface, and should hide it when the cursor leaves it', () => {
     component.surface.nativeElement.dispatchEvent(new Event('contextmenu'));

@@ -7,6 +7,8 @@ import { SettingsService } from '../settings/settings.service';
 import { FileService } from '../../../api/files/file.service';
 import { Path } from '../../../api/files/path';
 import { of } from 'rxjs';
+import { Device } from '../../../api/devices/device';
+import { WindowDelegate } from '../../window/window-delegate';
 
 
 function escapeHtml(html) {
@@ -180,6 +182,22 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   working_dir: string = Path.ROOT;  // UUID of the working directory
 
+  constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
+              private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
+              protected terminal: TerminalAPI, public promptColor: string = null) {
+    super();
+  }
+
+  static registerPromptAppenders(element: HTMLElement) {
+    element
+      .querySelectorAll('.promptAppender')
+      .forEach(el => el.addEventListener('click', DefaultTerminalState.promptAppenderListener));
+  }
+
+  static promptAppender(value: string): string {
+    return `<span class="promptAppender" style="text-decoration: underline; cursor: pointer;">${escapeHtml(value)}</span>`;
+  }
+
   private static promptAppenderListener(evt: MouseEvent) {
     evt.stopPropagation();
     const this_ = evt.target as HTMLElement;
@@ -199,22 +217,6 @@ export class DefaultTerminalState extends CommandTerminalState {
       cmdline.value += this_.innerText + ' ';
       cmdline.focus();
     }
-  }
-
-  static registerPromptAppenders(element: HTMLElement) {
-    element
-      .querySelectorAll('.promptAppender')
-      .forEach(el => el.addEventListener('click', DefaultTerminalState.promptAppenderListener));
-  }
-
-  static promptAppender(value: string): string {
-    return `<span class="promptAppender" style="text-decoration: underline; cursor: pointer;">${escapeHtml(value)}</span>`;
-  }
-
-  constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-              private domSanitizer: DomSanitizer, protected terminal: TerminalAPI, protected activeDevice: object,
-              public promptColor: string = null) {
-    super();
   }
 
   commandNotFound(command: string) {
@@ -266,8 +268,8 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.activeDevice = newDevice;
         this.refreshPrompt();
 
-        if (this.activeDevice['uuid'] === JSON.parse(sessionStorage.getItem('activeDevice'))['uuid']) {
-          sessionStorage.setItem('activeDevice', JSON.stringify(newDevice));
+        if (this.activeDevice.uuid === this.windowDelegate.device.uuid) {
+          Object.assign(this.windowDelegate.device, newDevice);
         }
       }, () => {
         this.terminal.outputText('The hostname couldn\'t be changed');
@@ -1028,10 +1030,9 @@ export class DefaultTerminalState extends CommandTerminalState {
 
     this.websocket.ms('device', ['device', 'info'], { device_uuid: args[0] }).subscribe(infoData => {
       this.websocket.ms('service', ['part_owner'], { device_uuid: args[0] }).subscribe(partOwnerData => {
-        const user_uuid = JSON.parse(sessionStorage.getItem('activeDevice'))['owner'];
-        if (infoData['owner'] === user_uuid || partOwnerData['ok'] === true) {
+        if (infoData['owner'] === this.websocket.account.uuid || partOwnerData['ok'] === true) {
           this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.fileService, this.domSanitizer,
-            this.terminal, infoData, '#DD2C00'));
+            this.windowDelegate, infoData, this.terminal, '#DD2C00'));
         } else {
           this.terminal.outputText('Access denied');
         }
@@ -1393,7 +1394,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.terminal.outputText('network create <name> <private|public>   # create a network');
   }
 
-  info(args: string[]) {
+  info() {
     this.terminal.outputText('Username: ' + this.websocket.account.name);
     this.terminal.outputText('Host: ' + this.activeDevice['name']);
 
@@ -1465,6 +1466,8 @@ export class YesNoTerminalState extends ChoiceTerminalState {
 
 
 export class BruteforceTerminalState extends ChoiceTerminalState {
+  time = this.startSeconds;
+  intervalHandle;
   choices = {
     'stop': () => {
       clearInterval(this.intervalHandle);
@@ -1477,8 +1480,6 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
       this.callback(false);
     }
   };
-  time = this.startSeconds;
-  intervalHandle;
 
   constructor(terminal: TerminalAPI,
               private domSanitizer: DomSanitizer,

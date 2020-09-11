@@ -1,0 +1,244 @@
+@import "../control-center-style";
+@import "variables";
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  user-select: none;
+
+  .computer-logo {
+    margin-right: 3rem;
+    width: 256px;
+    height: 160px;
+
+    &.online {
+      cursor: pointer;
+    }
+
+    &.disabled {
+      pointer-events: none;
+    }
+  }
+
+  h1 {
+    margin: 0;
+    outline: none;
+
+    &.changed {
+      font-style: italic;
+    }
+  }
+
+  .rename-button {
+    margin-top: 2rem;
+    border-color: $button-border-color;
+    background-color: $sidebar-background;
+
+    &:hover {
+      background-color: $button-hover-color;
+    }
+  }
+
+  .power-button {
+    margin-left: 3rem;
+
+    cursor: pointer;
+
+    &.disabled {
+      cursor: not-allowed;
+    }
+  }
+}
+
+.table-container {
+  margin-top: 1rem;
+
+  table {
+    th {
+      font-size: 18pt;
+      color: $table-header-color;
+      text-align: left;
+      line-height: 2em;
+      padding-top: 0.5em;
+    }
+
+    td {
+      font-size: 13pt;
+      padding-right: 3rem;
+      line-height: 1.5em;
+    }
+
+    td:last-child {
+      padding-right: 0;
+    }
+  }
+
+  .separator {
+    width: 50%;
+    margin-top: 1em;
+    border-top: 1px solid $button-border-color
+  }
+}
+
+button {
+  padding: 12px;
+  color: white;
+  border: 2px solid;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+
+  &.disassemble-button {
+    margin-top: 2rem;
+    border-color: #ff0000;
+    background-color: #be0000;
+
+    &:hover {
+      background-color: #ff0000;
+    }
+  }
+}
+
+.modal-container {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+
+  .modal {
+    position: relative;
+    background-color: $page-background;
+    margin: 15% auto auto auto;
+    padding: 20px;
+    min-width: 20rem;
+    width: 30%;
+    border: 1px solid $gray;
+    border-radius: 5px;
+    overflow: auto;
+
+    .close-icon {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    h3 {
+      margin-top: 0;
+    }
+
+    label {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      line-height: 2em;
+
+      input[type=text] {
+        margin-left: 1em;
+        padding: 0 10px;
+        flex-grow: 1;
+        border-radius: 5px;
+        border: none;
+        min-width: 2em;
+      }
+    }
+
+    button {
+      margin-top: 0;
+      width: 100%;
+
+      &:disabled {
+        cursor: default;
+        border-color: $gray;
+        background-color: $gray;
+      }
+    }
+  }
+}
+
+button {
+  padding: 12px;
+  color: white;
+  border: 2px solid;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+
+  &.disassemble-button {
+    margin-top: 2rem;
+    border-color: #ff0000;
+    background-color: #be0000;
+
+    &:hover {
+      background-color: #ff0000;
+    }
+  }
+}
+
+.modal-container {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+
+  .modal {
+    position: relative;
+    background-color: $page-background;
+    margin: 15% auto auto auto;
+    padding: 20px;
+    min-width: 20rem;
+    width: 30%;
+    border: 1px solid $gray;
+    border-radius: 5px;
+    overflow: auto;
+
+    .close-icon {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    h3 {
+      margin-top: 0;
+    }
+
+    label {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      line-height: 2em;
+
+      input[type=text] {
+        margin-left: 1em;
+        padding: 0 10px;
+        flex-grow: 1;
+        border-radius: 5px;
+        border: none;
+        min-width: 2em;
+      }
+    }
+
+    button {
+      margin-top: 0;
+      width: 100%;
+
+      &:disabled {
+        cursor: default;
+        border-color: $gray;
+        background-color: $gray;
+      }
+    }
+  }
+}
