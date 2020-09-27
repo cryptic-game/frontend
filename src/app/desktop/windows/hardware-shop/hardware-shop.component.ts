@@ -1,52 +1,45 @@
-import { Component, ElementRef, OnInit, Type, ViewChild } from '@angular/core';
+import { Component, OnInit, Type } from '@angular/core';
 
 import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { HardwareShopService } from './hardware-shop.service';
-import { Category } from './category';
+import { HardwareShopCategory } from './hardware-shop-category';
+import { HardwareShopDelegate } from './hardware-shop.delegate';
 
 @Component({
   selector: 'app-hardware-shop',
   templateUrl: './hardware-shop.component.html',
   styleUrls: ['./hardware-shop.component.scss']
 })
-export class HardwareShopComponent extends WindowComponent implements OnInit {
+export class HardwareShopComponent extends WindowComponent implements HardwareShopDelegate, OnInit {
 
-  cardVisibility: boolean;
+  cartVisibility: boolean;
 
-  width: number;
-  height: number;
-  category: Category;
-  @ViewChild('hardwareShop', { static: false })
-  private hardwareShop: ElementRef;
+  selectedCategory: HardwareShopCategory;
 
   constructor(private hardwareShopService: HardwareShopService) {
     super();
-    this.hardwareShopService.updateGridView.subscribe(() => {
-      if (this.category) {
-        this.category = this.hardwareShopService.getCategory(this.category.name);
+    this.hardwareShopService.updateCategories.subscribe(() => {
+      if (this.selectedCategory) {
+        this.selectedCategory = this.hardwareShopService.getCategory(this.selectedCategory.name);
       }
     });
-    this.hardwareShopService.updateCartView.subscribe(() => {
-      if (this.category) {
-        this.category = this.hardwareShopService.getCategory(this.category.name);
+    this.hardwareShopService.updateCartItems.subscribe(() => {
+      if (this.selectedCategory) {
+        this.selectedCategory = this.hardwareShopService.getCategory(this.selectedCategory.name);
       }
     });
   }
 
   ngOnInit(): void {
-    this.cardVisibility = false;
+    this.cartVisibility = false;
   }
 
-  setCardVisibility(status: boolean) {
-    this.cardVisibility = status;
+  setCartVisibility(status: boolean) {
+    this.cartVisibility = status;
   }
 
-  selectCategory(category: Category): void {
-    if (this.category) {
-      this.category.selected = false;
-    }
-    this.category = category;
-    category.selected = true;
+  selectCategory(category: HardwareShopCategory): void {
+    this.selectedCategory = category;
   }
 }
 

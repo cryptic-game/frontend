@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
-import { HardwarePart } from '../hardware-part';
 import { WalletAppService } from '../../wallet-app/wallet-app.service';
+import { HardwareShopCartItem } from '../hardware-shop-cart-item';
 
 @Component({
   selector: 'app-hardware-shop-cart',
@@ -10,9 +10,9 @@ import { WalletAppService } from '../../wallet-app/wallet-app.service';
 })
 export class HardwareShopCartComponent {
 
-  items: HardwarePart[];
+  items: HardwareShopCartItem[];
   morphCoins: number;
-  cardMorphCoins: string | number;
+  cartMorphCoins: string | number;
   hasEnoughMorphCoins: boolean;
 
   constructor(
@@ -20,13 +20,13 @@ export class HardwareShopCartComponent {
     private walletAppService: WalletAppService
   ) {
     this.items = this.hardwareShopService.getCartItems();
-    this.cardMorphCoins = 'Loading...';
-    setTimeout(() => this.cardMorphCoins = this.getHoleMorphCoins(), 2000);
-    this.hardwareShopService.updateCartView.subscribe(() => {
+    this.cartMorphCoins = 'Loading...';
+    setTimeout(() => this.cartMorphCoins = this.getTotalPrice(), 250);
+    this.hardwareShopService.updateCartItems.subscribe(() => {
       this.items = this.hardwareShopService.getCartItems();
-      this.cardMorphCoins = this.getHoleMorphCoins();
+      this.cartMorphCoins = this.getTotalPrice();
     });
-    this.walletAppService.updateWallet();
+    this.walletAppService.updateWallet().then();
     this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet.amount);
   }
 
@@ -42,9 +42,8 @@ export class HardwareShopCartComponent {
     this.hardwareShopService.buyCart();
   }
 
-  private getHoleMorphCoins(): number {
-    let mc = 0;
-    this.items.forEach(item => mc += item.price * item.number);
+  private getTotalPrice(): number {
+    const mc = this.items.reduce((acc, item) => acc + (item.shopItem.price * item.quantity), 0);
     this.hasEnoughMorphCoins = this.morphCoins >= mc && mc !== 0;
     return mc / 1000;
   }

@@ -9,16 +9,12 @@ import { HardwareShopService } from '../hardware-shop.service';
 })
 export class HardwareShopHeaderComponent {
 
-  @Output()
-  cartOpen: EventEmitter<any> = new EventEmitter<any>();
+  @Output() cartOpen: EventEmitter<any> = new EventEmitter<any>();
+  @Output() cartClose: EventEmitter<any> = new EventEmitter<any>();
 
-  @Output()
-  cartClose: EventEmitter<any> = new EventEmitter<any>();
+  @Input() cartVisibility: boolean;
 
-  @Input()
-  cardVisibility: boolean;
-
-  cardItems: number;
+  cartItems: number;
 
   morphCoins: number;
 
@@ -26,21 +22,21 @@ export class HardwareShopHeaderComponent {
     private walletAppService: WalletAppService,
     private hardwareShopService: HardwareShopService
   ) {
-    this.walletAppService.updateWallet();
+    this.walletAppService.updateWallet().then();
     this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet.amount);
-    this.hardwareShopService.updateCartView.subscribe(() => this.loadCardSize());
-    this.loadCardSize();
+    this.hardwareShopService.updateCartItems.subscribe(() => this.updateCartSize());
+    this.updateCartSize();
   }
 
   showCart() {
     this.cartOpen.emit();
   }
 
-  hideCard() {
+  hideCart() {
     this.cartClose.emit();
   }
 
-  private loadCardSize(): void {
-    this.cardItems = this.hardwareShopService.getCartItems().length;
+  private updateCartSize(): void {
+    this.cartItems = this.hardwareShopService.getCartItems().length;
   }
 }

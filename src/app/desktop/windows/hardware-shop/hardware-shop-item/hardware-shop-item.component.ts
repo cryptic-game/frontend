@@ -1,19 +1,25 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
-import { HardwarePart } from '../hardware-part';
+import { HardwareShopItem } from '../hardware-shop-item';
 
 @Component({
   selector: 'app-hardware-shop-item',
   templateUrl: './hardware-shop-item.component.html',
-  styleUrls: ['./hardware-shop-item.component.scss']
+  styleUrls: ['./hardware-shop-item.component.scss'],
 })
-export class HardwareShopItemComponent {
+export class HardwareShopItemComponent implements OnInit {
+  @Input() item: HardwareShopItem;
 
-  @Input() item: HardwarePart;
+  inCart = false;
 
-  constructor(
-    private hardwareShopService: HardwareShopService
-  ) {
+  constructor(public hardwareShopService: HardwareShopService) {
+    hardwareShopService.updateCartItems.subscribe(() =>
+      this.inCart = this.hardwareShopService.cartContains(this.item)
+    );
+  }
+
+  ngOnInit() {
+    this.inCart = this.hardwareShopService.cartContains(this.item);
   }
 
   addToCart(): void {

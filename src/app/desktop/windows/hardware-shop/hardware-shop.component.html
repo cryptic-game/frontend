@@ -1,26 +1,27 @@
-<div #hardwareShop class="hardware-shop">
+<div class="hardware-shop">
 
   <div class="header">
     <app-hardware-shop-header
-      (cartClose)="setCardVisibility(false)"
-      (cartOpen)="setCardVisibility(true)"
-      [cardVisibility]="cardVisibility"
+      (cartClose)="setCartVisibility(false)"
+      (cartOpen)="setCartVisibility(true)"
+      [cartVisibility]="cartVisibility"
     ></app-hardware-shop-header>
   </div>
 
   <div class="content">
 
     <div class="body">
-      <div *ngIf="!cardVisibility; else elseCardVisibility" class="hardware-shop-items">
+      <div *ngIf="!cartVisibility; else elseCartVisibility" class="hardware-shop-items">
         <div class="sidebar">
-          <app-hardware-shop-sidebar (select)="selectCategory($event)"></app-hardware-shop-sidebar>
+          <app-hardware-shop-sidebar [delegate]="this"
+                                     (selectCategory)="selectCategory($event)"></app-hardware-shop-sidebar>
         </div>
         <div class="main">
-          <app-hardware-shop-item-list [category]="category"></app-hardware-shop-item-list>
+          <app-hardware-shop-item-list [category]="selectedCategory"></app-hardware-shop-item-list>
         </div>
       </div>
 
-      <ng-template #elseCardVisibility>
+      <ng-template #elseCartVisibility>
         <div class="main">
           <app-hardware-shop-cart></app-hardware-shop-cart>
         </div>
