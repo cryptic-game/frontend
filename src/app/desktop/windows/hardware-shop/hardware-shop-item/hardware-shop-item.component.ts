@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
 import { HardwareShopItem } from '../hardware-shop-item';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { PartCategory } from '../../../../api/hardware/hardware-parts';
+import { Mainboard, PartCategory } from '../../../../api/hardware/hardware-parts';
 
 @Component({
   selector: 'app-hardware-shop-item',
@@ -88,9 +88,45 @@ export class HardwareShopItemComponent implements OnInit {
   private getSpecifications() {
     switch (this.item.part.category) {
       case PartCategory.MAINBOARD:
-        // const mainboard = this.item.part as Mainboard;
-        // TODO: mainboard specifications
-        return {};
+        const mainboard = this.item.part as Mainboard;
+
+        const hasIDEDiskInterface = mainboard.diskStorage.interface.find(x => x[0] === 'IDE');
+        const hasSATADiskInterface = mainboard.diskStorage.interface.find(x => x[0] === 'SATA');
+
+        return {
+          'Mainboard properties': {
+            'Form factor': mainboard.case,
+            'Power usage': `${mainboard.power} W`,
+          },
+          'Mainboard processor': {
+            'Socket': `${mainboard.cpuSlots}x ${mainboard.cpuSocket}`,
+            'Temperature control': mainboard.coreTemperatureControl ? 'yes' : 'no'
+          },
+          'Mainboard memory': {
+            'Slots': mainboard.ram.ramSlots,
+            'Maximum amount': `${mainboard.ram.maxRamSize} MB`,
+            'Type': mainboard.ram.ramTyp.map(type => type.join('')).join(', '),
+            'Frequencies': mainboard.ram.frequency.map(freq => `${freq} MHz`).join(', ')
+          },
+          'Mainboard graphics': {
+            'Integrated graphics': mainboard.graphicUnitOnBoard?.name ?? 'no',
+            'Memory': mainboard.graphicUnitOnBoard ? `${mainboard.graphicUnitOnBoard.ramSize} MB` : undefined,
+            'Frequency': mainboard.graphicUnitOnBoard ? `${mainboard.graphicUnitOnBoard?.frequency} MHz` : undefined
+          },
+          'Expansion slots': mainboard.expansionSlots
+            .reduce((acc, expansion) =>
+              ({ ...acc, [expansion.interface.join(' ')]: `${expansion.interfaceSlots}x` }), {}),
+          'Mainboard ports': {
+            'IDE': hasIDEDiskInterface ? `${mainboard.diskStorage.diskSlots}x (internal)` : undefined,
+            'SATA': hasSATADiskInterface ? `${mainboard.diskStorage.diskSlots}x (internal)` : undefined,
+            'USB': mainboard.usbPorts ? `${mainboard.usbPorts}x (external)` : undefined,
+            'Ethernet': `1x (external)`
+          },
+          'Mainboard network': {
+            'LAN controller': mainboard.networkPort.name,
+            'Speed': `${mainboard.networkPort.speed} MBit/s`
+          }
+        };
       case PartCategory.CPU:
         // const cpu = this.item.part as CPU;
         // TODO: CPU specifications
