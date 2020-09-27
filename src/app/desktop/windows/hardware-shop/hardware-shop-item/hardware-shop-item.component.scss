@@ -8,7 +8,9 @@
   div.item {
     width: 100%;
 
-    div.body {
+    .body {
+      position: relative;
+
       padding: 10px;
       background-color: $white;
       border-radius: 10px;
@@ -16,6 +18,10 @@
 
       display: flex;
       flex-direction: column;
+
+      z-index: 1;
+
+      cursor: help;
 
       div {
         width: 100%;
@@ -26,6 +32,55 @@
         display: flex;
         justify-content: space-between;
       }
+
+      .arrow {
+        height: 0.8em;
+        margin-left: 0.4em;
+      }
     }
+
+    .specifications {
+      width: 100%;
+
+      border: 2px solid $red;
+      border-radius: 10px;
+      box-shadow: 0 0 4px 0 rgb(0 0 0 / 0.25);
+      box-sizing: border-box;
+
+      columns: 1;
+      column-gap: 1px;
+      column-rule: 1px solid $gray;
+
+      h3, h4 {
+        margin: 0;
+        padding: 0.1em 1rem;
+      }
+
+      h3 {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        background-color: $red;
+        color: white;
+        font-size: 13pt;
+        column-span: all;
+      }
+
+      .category {
+        break-inside: avoid;
+        -webkit-column-break-inside: avoid;
+        padding-bottom: 0.5em;
+
+        h4 {
+          background-color: #ced8e0;
+          font-weight: 600;
+        }
+
+        table {
+          margin: 0 1.5rem;
+          user-select: text;
+        }
+      }
+    }
+
   }
 }

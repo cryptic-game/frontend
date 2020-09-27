@@ -1,7 +1,11 @@
 <div class="item">
-  <div class="body">
+  <div class="body" (click)="specificationsVisible = !specificationsVisible">
     <div class="content">
       <span class="name">{{item.name}}</span>
+      <svg [@arrowUpwardsDownwards]="specificationsVisible ? 'downwards' : 'upwards'" class="arrow"
+           viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 7 3 L 13 10 L 1 10 Z" fill="black"/>
+      </svg>
     </div>
 
     <div class="footer">
@@ -10,6 +14,21 @@
       <span *ngIf="inCart" (click)="removeFromCart(); $event.stopPropagation()" class="btn btn-error">Remove</span>
       <span *ngIf="!inCart" (click)="addToCart(); $event.stopPropagation()" class="btn btn-success">Add</span>
     </div>
+  </div>
 
+  <div *ngIf="specificationsVisible" [@expandCollapse] #specificationsDiv class="specifications"
+       [style.columns]="specificationsDiv.clientWidth > 500 ? specificationsDiv.clientWidth > 1000 ? 3 : 2 : 1">
+    <h3>Technical specifications</h3>
+    <div *ngFor="let category of specifications | keyvalue: originalOrder" class="category">
+      <h4>{{category.key}}</h4>
+      <table>
+        <ng-container *ngFor="let spec of category.value | keyvalue: originalOrder">
+          <tr *ngIf="spec.value">
+            <td>{{spec.key}}:</td>
+            <td>{{spec.value}}</td>
+          </tr>
+        </ng-container>
+      </table>
+    </div>
   </div>
 </div>
