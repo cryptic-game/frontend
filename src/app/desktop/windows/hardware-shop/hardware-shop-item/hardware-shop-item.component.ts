@@ -127,6 +127,7 @@ export class HardwareShopItemComponent implements OnInit {
             'Speed': `${mainboard.networkPort.speed} MBit/s`
           }
         };
+
       case hardwareParts.PartCategory.CPU:
         const cpu = this.item.part as hardwareParts.CPU;
 
@@ -150,7 +151,80 @@ export class HardwareShopItemComponent implements OnInit {
           }
         };
 
-      // TODO: other specifications
+      case hardwareParts.PartCategory.PROCESSOR_COOLER:
+
+         const processorCooler = this.item.part as hardwareParts.ProcessorCooler;
+
+         return{
+           'Cooler properties': {
+             'Cooler speed' : processorCooler.coolerSpeed,
+             'Socket' : processorCooler.socket,
+             'Power usage' : `${processorCooler.power} W`
+          }
+         };
+
+      case hardwareParts.PartCategory.RAM:
+
+        const ram = this.item.part as hardwareParts.RAM;
+
+        return{
+          'RAM properties': {
+            'RAM size' : `${ram.ramSize} MB`,
+            'Type' : ram.ramTyp,
+            'Frequency' : `${ram.frequency} MHz`,
+            'Power usage' : `${ram.power} W`,
+          }
+        };
+
+      case hardwareParts.PartCategory.GPU:
+
+        const gpu = this.item.part as hardwareParts.GPU;
+
+        return{
+          'Graphic cards properties': {
+            'RAM size': `${gpu.ramSize} MB`,
+            'Type': gpu.ramTyp,
+            'Frequency': `${gpu.frequency} MHz`,
+            'Interface': gpu.interface,
+            'Power usage': `${gpu.power} W`
+          }
+        };
+
+      case hardwareParts.PartCategory.DISK:
+
+        const disk = this.item.part as hardwareParts.Disk;
+
+        return{
+          'Disk properties' : {
+            'Type': disk.diskTyp,
+            'Capacity': `${disk.capacity / 1000} GB`,
+            'Interface': disk.interface,
+            'Writing speed': `${disk.writingSpeed} MB/s`,
+            'Reading speed': `${disk.readingSpeed} MB/s`,
+            'Power usage': `${disk.power} W`
+          }
+        };
+
+      case hardwareParts.PartCategory.POWER_PACK:
+
+        const powerPack = this.item.part as hardwareParts.PowerPack;
+
+        return{
+          'Powerpack properties' : {
+            'Total power': `${powerPack.totalPower} W`
+          }
+        };
+
+      case hardwareParts.PartCategory.CASE:
+
+        const _case = this.item.part as hardwareParts.Case;
+
+        return{
+          'Case properties': {
+            'Name': _case.name,
+            'Size': _case.size
+          }
+        };
 
       default:
         return {};
