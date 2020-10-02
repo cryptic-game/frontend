@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
 import { HardwareShopItem } from '../hardware-shop-item';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Mainboard, PartCategory } from '../../../../api/hardware/hardware-parts';
+import * as hardwareParts from '../../../../api/hardware/hardware-parts';
 
 @Component({
   selector: 'app-hardware-shop-item',
@@ -87,8 +87,8 @@ export class HardwareShopItemComponent implements OnInit {
 
   private getSpecifications() {
     switch (this.item.part.category) {
-      case PartCategory.MAINBOARD:
-        const mainboard = this.item.part as Mainboard;
+      case hardwareParts.PartCategory.MAINBOARD:
+        const mainboard = this.item.part as hardwareParts.Mainboard;
 
         const hasIDEDiskInterface = mainboard.diskStorage.interface.find(x => x[0] === 'IDE');
         const hasSATADiskInterface = mainboard.diskStorage.interface.find(x => x[0] === 'SATA');
@@ -127,10 +127,28 @@ export class HardwareShopItemComponent implements OnInit {
             'Speed': `${mainboard.networkPort.speed} MBit/s`
           }
         };
-      case PartCategory.CPU:
-        // const cpu = this.item.part as CPU;
-        // TODO: CPU specifications
-        return {};
+      case hardwareParts.PartCategory.CPU:
+        const cpu = this.item.part as hardwareParts.CPU;
+
+        return {
+         'Processor properties': {
+           'Frequeny min': `${cpu.frequencyMin} MHz`,
+           'Frequeny max': `${cpu.frequencyMax} MHz`,
+           'Socket': cpu.socket,
+           'Number cores': cpu.cores,
+           'Max. temperature': `${cpu.maxTemperature} °C`,
+           'Power usage': `${cpu.power} W`
+         },
+          'Processor specific power': {
+           'Turbospeed': cpu.turboSpeed ? 'available' : 'not available',
+           'Overclock': cpu.overClock ? 'available' : 'not available'
+          },
+          'Processor graphics' : {
+           'Integrated graphics': cpu.graphicUnit ? cpu.graphicUnit.name : 'not integrated',
+           'Memory': cpu.graphicUnit ? cpu.graphicUnit.ramSize : undefined,
+           'Frequency': cpu.graphicUnit ? cpu.graphicUnit.frequency : undefined
+          }
+        };
 
       // TODO: other specifications
 
