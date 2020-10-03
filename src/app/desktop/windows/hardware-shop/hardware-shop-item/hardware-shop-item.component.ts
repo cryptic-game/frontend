@@ -105,7 +105,7 @@ export class HardwareShopItemComponent implements OnInit {
           'Mainboard memory': {
             'Slots': mainboard.ram.ramSlots,
             'Maximum amount': `${mainboard.ram.maxRamSize} MB`,
-            'Type': mainboard.ram.ramTyp.map(type => type.join('')).join(', '),
+            'Type': mainboard.ram.ramTyp.map(type => type.join(' ')).join(', '),
             'Frequencies': mainboard.ram.frequency.map(freq => `${freq} MHz`).join(', ')
           },
           'Mainboard graphics': {
@@ -146,8 +146,8 @@ export class HardwareShopItemComponent implements OnInit {
           },
           'Processor graphics': {
             'Integrated graphics': cpu.graphicUnit ? cpu.graphicUnit.name : 'not integrated',
-            'Memory': cpu.graphicUnit ? cpu.graphicUnit.ramSize : undefined,
-            'Frequency': cpu.graphicUnit ? cpu.graphicUnit.frequency : undefined
+            'Memory': cpu.graphicUnit ? `${cpu.graphicUnit.ramSize} MB` : undefined,
+            'Frequency': cpu.graphicUnit ? `${cpu.graphicUnit.frequency} MHz` : undefined
           }
         };
 
@@ -165,10 +165,12 @@ export class HardwareShopItemComponent implements OnInit {
       case PartCategory.RAM:
         const ram = this.item.part as RAM;
 
+        console.log(ram.ramTyp);
+
         return {
           'RAM properties': {
             'RAM size': `${ram.ramSize} MB`,
-            'Type': ram.ramTyp,
+            'Type': ram.ramTyp.join(' '),
             'Frequency': `${ram.frequency} MHz`,
             'Power usage': `${ram.power} W`,
           }
@@ -180,9 +182,9 @@ export class HardwareShopItemComponent implements OnInit {
         return {
           'Graphic cards properties': {
             'RAM size': `${gpu.ramSize} MB`,
-            'Type': gpu.ramTyp,
+            'Type': gpu.ramTyp.join(' '),
             'Frequency': `${gpu.frequency} MHz`,
-            'Interface': gpu.interface,
+            'Interface': gpu.interface.join(' '),
             'Power usage': `${gpu.power} W`
           }
         };
@@ -194,7 +196,7 @@ export class HardwareShopItemComponent implements OnInit {
           'Disk properties': {
             'Type': disk.diskTyp,
             'Capacity': `${disk.capacity / 1000} GB`,
-            'Interface': disk.interface,
+            'Interface': disk.interface.join(' '),
             'Writing speed': `${disk.writingSpeed} MB/s`,
             'Reading speed': `${disk.readingSpeed} MB/s`,
             'Power usage': `${disk.power} W`
