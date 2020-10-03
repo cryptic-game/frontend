@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
 import { HardwareShopItem } from '../hardware-shop-item';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import * as hardwareParts from '../../../../api/hardware/hardware-parts';
+import { PartCategory, Mainboard, CPU, ProcessorCooler, RAM, GPU, Disk, PowerPack, Case } from '../../../../api/hardware/hardware-parts';
 
 @Component({
   selector: 'app-hardware-shop-item',
@@ -87,8 +87,8 @@ export class HardwareShopItemComponent implements OnInit {
 
   private getSpecifications() {
     switch (this.item.part.category) {
-      case hardwareParts.PartCategory.MAINBOARD:
-        const mainboard = this.item.part as hardwareParts.Mainboard;
+      case PartCategory.MAINBOARD:
+        const mainboard = this.item.part as Mainboard;
 
         const hasIDEDiskInterface = mainboard.diskStorage.interface.find(x => x[0] === 'IDE');
         const hasSATADiskInterface = mainboard.diskStorage.interface.find(x => x[0] === 'SATA');
@@ -128,59 +128,56 @@ export class HardwareShopItemComponent implements OnInit {
           }
         };
 
-      case hardwareParts.PartCategory.CPU:
-        const cpu = this.item.part as hardwareParts.CPU;
+      case PartCategory.CPU:
+        const cpu = this.item.part as CPU;
 
         return {
-         'Processor properties': {
-           'Frequeny min': `${cpu.frequencyMin} MHz`,
-           'Frequeny max': `${cpu.frequencyMax} MHz`,
-           'Socket': cpu.socket,
-           'Number cores': cpu.cores,
-           'Max. temperature': `${cpu.maxTemperature} °C`,
-           'Power usage': `${cpu.power} W`
-         },
-          'Processor specific power': {
-           'Turbospeed': cpu.turboSpeed ? 'available' : 'not available',
-           'Overclock': cpu.overClock ? 'available' : 'not available'
+          'Processor properties': {
+            'Frequeny min': `${cpu.frequencyMin} MHz`,
+            'Frequeny max': `${cpu.frequencyMax} MHz`,
+            'Socket': cpu.socket,
+            'Number cores': cpu.cores,
+            'Max. temperature': `${cpu.maxTemperature} °C`,
+            'Power usage': `${cpu.power} W`
           },
-          'Processor graphics' : {
-           'Integrated graphics': cpu.graphicUnit ? cpu.graphicUnit.name : 'not integrated',
-           'Memory': cpu.graphicUnit ? cpu.graphicUnit.ramSize : undefined,
-           'Frequency': cpu.graphicUnit ? cpu.graphicUnit.frequency : undefined
+          'Processor specific power': {
+            'Turbospeed': cpu.turboSpeed ? 'available' : 'not available',
+            'Overclock': cpu.overClock ? 'available' : 'not available'
+          },
+          'Processor graphics': {
+            'Integrated graphics': cpu.graphicUnit ? cpu.graphicUnit.name : 'not integrated',
+            'Memory': cpu.graphicUnit ? cpu.graphicUnit.ramSize : undefined,
+            'Frequency': cpu.graphicUnit ? cpu.graphicUnit.frequency : undefined
           }
         };
 
-      case hardwareParts.PartCategory.PROCESSOR_COOLER:
+      case PartCategory.PROCESSOR_COOLER:
+        const processorCooler = this.item.part as ProcessorCooler;
 
-         const processorCooler = this.item.part as hardwareParts.ProcessorCooler;
-
-         return{
-           'Cooler properties': {
-             'Cooler speed' : processorCooler.coolerSpeed,
-             'Socket' : processorCooler.socket,
-             'Power usage' : `${processorCooler.power} W`
+        return {
+          'Cooler properties': {
+            'Cooler speed': processorCooler.coolerSpeed,
+            'Socket': processorCooler.socket,
+            'Power usage': `${processorCooler.power} W`
           }
-         };
+        };
 
-      case hardwareParts.PartCategory.RAM:
+      case PartCategory.RAM:
+        const ram = this.item.part as RAM;
 
-        const ram = this.item.part as hardwareParts.RAM;
-
-        return{
+        return {
           'RAM properties': {
-            'RAM size' : `${ram.ramSize} MB`,
-            'Type' : ram.ramTyp,
-            'Frequency' : `${ram.frequency} MHz`,
-            'Power usage' : `${ram.power} W`,
+            'RAM size': `${ram.ramSize} MB`,
+            'Type': ram.ramTyp,
+            'Frequency': `${ram.frequency} MHz`,
+            'Power usage': `${ram.power} W`,
           }
         };
 
-      case hardwareParts.PartCategory.GPU:
+      case PartCategory.GPU:
+        const gpu = this.item.part as GPU;
 
-        const gpu = this.item.part as hardwareParts.GPU;
-
-        return{
+        return {
           'Graphic cards properties': {
             'RAM size': `${gpu.ramSize} MB`,
             'Type': gpu.ramTyp,
@@ -190,12 +187,11 @@ export class HardwareShopItemComponent implements OnInit {
           }
         };
 
-      case hardwareParts.PartCategory.DISK:
+      case PartCategory.DISK:
+        const disk = this.item.part as Disk;
 
-        const disk = this.item.part as hardwareParts.Disk;
-
-        return{
-          'Disk properties' : {
+        return {
+          'Disk properties': {
             'Type': disk.diskTyp,
             'Capacity': `${disk.capacity / 1000} GB`,
             'Interface': disk.interface,
@@ -205,21 +201,19 @@ export class HardwareShopItemComponent implements OnInit {
           }
         };
 
-      case hardwareParts.PartCategory.POWER_PACK:
+      case PartCategory.POWER_PACK:
+        const powerPack = this.item.part as PowerPack;
 
-        const powerPack = this.item.part as hardwareParts.PowerPack;
-
-        return{
-          'Powerpack properties' : {
+        return {
+          'Powerpack properties': {
             'Total power': `${powerPack.totalPower} W`
           }
         };
 
-      case hardwareParts.PartCategory.CASE:
+      case PartCategory.CASE:
+        const _case = this.item.part as Case;
 
-        const _case = this.item.part as hardwareParts.Case;
-
-        return{
+        return {
           'Case properties': {
             'Name': _case.name,
             'Size': _case.size
