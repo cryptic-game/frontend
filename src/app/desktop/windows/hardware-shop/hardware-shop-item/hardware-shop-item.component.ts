@@ -93,6 +93,8 @@ export class HardwareShopItemComponent implements OnInit {
         const hasIDEDiskInterface = mainboard.diskStorage.interface.find(x => x[0] === 'IDE');
         const hasSATADiskInterface = mainboard.diskStorage.interface.find(x => x[0] === 'SATA');
 
+        console.log(mainboard);
+
         return {
           'Mainboard properties': {
             'Form factor': mainboard.case,
@@ -117,8 +119,8 @@ export class HardwareShopItemComponent implements OnInit {
             .reduce((acc, expansion) =>
               ({ ...acc, [expansion.interface.join(' ').concat('.0')]: `${expansion.interfaceSlots}x` }), {}),
           'Mainboard ports': {
-            'IDE': hasIDEDiskInterface ? `${mainboard.diskStorage.diskSlots}x (internal)` : undefined,
-            'SATA': hasSATADiskInterface ? `${mainboard.diskStorage.diskSlots}x (internal)` : undefined,
+            'IDE': hasIDEDiskInterface ? `${mainboard.diskStorage.diskSlots}x [${mainboard.diskStorage.interface.map(type => type.join(' ').concat('.0')).join(', ')}]  (internal)` : undefined,
+            'SATA': hasSATADiskInterface ? `${mainboard.diskStorage.diskSlots}x [${mainboard.diskStorage.interface.map(type => type.join(' ').concat('.0')).join(', ')}] (internal)` : undefined,
             'USB': mainboard.usbPorts ? `${mainboard.usbPorts}x (external)` : undefined,
             'Ethernet': `1x (external)`
           },
