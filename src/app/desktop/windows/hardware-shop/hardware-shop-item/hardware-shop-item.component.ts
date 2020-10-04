@@ -115,7 +115,7 @@ export class HardwareShopItemComponent implements OnInit {
           },
           'Expansion slots': mainboard.expansionSlots
             .reduce((acc, expansion) =>
-              ({ ...acc, [expansion.interface.join(' ')]: `${expansion.interfaceSlots}x` }), {}),
+              ({ ...acc, [expansion.interface.join(' ').concat('.0')]: `${expansion.interfaceSlots}x` }), {}),
           'Mainboard ports': {
             'IDE': hasIDEDiskInterface ? `${mainboard.diskStorage.diskSlots}x (internal)` : undefined,
             'SATA': hasSATADiskInterface ? `${mainboard.diskStorage.diskSlots}x (internal)` : undefined,
@@ -184,7 +184,7 @@ export class HardwareShopItemComponent implements OnInit {
             'RAM size': `${gpu.ramSize} MB`,
             'Type': gpu.ramTyp.join(' '),
             'Frequency': `${gpu.frequency} MHz`,
-            'Interface': gpu.interface.join(' '),
+            'Interface': `${gpu.interface.join(' ')}.0`,
             'Power usage': `${gpu.power} W`
           }
         };
@@ -196,7 +196,7 @@ export class HardwareShopItemComponent implements OnInit {
           'Disk properties': {
             'Type': disk.diskTyp,
             'Capacity': `${disk.capacity / 1000} GB`,
-            'Interface': disk.interface.join(' '),
+            'Interface': `${disk.interface.join(' ')}.0`,
             'Writing speed': `${disk.writingSpeed} MB/s`,
             'Reading speed': `${disk.readingSpeed} MB/s`,
             'Power usage': `${disk.power} W`
