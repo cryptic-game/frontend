@@ -93,8 +93,6 @@ export class HardwareShopItemComponent implements OnInit {
         const hasIDEDiskInterface = mainboard.diskStorage.interface.find(x => x[0] === 'IDE');
         const hasSATADiskInterface = mainboard.diskStorage.interface.find(x => x[0] === 'SATA');
 
-        console.log(mainboard);
-
         return {
           'Mainboard properties': {
             'Form factor': mainboard.case,
