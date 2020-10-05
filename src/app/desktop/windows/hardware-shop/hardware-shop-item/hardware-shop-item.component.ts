@@ -105,7 +105,7 @@ export class HardwareShopItemComponent implements OnInit {
           'Mainboard memory': {
             'Slots': mainboard.ram.ramSlots,
             'Maximum amount': `${mainboard.ram.maxRamSize} MB`,
-            'Type': mainboard.ram.ramTyp.map(type => type.join(' ')).join(', '),
+            'Type': mainboard.ram.ramTyp.map(type => type.join('')).join(', '),
             'Frequencies': mainboard.ram.frequency.map(freq => `${freq} MHz`).join(', ')
           },
           'Mainboard graphics': {
@@ -133,8 +133,8 @@ export class HardwareShopItemComponent implements OnInit {
 
         return {
           'Processor properties': {
-            'Frequeny min': `${cpu.frequencyMin} MHz`,
-            'Frequeny max': `${cpu.frequencyMax} MHz`,
+            'Frequency min': `${cpu.frequencyMin} MHz`,
+            'Frequency max': `${cpu.frequencyMax} MHz`,
             'Socket': cpu.socket,
             'Number cores': cpu.cores,
             'Max. temperature': `${cpu.maxTemperature} °C`,
@@ -165,12 +165,10 @@ export class HardwareShopItemComponent implements OnInit {
       case PartCategory.RAM:
         const ram = this.item.part as RAM;
 
-        console.log(ram.ramTyp);
-
         return {
           'RAM properties': {
             'RAM size': `${ram.ramSize} MB`,
-            'Type': ram.ramTyp.join(' '),
+            'Type': ram.ramTyp.join(''),
             'Frequency': `${ram.frequency} MHz`,
             'Power usage': `${ram.power} W`,
           }
@@ -182,7 +180,7 @@ export class HardwareShopItemComponent implements OnInit {
         return {
           'Graphic cards properties': {
             'RAM size': `${gpu.ramSize} MB`,
-            'Type': gpu.ramTyp.join(' '),
+            'Type': gpu.ramTyp.join(''),
             'Frequency': `${gpu.frequency} MHz`,
             'Interface': `${gpu.interface.join(' ')}.0`,
             'Power usage': `${gpu.power} W`
