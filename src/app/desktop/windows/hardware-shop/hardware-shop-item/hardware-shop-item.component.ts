@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
 import { HardwareShopItem } from '../hardware-shop-item';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { PartCategory, Mainboard, CPU, ProcessorCooler, RAM, GPU, Disk, PowerPack, Case } from '../../../../api/hardware/hardware-parts';
+import { Case, CPU, Disk, GPU, Mainboard, PartCategory, PowerPack, ProcessorCooler, RAM } from '../../../../api/hardware/hardware-parts';
 
 @Component({
   selector: 'app-hardware-shop-item',
@@ -83,6 +83,10 @@ export class HardwareShopItemComponent implements OnInit {
 
   originalOrder(): number {
     return 0;
+  }
+
+  getSpecificationsColumnCount(width: number) {
+    return Math.min(width > 500 ? width > 1000 ? 3 : 2 : 1, Object.keys(this.specifications).length);
   }
 
   private getSpecifications() {

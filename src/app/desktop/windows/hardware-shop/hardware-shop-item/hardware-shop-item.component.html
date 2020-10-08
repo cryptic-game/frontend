@@ -17,7 +17,7 @@
   </div>
 
   <div *ngIf="specificationsVisible" [@expandCollapse] #specificationsDiv class="specifications"
-       [style.columns]="specificationsDiv.clientWidth > 500 ? specificationsDiv.clientWidth > 1000 ? 3 : 2 : 1">
+       [style.columns]="getSpecificationsColumnCount(specificationsDiv.clientWidth)">
     <h3>Technical specifications</h3>
     <div *ngFor="let category of specifications | keyvalue: originalOrder" class="category">
       <h4>{{category.key}}</h4>
