@@ -90,9 +90,6 @@ export class HardwareShopItemComponent implements OnInit {
       case PartCategory.MAINBOARD:
         const mainboard = this.item.part as Mainboard;
 
-        const hasIDEDiskInterface = mainboard.diskStorage.interface.find(x => x[0] === 'IDE');
-        const hasSATADiskInterface = mainboard.diskStorage.interface.find(x => x[0] === 'SATA');
-
         return {
           'Mainboard properties': {
             'Form factor': mainboard.case,
@@ -117,8 +114,7 @@ export class HardwareShopItemComponent implements OnInit {
             .reduce((acc, expansion) =>
               ({ ...acc, [expansion.interface.join(' ').concat('.0')]: `${expansion.interfaceSlots}x` }), {}),
           'Mainboard ports': {
-            'IDE': hasIDEDiskInterface ? `${mainboard.diskStorage.diskSlots}x [${mainboard.diskStorage.interface.map(type => type.join(' ').concat('.0')).join(', ')}]  (internal)` : undefined,
-            'SATA': hasSATADiskInterface ? `${mainboard.diskStorage.diskSlots}x [${mainboard.diskStorage.interface.map(type => type.join(' ').concat('.0')).join(', ')}] (internal)` : undefined,
+            [mainboard.diskStorage.interface.map(type => type.join(' ').concat('.0')).join(', ')]: `${mainboard.diskStorage.diskSlots}x (internal)`,
             'USB': mainboard.usbPorts ? `${mainboard.usbPorts}x (external)` : undefined,
             'Ethernet': `1x (external)`
           },
@@ -141,7 +137,7 @@ export class HardwareShopItemComponent implements OnInit {
             'Power usage': `${cpu.power} W`
           },
           'Processor specific power': {
-            'Turbospeed': cpu.turboSpeed ? 'available' : 'not available',
+            'Turbo speed': cpu.turboSpeed ? 'available' : 'not available',
             'Overclock': cpu.overClock ? 'available' : 'not available'
           },
           'Processor graphics': {
