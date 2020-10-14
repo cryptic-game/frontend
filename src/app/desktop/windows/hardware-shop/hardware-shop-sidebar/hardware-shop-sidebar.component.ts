@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
-import { Category } from '../category';
+import { HardwareShopCategory } from '../hardware-shop-category';
+import { HardwareShopDelegate } from '../hardware-shop.delegate';
 
 @Component({
   selector: 'app-hardware-shop-sidebar',
@@ -9,20 +10,15 @@ import { Category } from '../category';
 })
 export class HardwareShopSidebarComponent {
 
-  categories: Category[];
+  @Input() delegate: HardwareShopDelegate;
 
-  @Output()
-  private select: EventEmitter<Category> = new EventEmitter<Category>();
+  @Output() selectCategory: EventEmitter<HardwareShopCategory> = new EventEmitter<HardwareShopCategory>();
 
-  constructor(
-    private hardwareShopService: HardwareShopService
-  ) {
+  categories: HardwareShopCategory[];
+
+  constructor(private hardwareShopService: HardwareShopService) {
     this.load();
-    this.hardwareShopService.updateGridView.subscribe(() => this.load());
-  }
-
-  selectCategory(category: Category): void {
-    this.select.emit(category);
+    this.hardwareShopService.updateCategories.subscribe(() => this.load());
   }
 
   private load(): void {

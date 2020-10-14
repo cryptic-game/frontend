@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Category } from '../category';
+import { HardwareShopCategory } from '../hardware-shop-category';
 
 @Component({
   selector: 'app-hardware-shop-item-list',
@@ -8,6 +8,5 @@ import { Category } from '../category';
 })
 export class HardwareShopItemListComponent {
 
-  @Input()
-  category: Category;
+  @Input() category: HardwareShopCategory;
 }

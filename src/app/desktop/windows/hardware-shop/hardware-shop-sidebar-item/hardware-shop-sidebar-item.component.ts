@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Category } from '../category';
+import { HardwareShopCategory } from '../hardware-shop-category';
+import { HardwareShopDelegate } from '../hardware-shop.delegate';
 
 @Component({
   selector: 'app-hardware-shop-sidebar-item',
@@ -8,13 +9,9 @@ import { Category } from '../category';
 })
 export class HardwareShopSidebarItemComponent {
 
-  @Input()
-  category: Category;
+  @Input() delegate: HardwareShopDelegate;
+  @Input() category: HardwareShopCategory;
 
-  @Output()
-  private select: EventEmitter<void> = new EventEmitter<void>();
+  @Output() selectCategory: EventEmitter<HardwareShopCategory> = new EventEmitter<HardwareShopCategory>();
 
-  selectItem() {
-    this.select.emit();
-  }
 }
