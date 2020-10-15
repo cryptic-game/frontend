@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, Type, ViewChild } from '@angular/core';
 import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { FileService } from '../../../api/files/file.service';
 import { Path } from '../../../api/files/path';
+import { File } from '../../../api/files/file';
 
 @Component({
   selector: 'app-editor',
@@ -10,8 +11,9 @@ import { Path } from '../../../api/files/path';
 })
 export class EditorComponent extends WindowComponent implements OnInit {
 
-  @ViewChild('editorTextfield', { static: true }) editorTextfield: ElementRef;
   @ViewChild('fileInput', { static: true }) fileInput: ElementRef;
+
+  delegate: EditorWindowDelegate;
 
   error: string;
   fileContent: string;
@@ -23,6 +25,15 @@ export class EditorComponent extends WindowComponent implements OnInit {
 
   ngOnInit() {
     this.fileOpened = false;
+
+    if (this.delegate.openFile != null && !this.delegate.openFile.is_directory) {
+      this.fileOpened = true;
+      this.fileContent = this.delegate.openFile.content;
+      this.fileService.getAbsolutePath(this.delegate.device.uuid, this.delegate.openFile.uuid).subscribe(path => {
+        this.fileInput.nativeElement.value = '/' + path.join('/');
+      });
+      this.fileInput.nativeElement.disabled = true;
+    }
   }
 
   enter(inputPath: string) {
@@ -34,7 +45,7 @@ export class EditorComponent extends WindowComponent implements OnInit {
       return;
     }
 
-    this.fileService.getFromPath(JSON.parse(sessionStorage.getItem('activeDevice')).uuid, path).subscribe(file => {
+    this.fileService.getFromPath(this.delegate.device.uuid, path).subscribe(file => {
       if (file.is_directory) {
         this.error = 'Not a file';
       } else {
@@ -58,4 +69,8 @@ export class EditorWindowDelegate extends WindowDelegate {
   type: Type<any> = EditorComponent;
 
   constraints = new WindowConstraints({ minWidth: 300, minHeight: 200 });
+
+  constructor(public openFile?: File) {
+    super();
+  }
 }
