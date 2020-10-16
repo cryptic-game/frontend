@@ -184,6 +184,8 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
   async dragDrop(event: DragEvent, destinationUUID: string) {
     const sourceUUID = event.dataTransfer.getData('cryptic/file');
 
+    event.stopPropagation();
+
     try {
       const sourceFile = await this.fileService.getFile(this.delegate.device.uuid, sourceUUID).toPromise();
       if (sourceFile.parent_dir_uuid === destinationUUID) {
