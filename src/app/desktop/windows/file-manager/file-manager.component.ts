@@ -17,6 +17,8 @@ import { EditorWindowDelegate } from '../editor/editor.component';
 export class FileManagerComponent extends WindowComponent implements OnInit, OnDestroy {
   @ViewChild('dragDropMenu') dragDropMenu: ContextMenuComponent;
 
+  delegate: FileManagerWindowDelegate;
+
   addressBarURL = '/';
   status = '';
   errorTimeoutID: any;
@@ -35,7 +37,7 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
 
   ngOnInit() {
     this.currentFolder = this.fileService.getRootFile(this.delegate.device.uuid);
-    this.goToFolder(Path.ROOT).then();
+    this.goToFolderUUID(this.delegate.openDirectory?.is_directory ? this.delegate.openDirectory.uuid : Path.ROOT).then();
 
     this.fileUpdateSubscription = this.apiService
       .subscribeNotification<{ created: string[], changed: string[], deleted: string[] }>('file-update')
@@ -110,7 +112,7 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     this.addressBarURL = new Path(url).toString();
   }
 
-  async goToFolder(uuid: string) {
+  async goToFolderUUID(uuid: string) {
     try {
       this.currentFolder = await this.fileService.getFile(this.delegate.device.uuid, uuid).toPromise();
       await this.updateFiles();
@@ -126,7 +128,7 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
   }
 
   async goToParent() {
-    await this.goToFolder(this.currentFolder.parent_dir_uuid);
+    await this.goToFolderUUID(this.currentFolder.parent_dir_uuid);
   }
 
   dragStart(event: DragEvent, source: File) {
@@ -288,6 +290,9 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     this.windowManager.openWindow(new EditorWindowDelegate(file));
   }
 
+  openInNewWindow(folder: File) {
+    this.windowManager.openWindow(new FileManagerWindowDelegate(folder));
+  }
 }
 
 export class FileManagerWindowDelegate extends WindowDelegate {
@@ -296,4 +301,8 @@ export class FileManagerWindowDelegate extends WindowDelegate {
   type: Type<any> = FileManagerComponent;
 
   constraints = new WindowConstraints({ minWidth: 330, minHeight: 280 });
+
+  constructor(public openDirectory?: File) {
+    super();
+  }
 }

@@ -11,7 +11,7 @@
   <div class="files-container" [contextMenu]="generalContextMenu"
        (dragover)="dragOver($event, currentFolder)" (drop)="dragDrop($event, currentFolder.uuid)">
     <div *ngFor="let file of currentFolderFiles" class="file" [class.folder]="file.is_directory"
-         [draggable]="!file.is_directory" (click)="file.is_directory ? goToFolder(file.uuid) : open(file)"
+         [draggable]="!file.is_directory" (click)="file.is_directory ? goToFolderUUID(file.uuid) : open(file)"
          (dragstart)="dragStart($event, file)" (dragover)="dragOver($event, file)" (drop)="dragDrop($event, file.uuid)"
          [contextMenu]="file.is_directory ? folderContextMenu : fileContextMenu" [contextMenuSubject]="file">
       <img *ngIf="file.is_directory" class="icon" src="./assets/desktop/img/folder.svg" alt="Directory"
@@ -57,6 +57,7 @@
   </context-menu>
 
   <context-menu #folderContextMenu>
+    <ng-template contextMenuItem (execute)="openInNewWindow($event.item)">Open in new window</ng-template>
     <ng-template contextMenuItem let-item passive="true">
       <label>
         Rename
