@@ -6,6 +6,8 @@ import { FileService } from '../../../api/files/file.service';
 import { ContextMenuComponent, ContextMenuService } from 'ngx-contextmenu';
 import { WebsocketService } from '../../../websocket.service';
 import { Subscription } from 'rxjs';
+import { WindowManager } from '../../window-manager/window-manager';
+import { EditorWindowDelegate } from '../editor/editor.component';
 
 @Component({
   selector: 'app-file-manager',
@@ -24,9 +26,10 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
 
   fileUpdateSubscription: Subscription;
 
-  constructor(private apiService: WebsocketService,
-              public fileService: FileService,
-              private contextMenuService: ContextMenuService) {
+  constructor(public fileService: FileService,
+              private apiService: WebsocketService,
+              private contextMenuService: ContextMenuService,
+              private windowManager: WindowManager) {
     super();
   }
 
@@ -280,8 +283,7 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
   }
 
   open(file: File) {
-    // TODO: implement file opening
-    this.displayError('Not implemented yet.');
+    this.windowManager.openWindow(new EditorWindowDelegate(file));
   }
 
 }

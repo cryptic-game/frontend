@@ -4,7 +4,8 @@ import { FileManagerComponent } from './file-manager.component';
 import { ContextMenuModule } from 'ngx-contextmenu';
 import { FormsModule } from '@angular/forms';
 import { WebsocketService } from '../../../websocket.service';
-import { emptyWindowDelegate, webSocketMock } from '../../../test-utils';
+import { emptyWindowDelegate, webSocketMock, windowManagerMock } from '../../../test-utils';
+import { WindowManager } from '../../window-manager/window-manager';
 
 describe('FileManagerComponent', () => {
   let component: FileManagerComponent;
@@ -14,6 +15,7 @@ describe('FileManagerComponent', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: WebsocketService, useValue: webSocketMock() },
+        { provide: WindowManager, useValue: windowManagerMock() }
       ],
       declarations: [
         FileManagerComponent
