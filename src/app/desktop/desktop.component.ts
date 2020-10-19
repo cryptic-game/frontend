@@ -21,9 +21,6 @@ export class DesktopComponent implements OnInit {
   devices: Device[] = [];
   windowManager: WindowManager;
   startMenu = false;
-  contextMenu = false;
-  contextMenuPosition = new Position(0, 0);
-  contextMenuTarget: EventTarget;
   @ViewChild('surface', { static: true }) surface: ElementRef;
   linkages: Program[] = []; // array for all linkages on the desktop
   dragLinkageIndex: number; // index of current dragged element
@@ -63,18 +60,6 @@ export class DesktopComponent implements OnInit {
 
   hideStartMenu(): void {
     this.startMenu = false;
-  }
-
-  showContextMenu(e: MouseEvent): boolean {
-    this.contextMenuPosition = new Position(e.pageX, e.pageY);
-    this.contextMenuTarget = e.target;
-    this.contextMenu = true;
-
-    return false;
-  }
-
-  hideContextMenu(): void {
-    this.contextMenu = false;
   }
 
   openProgramWindow(program: Program): void {

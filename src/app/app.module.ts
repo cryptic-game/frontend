@@ -8,7 +8,6 @@ import { LoginComponent } from './account/login/login.component';
 import { DesktopComponent } from './desktop/desktop.component';
 import { DesktopMenuComponent } from './desktop/desktop-menu/desktop-menu.component';
 import { DesktopStartmenuComponent } from './desktop/desktop-startmenu/desktop-startmenu.component';
-import { ContextMenuComponent } from './desktop/context-menu/context-menu.component';
 import { SignUpComponent } from './account/sign-up/sign-up.component';
 import { RouteReuseStrategy, RouterModule, Routes } from '@angular/router';
 import { DesktopGuard } from './desktop/desktop.guard';
@@ -44,7 +43,8 @@ import { ControlCenterModule } from './control-center/control-center.module';
 import { AppRouteReuseStrategy } from './app-route-reuse-strategy';
 import { DesktopDeviceResolver } from './desktop/desktop-device.resolver';
 import { EditorComponent } from './desktop/windows/editor/editor.component';
-
+import { FileManagerComponent } from './desktop/windows/file-manager/file-manager.component';
+import { ContextMenuModule } from 'ngx-contextmenu';
 // tslint:enable:max-line-length
 
 const routes: Routes = [
@@ -68,7 +68,6 @@ const routes: Routes = [
     DesktopComponent,
     DesktopMenuComponent,
     DesktopStartmenuComponent,
-    ContextMenuComponent,
     SignUpComponent,
     PXtoViewWidthPipe,
     PXtoViewHeightPipe,
@@ -96,7 +95,8 @@ const routes: Routes = [
     WalletAppEditComponent,
     WalletAppTransactionComponent,
     HardwareShopSidebarComponent,
-    EditorComponent
+    EditorComponent,
+    FileManagerComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -108,7 +108,8 @@ const routes: Routes = [
       enabled: environment.production,
     }),
     ReactiveFormsModule,
-    DesignModule
+    DesignModule,
+    ContextMenuModule.forRoot()
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy }

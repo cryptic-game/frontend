@@ -22,7 +22,7 @@ export class WebsocketService {
 
   private socketSubject: WebSocketSubject<any>;
   private open = {};
-  private notification_subjects: { [notify_id: string]: Subject<Notification> } = {};
+  private notification_subjects: { [notify_id: string]: Subject<Notification<any>> } = {};
   private connectedOnce = false;
   private keepAliveHandle: any;
 
@@ -76,12 +76,12 @@ export class WebsocketService {
     this.socketSubject.error({ code: 4000, reason: 'client-close' });
   }
 
-  subscribe_notification(notify_id: string): Subject<Notification> {
+  subscribeNotification<T>(notify_id: string): Subject<Notification<T>> {
     if (this.notification_subjects[notify_id] != null) {
       return this.notification_subjects[notify_id];
     }
 
-    const subject = new Subject<Notification>();
+    const subject = new Subject<Notification<T>>();
     this.notification_subjects[notify_id] = subject;
     return subject;
   }
@@ -171,8 +171,8 @@ function checkResponseError(obj) {
   }
 }
 
-export interface Notification {
-  data: any;
+export interface Notification<T> {
+  data: T;
   device_uuid?: string;
   origin?: string;
 }

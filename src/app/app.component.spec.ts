@@ -5,7 +5,6 @@ import { DesktopMenuComponent } from './desktop/desktop-menu/desktop-menu.compon
 import { DesktopStartmenuComponent } from './desktop/desktop-startmenu/desktop-startmenu.component';
 import { PXtoViewWidthPipe } from './pxto-view-width.pipe';
 import { PXtoViewHeightPipe } from './pxto-view-height.pipe';
-import { ContextMenuComponent } from './desktop/context-menu/context-menu.component';
 import { WindowManagerComponent } from './desktop/window-manager/window-manager.component';
 import { WindowFrameComponent } from './desktop/window/window-frame.component';
 import { WebsocketService } from './websocket.service';
@@ -32,7 +31,6 @@ describe('AppComponent', () => {
         DesktopStartmenuComponent,
         PXtoViewWidthPipe,
         PXtoViewHeightPipe,
-        ContextMenuComponent,
         WindowManagerComponent,
         WindowFrameComponent
       ],

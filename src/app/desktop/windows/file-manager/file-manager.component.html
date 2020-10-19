@@ -1,0 +1,75 @@
+<div id="file-manager-container">
+  <div class="header">
+    <button (click)="goToParent()" (dragover)="dragOverParentFolder($event)"
+            (drop)="dragDrop($event, currentFolder.parent_dir_uuid)">↑
+    </button>
+    <form (submit)="navigateByAddress(); $event.preventDefault()">
+      <input class="address-bar" type="text" aria-label="Address bar" name="address" [(ngModel)]="addressBarURL"
+             (dragover)="$event.preventDefault()">
+    </form>
+  </div>
+  <div class="files-container" [contextMenu]="generalContextMenu"
+       (dragover)="dragOver($event, currentFolder)" (drop)="dragDrop($event, currentFolder.uuid)">
+    <div *ngFor="let file of currentFolderFiles" class="file" [class.folder]="file.is_directory"
+         [draggable]="!file.is_directory" (click)="file.is_directory ? goToFolderUUID(file.uuid) : open(file)"
+         (dragstart)="dragStart($event, file)" (dragover)="dragOver($event, file)" (drop)="dragDrop($event, file.uuid)"
+         [contextMenu]="file.is_directory ? folderContextMenu : fileContextMenu" [contextMenuSubject]="file">
+      <img *ngIf="file.is_directory" class="icon" src="./assets/desktop/img/folder.svg" alt="Directory"
+           draggable="false">
+      <img *ngIf="!file.is_directory" class="icon" src="./assets/desktop/img/text-file.svg" alt="File"
+           draggable="false">
+      {{file.filename}}
+    </div>
+  </div>
+  <div class="status-bar">
+    {{status}}
+    <button *ngIf="confirmResolve" (click)="respondConfirm(true)">Yes</button>
+    <button *ngIf="confirmResolve" (click)="respondConfirm(false)">No</button>
+  </div>
+
+  <context-menu #generalContextMenu>
+    <ng-template contextMenuItem passive="true">
+      <label>
+        New file
+        <input #newFileInput type="text" value="new-file" maxlength="64"
+               (keydown.enter)="newFile(newFileInput.value)">
+      </label>
+    </ng-template>
+    <ng-template contextMenuItem passive="true">
+      <label>
+        New folder
+        <input #newFileInput type="text" value="new-folder" maxlength="64"
+               (keydown.enter)="newFolder(newFileInput.value)">
+      </label>
+    </ng-template>
+  </context-menu>
+
+  <context-menu #fileContextMenu>
+    <ng-template contextMenuItem (execute)="open($event.item)">Open</ng-template>
+    <ng-template contextMenuItem let-item passive="true">
+      <label>
+        Rename
+        <input #fileRenameInput type="text" [value]="item.filename" maxlength="64"
+               (keydown.enter)="rename(item, fileRenameInput.value)">
+      </label>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="delete($event.item)">Delete</ng-template>
+  </context-menu>
+
+  <context-menu #folderContextMenu>
+    <ng-template contextMenuItem (execute)="openInNewWindow($event.item)">Open in new window</ng-template>
+    <ng-template contextMenuItem let-item passive="true">
+      <label>
+        Rename
+        <input #folderRenameInput type="text" [value]="item.filename" maxlength="64"
+               (keydown.enter)="rename(item, folderRenameInput.value)">
+      </label>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="delete($event.item)">Delete</ng-template>
+  </context-menu>
+
+  <context-menu #dragDropMenu>
+    <ng-template contextMenuItem (execute)="dropMove($event)">Move</ng-template>
+    <ng-template contextMenuItem (execute)="dropCopy($event)">Copy</ng-template>
+  </context-menu>
+</div>
