@@ -14,6 +14,5 @@
   "npm.autoDetect": "off",
   "typescript.tsc.autoDetect": "off",
   "tslint.enable": false,
-  "editor.detectIndentation": false,
-  "explorer.compactFolders": false
+  "editor.detectIndentation": false
 }
