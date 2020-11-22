@@ -1,5 +1,8 @@
 <div id="sidebar-container">
   <app-control-center-sidebar-menu *ngFor="let menu of menus" [menu]="menu"></app-control-center-sidebar-menu>
-  <button (click)="logout()" class="logout-button">Logout</button>
-  <span class="username">Logged in as {{apiService.account.name}}</span>
+  <div class="footer">
+    <button (click)="logout()" class="logout-button">Logout</button>
+    <p class="username">Logged in as {{apiService.account.name}}</p>
+    <p class="imprint"><a href="https://the-morpheus.de/#signup" rel="noopener" target="_blank">Imprint</a></p>
+  </div>
 </div>
