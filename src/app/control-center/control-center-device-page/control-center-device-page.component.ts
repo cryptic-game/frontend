@@ -220,4 +220,11 @@ export class ControlCenterDevicePageComponent implements OnInit {
     });
     this.closeDisassembleModal();
   }
+
+  @HostListener('window:keydown', ['$event'])
+  windowKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      this.closeDisassembleModal();
+    }
+  }
 }
