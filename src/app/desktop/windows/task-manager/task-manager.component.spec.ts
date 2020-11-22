@@ -71,7 +71,7 @@ describe('TaskManagerComponent', () => {
       const deviceUUID = 'test123-456';
       const cpuUtilization = 6226;
 
-      component.delegate.device = { uuid: deviceUUID, name: '', powered_on: true, owner: '' };
+      component.delegate.device = { uuid: deviceUUID, name: '', powered_on: true, owner: '', starter_device: false };
 
       fixture.whenStable().then(() => {
         expect(webSocket.subscribeNotification).toHaveBeenCalledWith('resource-usage');
@@ -82,7 +82,7 @@ describe('TaskManagerComponent', () => {
     }));
 
   it('should not update the utilization if the device uuid does not match', async(() => {
-    component.delegate.device = { uuid: '123456', name: '', powered_on: true, owner: '' };
+    component.delegate.device = { uuid: '123456', name: '', powered_on: true, owner: '', starter_device: false };
     const cpuUtilBefore = 15;
     component.utilization.cpu = cpuUtilBefore;
 

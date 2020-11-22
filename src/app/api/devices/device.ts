@@ -3,6 +3,7 @@ export interface Device {
   name: string;
   owner: string;
   powered_on: boolean;
+  starter_device: boolean;
 }
 
 export interface DeviceWithHardware extends Device {

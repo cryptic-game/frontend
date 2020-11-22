@@ -118,6 +118,7 @@ describe('HardwareService', () => {
         name: '',
         powered_on: false,
         owner: '',
+        starter_device: false,
         hardware: [
           { uuid: '', device_uuid: '', hardware_element: 'test_mainboard', hardware_type: 'mainboard' },
           { uuid: '', device_uuid: '', hardware_element: 'test_cpu', hardware_type: 'cpu' },

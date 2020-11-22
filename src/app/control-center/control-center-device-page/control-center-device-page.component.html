@@ -94,7 +94,9 @@
   </table>
 </div>
 
-<button (click)="disassembleModal = true" class="disassemble-button">Disassemble computer</button>
+<button *ngIf="!device.starter_device" (click)="disassembleModal = true" class="disassemble-button">Disassemble
+  computer
+</button>
 
 <div (click)="closeDisassembleModal()" *ngIf="disassembleModal" class="modal-container">
   <form (click)="$event.stopPropagation()" class="modal">
@@ -110,12 +112,12 @@
     </p>
     <label>
       Type in the name of your device to confirm:
-      <input #disassembleConfirm (keyup)="checkDisassembleConfirm(disassembleConfirm)" autocomplete="off"
-             name="disassemble-confirm"
-             type="text">
+      <input (keyup)="checkDisassembleConfirm(disassembleConfirm)" #disassembleConfirm
+             autocomplete="off" name="disassemble-confirm" type="text">
     </label>
     <br>
-    <button (click)="disassembleDevice()" [disabled]="!disassembleConfirmed" class="disassemble-button">Disassemble
+    <button (click)="disassembleDevice()" [disabled]="!disassembleConfirmed"
+            class="disassemble-button">Disassemble
     </button>
   </form>
 </div>

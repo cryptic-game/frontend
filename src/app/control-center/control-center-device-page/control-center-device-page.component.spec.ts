@@ -29,7 +29,7 @@ describe('ControlCenterDevicePageComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ControlCenterDevicePageComponent);
     component = fixture.componentInstance;
-    component.device = { name: '', owner: '', powered_on: false, uuid: '' };
+    component.device = { name: '', owner: '', powered_on: false, uuid: '', starter_device: false };
     component.hardware = new DeviceHardware(component.device);
     component.hardware.cpu.push({ name: '' } as any);
     fixture.detectChanges();

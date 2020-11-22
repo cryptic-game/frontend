@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { WebsocketService } from '../../websocket.service';
 import { DeviceService } from '../../api/devices/device.service';
 import { from } from 'rxjs';

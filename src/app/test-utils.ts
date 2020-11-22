@@ -28,7 +28,7 @@ export function webSocketMock(): WebsocketService {
 }
 
 export function emptyDevice(partial: Partial<Device> = {}): Device {
-  return { name: '', owner: '', powered_on: false, uuid: '', ...partial };
+  return { name: '', owner: '', powered_on: false, uuid: '', starter_device: false, ...partial };
 }
 
 export function emptyWindowDelegate(): WindowDelegate {
@@ -36,7 +36,7 @@ export function emptyWindowDelegate(): WindowDelegate {
     icon = '';
     title = '';
     type = null;
-    device = { uuid: '', owner: '', powered_on: false, name: '' };
+    device = emptyDevice();
   };
 }
 
