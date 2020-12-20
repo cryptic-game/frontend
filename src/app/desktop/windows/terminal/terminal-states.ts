@@ -39,7 +39,7 @@ export abstract class CommandTerminalState implements TerminalState {
   }
 
   execute(command: string) {
-    const command_ = command.trim().split(' ');
+    const command_ = command.trim().split(/[ \t\n\r\f]/).filter(arg => arg.trim());
     if (command_.length === 0) {
       return;
     }
@@ -921,10 +921,8 @@ export class DefaultTerminalState extends CommandTerminalState {
               target_device: targetDevice, target_service: targetService
             }).subscribe(() => {
                 this.terminal.outputText('You started a bruteforce attack');
-                this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
-                  if (stop) {
-                    this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
-                  }
+                this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, () => {
+                  this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
                 }));
               }, error1 => {
                 if (error1.message === 'could_not_start_service') {
@@ -1472,18 +1470,13 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
     'stop': () => {
       clearInterval(this.intervalHandle);
       this.terminal.popState();
-      this.callback(true);
-    },
-    'exit': () => {
-      clearInterval(this.intervalHandle);
-      this.terminal.popState();
-      this.callback(false);
+      this.callback();
     }
   };
 
   constructor(terminal: TerminalAPI,
               private domSanitizer: DomSanitizer,
-              private callback: (response: boolean) => void,
+              private callback: () => void,
               private startSeconds: number = 0) {
     super(terminal);
 
@@ -1496,7 +1489,7 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
   refreshPrompt() {
     const minutes = Math.floor(this.time / 60);
     const seconds = this.time % 60;
-    const prompt = `Bruteforcing ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} [stop/exit] `;
+    const prompt = `Bruteforcing ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} [type 'stop' to stop] `;
     this.terminal.changePrompt(`<span style="color: gold">${prompt}</span>`, true);
   }
 }
