@@ -25,6 +25,7 @@ export class SignUpComponent {
       password: [history.state?.password ?? '', [
         Validators.required,
         Validators.minLength(8),
+        Validators.maxLength(64),
         Validators.pattern(/[0-9]/),
         Validators.pattern(/[A-Z]/),
         Validators.pattern(/[a-z]/)]
