@@ -28,4 +28,5 @@
     <input [disabled]="tradeItem == null" type="submit" value="!">
     <span *ngIf="tradeErrorMessage" class="error-message">{{tradeErrorMessage}}</span>
   </form>
+  <p>Your own UUID: <span class="uuid">{{apiService.account.uuid}}</span></p>
 </div>

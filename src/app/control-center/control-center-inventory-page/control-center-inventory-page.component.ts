@@ -3,6 +3,7 @@ import { InventoryItemWithHardware } from '../../api/inventory/inventory-item';
 import { ActivatedRoute } from '@angular/router';
 import { PartCategory } from '../../api/hardware/hardware-parts';
 import { InventoryService } from '../../api/inventory/inventory.service';
+import { WebsocketService } from '../../websocket.service';
 
 @Component({
   selector: 'app-control-center-inventory-page',
@@ -25,7 +26,7 @@ export class ControlCenterInventoryPageComponent implements OnInit {
   };
   tradeErrorMessage = '';
 
-  constructor(private activatedRoute: ActivatedRoute, private inventoryService: InventoryService) {
+  constructor(private activatedRoute: ActivatedRoute, private inventoryService: InventoryService, public apiService: WebsocketService) {
     activatedRoute.data.subscribe(data => {
       this.items = data['items'];
     });

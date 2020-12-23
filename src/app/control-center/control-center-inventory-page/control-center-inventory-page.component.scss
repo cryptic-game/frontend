@@ -104,6 +104,16 @@ h1 {
     color: red;
     text-align: center;
   }
+
+  p {
+    user-select: none;
+
+    .uuid {
+      user-select: text;
+      text-decoration: underline;
+    }
+  }
+
 }
 
 
