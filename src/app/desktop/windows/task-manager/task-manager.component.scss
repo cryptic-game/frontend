@@ -58,12 +58,12 @@
           bottom: 0;
         }
 
-        .green-indicator {
+        .usage-indicator {
           background-color: $green;
-        }
 
-        .red-indicator {
-          background-color: $red;
+          &.high-usage {
+            background-color: red;
+          }
         }
 
         .line-indicator {
