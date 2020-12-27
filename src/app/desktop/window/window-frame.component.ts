@@ -16,6 +16,7 @@ export class WindowFrameComponent implements OnInit {
 
   @Input() delegate: WindowDelegate;
   @Input() windowManager: WindowManager;
+  @Input() disabled: boolean;
   dragging = false;
   dragStartWindowPos: [number, number] = [0, 0];
   dragStartPos: [number, number] = [0, 0];
@@ -68,7 +69,8 @@ export class WindowFrameComponent implements OnInit {
       || this.dragging
       || this.delegate.position.maximized
       || this.resizing
-      || this.delegate.position.minimized) {
+      || this.delegate.position.minimized
+      || this.disabled) {
       return 0;
     }
 

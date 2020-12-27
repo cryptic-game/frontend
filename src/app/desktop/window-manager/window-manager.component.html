@@ -4,6 +4,7 @@
                       [style.top.px]="window.position.maximized ? 0 : window.position.y"
                       [style.z-index]="window.position.zIndex"
                       [windowManager]="windowManager"
+                      [disabled]="!active"
                       style="position: absolute;">
     </app-window-frame>
   </div>

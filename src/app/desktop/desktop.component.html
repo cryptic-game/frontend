@@ -11,7 +11,7 @@
 
   <app-window-manager
     *ngFor="let device of devices; trackBy: trackByUUID" [device]="device"
-    [hidden]="device.uuid !== activeDevice.uuid"
+    [active]="device.uuid === activeDevice.uuid" [hidden]="device.uuid !== activeDevice.uuid"
   ></app-window-manager>
 </div>
 <app-desktop-startmenu *ngIf="startMenu" [parent]="this"></app-desktop-startmenu>

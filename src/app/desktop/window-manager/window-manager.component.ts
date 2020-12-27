@@ -9,6 +9,8 @@ import { WindowManager } from './window-manager';
   styleUrls: ['./window-manager.component.scss']
 })
 export class WindowManagerComponent implements OnInit {
+  @Input() active;
+
   windowManager: WindowManager;
 
   constructor(private windowManagerService: WindowManagerService) {
