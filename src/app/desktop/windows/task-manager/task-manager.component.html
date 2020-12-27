@@ -14,7 +14,7 @@
               <div class="chart">
                 <div [style.height.%]="utilization.cpu * 100" class="indicator green-indicator"></div>
               </div>
-              <p style="text-align: center; margin: 0;">{{utilization.cpu * 100 | number:'1.0-0'}}%</p>
+              <p style="text-align: center; margin: 0;">{{utilization.cpu | percent}}</p>
             </div>
             <div class="value-container">
               <span class="description">Utilization</span>
@@ -31,7 +31,7 @@
               <div class="chart">
                 <div [style.height.%]="utilization.gpu * 100" class="indicator green-indicator"></div>
               </div>
-              <p style="text-align: center; margin: 0;">{{utilization.gpu * 100 | number:'1.0-0'}}%</p>
+              <p style="text-align: center; margin: 0;">{{utilization.gpu | percent}}</p>
             </div>
             <div class="value-container">
               <span class="description">Utilization</span>
@@ -48,14 +48,13 @@
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
-                <div [style.height.%]="utilization.ram / ram.totalMemory * 100" class="indicator red-indicator"></div>
+                <div [style.height.%]="utilization.ram * 100" class="indicator red-indicator"></div>
               </div>
-              <p style="text-align: center; margin: 0;">{{utilization.ram / ram.totalMemory * 100 | number:'1.0-0'}}
-                %</p>
+              <p style="text-align: center; margin: 0;">{{utilization.ram | percent}}</p>
             </div>
             <div class="value-container">
               <span class="description">Usage</span>
-              <div class="value">{{utilization.ram | number:'1.0-0'}} MB</div>
+              <div class="value">{{utilization.ram * ram.totalMemory | number:'1.0-0'}} MB</div>
             </div>
           </div>
         </div>
@@ -68,7 +67,7 @@
               <div class="chart">
                 <div [style.height.%]="utilization.disk * 100" class="indicator green-indicator"></div>
               </div>
-              <p style="text-align: center; margin: 0;">{{utilization.disk * 100 | number:'1.0-0'}}%</p>
+              <p style="text-align: center; margin: 0;">{{utilization.disk | percent}}</p>
             </div>
             <div class="value-container">
               <span class="description">Utilization</span>
@@ -87,7 +86,7 @@
               <div class="chart">
                 <div [style.height.%]="utilization.network * 100" class="indicator green-indicator"></div>
               </div>
-              <p style="text-align: center; margin: 0;">{{utilization.network * 100 | number:'1.0-0'}}%</p>
+              <p style="text-align: center; margin: 0;">{{utilization.network | percent}}</p>
             </div>
             <div class="value-container">
               <span class="description">Utilization</span>

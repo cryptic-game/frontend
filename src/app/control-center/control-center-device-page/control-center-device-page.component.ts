@@ -3,7 +3,7 @@ import { WebsocketService } from '../../websocket.service';
 import { DeviceService } from '../../api/devices/device.service';
 import { from } from 'rxjs';
 import { filter, flatMap, map, switchMap, toArray } from 'rxjs/operators';
-import { Device, DeviceUtilization } from '../../api/devices/device';
+import { Device, DeviceResources, ResourceUsage } from '../../api/devices/device';
 import { animate, animateChild, keyframes, query, state, style, transition, trigger } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceHardware } from '../../api/hardware/device-hardware';
@@ -65,9 +65,10 @@ function powerButtonColorAnimation(triggerName, property) {
 export class ControlCenterDevicePageComponent implements OnInit {
   device: Device;
   hardware: DeviceHardware;
+  deviceResources: DeviceResources;
   services: {
     service: { uuid: string, name: string, running: boolean },
-    usage: DeviceUtilization
+    usage: ResourceUsage
   }[] = [];
   powerButton: {
     state: 'off' | 'fast-off' | 'on' | 'fast-on';
@@ -104,19 +105,22 @@ export class ControlCenterDevicePageComponent implements OnInit {
   updateServices(): void {
     this.powerButton.state = this.device.powered_on ? 'fast-on' : 'fast-off';
     if (this.device.powered_on) {
-      this.webSocket.ms('service', ['list'], { device_uuid: this.device.uuid }).pipe(
-        switchMap(response => from(response.services as { uuid: string, name: string, running: boolean }[])),
-        filter(service => service.running),
-        flatMap(service =>
-          this.deviceService.getServiceResourceUsage(service.uuid).pipe(map(serviceUsage =>
-              ({ service: service, usage: new DeviceUtilization(serviceUsage) })
-            )
-          )),
-        toArray(),
-        map(serviceUsages => serviceUsages.sort((a, b) => a.service.name.localeCompare(b.service.name)))
-      ).subscribe(serviceUsages => {
-        this.services.length = 0;
-        this.services.push(...serviceUsages);
+      this.deviceService.getDeviceResourceUsage(this.device.uuid).subscribe(resources => {
+        this.deviceResources = resources;
+
+        this.webSocket.ms('service', ['list'], { device_uuid: this.device.uuid }).pipe(
+          switchMap(response => from(response.services as { uuid: string, name: string, running: boolean }[])),
+          filter(service => service.running),
+          flatMap(service =>
+            this.deviceService.getServiceResourceUsage(service.uuid).pipe(map(serviceUsage =>
+              ({ service: service, usage: new ResourceUsage(serviceUsage).relativeToDevice(this.deviceResources) })
+            ))),
+          toArray(),
+          map(serviceUsages => serviceUsages.sort((a, b) => a.service.name.localeCompare(b.service.name)))
+        ).subscribe(serviceUsages => {
+          this.services.length = 0;
+          this.services.push(...serviceUsages);
+        });
       });
     } else {
       this.services = [];

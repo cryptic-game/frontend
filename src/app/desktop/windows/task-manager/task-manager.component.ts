@@ -4,7 +4,7 @@ import { WebsocketService } from '../../../websocket.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { HardwareService } from '../../../api/hardware/hardware.service';
-import { DeviceUtilization } from '../../../api/devices/device';
+import { DeviceResources, ResourceUsage } from '../../../api/devices/device';
 import { DeviceHardware } from '../../../api/hardware/device-hardware';
 
 @Component({
@@ -20,7 +20,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   gpu: { name?: string, frequency: number } = { name: '', frequency: 0 };
   ram = { totalMemory: 0, type: '' };
   diskName = '';
-  utilization: DeviceUtilization = new DeviceUtilization();
+  utilization: ResourceUsage = new ResourceUsage();
 
   constructor(public delegate: WindowDelegate,
               private webSocket: WebsocketService,
@@ -31,9 +31,9 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   }
 
   ngOnInit() {
-    this.resourceNotifySubscription = this.webSocket.subscribeNotification<DeviceUtilization>('resource-usage')
+    this.resourceNotifySubscription = this.webSocket.subscribeNotification<ResourceUsage>('resource-usage')
       .pipe(filter(x => x.device_uuid === this.delegate.device.uuid))
-      .subscribe(notification => this.updateUtilization(notification['data']));
+      .subscribe(notification => this.updateUtilization(notification['data'], true));
   }
 
   ngOnDestroy() {
@@ -60,16 +60,14 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
       this.diskName = data.disk.length >= 1 ? data.disk[0].name : 'Disk';
 
       this.webSocket.ms('device', ['hardware', 'resources'], { device_uuid: this.delegate.device.uuid })
-        .subscribe(resourceData => this.updateUtilization(resourceData));
+        .subscribe(resourceData => this.updateUtilization(resourceData, false));
     });
   }
 
-  updateUtilization(resourceUsage: any) {
-    this.utilization.cpu = resourceUsage['cpu'];
-    this.utilization.gpu = resourceUsage['gpu'];
-    this.utilization.ram = resourceUsage['ram'] * this.ram.totalMemory;
-    this.utilization.disk = resourceUsage['disk'];
-    this.utilization.network = resourceUsage['network'];
+  updateUtilization(resourceUsage: any, notification: boolean) {
+    Object.assign(this.utilization, notification
+      ? resourceUsage
+      : new DeviceResources(resourceUsage).relativeUsage());
   }
 
 }

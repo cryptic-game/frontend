@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { WebsocketService } from '../../websocket.service';
-import { Device, DeviceUtilization, DeviceWithHardware } from './device';
+import { Device, DeviceResources, DeviceWithHardware, ResourceUsage } from './device';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -54,11 +54,11 @@ export class DeviceService {
     return this.deviceRequest(['hardware', 'build'], hardware);
   }
 
-  getResourceUsage(deviceUUID): Observable<DeviceUtilization> {
+  getDeviceResourceUsage(deviceUUID): Observable<DeviceResources> {
     return this.deviceRequest(['hardware', 'resources'], { device_uuid: deviceUUID });
   }
 
-  getServiceResourceUsage(serviceUUID): Observable<DeviceUtilization> {
+  getServiceResourceUsage(serviceUUID): Observable<ResourceUsage> {
     return this.deviceRequest(['hardware', 'process'], { service_uuid: serviceUUID });
   }
 

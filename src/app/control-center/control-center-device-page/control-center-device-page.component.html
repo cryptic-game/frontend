@@ -87,9 +87,21 @@
     <tr>
       <th colspan="2">Running processes</th>
     </tr>
+    <tr>
+      <td><b>Service</b></td>
+      <td><b>CPU</b></td>
+      <td><b>GPU</b></td>
+      <td><b>RAM</b></td>
+      <td><b>Disk</b></td>
+      <td><b>Network</b></td>
+    </tr>
     <tr *ngFor="let service of services">
       <td>{{service.service.name}}</td>
-      <td>{{service.usage.average() | number:'1.0-1'}}</td>
+      <td>{{service.usage.cpu | percent}}</td>
+      <td>{{service.usage.gpu | percent}}</td>
+      <td>{{service.usage.ram | percent}}</td>
+      <td>{{service.usage.disk | percent}}</td>
+      <td>{{service.usage.network | percent}}</td>
     </tr>
   </table>
 </div>
