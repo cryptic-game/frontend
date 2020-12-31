@@ -20,7 +20,7 @@ describe('AccountService', () => {
     windowManagerService = jasmine.createSpyObj('WindowManagerService', ['reset']);
     router = jasmine.createSpyObj('Router', ['navigateByUrl']);
     router.navigateByUrl.and.returnValue(new Promise(resolve => resolve(true)));
-    routeReuseStrategy = { storedPaths: {} };
+    routeReuseStrategy = jasmine.createSpyObj('AppRouteReuseStrategy', ['reset']);
 
     TestBed.configureTestingModule({
       providers: [
@@ -123,7 +123,6 @@ describe('AccountService', () => {
     inject([AccountService], (service: AccountService) => {
       spyOn(localStorage, 'clear');
       webSocket.loggedIn = true;
-      routeReuseStrategy.storedPaths = { A: 'B', C: 'D' };
       const navigateByUrlPromise = new FakePromise();
       router.navigateByUrl.and.returnValue(navigateByUrlPromise);
 
@@ -134,11 +133,11 @@ describe('AccountService', () => {
       expect(webSocket.request).toHaveBeenCalledWith({ action: 'logout' });
       expect(webSocket.loggedIn).toBeFalse();
 
-      expect(routeReuseStrategy.storedPaths).toEqual({ A: 'B', C: 'D' });
+      expect(routeReuseStrategy.reset).not.toHaveBeenCalled();
       expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
 
       navigateByUrlPromise.resolve(true);
-      expect(routeReuseStrategy.storedPaths).toEqual({});
+      expect(routeReuseStrategy.reset).toHaveBeenCalled();
     })
   );
 

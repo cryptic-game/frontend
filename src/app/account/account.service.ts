@@ -82,7 +82,7 @@ export class AccountService {
     this.websocket.loggedIn = false;
 
     this.router.navigateByUrl('/login').then(() => {
-      (this.routeReuseStrategy as AppRouteReuseStrategy).storedPaths = {};
+      (this.routeReuseStrategy as AppRouteReuseStrategy).reset();
     });
   }
 

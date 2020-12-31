@@ -16,6 +16,17 @@ export class AppRouteReuseStrategy implements RouteReuseStrategy {
   pathReuse = ['', 'create-device', 'settings', 'sound', 'changelog', 'desktop'];
   storedPaths: { [path: string]: StoredRoute } = {};
 
+  reset() {
+    for (const storedRoute of Object.values(this.storedPaths)) {
+      this.destroyHandle(storedRoute.handle);
+    }
+    this.storedPaths = {};
+  }
+
+  destroyHandle(handle: DetachedRouteHandle) {
+    handle['componentRef']?.destroy();
+  }
+
   shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
     return curr.routeConfig === future.routeConfig;
   }
@@ -51,7 +62,7 @@ export class AppRouteReuseStrategy implements RouteReuseStrategy {
   /**
    * Checks if two routes have the same children. Apparently, this is important when going from
    * the desktop to some route in the control center, because Angular can't reuse the parent route
-   * for a different child route than the one active when it were been stored.
+   * for a different child route than the one active when it was stored.
    * @param a The first route to compare
    * @param b The second route to compare
    */
