@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { WebsocketService } from './websocket.service';
 import { animate, animateChild, group, query, style, transition, trigger } from '@angular/animations';
 import { RouterOutlet } from '@angular/router';
+import { VersionService } from './version.service';
 
 @Component({
   selector: 'app-root',
@@ -69,7 +70,7 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent implements OnDestroy {
 
-  constructor(private websocket: WebsocketService) {
+  constructor(private websocket: WebsocketService, public versionService: VersionService) {
     websocket.init();
   }
 
@@ -81,4 +82,11 @@ export class AppComponent implements OnDestroy {
     return outlet?.activatedRouteData?.['animation'];
   }
 
+  activateUpdate() {
+    this.versionService.updateAndReload();
+  }
+
+  cancelUpdate() {
+    this.versionService.cancelUpdate();
+  }
 }

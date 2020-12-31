@@ -73,3 +73,14 @@ export class FakePromise {
     this.rejectCallback?.(reason);
   }
 }
+
+export function swUpdateMock() {
+  const mock = jasmine.createSpyObj('SwUpdate', ['activateUpdate', 'checkForUpdate']);
+  mock.activateUpdate.and.callFake(() => Promise.resolve());
+  mock.checkForUpdate.and.callFake(() => Promise.resolve());
+  mock.$$availableSubj = new Subject<{ available: { hash: string } }>();
+  mock.$$activatedSubj = new Subject<{ current: { hash: string } }>();
+  mock.available = mock.$$availableSubj.asObservable();
+  mock.activated = mock.$$activatedSubj.asObservable();
+  return mock;
+}

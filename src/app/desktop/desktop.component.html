@@ -1,6 +1,6 @@
 <div #surface (contextmenu)="$event.preventDefault()" (mousedown)="checkWindowUnfocus($event); hideStartMenu()"
      [style.background]="getBackground()" id="desktop-surface">
-  <h1 id="version-info">Pre-Alpha 2.0</h1>
+  <h1 id="version-info" [class.just-updated]="versionService.justUpdated">{{versionService.CURRENT_VERSION}}</h1>
 
   <div
     *ngFor="let linkage of onDesktop(); index as i"

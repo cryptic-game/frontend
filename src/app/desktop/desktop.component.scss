@@ -15,6 +15,10 @@
     color: #696969;
     user-select: none;
     pointer-events: none;
+
+    &.just-updated {
+      text-decoration: underline;
+    }
   }
 
   .linkage {

@@ -21,6 +21,7 @@ import { WindowDelegate } from './window/window-delegate';
 import { emptyDevice, webSocketMock, windowManagerMock } from '../test-utils';
 import { DeviceService } from '../api/devices/device.service';
 import { ActivatedRoute, RouteReuseStrategy } from '@angular/router';
+import { VersionService } from '../version.service';
 
 describe('DesktopComponent', () => {
   const testDevice = { ...emptyDevice({ uuid: 'b8a67b5c-7aaa-4acb-805d-3d86af7a6fb7' }) };
@@ -29,6 +30,7 @@ describe('DesktopComponent', () => {
   let activatedRouteDataSubject;
   let windowManagerService;
   let windowManager;
+  let versionService;
 
   beforeEach(async(() => {
     const deviceService = jasmine.createSpyObj('DeviceService', ['getDevices']);
@@ -39,6 +41,12 @@ describe('DesktopComponent', () => {
     windowManagerService = jasmine.createSpyObj('WindowManagerService', ['forDevice']);
     windowManagerService.forDevice.and.returnValue(windowManager);
 
+    versionService = jasmine.createSpyObj('VersionService', ['cancelUpdate', 'updateAndReload', 'updateRead']);
+    versionService.CURRENT_VERSION = '';
+    versionService.availableUpdate = null;
+    versionService.previousVersion = null;
+    versionService.justUpdated = false;
+
     TestBed.configureTestingModule({
       providers: [
         { provide: WebsocketService, useValue: webSocketMock() },
@@ -46,6 +54,7 @@ describe('DesktopComponent', () => {
         { provide: ActivatedRoute, useValue: { data: activatedRouteDataSubject } },
         { provide: WindowManagerService, useValue: windowManagerService },
         { provide: RouteReuseStrategy, useValue: {} },
+        { provide: VersionService, useValue: versionService },
         ProgramService
       ],
       imports: [

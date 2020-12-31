@@ -10,6 +10,7 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { DeviceService } from '../api/devices/device.service';
 import { Device } from '../api/devices/device';
 import { WindowManager } from './window-manager/window-manager';
+import { VersionService } from '../version.service';
 
 @Component({
   selector: 'app-desktop',
@@ -35,7 +36,8 @@ export class DesktopComponent implements OnInit {
     private cursorService: GlobalCursorService,
     private settings: SettingsService,
     private sanitizer: DomSanitizer,
-    private windowManagerService: WindowManagerService
+    private windowManagerService: WindowManagerService,
+    public versionService: VersionService
   ) {
     this.activatedRoute.data.subscribe(data => {
       this.activeDevice = data['device'];
