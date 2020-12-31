@@ -38,6 +38,11 @@
     &:hover {
       background-color: $button-hover-color;
     }
+
+    &:disabled {
+      background-color: $button-border-color;
+      cursor: not-allowed;
+    }
   }
 
   .power-button {

@@ -11,7 +11,9 @@
         (input)="deviceNameInput()" (blur)="finishRenaming()" (keyup.escape)="stopRenaming()"
         (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"></h1>
 
-    <button (click)="startRenaming()" class="rename-button">Rename this PC</button>
+    <button class="rename-button" (click)="startRenaming()" [disabled]="!device.powered_on"
+            [title]="device.powered_on ? '' : 'The device is offline'">Rename this PC
+    </button>
   </div>
   <svg (@powerButton.done)="powerAnimationDone()" (click)="powerButtonClicked()" [@powerButton]="powerButton.state"
        [class.disabled]="powerButton.animating" class="power-button"
