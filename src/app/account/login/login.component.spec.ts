@@ -39,19 +39,20 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should decrease errorLive every second by 1', () => {
-    component.errorLive = 2;
+  it('#decayError() should decrease errorLife every second by 1', () => {
+    component.decayError(2);
 
+    expect(component.errorLife).toEqual(2);
     jasmine.clock().tick(1001);
-    expect(component.errorLive).toEqual(1);
+    expect(component.errorLife).toEqual(1);
     jasmine.clock().tick(1001);
-    expect(component.errorLive).toEqual(0);
+    expect(component.errorLife).toEqual(0);
   });
 
-  it('should reset the error message when errorLive is equal or fewer than 0', () => {
+  it('#decayError() should reset the error message when errorLife is equal or fewer than 0', () => {
     const testError = 'This is a test error.';
     component.error = testError;
-    component.errorLive = 2;
+    component.decayError(2);
 
     jasmine.clock().tick(1001);
     expect(component.error).toEqual(testError);
@@ -72,12 +73,13 @@ describe('LoginComponent', () => {
     component.form = { valid: true, value: { username: 'testUser', password: 'testPassword' } } as any;
 
     accountService.login.and.callFake(() => throwError(new Error('permissions denied')));
+    spyOn(component, 'decayError');
 
     component.login();
     expect(accountService.login).toHaveBeenCalled();
     expect(accountService.finalLogin).not.toHaveBeenCalled();
     expect(component.error).toEqual('This username and password could not be found.');
-    expect(component.errorLive).toEqual(10);
+    expect(component.decayError).toHaveBeenCalledWith(10);
 
     const testError = 'This is a non-standard test error.';
     accountService.login.and.callFake(() => throwError(new Error(testError)));
@@ -86,7 +88,7 @@ describe('LoginComponent', () => {
     expect(accountService.login).toHaveBeenCalled();
     expect(accountService.finalLogin).not.toHaveBeenCalled();
     expect(component.error).toEqual(testError);
-    expect(component.errorLive).toEqual(10);
+    expect(component.decayError).toHaveBeenCalledWith(10);
   });
 
   it('#login() should call finalLogin with the received token if the server responds with no error', () => {

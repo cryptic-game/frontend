@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { WindowDelegate } from '../window/window-delegate';
 import { WindowManager } from '../window-manager/window-manager';
 
@@ -7,21 +7,25 @@ import { WindowManager } from '../window-manager/window-manager';
   templateUrl: './desktop-menu.component.html',
   styleUrls: ['./desktop-menu.component.scss']
 })
-export class DesktopMenuComponent implements OnInit {
+export class DesktopMenuComponent implements OnInit, OnDestroy {
   @Input() windowManager: WindowManager;
   @Output() startMenu = new EventEmitter();
 
   now: Date;
+  intervalHandle: any;
 
   constructor() {
     this.now = new Date();
+  }
 
-    setInterval(() => {
+  ngOnInit() {
+    this.intervalHandle = setInterval(() => {
       this.now = new Date();
     }, 1000);
   }
 
-  ngOnInit() {
+  ngOnDestroy() {
+    clearInterval(this.intervalHandle);
   }
 
   activateOrMinimize(window: WindowDelegate) {

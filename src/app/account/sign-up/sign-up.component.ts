@@ -11,7 +11,8 @@ export class SignUpComponent {
 
   form: FormGroup;
   error: string;
-  errorLive: number;
+  errorLife = 0;
+  errorLifeHandle: any;
   passwordStrength: number;
 
   constructor(private formBuilder: FormBuilder,
@@ -33,16 +34,6 @@ export class SignUpComponent {
       passwordConfirm: ['', Validators.required]
     });
 
-    this.errorLive = 0;
-    setInterval(() => {
-      if (this.errorLive > 0) {
-        this.errorLive -= 1;
-      }
-
-      if (this.errorLive <= 0) {
-        this.error = undefined;
-      }
-    }, 1000);
     this.passwordStrength = this.accountService.checkPassword(this.form.value.password);
 
     this.form.valueChanges.subscribe(data => this.passwordStrength = this.accountService.checkPassword(data.password));
@@ -53,7 +44,7 @@ export class SignUpComponent {
       const value: { username: string, password: string, passwordConfirm: string } = this.form.value;
       if (value.password !== value.passwordConfirm) {
         this.error = 'The passwords do not match.';
-        this.errorLive = 10;
+        this.decayError(10);
         return;
       }
 
@@ -66,8 +57,22 @@ export class SignUpComponent {
           this.error = error.message;
         }
 
-        this.errorLive = 10;
+        this.decayError(10);
       });
     }
+  }
+
+  decayError(duration: number) {
+    this.errorLife = duration;
+    clearInterval(this.errorLifeHandle);
+    this.errorLifeHandle = setInterval(() => {
+      if (this.errorLife > 0) {
+        this.errorLife -= 1;
+      }
+
+      if (this.errorLife <= 0) {
+        this.error = undefined;
+      }
+    }, 1000);
   }
 }

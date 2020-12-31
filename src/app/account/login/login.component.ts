@@ -11,7 +11,8 @@ export class LoginComponent {
 
   form: FormGroup;
   error: string;
-  errorLive: number;
+  errorLife = 0;
+  errorLifeHandle: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -21,16 +22,6 @@ export class LoginComponent {
       username: [history.state?.username ?? '', Validators.required],
       password: [history.state?.password ?? '', Validators.required]
     });
-    this.errorLive = 0;
-    setInterval(() => {
-      if (this.errorLive > 0) {
-        this.errorLive -= 1;
-      }
-
-      if (this.errorLive <= 0) {
-        this.error = undefined;
-      }
-    }, 1000);
   }
 
   login(): void {
@@ -46,8 +37,22 @@ export class LoginComponent {
           this.error = error.message;
         }
 
-        this.errorLive = 10;
+        this.decayError(10);
       });
     }
+  }
+
+  decayError(duration: number) {
+    this.errorLife = duration;
+    clearInterval(this.errorLifeHandle);
+    this.errorLifeHandle = setInterval(() => {
+      if (this.errorLife > 0) {
+        this.errorLife -= 1;
+      }
+
+      if (this.errorLife <= 0) {
+        this.error = undefined;
+      }
+    }, 1000);
   }
 }

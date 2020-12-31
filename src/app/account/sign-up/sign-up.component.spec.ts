@@ -39,18 +39,19 @@ describe('SignUpComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should decrease errorLive every second by 1', () => {
-    component.errorLive = 2;
+  it('#decayError() should decrease errorLife every second by 1', () => {
+    component.decayError(2);
+    expect(component.errorLife).toEqual(2);
     jasmine.clock().tick(1001);
-    expect(component.errorLive).toEqual(1);
+    expect(component.errorLife).toEqual(1);
     jasmine.clock().tick(1001);
-    expect(component.errorLive).toEqual(0);
+    expect(component.errorLife).toEqual(0);
   });
 
-  it('should reset the error message when errorLive is equal or fewer than 0', () => {
+  it('#decayError() should reset the error message when errorLife is equal or fewer than 0', () => {
     const testError = 'This is a test error.';
     component.error = testError;
-    component.errorLive = 2;
+    component.decayError(2);
 
     jasmine.clock().tick(1001);
     expect(component.error).toEqual(testError);
@@ -80,7 +81,7 @@ describe('SignUpComponent', () => {
 
     component.signUp();
     expect(component.error).toEqual('The passwords do not match.');
-    expect(component.errorLive).toEqual(10);
+    expect(component.errorLife).toEqual(10);
     expect(accountService.signUp).not.toHaveBeenCalled();
     expect(accountService.finalLogin).not.toHaveBeenCalled();
   });
@@ -122,6 +123,7 @@ describe('SignUpComponent', () => {
 
     const testError = 'This is a non-standard test error.';
     accountService.signUp.and.callFake(() => throwError(new Error(testError)));
+    spyOn(component, 'decayError');
 
     component.signUp();
     expect(accountService.signUp).toHaveBeenCalled();
@@ -135,13 +137,13 @@ describe('SignUpComponent', () => {
 
     for (const [errorName, translation] of Object.entries(knownErrors)) {
       accountService.signUp.and.callFake(() => throwError(new Error(errorName)));
-      component.errorLive = 0;
+      component.errorLife = 0;
 
       component.signUp();
       expect(accountService.signUp).toHaveBeenCalled();
       expect(accountService.finalLogin).not.toHaveBeenCalled();
       expect(component.error).toEqual(translation);
-      expect(component.errorLive).toEqual(10);
+      expect(component.decayError).toHaveBeenCalledWith(10);
     }
   });
 
