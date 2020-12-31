@@ -106,6 +106,7 @@ const routes: Routes = [
     FormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
+      registrationStrategy: 'registerImmediately'
     }),
     ReactiveFormsModule,
     DesignModule,

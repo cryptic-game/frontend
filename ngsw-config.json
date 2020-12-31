@@ -1,17 +1,6 @@
 {
   "$schema": "./node_modules/@angular/service-worker/config/schema.json",
   "index": "/index.html",
-  "dataGroups": [
-    {
-      "name": "api-performance",
-      "urls": ["ws.test.cryptic-game.net", "ws.cryptic-game.net"],
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxSize": 100,
-        "maxAge": "3d"
-      }
-    }
-  ],
   "assetGroups": [
     {
       "name": "app",
@@ -28,13 +17,38 @@
     },
     {
       "name": "assets",
-      "installMode": "prefetch",
-      "updateMode": "prefetch",
+      "installMode": "lazy",
       "resources": {
         "files": [
           "/assets/**",
-          "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
+          "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)",
+          "!/assets/api.json"
         ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "app-config",
+      "urls": [
+        "/api.json"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 5,
+        "maxAge": "3d"
+      }
+    },
+    {
+      "name": "api-performance",
+      "urls": [
+        "ws.test.cryptic-game.net",
+        "ws.cryptic-game.net"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 100,
+        "maxAge": "3d"
       }
     }
   ]
