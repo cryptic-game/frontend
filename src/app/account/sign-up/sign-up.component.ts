@@ -20,17 +20,18 @@ export class SignUpComponent {
     this.form = this.formBuilder.group({
       username: [history.state?.username ?? '', [
         Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(256)]
-      ],
+        Validators.minLength(2),
+        Validators.maxLength(32),
+        Validators.pattern(/^[a-zA-Z0-9\-_.]+$/)
+      ]],
       password: [history.state?.password ?? '', [
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(64),
         Validators.pattern(/[0-9]/),
         Validators.pattern(/[A-Z]/),
-        Validators.pattern(/[a-z]/)]
-      ],
+        Validators.pattern(/[a-z]/)
+      ]],
       passwordConfirm: ['', Validators.required]
     });
 
