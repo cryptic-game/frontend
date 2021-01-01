@@ -15,7 +15,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
   active = false;
   power = 0.0;
   miningRate = 0.0;
-  started;
+  started: number;
 
   walletControl: FormControl = new FormControl('', [
     Validators.required, Validators.pattern(/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/)
@@ -78,7 +78,6 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
         this.setWallet(data['wallet']);
         this.started = data['started'];
         this.setPower(Math.round(data['power'] * 100));
-        this.active = this.power > 0 && this.started != null;
       });
     }
   }
@@ -157,6 +156,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
 
   private setPower(power: number, syncSlider: boolean = true): void {
     this.power = power;
+    this.active = power > 0;
     if (syncSlider) {
       this.minerPower.setValue(power, { emitEvent: false });
     }
