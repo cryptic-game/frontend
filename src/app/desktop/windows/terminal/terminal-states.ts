@@ -902,9 +902,42 @@ export class DefaultTerminalState extends CommandTerminalState {
           return;
         }
 
+        const startAttack = () => {
+          this.websocket.ms('service', ['bruteforce', 'attack'], {
+            service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
+            target_device: targetDevice, target_service: targetService
+          }).subscribe(() => {
+              this.terminal.outputText('You started a bruteforce attack');
+              this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
+                if (stop) {
+                  this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
+                }
+              }));
+            }, error1 => {
+              if (error1.message === 'could_not_start_service') {
+                this.terminal.outputText('There was an error while starting the bruteforce attack');
+              } else if (error1.message === 'invalid_input_data') {
+                this.terminal.outputText('The specified UUID is not valid');
+              } else {
+                reportError(error1);
+              }
+            }
+          );
+        };
+
         this.websocket.ms('service', ['bruteforce', 'status'], {
           service_uuid: bruteforceService['uuid'], device_uuid: activeDevice
-        }).subscribe(() => {
+        }).subscribe(status => {
+          const differentServiceAttacked = status['target_service'] !== targetService;
+          if (differentServiceAttacked) {
+            const div = document.createElement('div');
+            div.innerHTML = 'The bruteforce service already attacks another device: ' +
+              DefaultTerminalState.promptAppender(status['target_device']) +
+              '. Stopping...';
+            this.terminal.outputNode(div);
+            DefaultTerminalState.registerPromptAppenders(div);
+          }
+
           this.websocket.ms('service', ['bruteforce', 'stop'], {
             service_uuid: bruteforceService['uuid'], device_uuid: activeDevice
           }).subscribe(stopData => {
@@ -913,29 +946,14 @@ export class DefaultTerminalState extends CommandTerminalState {
             } else {
               this.terminal.outputText('Access denied. The bruteforce attack was not successful');
             }
+
+            if (differentServiceAttacked) {
+              startAttack();
+            }
           });
         }, error => {
           if (error.message === 'attack_not_running') {
-            this.websocket.ms('service', ['bruteforce', 'attack'], {
-              service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
-              target_device: targetDevice, target_service: targetService
-            }).subscribe(() => {
-                this.terminal.outputText('You started a bruteforce attack');
-                this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
-                  if (stop) {
-                    this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
-                  }
-                }));
-              }, error1 => {
-                if (error1.message === 'could_not_start_service') {
-                  this.terminal.outputText('There was an error while starting the bruteforce attack');
-                } else if (error1.message === 'invalid_input_data') {
-                  this.terminal.outputText('The specified UUID is not valid');
-                } else {
-                  reportError(error1);
-                }
-              }
-            );
+            startAttack();
           } else {
             reportError(error);
           }
