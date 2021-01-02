@@ -27,6 +27,8 @@ export class WindowManager {
     if (this.activeWindow) {
       this.activeWindow.position.active = false;
       win.position.zIndex = this.activeWindow.position.zIndex + 1;
+    } else if (this.windows.length > 1) {
+      win.position.zIndex = this.windows[this.windows.length - 2].position.zIndex + 1;
     }
     win.position.active = true;
     this.activeWindow = win;

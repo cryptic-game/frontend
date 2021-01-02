@@ -1,11 +1,10 @@
 <div class="window-container">
-  <div *ngFor="let window of windowManager.taskList">
-    <app-window-frame [delegate]="window" [style.left.px]="window.position.maximized ? 0 : window.position.x"
-                      [style.top.px]="window.position.maximized ? 0 : window.position.y"
-                      [style.z-index]="window.position.zIndex"
-                      [windowManager]="windowManager"
-                      [disabled]="!active"
-                      style="position: absolute;">
-    </app-window-frame>
-  </div>
+  <app-window-frame *ngFor="let window of windowManager.taskList" [delegate]="window"
+                    [style.left.px]="window.position.maximized ? 0 : window.position.x"
+                    [style.top.px]="window.position.maximized ? 0 : window.position.y"
+                    [style.z-index]="window.position.zIndex"
+                    [windowManager]="windowManager"
+                    [disabled]="!active"
+                    style="position: absolute;">
+  </app-window-frame>
 </div>
