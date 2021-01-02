@@ -1,10 +1,8 @@
 <div class="header">
 
-  <div class="left">
-    <span *ngIf="wallet" class="btn">
-      <span (click)="showWalletEdit()" *ngIf="!isWalletEdit">Change Wallet</span>
-      <span (click)="hideWalletEdit()" *ngIf="isWalletEdit">Back to Wallet</span>
-    </span>
+  <div class="left" *ngIf="wallet">
+    <span class="btn" (click)="showWalletEdit()" *ngIf="!walletEdit">Change Wallet</span>
+    <span class="btn" (click)="hideWalletEdit()" *ngIf="walletEdit">Back to Wallet</span>
   </div>
 
   <div class="right">

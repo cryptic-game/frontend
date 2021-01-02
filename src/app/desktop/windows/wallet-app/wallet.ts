@@ -1,5 +1,4 @@
 export interface Wallet {
-
   time_stamp: Date;
   source_uuid: string;
   key: string;

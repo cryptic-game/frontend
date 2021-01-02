@@ -1,8 +1,7 @@
-import { Component, OnInit, Type } from '@angular/core';
+import { Component, OnDestroy, OnInit, Type } from '@angular/core';
 import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { WalletAppService } from './wallet-app.service';
 import { Wallet } from './wallet';
-import { interval } from 'rxjs';
 import { Transaction } from './transaction';
 
 @Component({
@@ -10,52 +9,52 @@ import { Transaction } from './transaction';
   templateUrl: './wallet-app.component.html',
   styleUrls: ['./wallet-app.component.scss']
 })
-export class WalletAppComponent extends WindowComponent implements OnInit {
+export class WalletAppComponent extends WindowComponent implements OnInit, OnDestroy {
 
-  walletEdit: boolean;
+  walletEdit = false;
   wallet: Wallet;
-  transactions: Transaction[];
-  currentPage = 1;
-  pages = 1;
+  transactions: Transaction[] = [];
+  lastTransactionCount = 0;
+  currentPage = 0;
+  pages = 0;
   itemsPerPage = 3;
+  updateIntervalHandle: any;
 
-  constructor(
-    private walletAppService: WalletAppService
-  ) {
+  constructor(private walletAppService: WalletAppService) {
     super();
-    walletAppService.updateWallet().then((loaded) => {
-      if (loaded) {
-        this.setWalletEditStatus(false);
-      } else {
-        this.setWalletEditStatus(true);
-      }
+    walletAppService.updateWallet().then(loaded => {
+      this.walletEdit = !loaded;
     });
 
     this.wallet = walletAppService.wallet;
 
-    let loading = true;
-
-    walletAppService.update.subscribe((wallet) => {
+    walletAppService.update.subscribe(wallet => {
       this.wallet = wallet;
       if (wallet) {
-        this.setWalletEditStatus(false);
         this.pages = Math.ceil(this.wallet.transactions / this.itemsPerPage);
-        if (loading) {
-          this.walletAppService.getTransactions(0, this.itemsPerPage)
-            .subscribe((data) => this.transactions = data);
+        if (this.pages === 0) {
+          this.currentPage = 0;
+          this.transactions = [];
+        } else {
+          if (this.currentPage === 0 || this.currentPage > this.pages) {
+            this.currentPage = 1;
+          }
+          if (this.wallet.transactions !== this.lastTransactionCount) {
+            this.walletAppService.getTransactions((this.currentPage - 1) * (this.itemsPerPage), this.itemsPerPage)
+              .subscribe((data) => this.transactions = data);
+            this.lastTransactionCount = this.wallet.transactions;
+          }
         }
-        loading = false;
       }
     });
-    this.transactions = [];
   }
 
   ngOnInit() {
-    interval(1000 * 15).subscribe(() => this.walletAppService.updateWallet());
+    this.updateIntervalHandle = setInterval(() => this.walletAppService.updateWallet(), 1000 * 15);
   }
 
-  setWalletEditStatus(status: boolean): void {
-    this.walletEdit = status;
+  ngOnDestroy() {
+    clearInterval(this.updateIntervalHandle);
   }
 
   nextPage() {

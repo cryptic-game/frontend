@@ -10,28 +10,23 @@ import { Wallet } from '../wallet';
 export class WalletAppHeaderComponent {
 
   wallet: Wallet;
-  @Input()
-  isWalletEdit: boolean;
 
-  @Output()
-  public walletEdit: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Input() walletEdit: boolean;
+  @Output() walletEditChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(
-    private walletAppService: WalletAppService
-  ) {
+  constructor(private walletAppService: WalletAppService) {
     walletAppService.update.subscribe((wallet) => {
       this.wallet = wallet;
-      this.isWalletEdit = false;
     });
   }
 
   showWalletEdit(): void {
-    this.walletEdit.emit(true);
-    this.isWalletEdit = true;
+    this.walletEdit = true;
+    this.walletEditChange.emit(true);
   }
 
   hideWalletEdit(): void {
-    this.walletEdit.emit(false);
-    this.isWalletEdit = false;
+    this.walletEdit = false;
+    this.walletEditChange.emit(false);
   }
 }
