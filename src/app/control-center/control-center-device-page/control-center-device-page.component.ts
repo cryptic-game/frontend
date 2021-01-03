@@ -1,10 +1,21 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { WebsocketService } from '../../websocket.service';
 import { DeviceService } from '../../api/devices/device.service';
 import { from } from 'rxjs';
 import { filter, flatMap, map, switchMap, toArray } from 'rxjs/operators';
 import { Device, DeviceResources, ResourceUsage } from '../../api/devices/device';
-import { animate, animateChild, keyframes, query, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  animateChild,
+  AnimationBuilder,
+  AnimationPlayer,
+  keyframes,
+  query,
+  state,
+  style,
+  transition,
+  trigger
+} from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceHardware } from '../../api/hardware/device-hardware';
 import { ControlCenterService } from '../control-center.service';
@@ -100,6 +111,10 @@ export class ControlCenterDevicePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy() {
+    this.powerButton.animating = false;
   }
 
   updateServices(): void {
