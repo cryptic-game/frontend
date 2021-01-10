@@ -1,7 +1,7 @@
 <h1>Release notes</h1>
 <div class="changelog-container">
   <div class="changelog">
-    <table>
+    <table *ngIf="changelog">
       <ng-container *ngFor="let version of changelog?.versions" class="version-container">
         <tr>
           <th colspan="2">
