@@ -3,7 +3,7 @@
   "versions": [
     {
       "name": "Pre-Alpha 2.0",
-      "date": "2020-09-31T10:00:00.000Z",
+      "date": "2021-01-15T17:00:00.000Z",
       "additions": [
         "Computer hardware",
         "System for building computers",
@@ -23,11 +23,12 @@
         "Ability to switch between computers",
         "Possibility to report bugs via a link in the start menu",
         "Changelog",
-        "Progressive web app support",
-        "Ability to change the account password (not available in the frontend yet)",
+        "Progressive web app support and update indicator",
+        "Ability to change the account password",
         "Ability to stop and delete services, exception: SSH (not available in the frontend yet)"
       ],
       "enhancements": [
+        "Computers disassembly while keeping the parts",
         "Login and registration, added a password strength indicator",
         "Filesystem with directories",
         "Improved commands in the terminal",
