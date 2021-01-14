@@ -1,0 +1,14 @@
+node_modules
+coverage
+dist
+local
+.git
+.github
+.vscode
+.idea
+.gitignore
+.editorconfig
+.travis.yml
+docker-compose.yml
+README.md
+STYLE.MD
