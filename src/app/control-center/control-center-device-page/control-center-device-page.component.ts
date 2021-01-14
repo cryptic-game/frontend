@@ -4,18 +4,7 @@ import { DeviceService } from '../../api/devices/device.service';
 import { from } from 'rxjs';
 import { filter, flatMap, map, switchMap, toArray } from 'rxjs/operators';
 import { Device, DeviceResources, ResourceUsage } from '../../api/devices/device';
-import {
-  animate,
-  animateChild,
-  AnimationBuilder,
-  AnimationPlayer,
-  keyframes,
-  query,
-  state,
-  style,
-  transition,
-  trigger
-} from '@angular/animations';
+import { animate, animateChild, keyframes, query, state, style, transition, trigger } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceHardware } from '../../api/hardware/device-hardware';
 import { ControlCenterService } from '../control-center.service';
@@ -73,7 +62,7 @@ function powerButtonColorAnimation(triggerName, property) {
   templateUrl: './control-center-device-page.component.html',
   styleUrls: ['./control-center-device-page.component.scss']
 })
-export class ControlCenterDevicePageComponent implements OnInit {
+export class ControlCenterDevicePageComponent implements OnInit, OnDestroy {
   device: Device;
   hardware: DeviceHardware;
   deviceResources: DeviceResources;
