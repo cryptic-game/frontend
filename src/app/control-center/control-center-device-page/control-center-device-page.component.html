@@ -1,0 +1,137 @@
+<div class="header">
+  <img [hidden]="!device.powered_on" [queryParams]="{'device': device.uuid}"
+       [routerLink]="'/desktop'" [class.disabled]="powerButton.animating"
+       alt="Online-Computer" class="computer-logo online" draggable="false"
+       src="../assets/device/desktop_computer_online.svg">
+  <img [hidden]="device.powered_on" alt="Offline-Computer" class="computer-logo"
+       draggable="false" src="../assets/device/desktop_computer_offline.svg">
+  <div>
+    <h1 [hidden]="renamingActive">{{device.name}}</h1>
+    <h1 hidden="hidden" #deviceRename [class.changed]="nameChanged" (keypress)="deviceNameKeyPress($event)"
+        (input)="deviceNameInput()" (blur)="finishRenaming()" (keyup.escape)="stopRenaming()"
+        (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"></h1>
+
+    <button class="rename-button" (click)="startRenaming()" [disabled]="!device.powered_on"
+            [title]="device.powered_on ? '' : 'The device is offline'">Rename this PC
+    </button>
+  </div>
+  <svg (@powerButton.done)="powerAnimationDone()" (click)="powerButtonClicked()" [@powerButton]="powerButton.state"
+       [class.disabled]="powerButton.animating" class="power-button"
+       height="80" viewBox="0 0 1080 1080"
+       width="80" xmlns="http://www.w3.org/2000/svg">
+    <g filter="url(#_Blur)">
+      <circle [@powerButtonFill]="powerButton.state" cx="540" cy="540" r="480"/>
+    </g>
+    <circle cx="540" cy="540" fill="#181f23" r="448"/>
+    <path [@powerButtonFill]="powerButton.state"
+          d="M540 76a464 464 0 100 928 464 464 0 000-928zm0 16a448 448 0 110 896 448 448 0 010-896z"/>
+    <circle [@powerButtonProgress]="powerButton.state" [@powerButtonStroke]="powerButton.state" cx="540" cy="540"
+            fill="none" r="354"
+            stroke-dasharray="2224.24759874"
+            stroke-linecap="butt"
+            stroke-width="128"/>
+    <path [@powerButtonStroke]="powerButton.state" d="M491 400a144 144 0 1098 0" fill="none" stroke="#1bd41f"
+          stroke-linecap="round"
+          stroke-width="36"/>
+    <path [@powerButtonStroke]="powerButton.state" d="M540 504V360" fill="none" stroke="#1bd41f" stroke-linecap="round"
+          stroke-linejoin="miter"
+          stroke-width="36"/>
+    <defs>
+      <filter height="1344" id="_Blur" width="1344" x="-132" y="-132">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="32"/>
+      </filter>
+    </defs>
+  </svg>
+</div>
+
+<div class="table-container">
+  <table>
+    <tr>
+      <th colspan="2">Device specifications</th>
+    </tr>
+    <tr>
+      <td>Device name</td>
+      <td>{{device.name}}</td>
+    </tr>
+    <tr>
+      <td>Processor</td>
+      <td>{{hardware.cpu[0]?.name}}</td>
+    </tr>
+    <tr>
+      <td>Installed RAM</td>
+      <td>{{hardware.getTotalMemory()}} MB</td>
+    </tr>
+    <tr>
+      <td>Device-UUID</td>
+      <td>{{device.uuid}}</td>
+    </tr>
+
+    <tr>
+      <th colspan="2">Specific factors</th>
+    </tr>
+    <tr>
+      <td>Speed</td>
+      <td>not available</td>
+    </tr>
+    <tr>
+      <td>Security</td>
+      <td>not available</td>
+    </tr>
+    <tr>
+      <td>Efficiency</td>
+      <td>not available</td>
+    </tr>
+  </table>
+
+  <div class="separator"></div>
+
+  <table>
+    <tr>
+      <th colspan="2">Running processes</th>
+    </tr>
+    <tr>
+      <td><b>Service</b></td>
+      <td><b>CPU</b></td>
+      <td><b>GPU</b></td>
+      <td><b>RAM</b></td>
+      <td><b>Disk</b></td>
+      <td><b>Network</b></td>
+    </tr>
+    <tr *ngFor="let service of services">
+      <td>{{service.service.name}}</td>
+      <td>{{service.usage.cpu | percent}}</td>
+      <td>{{service.usage.gpu | percent}}</td>
+      <td>{{service.usage.ram | percent}}</td>
+      <td>{{service.usage.disk | percent}}</td>
+      <td>{{service.usage.network | percent}}</td>
+    </tr>
+  </table>
+</div>
+
+<button *ngIf="!device.starter_device" (click)="disassembleModal = true" class="disassemble-button">Disassemble
+  computer
+</button>
+
+<div (click)="closeDisassembleModal()" *ngIf="disassembleModal" class="modal-container">
+  <form (click)="$event.stopPropagation()" class="modal">
+    <svg (click)="closeDisassembleModal()" class="close-icon" role="button" stroke="white" viewBox="0 0 20 20">
+      <line stroke-width="2" x1="2" x2="18" y1="2" y2="18"></line>
+      <line stroke-width="2" x1="18" x2="2" y1="2" y2="18"></line>
+    </svg>
+    <h3>Are you sure you want to disassemble this computer?</h3>
+    <p>
+      This will <strong>delete</strong> all your saved wallet
+      credentials and files and <strong>cannot be undone</strong>.<br>
+      The hardware parts will go back into your inventory.
+    </p>
+    <label>
+      Type in the name of your device to confirm:
+      <input (keyup)="checkDisassembleConfirm(disassembleConfirm)" #disassembleConfirm
+             autocomplete="off" name="disassemble-confirm" type="text">
+    </label>
+    <br>
+    <button (click)="disassembleDevice()" [disabled]="!disassembleConfirmed"
+            class="disassemble-button">Disassemble
+    </button>
+  </form>
+</div>

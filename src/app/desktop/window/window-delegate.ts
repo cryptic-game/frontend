@@ -1,22 +1,41 @@
 import { Type } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Device } from '../../api/devices/device';
 
 export abstract class WindowDelegate {
-  title: string;
-  icon: string;
-  type: Type<WindowComponent>;
+  abstract title: string;
+  abstract icon: string;
+  abstract type: Type<WindowComponent>;
+
+  constraints: WindowConstraints = new WindowConstraints();
 
   component: WindowComponent;
+  device: Device;
 
   position: WindowPosition = {
     x: 0,
     y: 0,
-    width: 600,
-    height: 400,
+    width: Math.min(Math.max(600, this.constraints.minWidth), this.constraints.maxWidth),
+    height: Math.min(Math.max(400, this.constraints.minHeight), this.constraints.maxHeight),
     zIndex: 1,
     active: false,
     maximized: false,
     minimized: false
   };
+}
+
+export class WindowConstraints {
+  singleInstance = false;
+  resizable = true;
+  maximizable = true;
+  minWidth = 300;
+  minHeight = 150;
+  maxWidth = 2 ** 15;
+  maxHeight = 2 ** 15;
+
+  constructor(constraints: Partial<WindowConstraints> = {}) {
+    Object.assign(this, constraints);
+  }
 }
 
 export interface WindowPosition {
@@ -32,4 +51,5 @@ export interface WindowPosition {
 
 export abstract class WindowComponent {
   delegate: WindowDelegate;
+  events = new Subject<string>();
 }

@@ -1,8 +1,8 @@
-import { Account } from '../../../dataclasses/account';
-import { UserService } from '../user.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { DesktopComponent } from '../desktop.component';
 import { WebsocketService } from 'src/app/websocket.service';
+import { AccountService } from '../../account/account.service';
+import { DeviceService } from '../../api/devices/device.service';
 
 @Component({
   selector: 'app-desktop-startmenu',
@@ -11,22 +11,15 @@ import { WebsocketService } from 'src/app/websocket.service';
 })
 export class DesktopStartmenuComponent implements OnInit {
   @Input() parent: DesktopComponent;
-  @Input() target;
 
   searchTerm = '';
-  token: string = sessionStorage.getItem('token');
-  user: Account = { name: '', email: '', created: 0, last: 0 };
 
-  constructor(
-    public userService: UserService,
-    public websocket: WebsocketService
-  ) {}
+  constructor(public websocket: WebsocketService,
+              private accountService: AccountService,
+              private deviceService: DeviceService) {
+  }
 
   ngOnInit() {
-    this.user.name = sessionStorage.getItem('username');
-    this.user.email = sessionStorage.getItem('email');
-    this.user.created = parseInt(sessionStorage.getItem('created'), 10);
-    this.user.last = parseInt(sessionStorage.getItem('last'), 10);
   }
 
   search(term: string) {
@@ -36,5 +29,15 @@ export class DesktopStartmenuComponent implements OnInit {
         .toLowerCase()
         .match(term.trim().toLowerCase())
     );
+  }
+
+  logout() {
+    this.accountService.logout();
+    this.parent.hideStartMenu();
+  }
+
+  shutdown() {
+    this.deviceService.togglePower(this.parent.activeDevice.uuid).subscribe();
+    this.parent.hideStartMenu();
   }
 }

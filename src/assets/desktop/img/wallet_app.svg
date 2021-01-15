@@ -1,0 +1,107 @@
+<svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"
+     viewBox="0 0 363 363" xmlns="http://www.w3.org/2000/svg">
+  <defs/>
+  <path d="M0 0h363v363H0z" fill="none"/>
+  <clipPath id="a">
+    <path d="M0 0h363v363H0z"/>
+  </clipPath>
+  <g clip-path="url(#a)">
+    <path d="M363 91c0-50-41-91-91-91H91C41 0 0 41 0 91v181c0 50 41 91 91 91h181c50 0 91-41 91-91V91z"
+          fill="url(#_Linear2)"/>
+    <path
+      d="M363 36c0-20-16-36-36-36H36C16 0 0 16 0 36v291c0 20 16 36 36 36h291c20 0 36-16 36-36V36zm-17 14c0-19-15-33-33-33H50c-19 0-33 14-33 33v263c0 18 14 33 33 33h263c18 0 33-15 33-33V50z"
+      fill="url(#_Linear3)"/>
+    <circle cx="137.3" cy="181.4" fill="url(#_Linear4)" r="92.2"/>
+    <path d="M140 102l-1-2h-3l-2 2v34l2 1h3l1-1v-34z" fill="url(#_Linear5)"/>
+    <path d="M140 229l-1-1h-3l-2 1v34l2 2h3l1-2v-34z" fill="url(#_Linear6)"/>
+    <path d="M90 184l1-1v-3l-1-2H56l-2 2v3l2 1h34z" fill="url(#_Linear7)"/>
+    <path d="M219 184l2-1v-3l-2-2h-34l-1 2v3l1 1h34z" fill="url(#_Linear8)"/>
+    <path d="M196 127v-2l-2-2h-2l-24 24v2l2 2h3l23-24z" fill="url(#_Linear9)"/>
+    <path d="M106 217v-2l-2-2h-2l-24 24v2l2 2h2l24-24z" fill="url(#_Linear10)"/>
+    <path d="M103 150h2l2-2v-2l-24-24h-2l-2 2v2l24 24z" fill="url(#_Linear11)"/>
+    <path d="M194 242h2l2-2v-3l-24-24h-2l-2 3v2l24 24z" fill="url(#_Linear12)"/>
+    <circle cx="137.3" cy="181.4" fill="#bebebe" r="33.2"/>
+    <circle cx="280.2" cy="154.3" fill="url(#_Linear13)" r="36.5"/>
+    <path d="M296 155a16 16 0 00-31 0v80a16 16 0 0031 0v-80z" fill="url(#_Linear14)"/>
+  </g>
+  <defs>
+    <linearGradient gradientTransform="rotate(-135 209 90) scale(372.932)" gradientUnits="userSpaceOnUse" id="_Linear2"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#73767e"/>
+      <stop offset="1" stop-color="#c2c2c2"/>
+    </linearGradient>
+    <linearGradient gradientTransform="rotate(39 -158 -312) scale(310.165)" gradientUnits="userSpaceOnUse" id="_Linear3"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#696969"/>
+      <stop offset="1" stop-color="#1e1e1e"/>
+    </linearGradient>
+    <linearGradient gradientTransform="rotate(-134 131 71) scale(137.6065)" gradientUnits="userSpaceOnUse" id="_Linear4"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#252525"/>
+      <stop offset="1" stop-color="#b6b6b6"/>
+    </linearGradient>
+    <linearGradient gradientTransform="scale(-29.64125) rotate(79 0 -5)" gradientUnits="userSpaceOnUse" id="_Linear5"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#2d2d2d"/>
+      <stop offset="1" stop-color="#4f5973"/>
+    </linearGradient>
+    <linearGradient gradientTransform="scale(-29.64125) rotate(79 3 -7)" gradientUnits="userSpaceOnUse" id="_Linear6"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#2d2d2d"/>
+      <stop offset="1" stop-color="#4f5973"/>
+    </linearGradient>
+    <linearGradient gradientTransform="scale(29.64125) rotate(-11 32 -7)" gradientUnits="userSpaceOnUse" id="_Linear7"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#2d2d2d"/>
+      <stop offset="1" stop-color="#4f5973"/>
+    </linearGradient>
+    <linearGradient gradientTransform="scale(29.64125) rotate(-11 34 -29)" gradientUnits="userSpaceOnUse" id="_Linear8"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#2d2d2d"/>
+      <stop offset="1" stop-color="#4f5973"/>
+    </linearGradient>
+    <linearGradient gradientTransform="rotate(-56 226 -92) scale(29.6413)" gradientUnits="userSpaceOnUse" id="_Linear9"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#2d2d2d"/>
+      <stop offset="1" stop-color="#4f5973"/>
+    </linearGradient>
+    <linearGradient gradientTransform="rotate(-56 265 37) scale(29.6413)" gradientUnits="userSpaceOnUse" id="_Linear10"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#2d2d2d"/>
+      <stop offset="1" stop-color="#4f5973"/>
+    </linearGradient>
+    <linearGradient gradientTransform="rotate(34 -174 203) scale(29.6413)" gradientUnits="userSpaceOnUse" id="_Linear11"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#2d2d2d"/>
+      <stop offset="1" stop-color="#4f5973"/>
+    </linearGradient>
+    <linearGradient gradientTransform="rotate(34 -280 400) scale(29.6413)" gradientUnits="userSpaceOnUse" id="_Linear12"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#2d2d2d"/>
+      <stop offset="1" stop-color="#4f5973"/>
+    </linearGradient>
+    <linearGradient gradientTransform="scale(53.5055) rotate(43 0 7)" gradientUnits="userSpaceOnUse" id="_Linear13"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#b7b7b7"/>
+      <stop offset="1" stop-color="#515151"/>
+    </linearGradient>
+    <linearGradient gradientTransform="rotate(25 -215 670) scale(44.4451)" gradientUnits="userSpaceOnUse" id="_Linear14"
+                    x1="0" x2="1" y1="0"
+                    y2="0">
+      <stop offset="0" stop-color="#b7b7b7"/>
+      <stop offset="1" stop-color="#353938"/>
+    </linearGradient>
+  </defs>
+</svg>

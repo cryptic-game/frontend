@@ -1,0 +1,13 @@
+<div class="header">
+
+  <div class="left">
+    <span (click)="showCart()" *ngIf="!cartVisibility" class="btn">Shopping cart - {{cartItems}} Items</span>
+    <span (click)="hideCart()" *ngIf="cartVisibility" class="btn">Back to shop</span>
+  </div>
+
+  <div class="right">
+    <span *ngIf="!(morphCoins >= 0)">No wallet found.</span>
+    <span *ngIf="morphCoins >= 0">{{morphCoins / 1000}} MC</span>
+  </div>
+
+</div>

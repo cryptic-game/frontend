@@ -1,0 +1,15 @@
+<div id="control-center">
+  <header>
+    <h1>Control-Center</h1>
+  </header>
+  <div class="body">
+    <div class="sidebar">
+      <app-control-center-sidebar [menus]="menus"></app-control-center-sidebar>
+    </div>
+    <div class="main-page-container">
+      <div class="main-page">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

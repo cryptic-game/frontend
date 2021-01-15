@@ -1,10 +1,12 @@
+import { SettingsService } from '../settings/settings.service';
 import { Component, ElementRef, OnInit, SecurityContext, Type, ViewChild } from '@angular/core';
 import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
 import { TerminalAPI, TerminalState } from './terminal-api';
-import { WindowManagerService } from '../../window-manager/window-manager.service';
 import { DefaultTerminalState } from './terminal-states';
 import { WebsocketService } from '../../../websocket.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { FileService } from '../../../api/files/file.service';
+import { WindowManager } from '../../window-manager/window-manager';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -12,8 +14,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   templateUrl: './terminal.component.html',
   styleUrls: ['./terminal.component.scss']
 })
-export class TerminalComponent extends WindowComponent
-  implements OnInit, TerminalAPI {
+export class TerminalComponent extends WindowComponent implements OnInit, TerminalAPI {
   @ViewChild('history', { static: true }) history: ElementRef;
   @ViewChild('prompt', { static: true }) prompt: ElementRef;
   @ViewChild('cmdLine', { static: true }) cmdLine: ElementRef;
@@ -25,22 +26,35 @@ export class TerminalComponent extends WindowComponent
 
   constructor(
     private websocket: WebsocketService,
-    private windowManager: WindowManagerService,
+    private settings: SettingsService,
+    private fileService: FileService,
+    private windowManager: WindowManager,
     private domSanitizer: DomSanitizer
   ) {
     super();
   }
 
   ngOnInit() {
-    this.pushState(new DefaultTerminalState(this.websocket, this.domSanitizer, this,
-      JSON.parse(sessionStorage.getItem('activeDevice')), sessionStorage.getItem('username')));
+    this.pushState(
+      new DefaultTerminalState(
+        this.websocket,
+        this.settings,
+        this.fileService,
+        this.domSanitizer,
+        this.delegate,
+        this.delegate.device,
+        this
+      )
+    );
     this.getState().refreshPrompt();
+    this.focusCommandLine();
   }
 
   focusCommandLine() {
     if (window.getSelection().type !== 'Range') {
       this.cmdLine.nativeElement.focus();
     }
+    this.getState().refreshPrompt();
   }
 
   changePrompt(prompt: string | SafeHtml, trust: boolean = false) {
@@ -50,7 +64,10 @@ export class TerminalComponent extends WindowComponent
     }
 
     if (typeof prompt === 'string') {
-      this.promptHtml = this.domSanitizer.sanitize(SecurityContext.HTML, prompt);
+      this.promptHtml = this.domSanitizer.sanitize(
+        SecurityContext.HTML,
+        prompt
+      );
     } else {
       this.promptHtml = prompt;
     }
@@ -107,7 +124,8 @@ export class TerminalComponent extends WindowComponent
   nextFromHistory() {
     if (this.historyIndex > -1) {
       this.historyIndex--;
-      this.cmdLine.nativeElement.value = this.historyIndex > -1 ? this.getHistory()[this.historyIndex] : '';
+      this.cmdLine.nativeElement.value =
+        this.historyIndex > -1 ? this.getHistory()[this.historyIndex] : '';
       this.cmdLine.nativeElement.scrollIntoView();
     }
   }
@@ -149,7 +167,6 @@ export class TerminalComponent extends WindowComponent
   clear() {
     this.history.nativeElement.value = '';
   }
-
 }
 
 export class TerminalWindowDelegate extends WindowDelegate {

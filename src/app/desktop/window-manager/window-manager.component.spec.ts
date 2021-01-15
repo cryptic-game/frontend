@@ -2,9 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WindowManagerComponent } from './window-manager.component';
 import { WindowFrameComponent } from '../window/window-frame.component';
-import { NgModule } from '@angular/core';
-import { TestWindowComponent } from '../windows/test-window/test-window.component';
-import { TerminalComponent } from '../windows/terminal/terminal.component';
+import { windowManagerMock } from '../../test-utils';
 
 describe('WindowManagerComponent', () => {
   let component: WindowManagerComponent;
@@ -12,7 +10,6 @@ describe('WindowManagerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [EntryComponentsTestModule],
       declarations: [
         WindowManagerComponent,
         WindowFrameComponent
@@ -24,6 +21,7 @@ describe('WindowManagerComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(WindowManagerComponent);
     component = fixture.componentInstance;
+    component.windowManager = windowManagerMock();
     fixture.detectChanges();
   });
 
@@ -31,10 +29,3 @@ describe('WindowManagerComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-
-@NgModule({
-  declarations: [TestWindowComponent, TerminalComponent],
-  entryComponents: [TestWindowComponent, TerminalComponent]
-})
-class EntryComponentsTestModule {
-}

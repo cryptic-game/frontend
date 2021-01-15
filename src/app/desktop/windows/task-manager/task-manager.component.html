@@ -1,0 +1,124 @@
+<div id="task-manager-container">
+  <table id="resource-usage-table">
+    <tr>
+      <th colspan="2">
+        <p style="text-align: left; font-size: 20pt; margin-top: 0; margin-bottom: 10px;">{{delegate?.device.name}}</p>
+      </th>
+    </tr>
+    <tr>
+      <td>
+        <div id="cpu">
+          <span class="header">CPU {{cpu.name}} / {{cpu.frequencyMax}} MHz</span>
+          <div class="chart-container">
+            <div class="chart-container-2">
+              <div class="chart">
+                <div [style.height.%]="utilization.cpu * 100" class="indicator usage-indicator"
+                     [class.high-usage]="utilization.cpu >= 0.8"></div>
+              </div>
+              <p style="text-align: center; margin: 0;">{{utilization.cpu | percent}}</p>
+            </div>
+            <div class="value-container">
+              <span class="description">Utilization</span>
+              <div class="value">{{utilization.cpu * 100 | number:'1.2-2'}} %</div>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div id="gpu">
+          <span class="header">GPU {{gpu.name}} / {{gpu.frequency}} MHz</span>
+          <div class="chart-container">
+            <div class="chart-container-2">
+              <div class="chart">
+                <div [style.height.%]="utilization.gpu * 100" class="indicator usage-indicator"
+                     [class.high-usage]="utilization.gpu >= 0.8"></div>
+              </div>
+              <p style="text-align: center; margin: 0;">{{utilization.gpu | percent}}</p>
+            </div>
+            <div class="value-container">
+              <span class="description">Utilization</span>
+              <div class="value">{{utilization.gpu * 100 | number:'1.2-2'}} %</div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div id="ram">
+          <span class="header">RAM {{ram.type}} / {{ram.totalMemory}} MB</span>
+          <div class="chart-container">
+            <div class="chart-container-2">
+              <div class="chart">
+                <div [style.height.%]="utilization.ram * 100" class="indicator usage-indicator"
+                     [class.high-usage]="utilization.ram >= 0.8"></div>
+              </div>
+              <p style="text-align: center; margin: 0;">{{utilization.ram | percent}}</p>
+            </div>
+            <div class="value-container">
+              <span class="description">Usage</span>
+              <div class="value">{{utilization.ram * ram.totalMemory | number:'1.0-0'}} MB</div>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div id="disk">
+          <span class="header">{{diskName}}</span>
+          <div class="chart-container">
+            <div class="chart-container-2">
+              <div class="chart">
+                <div [style.height.%]="utilization.disk * 100" class="indicator usage-indicator"
+                     [class.high-usage]="utilization.disk >= 0.8"></div>
+              </div>
+              <p style="text-align: center; margin: 0;">{{utilization.disk | percent}}</p>
+            </div>
+            <div class="value-container">
+              <span class="description">Utilization</span>
+              <div class="value">{{utilization.disk * 100 | number:'1.2-2'}} %</div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div id="network">
+          <span class="header">Network</span>
+          <div class="chart-container">
+            <div class="chart-container-2">
+              <div class="chart">
+                <div [style.height.%]="utilization.network * 100" class="indicator usage-indicator"
+                     [class.high-usage]="utilization.network >= 0.8"></div>
+              </div>
+              <p style="text-align: center; margin: 0;">{{utilization.network | percent}}</p>
+            </div>
+            <div class="value-container">
+              <span class="description">Utilization</span>
+              <div class="value">{{utilization.network * 100 | number:'1.2-2'}} %</div>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <!--div id="temp">
+          <span class="header">Temperature</span>
+          <div class="chart-container">
+            <div class="chart-container-2">
+              <div class="chart" id="temp-chart">
+                <div class="indicator line-indicator" [style.height.%]="utilization.temperature / 95 * 100"></div>
+              </div>
+            </div>
+            <div class="value-container">
+              <span class="top-marking">95°C</span>
+              <div class="value">{{utilization.temperature | number:'1.0-0'}}°C</div>
+              <span class="bottom-marking">0°C</span>
+            </div>
+          </div>
+        </div-->
+      </td>
+    </tr>
+  </table>
+
+
+</div>

@@ -1,95 +1,38 @@
 import { Injectable } from '@angular/core';
-import { WindowDelegate } from '../window/window-delegate';
+import { Device } from '../../api/devices/device';
+import { WindowManager } from './window-manager';
 
+/**
+ * This service holds the window managers for all devices
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class WindowManagerService {
-  windows: WindowDelegate[] = [];
-  taskList: WindowDelegate[] = [];
-  activeWindow: WindowDelegate;
-  cursorWindow: WindowDelegate = null;
+  private devices: { [device: string]: WindowManager } = {};
 
   constructor() {
   }
 
-  openWindow(win: WindowDelegate) {
-    this.windows.push(win);
-    this.taskList.push(win);
-    if (this.activeWindow) {
-      this.activeWindow.position.active = false;
-      win.position.zIndex = this.activeWindow.position.zIndex + 1;
-    }
-    win.position.active = true;
-    this.activeWindow = win;
+  /**
+   * Closes all windows and removes all stored window managers.
+   */
+  reset() {
+    Object.values(this.devices).forEach(manager => manager.closeAllWindows());
+    Object.keys(this.devices).forEach(key => delete this.devices[key]);
   }
 
-  sortWindows() {
-    if (this.windows.length === 0) {
-      this.activeWindow = null;
-      return;
-    }
-
-    this.windows.sort((a, b) => a.position.zIndex - b.position.zIndex);
-    let highestZIndex = 1;
-    for (const win of this.windows) {
-      win.position.zIndex = highestZIndex++;
-      win.position.active = false;
-    }
-    this.activeWindow = this.windows[this.windows.length - 1];
-    this.activeWindow.position.active = true;
-  }
-
-  closeWindow(window: WindowDelegate) {
-    this.windows.splice(this.windows.findIndex(win => win === window), 1);
-    this.taskList.splice(this.taskList.findIndex(win => win === window), 1);
-    this.sortWindows();
-  }
-
-  closeAllWindows() {
-    this.windows = [];
-    this.taskList = [];
-  }
-
-  focusWindow(window: WindowDelegate) {
-    window.position.active = true;
-    if (this.activeWindow === window) {
-      return;
-    }
-
-    window.position.zIndex = this.windows[this.windows.length - 1].position.zIndex + 1;
-    this.sortWindows();
-  }
-
-  unfocus() {
-    if (this.activeWindow) {
-      this.activeWindow.position.active = false;
-      this.activeWindow = null;
-    }
-  }
-
-  toggleMinimize(window: WindowDelegate) {
-    window.position.minimized = !window.position.minimized;
-    if (window.position.minimized) {
-      window.position.zIndex = -1;
-      this.sortWindows();
-      this.focusWindow(this.windows[this.windows.length - 1]);
+  /**
+   * Returns a window manager for a given device. A new one will be created if no matching one exists yet.
+   * @param device The device to get the window manager for
+   */
+  forDevice(device: Device) {
+    const manager = this.devices[device.uuid];
+    if (manager) {
+      manager.device.name = device.name;  // update the device name
+      return manager;
     } else {
-      this.focusWindow(window);
-    }
-  }
-
-  setCursor(fromWindow: WindowDelegate, cursor: string) {
-    if (this.cursorWindow === null && cursor !== '') {
-      this.cursorWindow = fromWindow;
-    }
-
-    if (this.cursorWindow === fromWindow && cursor === '') {
-      this.cursorWindow = null;
-    }
-
-    if ((this.cursorWindow === null || this.cursorWindow === fromWindow) && document.body.style.cursor !== cursor) {
-      document.body.style.cursor = cursor;
+      return this.devices[device.uuid] = new WindowManager(device);
     }
   }
 

@@ -1,0 +1,11 @@
+<div class="grid">
+  <div class="title">
+    <h1>Hardware Shop <span *ngIf="category">({{category.name}} {{category.items.length}} Items)</span></h1>
+  </div>
+  <div *ngIf="category" class="grid-content">
+    <app-hardware-shop-item
+      *ngFor="let item of category.items"
+      [item]="item"
+    ></app-hardware-shop-item>
+  </div>
+</div>

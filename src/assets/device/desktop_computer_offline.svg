@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 128 80" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(0 -311.12)">
+    <g transform="matrix(3.0361 0 0 3.0361 -1016 -396.91)">
+      <g fill-rule="evenodd">
+        <path
+          d="m347.19 249.4c-0.32455 0-0.5857 0.32017-0.5857 0.71766v6.1827h-2.3001c-0.31856 0-0.57502 0.25646-0.57502 0.57502v0.57503c0 0.31856 0.25646 0.57503 0.57502 0.57503h10.35c0.31856 0 0.57503-0.25647 0.57503-0.57503v-0.57503c0-0.31856-0.25647-0.57502-0.57503-0.57502h-2.3001v-6.1827c0-0.39749-0.26144-0.71766-0.58598-0.71766z"
+          stroke="#e5e5e5" stroke-width=".14376"/>
+        <rect height="16.963" rx="1.1501" ry="1.1501" stroke="#e5e5e5" stroke-width=".14376" transform="scale(1,-1)"
+              width="29.039"
+              x="334.96" y="-252.04"/>
+        <rect fill="#1f1f1f" height="13.657" rx=".71878" ry=".71878" stroke="#e4e5e5" stroke-width=".10583"
+              transform="scale(1,-1)"
+              width="25.732" x="336.61" y="-250.39"/>
+      </g>
+      <circle cx="349.48" cy="251.16" fill="#ececec" r=".51434"/>
+      <circle cx="349.48" cy="251.16" r=".3429"/>
+      <g transform="matrix(.54333 0 0 .54333 214.19 316.15)">
+        <rect fill-rule="evenodd" height="42.862" rx="2.1167" ry="2.1167" stroke="#e5e5e5" stroke-width=".26458"
+              width="21.167"
+              x="277.6" y="-149.84"/>
+        <g transform="translate(-1.6812 8.4667)">
+          <rect fill="#fff" fill-rule="evenodd" height="8.4667" rx="2.1167" ry="2.1167" stroke-width=".29246"
+                width="5.2917"
+                x="287.22" y="-126.92"/>
+          <circle cx="289.87" cy="-124.59" r="1.9844"/>
+          <circle cx="289.87" cy="-119.94" r=".819"/>
+        </g>
+        <g fill="#fff" fill-rule="evenodd">
+          <rect height=".97393" rx=".097393" ry=".097393" stroke-width=".15723" width="3.4087" x="286.48" y="-122.51"/>
+          <rect height=".97393" rx=".097393" ry=".097393" stroke-width=".15723" width="3.4087" x="286.48" y="-124.89"/>
+          <g stroke-width=".22277">
+            <rect height="2.1167" rx=".26458" ry=".26458" width="15.875" x="280.25" y="-146.3"/>
+            <rect height="2.1167" rx=".26458" ry=".26458" width="15.875" x="280.25" y="-142.33"/>
+            <rect height="2.1167" rx=".26458" ry=".26458" width="15.875" x="280.25" y="-138.36"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,48 @@
+<div id="settings-window-container">
+  <div class="h-100" id="settings-window">
+    <div class="row">
+      <span>Background Image</span>
+      <div class="setting">
+        <label>
+          <select #backgroundSetting (change)="onChangeSetting()" size="1">
+            <option *ngFor="let bg of current.getBackgroundPossibilities()"
+                    [selected]="current.getSettings().backgroundImage == bg">{{bg}}</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <span>Terminal-prompt color</span>
+      <div class="setting">
+        <label>
+          <input
+            #terminalPromptColorSetting
+            (change)="onChangeSetting()"
+            [value]="current.getSettings().tpc"
+            type="color"
+          />
+        </label>
+      </div>
+    </div>
+    <footer class="footer mt-auto py-3">
+      <div class="container" id="settings-window-footer-content">
+        <!--span-- class="text-muted">Place sticky footer content here.</!--span-->
+        <div class="row">
+          <div class="p-r-1">
+            <button (click)="resetSettings()">
+              Reset Settings
+            </button>
+          </div>
+          <button
+            (click)="
+              saveSettings(
+                backgroundSetting.value,
+                terminalPromptColorSetting.value
+              )">
+            Save
+          </button>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>

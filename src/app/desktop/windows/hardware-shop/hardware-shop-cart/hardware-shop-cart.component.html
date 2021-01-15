@@ -1,0 +1,16 @@
+<div class="cart">
+  <div class="title">
+    <h1>Cart ({{items.length}} Items)</h1>
+    <div class="control">
+      <span>Total {{cartMorphCoins}} MC</span>
+      <span (click)="buy()" [className]="hasEnoughMorphCoins ? 'btn btn-success' : 'btn btn-disabled'">Buy</span>
+    </div>
+  </div>
+  <div class="content">
+    <div *ngFor="let item of items" class="item">
+      <app-hardware-shop-cart-item
+        (update)="update()" (updateQuantity)="updateNumber()" [item]="item"
+      ></app-hardware-shop-cart-item>
+    </div>
+  </div>
+</div>

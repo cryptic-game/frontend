@@ -1,0 +1,31 @@
+<div class="hardware-shop">
+
+  <div class="header">
+    <app-hardware-shop-header
+      (cartClose)="setCartVisibility(false)"
+      (cartOpen)="setCartVisibility(true)"
+      [cartVisibility]="cartVisibility"
+    ></app-hardware-shop-header>
+  </div>
+
+  <div class="content">
+
+    <div class="body">
+      <div *ngIf="!cartVisibility; else elseCartVisibility" class="hardware-shop-items">
+        <div class="sidebar">
+          <app-hardware-shop-sidebar [delegate]="this"
+                                     (selectCategory)="selectCategory($event)"></app-hardware-shop-sidebar>
+        </div>
+        <div class="main">
+          <app-hardware-shop-item-list [category]="selectedCategory"></app-hardware-shop-item-list>
+        </div>
+      </div>
+
+      <ng-template #elseCartVisibility>
+        <div class="main">
+          <app-hardware-shop-cart></app-hardware-shop-cart>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

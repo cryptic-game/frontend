@@ -1,0 +1,11 @@
+<div [class.selected]="category === delegate.selectedCategory" class="item">
+  <span (click)="selectCategory.emit(category)" class="name">{{category.name}}</span>
+  <div class="sublist">
+    <app-hardware-shop-sidebar-item
+      *ngFor="let subCategory of category.categories"
+      (selectCategory)="selectCategory.emit($event)"
+      [delegate]="delegate"
+      [category]="subCategory"
+    ></app-hardware-shop-sidebar-item>
+  </div>
+</div>

@@ -1,7 +1,4 @@
-@import "~src/constants";
-
-$active-window-color: $gray;
-$inactive-window-color: $black;
+@import "variables";
 
 .window {
   display: flex;
@@ -24,23 +21,30 @@ $inactive-window-color: $black;
     height: 94.5vh !important;
 
     border: none;
+    box-shadow: none;
+
+    .window-header {
+      border-radius: 0;
+    }
   }
 }
 
 .window-header {
-  padding: 6px;
+  padding: 1px;
   display: flex;
+  border-radius: 5px 5px 0 0;
   flex-direction: row;
   background-color: $inactive-window-color;
   user-select: none;
   height: 2rem;
   align-items: center;
+  border-bottom: 1px solid #262626;
 
   .window-title {
     padding-bottom: 3px;
     line-height: 2em;
     margin-left: 8px;
-    color: white;
+    color: $window-title-color;
   }
 
   .window-icons {

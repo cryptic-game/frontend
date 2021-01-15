@@ -1,5 +1,4 @@
-@import "~src/constants";
-
+@import "variables";
 
 #version-info {
   font-family: $default-font;
@@ -9,4 +8,43 @@
   color: #696969;
   user-select: none;
   pointer-events: none;
+
+  &.just-updated {
+    text-decoration: underline;
+  }
+}
+
+.update-modal-container {
+  position: absolute;
+  width: 100%;
+  pointer-events: none;
+  z-index: 10;
+  user-select: none;
+
+  .update-modal {
+    box-sizing: border-box;
+    width: min(40rem, 100%);
+    padding: 1em;
+    margin: 0 auto;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: rgba(43, 43, 43, 0.8);
+    color: white;
+    text-align: center;
+    pointer-events: all;
+
+    .buttons button {
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+#animation-container {
+  width: 100%;
+  height: 100%;
+  display: contents;
 }

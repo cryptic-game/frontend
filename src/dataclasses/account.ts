@@ -1,6 +1,6 @@
 export interface Account {
+  uuid: string;
   name: string;
-  email: string;
   created: number;
   last: number;
 }
