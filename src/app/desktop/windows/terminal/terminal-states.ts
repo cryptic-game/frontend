@@ -78,7 +78,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     },
     'status': {
       executor: this.status.bind(this),
-      description: 'displays the number of online plyers'
+      description: 'displays the number of online players'
     },
     'hostname': {
       executor: this.hostname.bind(this),
