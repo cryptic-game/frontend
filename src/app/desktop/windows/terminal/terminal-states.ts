@@ -53,9 +53,12 @@ export abstract class CommandTerminalState implements TerminalState {
 
   autocomplete(content: string): string {
     return content
-      ? Object.entries(this.commands)
+      ? this.getHistory()
+        .reverse()
+        .find(n => n.startsWith(content)) ||
+        Object.entries(this.commands)
         .filter(command => !('hidden' in command[1]))
-        .map(([name, _value]) => name)
+        .map(([name]) => name)
         .sort()
         .find(n => n.startsWith(content))
       : '';
