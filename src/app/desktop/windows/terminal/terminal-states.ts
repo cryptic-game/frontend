@@ -9,7 +9,6 @@ import { Path } from '../../../api/files/path';
 import { of } from 'rxjs';
 import { Device } from '../../../api/devices/device';
 import { WindowDelegate } from '../../window/window-delegate';
-import { getMatScrollStrategyAlreadyAttachedError } from '@angular/cdk/overlay/scroll/scroll-strategy';
 
 
 function escapeHtml(html) {
@@ -1031,8 +1030,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             } else {
               reportError(error1);
             }
-          }
-          );
+          });
         };
 
         this.websocket.ms('service', ['bruteforce', 'status'], {
