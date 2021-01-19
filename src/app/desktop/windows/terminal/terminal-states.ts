@@ -287,7 +287,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
 
       } else {
-        this.terminal.outputText('Use miner look|wallet|power');
+        this.terminal.outputText('Use miner look|wallet|power|start');
       }
     } else if (args.length === 2) {
       if (args[0] === 'wallet') {
@@ -310,7 +310,41 @@ export class DefaultTerminalState extends CommandTerminalState {
             }
           });
         });
+      } else if (args[0] === 'power') {
+        if (!isNaN(Number(args[1]))) {
+          return this.terminal.outputText('Use miner power <power:number>');
+        }
+        this.websocket.ms('service', ['list'], {
+          'device_uuid': this.activeDevice['uuid'],
+        }).subscribe((listData) => {
+          listData.services.forEach((service) => {
+            if (service.name === 'miner') {
+              miner = service;
+              this.websocket.ms('service', ['miner', 'power'], {
+                'service_uuid': miner.uuid,
+                'power': Number(args[1]) / 100,
+              }).subscribe((data: { power: number }) => {
+                this.terminal.outputText('Set Power to ' + args[1] + '%');
+              });
+            }
+          });
+        });
+      } else if (args[0] === 'start') {
+        this.websocket.ms('service', ['create'], {
+          'device_uuid': this.activeDevice['uuid'],
+          'name': 'miner',
+          'wallet_uuid': args[1],
+        }).pipe(
+          map(createData => {
+            this.miner = createData;
+          }),
+          catchError(() => {
+            this.terminal.outputText('Invalid wallet');
+            return of<void>();
+          }));
       }
+    } else {
+      this.terminal.outputText('Use miner look|wallet|power|start');
     }
 
   }
