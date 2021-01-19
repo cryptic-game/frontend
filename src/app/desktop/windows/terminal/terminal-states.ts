@@ -9,6 +9,7 @@ import { Path } from '../../../api/files/path';
 import { of } from 'rxjs';
 import { Device } from '../../../api/devices/device';
 import { WindowDelegate } from '../../window/window-delegate';
+import { getMatScrollStrategyAlreadyAttachedError } from '@angular/cdk/overlay/scroll/scroll-strategy';
 
 
 function escapeHtml(html) {
@@ -75,6 +76,10 @@ export class DefaultTerminalState extends CommandTerminalState {
     'help': {
       executor: this.help.bind(this),
       description: 'list of all commands'
+    },
+    'miner': {
+      executor: this.miner.bind(this),
+      description: 'Manager your Morphcoin miners'
     },
     'status': {
       executor: this.status.bind(this),
@@ -177,14 +182,15 @@ export class DefaultTerminalState extends CommandTerminalState {
     'chaozz': {
       executor: () => this.terminal.outputText('"mess with the best, die like the rest :D`" - chaozz'),
       description: ''
-    }
+    },
+
   };
 
   working_dir: string = Path.ROOT;  // UUID of the working directory
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-              private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
-              protected terminal: TerminalAPI, public promptColor: string = null) {
+    private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
+    protected terminal: TerminalAPI, public promptColor: string = null) {
     super();
   }
 
@@ -250,6 +256,43 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.terminal.outputNode(table);
   }
 
+  miner(args: string[]) {
+    let miner;
+    let wallet;
+    let power;
+    let text;
+
+    if (args.length === 1) {
+      if (args[0] === 'look') {
+        this.websocket.ms('service', ['list'], {
+          'device_uuid': this.activeDevice['uuid'],
+        }).subscribe((listData) => {
+          listData.services.forEach((service) => {
+            if (service.name === 'miner') {
+              miner = service;
+              this.websocket.ms('service', ['miner', 'get'], {
+                'service_uuid': miner.uuid,
+              }).subscribe(data => {
+                wallet = data['wallet'];
+                power = Math.round(data['power'] * 100);
+                text =
+                  'Wallet: ' + wallet + '<br>' +
+                  'Mining Speed: ' + String(Number(miner.speed) * 60 * 60) + ' MC/h<br>' +
+                  'Power: ' + power + '%';
+                this.terminal.output(text);
+              });
+            }
+          });
+        });
+
+
+      } else {
+        this.terminal.outputText('....');
+      }
+    }
+
+  }
+
   status() {
     this.websocket.request({
       action: 'info'
@@ -257,6 +300,8 @@ export class DefaultTerminalState extends CommandTerminalState {
       this.terminal.outputText('Online players: ' + r.online);
     });
   }
+
+
 
   hostname(args: string[]) {
     if (args.length === 1) {
@@ -700,8 +745,8 @@ export class DefaultTerminalState extends CommandTerminalState {
 
       } else if (args[0] === 'create') {
         (path.path.length > 1
-            ? this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(0, -1), path.parentUUID))
-            : of({ uuid: path.parentUUID })
+          ? this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(0, -1), path.parentUUID))
+          : of({ uuid: path.parentUUID })
         ).subscribe(dest => {
           this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(-1), dest.uuid)).subscribe(() => {
             this.terminal.outputText('That file already exists');
@@ -907,21 +952,21 @@ export class DefaultTerminalState extends CommandTerminalState {
             service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
             target_device: targetDevice, target_service: targetService
           }).subscribe(() => {
-              this.terminal.outputText('You started a bruteforce attack');
-              this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
-                if (stop) {
-                  this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
-                }
-              }));
-            }, error1 => {
-              if (error1.message === 'could_not_start_service') {
-                this.terminal.outputText('There was an error while starting the bruteforce attack');
-              } else if (error1.message === 'invalid_input_data') {
-                this.terminal.outputText('The specified UUID is not valid');
-              } else {
-                reportError(error1);
+            this.terminal.outputText('You started a bruteforce attack');
+            this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
+              if (stop) {
+                this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
               }
+            }));
+          }, error1 => {
+            if (error1.message === 'could_not_start_service') {
+              this.terminal.outputText('There was an error while starting the bruteforce attack');
+            } else if (error1.message === 'invalid_input_data') {
+              this.terminal.outputText('The specified UUID is not valid');
+            } else {
+              reportError(error1);
             }
+          }
           );
         };
 
@@ -1500,9 +1545,9 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
   };
 
   constructor(terminal: TerminalAPI,
-              private domSanitizer: DomSanitizer,
-              private callback: (response: boolean) => void,
-              private startSeconds: number = 0) {
+    private domSanitizer: DomSanitizer,
+    private callback: (response: boolean) => void,
+    private startSeconds: number = 0) {
     super(terminal);
 
     this.intervalHandle = setInterval(() => {
@@ -1517,4 +1562,6 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
     const prompt = `Bruteforcing ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} [stop/exit] `;
     this.terminal.changePrompt(`<span style="color: gold">${prompt}</span>`, true);
   }
+
+
 }
