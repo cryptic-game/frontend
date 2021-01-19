@@ -187,8 +187,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   working_dir: string = Path.ROOT;  // UUID of the working directory
 
-  constructor(
-    protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
+  constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
     private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
     protected terminal: TerminalAPI, public promptColor: string = null) {
     super();
