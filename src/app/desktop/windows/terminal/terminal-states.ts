@@ -368,8 +368,6 @@ export class DefaultTerminalState extends CommandTerminalState {
     });
   }
 
-
-
   hostname(args: string[]) {
     if (args.length === 1) {
       const hostname = args[0];
@@ -1629,6 +1627,4 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
     const prompt = `Bruteforcing ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} [stop/exit] `;
     this.terminal.changePrompt(`<span style="color: gold">${prompt}</span>`, true);
   }
-
-
 }
