@@ -287,7 +287,29 @@ export class DefaultTerminalState extends CommandTerminalState {
 
 
       } else {
-        this.terminal.outputText('....');
+        this.terminal.outputText('Use miner look|wallet|power');
+      }
+    } else if (args.length === 2) {
+      if (args[0] === 'wallet') {
+        this.websocket.ms('service', ['list'], {
+          'device_uuid': this.activeDevice['uuid'],
+        }).subscribe((listData) => {
+          listData.services.forEach((service) => {
+            if (service.name === 'miner') {
+              miner = service;
+              this.websocket.ms('service', ['miner', 'wallet'], {
+                'service_uuid': miner.uuid,
+                'wallet_uuid': args[1],
+              }).subscribe((walletData) => {
+                wallet = args[1];
+                power = walletData.power;
+                this.terminal.outputText('Set Wallet to ' + args[1]);
+              }, () => {
+                this.terminal.outputText('Wallet is Invalid.');
+              });
+            }
+          });
+        });
       }
     }
 
