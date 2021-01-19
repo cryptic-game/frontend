@@ -262,90 +262,98 @@ export class DefaultTerminalState extends CommandTerminalState {
     let wallet;
     let power;
     let text;
-
-    if (args.length === 1) {
-      if (args[0] === 'look') {
-        this.websocket.ms('service', ['list'], {
-          'device_uuid': this.activeDevice['uuid'],
-        }).subscribe((listData) => {
-          listData.services.forEach((service) => {
-            if (service.name === 'miner') {
-              miner = service;
-              this.websocket.ms('service', ['miner', 'get'], {
-                'service_uuid': miner.uuid,
-              }).subscribe(data => {
-                wallet = data['wallet'];
-                power = Math.round(data['power'] * 100);
-                text =
-                  'Wallet: ' + wallet + '<br>' +
-                  'Mining Speed: ' + String(Number(miner.speed) * 60 * 60) + ' MC/h<br>' +
-                  'Power: ' + power + '%';
-                this.terminal.output(text);
-              });
-            }
-          });
-        });
-
-
-      } else {
-        this.terminal.outputText('Use miner look|wallet|power|start');
-      }
-    } else if (args.length === 2) {
-      if (args[0] === 'wallet') {
-        this.websocket.ms('service', ['list'], {
-          'device_uuid': this.activeDevice['uuid'],
-        }).subscribe((listData) => {
-          listData.services.forEach((service) => {
-            if (service.name === 'miner') {
-              miner = service;
-              this.websocket.ms('service', ['miner', 'wallet'], {
-                'service_uuid': miner.uuid,
-                'wallet_uuid': args[1],
-              }).subscribe((walletData) => {
-                wallet = args[1];
-                power = walletData.power;
-                this.terminal.outputText('Set Wallet to ' + args[1]);
-              }, () => {
-                this.terminal.outputText('Wallet is Invalid.');
-              });
-            }
-          });
-        });
-      } else if (args[0] === 'power') {
-        if (!isNaN(Number(args[1]))) {
-          return this.terminal.outputText('Use miner power <power:number>');
-        }
-        this.websocket.ms('service', ['list'], {
-          'device_uuid': this.activeDevice['uuid'],
-        }).subscribe((listData) => {
-          listData.services.forEach((service) => {
-            if (service.name === 'miner') {
-              miner = service;
-              this.websocket.ms('service', ['miner', 'power'], {
-                'service_uuid': miner.uuid,
-                'power': Number(args[1]) / 100,
-              }).subscribe((data: { power: number }) => {
-                this.terminal.outputText('Set Power to ' + args[1] + '%');
-              });
-            }
-          });
-        });
-      } else if (args[0] === 'start') {
-        this.websocket.ms('service', ['create'], {
-          'device_uuid': this.activeDevice['uuid'],
-          'name': 'miner',
-          'wallet_uuid': args[1],
-        }).pipe(
-          map(createData => {
-            this.miner = createData;
-          }),
-          catchError(() => {
-            this.terminal.outputText('Invalid wallet');
-            return of<void>();
-          }));
-      }
-    } else {
+    if (args.length === 0) {
       this.terminal.outputText('Use miner look|wallet|power|start');
+    }
+    if (args[0] === 'look') {
+      this.websocket.ms('service', ['list'], {
+        'device_uuid': this.activeDevice['uuid'],
+      }).subscribe((listData) => {
+        listData.services.forEach((service) => {
+          if (service.name === 'miner') {
+            miner = service;
+            this.websocket.ms('service', ['miner', 'get'], {
+              'service_uuid': miner.uuid,
+            }).subscribe(data => {
+              wallet = data['wallet'];
+              power = Math.round(data['power'] * 100);
+              text =
+                'Wallet: ' + wallet + '<br>' +
+                'Mining Speed: ' + String(Number(miner.speed) * 60 * 60) + ' MC/h<br>' +
+                'Power: ' + power + '%';
+              this.terminal.output(text);
+            });
+          }
+        });
+      });
+
+    } else if (args[0] === 'wallet') {
+      if (args.length !== 2) {
+        this.terminal.outputText('Use miner wallet <Wallet-ID>');
+        return;
+      }
+      this.websocket.ms('service', ['list'], {
+        'device_uuid': this.activeDevice['uuid'],
+      }).subscribe((listData) => {
+        listData.services.forEach((service) => {
+          if (service.name === 'miner') {
+            miner = service;
+            this.websocket.ms('service', ['miner', 'wallet'], {
+              'service_uuid': miner.uuid,
+              'wallet_uuid': args[1],
+            }).subscribe((walletData) => {
+              wallet = args[1];
+              power = walletData.power;
+              this.terminal.outputText('Set Wallet to ' + args[1]);
+            }, () => {
+              this.terminal.outputText('Wallet is Invalid.');
+            });
+          }
+        });
+      });
+    } else if (args[0] === 'power') {
+      if (args.length !== 2) {
+        this.terminal.outputText('Use miner power <0-100>');
+        return;
+      }
+      if (isNaN(Number(args[1]))) {
+        return this.terminal.outputText('Use miner power <0-100>');
+      }
+      if (0 > Number(args[1]) || Number(args[1]) > 100) {
+        return this.terminal.outputText('Use miner power <0-100>');
+      }
+      this.websocket.ms('service', ['list'], {
+        'device_uuid': this.activeDevice['uuid'],
+      }).subscribe((listData) => {
+        listData.services.forEach((service) => {
+          if (service.name === 'miner') {
+            miner = service;
+            this.websocket.ms('service', ['miner', 'power'], {
+              'service_uuid': miner.uuid,
+              'power': Number(args[1]) / 100,
+            }).subscribe((data: { power: number }) => {
+              this.terminal.outputText('Set Power to ' + args[1] + '%');
+            });
+          }
+        });
+      });
+    } else if (args[0] === 'start') {
+      if (args.length !== 2) {
+        this.terminal.outputText('Use miner start <Wallet-ID>');
+        return;
+      }
+      this.websocket.ms('service', ['create'], {
+        'device_uuid': this.activeDevice['uuid'],
+        'name': 'miner',
+        'wallet_uuid': args[1],
+      }).pipe(
+        map(createData => {
+          this.miner = createData;
+        }),
+        catchError(() => {
+          this.terminal.outputText('Invalid wallet');
+          return of<void>();
+        }));
     }
 
   }
