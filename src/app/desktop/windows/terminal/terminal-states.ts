@@ -354,6 +354,8 @@ export class DefaultTerminalState extends CommandTerminalState {
           this.terminal.outputText('Invalid wallet');
           return of<void>();
         }));
+    } else {
+      this.terminal.outputText('Use miner look|wallet|power|start');
     }
 
   }
