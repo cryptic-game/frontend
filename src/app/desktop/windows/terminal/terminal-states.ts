@@ -182,7 +182,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     'chaozz': {
       executor: () => this.terminal.outputText('"mess with the best, die like the rest :D`" - chaozz'),
       description: ''
-    },
+    }
 
   };
 
