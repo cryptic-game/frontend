@@ -302,7 +302,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             }).subscribe((walletData) => {
               wallet = args[1];
               power = walletData.power;
-              this.terminal.outputText('Set Wallet to ' + args[1]);
+              this.terminal.outputText(`Set wallet to ${args[1]}`);
             }, () => {
               this.terminal.outputText('Wallet is invalid.');
             });
