@@ -287,7 +287,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
     } else if (args[0] === 'wallet') {
       if (args.length !== 2) {
-        this.terminal.outputText('Use miner wallet <Wallet-ID>');
+        this.terminal.outputText('Use miner wallet <wallet-id>');
         return;
       }
       this.websocket.ms('service', ['list'], {
