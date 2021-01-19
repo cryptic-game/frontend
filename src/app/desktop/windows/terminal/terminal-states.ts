@@ -188,8 +188,8 @@ export class DefaultTerminalState extends CommandTerminalState {
   working_dir: string = Path.ROOT;  // UUID of the working directory
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-    private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
-    protected terminal: TerminalAPI, public promptColor: string = null) {
+              private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
+              protected terminal: TerminalAPI, public promptColor: string = null) {
     super();
   }
 
@@ -808,8 +808,8 @@ export class DefaultTerminalState extends CommandTerminalState {
 
       } else if (args[0] === 'create') {
         (path.path.length > 1
-          ? this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(0, -1), path.parentUUID))
-          : of({ uuid: path.parentUUID })
+            ? this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(0, -1), path.parentUUID))
+            : of({ uuid: path.parentUUID })
         ).subscribe(dest => {
           this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(-1), dest.uuid)).subscribe(() => {
             this.terminal.outputText('That file already exists');
@@ -1607,9 +1607,9 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
   };
 
   constructor(terminal: TerminalAPI,
-    private domSanitizer: DomSanitizer,
-    private callback: (response: boolean) => void,
-    private startSeconds: number = 0) {
+              private domSanitizer: DomSanitizer,
+              private callback: (response: boolean) => void,
+              private startSeconds: number = 0) {
     super(terminal);
 
     this.intervalHandle = setInterval(() => {
