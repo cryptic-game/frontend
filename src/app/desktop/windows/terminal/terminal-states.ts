@@ -78,7 +78,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     },
     'miner': {
       executor: this.miner.bind(this),
-      description: 'Manager your Morphcoin miners'
+      description: 'Manages Morphcoin miners'
     },
     'status': {
       executor: this.status.bind(this),
@@ -261,7 +261,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     let power;
     let text;
     if (args.length === 0) {
-      this.terminal.outputText('Use miner look|wallet|power|start');
+      this.terminal.outputText('usage: miner look|wallet|power|start');
     }
     if (args[0] === 'look') {
       this.websocket.ms('service', ['list'], {
@@ -287,7 +287,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
     } else if (args[0] === 'wallet') {
       if (args.length !== 2) {
-        this.terminal.outputText('Use miner wallet <Wallet-ID>');
+        this.terminal.outputText('usage: miner wallet <wallet-id>');
         return;
       }
       this.websocket.ms('service', ['list'], {
@@ -311,14 +311,14 @@ export class DefaultTerminalState extends CommandTerminalState {
       });
     } else if (args[0] === 'power') {
       if (args.length !== 2) {
-        this.terminal.outputText('Use miner power <0-100>');
+        this.terminal.outputText('usage: miner power <0-100>');
         return;
       }
       if (isNaN(Number(args[1]))) {
-        return this.terminal.outputText('Use miner power <0-100>');
+        return this.terminal.outputText('usage: miner power <0-100>');
       }
       if (0 > Number(args[1]) || Number(args[1]) > 100) {
-        return this.terminal.outputText('Use miner power <0-100>');
+        return this.terminal.outputText('usage: miner power <0-100>');
       }
       this.websocket.ms('service', ['list'], {
         'device_uuid': this.activeDevice['uuid'],
@@ -337,23 +337,21 @@ export class DefaultTerminalState extends CommandTerminalState {
       });
     } else if (args[0] === 'start') {
       if (args.length !== 2) {
-        this.terminal.outputText('Use miner start <Wallet-ID>');
+        this.terminal.outputText('usage: miner start <wallet-id>');
         return;
       }
       this.websocket.ms('service', ['create'], {
         'device_uuid': this.activeDevice['uuid'],
         'name': 'miner',
         'wallet_uuid': args[1],
-      }).pipe(
-        map(createData => {
-          this.miner = createData;
-        }),
-        catchError(() => {
-          this.terminal.outputText('Invalid wallet');
-          return of<void>();
-        }));
+      }).subscribe((service) => {
+        miner = service;
+      }, () => {
+        this.terminal.outputText('Invalid wallet');
+        return of<void>();
+      });
     } else {
-      this.terminal.outputText('Use miner look|wallet|power|start');
+      this.terminal.outputText('usage: miner look|wallet|power|start');
     }
 
   }
