@@ -1,5 +1,6 @@
 <div class="editor-container">
   <div class="editor-menu">
+    <button [disabled]=!fileOpened>Save</button>
     <label>
       Path: <input #fileInput (keydown.enter)="enter(fileInput.value); $event.preventDefault()"
                    [style.border-color]="error ? 'red' : 'black'" type="text" class="file-input"
@@ -8,7 +9,7 @@
     <span class="error">{{error}}</span>
   </div>
 
-  <div class="editor-text-field">
+  <textarea class="editor-text-field" [disabled]="!fileOpened" height="500">
     {{(fileOpened) ? fileContent : 'No file open'}}
-  </div>
+  </textarea>
 </div>
