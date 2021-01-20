@@ -80,6 +80,10 @@ export class DefaultTerminalState extends CommandTerminalState {
       executor: this.help.bind(this),
       description: 'list of all commands'
     },
+    'miner': {
+      executor: this.miner.bind(this),
+      description: 'Manages Morphcoin miners'
+    },
     'status': {
       executor: this.status.bind(this),
       description: 'displays the number of online players'
@@ -183,13 +187,14 @@ export class DefaultTerminalState extends CommandTerminalState {
       description: '',
       hidden: true
     }
+
   };
 
   working_dir: string = Path.ROOT;  // UUID of the working directory
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-              private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
-              protected terminal: TerminalAPI, public promptColor: string = null) {
+    private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
+    protected terminal: TerminalAPI, public promptColor: string = null) {
     super();
   }
 
@@ -253,6 +258,107 @@ export class DefaultTerminalState extends CommandTerminalState {
         table.innerHTML += row;
       });
     this.terminal.outputNode(table);
+  }
+
+  miner(args: string[]) {
+    let miner;
+    let wallet;
+    let power;
+    let text;
+    if (args.length === 0) {
+      this.terminal.outputText('usage: miner look|wallet|power|start');
+    }
+    if (args[0] === 'look') {
+      this.websocket.ms('service', ['list'], {
+        'device_uuid': this.activeDevice['uuid'],
+      }).subscribe((listData) => {
+        listData.services.forEach((service) => {
+          if (service.name === 'miner') {
+            miner = service;
+            this.websocket.ms('service', ['miner', 'get'], {
+              'service_uuid': miner.uuid,
+            }).subscribe(data => {
+              wallet = data['wallet'];
+              power = Math.round(data['power'] * 100);
+              text =
+                'Wallet: ' + wallet + '<br>' +
+                'Mining Speed: ' + String(Number(miner.speed) * 60 * 60) + ' MC/h<br>' +
+                'Power: ' + power + '%';
+              this.terminal.output(text);
+            });
+          }
+        });
+      });
+
+    } else if (args[0] === 'wallet') {
+      if (args.length !== 2) {
+        this.terminal.outputText('usage: miner wallet <wallet-id>');
+        return;
+      }
+      this.websocket.ms('service', ['list'], {
+        'device_uuid': this.activeDevice['uuid'],
+      }).subscribe((listData) => {
+        listData.services.forEach((service) => {
+          if (service.name === 'miner') {
+            miner = service;
+            this.websocket.ms('service', ['miner', 'wallet'], {
+              'service_uuid': miner.uuid,
+              'wallet_uuid': args[1],
+            }).subscribe((walletData) => {
+              wallet = args[1];
+              power = walletData.power;
+              this.terminal.outputText(`Set wallet to ${args[1]}`);
+            }, () => {
+              this.terminal.outputText('Wallet is invalid.');
+            });
+          }
+        });
+      });
+    } else if (args[0] === 'power') {
+      if (args.length !== 2) {
+        this.terminal.outputText('usage: miner power <0-100>');
+        return;
+      }
+      if (isNaN(Number(args[1]))) {
+        return this.terminal.outputText('usage: miner power <0-100>');
+      }
+      if (0 > Number(args[1]) || Number(args[1]) > 100) {
+        return this.terminal.outputText('usage: miner power <0-100>');
+      }
+      this.websocket.ms('service', ['list'], {
+        'device_uuid': this.activeDevice['uuid'],
+      }).subscribe((listData) => {
+        listData.services.forEach((service) => {
+          if (service.name === 'miner') {
+            miner = service;
+            this.websocket.ms('service', ['miner', 'power'], {
+              'service_uuid': miner.uuid,
+              'power': Number(args[1]) / 100,
+            }).subscribe((data: { power: number }) => {
+              this.terminal.outputText('Set Power to ' + args[1] + '%');
+            });
+          }
+        });
+      });
+    } else if (args[0] === 'start') {
+      if (args.length !== 2) {
+        this.terminal.outputText('usage: miner start <wallet-id>');
+        return;
+      }
+      this.websocket.ms('service', ['create'], {
+        'device_uuid': this.activeDevice['uuid'],
+        'name': 'miner',
+        'wallet_uuid': args[1],
+      }).subscribe((service) => {
+        miner = service;
+      }, () => {
+        this.terminal.outputText('Invalid wallet');
+        return of<void>();
+      });
+    } else {
+      this.terminal.outputText('usage: miner look|wallet|power|start');
+    }
+
   }
 
   status() {
@@ -705,8 +811,8 @@ export class DefaultTerminalState extends CommandTerminalState {
 
       } else if (args[0] === 'create') {
         (path.path.length > 1
-            ? this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(0, -1), path.parentUUID))
-            : of({ uuid: path.parentUUID })
+          ? this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(0, -1), path.parentUUID))
+          : of({ uuid: path.parentUUID })
         ).subscribe(dest => {
           this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(-1), dest.uuid)).subscribe(() => {
             this.terminal.outputText('That file already exists');
@@ -912,22 +1018,21 @@ export class DefaultTerminalState extends CommandTerminalState {
             service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
             target_device: targetDevice, target_service: targetService
           }).subscribe(() => {
-              this.terminal.outputText('You started a bruteforce attack');
-              this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
-                if (stop) {
-                  this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
-                }
-              }));
-            }, error1 => {
-              if (error1.message === 'could_not_start_service') {
-                this.terminal.outputText('There was an error while starting the bruteforce attack');
-              } else if (error1.message === 'invalid_input_data') {
-                this.terminal.outputText('The specified UUID is not valid');
-              } else {
-                reportError(error1);
+            this.terminal.outputText('You started a bruteforce attack');
+            this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
+              if (stop) {
+                this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
               }
+            }));
+          }, error1 => {
+            if (error1.message === 'could_not_start_service') {
+              this.terminal.outputText('There was an error while starting the bruteforce attack');
+            } else if (error1.message === 'invalid_input_data') {
+              this.terminal.outputText('The specified UUID is not valid');
+            } else {
+              reportError(error1);
             }
-          );
+          });
         };
 
         this.websocket.ms('service', ['bruteforce', 'status'], {
@@ -1505,9 +1610,9 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
   };
 
   constructor(terminal: TerminalAPI,
-              private domSanitizer: DomSanitizer,
-              private callback: (response: boolean) => void,
-              private startSeconds: number = 0) {
+    private domSanitizer: DomSanitizer,
+    private callback: (response: boolean) => void,
+    private startSeconds: number = 0) {
     super(terminal);
 
     this.intervalHandle = setInterval(() => {
