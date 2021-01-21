@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, Type, ViewChild } from '@angular/core';
 import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
+import { WebsocketService } from '../../../websocket.service';
 import { FileService } from '../../../api/files/file.service';
 import { Path } from '../../../api/files/path';
 import { File } from '../../../api/files/file';
@@ -18,8 +19,10 @@ export class EditorComponent extends WindowComponent implements OnInit {
   error: string;
   fileContent: string;
   fileOpened: boolean;
+  filePath: Path;
+  chars_left: number;
 
-  constructor(private fileService: FileService) {
+  constructor(private fileService: FileService, private websocket: WebsocketService) {
     super();
   }
 
@@ -31,7 +34,9 @@ export class EditorComponent extends WindowComponent implements OnInit {
       this.fileContent = this.delegate.openFile.content;
       this.fileService.getAbsolutePath(this.delegate.device.uuid, this.delegate.openFile.uuid).subscribe(path => {
         this.fileInput.nativeElement.value = '/' + path.join('/');
+        this.filePath = Path.fromString('/' + path.join('/'));
       });
+
       this.fileInput.nativeElement.disabled = true;
     }
   }
@@ -40,6 +45,7 @@ export class EditorComponent extends WindowComponent implements OnInit {
     let path: Path;
     try {
       path = Path.fromString(inputPath, Path.ROOT);
+      this.filePath = path;
     } catch {
       this.error = 'Path not valid';
       return;
@@ -61,7 +67,24 @@ export class EditorComponent extends WindowComponent implements OnInit {
       }
     });
   }
+
+  save() {
+    this.fileService.getFromPath(this.delegate.device.uuid, this.filePath).subscribe((file) => {
+      this.fileService.changeFileContent(this.delegate.device.uuid, file.uuid, this.fileContent).subscribe((resp) => {
+        console.log(resp);
+      }, (err) => {
+        console.error(err);
+        if (err === 'invalid_input_data'){
+          this.error = '';
+        }
+      });
+  });
+
+
 }
+
+}
+
 
 export class EditorWindowDelegate extends WindowDelegate {
   title = 'Editor';
