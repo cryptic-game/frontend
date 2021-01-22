@@ -8,7 +8,7 @@
       </div>
       <hr>
       <div>
-        <app-wallet-app-edit (close)="walletEdit = false"></app-wallet-app-edit>
+        <app-wallet-app-edit (performClose)="walletEdit = false"></app-wallet-app-edit>
       </div>
     </div>
     <div *ngIf="!walletEdit && wallet" class="wallet-transaction-list">
