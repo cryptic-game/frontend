@@ -1,12 +1,14 @@
 <div class="editor-container">
   <div class="editor-menu">
-    <button (click)="save()" [disabled]=!fileOpened>Save</button>
+
     <label>
       Path: <input #fileInput (keydown.enter)="enter(fileInput.value); $event.preventDefault()"
                    [style.border-color]="error ? 'red' : 'black'" type="text" class="file-input"
                    placeholder="/path/to/file">
-    </label>
+    </label>q
     <span class="error">{{error}}</span>
+    <button class="save-btn" (click)="save()" [disabled]=!fileOpened>Save</button>
+
   </div>
 
   <textarea maxlength="255" class="editor-text-field" [(ngModel)]="fileContent" [disabled]="!fileOpened">

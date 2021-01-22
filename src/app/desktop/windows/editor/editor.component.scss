@@ -9,12 +9,32 @@
   height: 100%;
   background-color: #4e4e4e;
   color: $window-font-color;
-
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 
   .editor-menu {
     background-color: #2f2f2f;
     min-height: 1em;
     padding: 0.5em 1em;
+    box-sizing: border-box;
+    margin: 0px;
+    display:flex;
+
+    .save-btn{
+      margin-left: auto;
+      background-color:#4CAF50;
+      border-radius: 15px;
+      border: none;
+      padding: 0.3em;
+      padding-right: 1em;
+      padding-left: 1em;
+      color: white;
+    }
+
+    .save-btn:hover {
+      opacity: 0.7;
+    }
 
     .file-input {
       background-color: white;
@@ -22,11 +42,14 @@
       font-size: 11pt;
       margin-left: 5px;
       margin-right: 0.5em;
+      box-sizing: border-box;
+      margin: 0px;
 
       &:disabled {
         background-color: transparent;
         color: white;
         border: none;
+        box-sizing: border-box;
       }
     }
   }
@@ -38,6 +61,8 @@
     display: block;
     margin: 0px;
     padding: 0px;
+    box-sizing: border-box;
+    resize: none;
   }
 
 
