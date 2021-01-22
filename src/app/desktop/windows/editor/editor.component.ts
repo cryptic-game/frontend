@@ -74,7 +74,7 @@ export class EditorComponent extends WindowComponent implements OnInit {
         console.log(resp);
       }, (err) => {
         console.error(err);
-        if (err === 'invalid_input_data'){
+        if (err === 'invalid_input_data') {
           this.error = '';
         }
       });

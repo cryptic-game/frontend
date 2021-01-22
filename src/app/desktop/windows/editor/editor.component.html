@@ -5,7 +5,7 @@
       Path: <input #fileInput (keydown.enter)="enter(fileInput.value); $event.preventDefault()"
                    [style.border-color]="error ? 'red' : 'black'" type="text" class="file-input"
                    placeholder="/path/to/file">
-    </label>q
+    </label>
     <span class="error">{{error}}</span>
     <button class="save-btn" (click)="save()" [disabled]=!fileOpened>Save</button>
 

@@ -16,7 +16,7 @@
   .editor-menu {
     background-color: #2f2f2f;
     min-height: 1em;
-    padding: 0.5em 1em;
+    padding: 0.5em 0.8em;
     box-sizing: border-box;
     margin: 0px;
     display:flex;
@@ -68,7 +68,9 @@
 
   .error {
     color: red;
-    padding: 0.2em;
+    padding-right: 0.2em;
+    padding-left: 0.2em;
+    margin-left: 5px;
   }
 
 }
