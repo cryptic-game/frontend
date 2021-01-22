@@ -267,6 +267,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     let text;
     if (args.length === 0) {
       this.terminal.outputText('usage: miner look|wallet|power|start');
+      return;
     }
     if (args[0] === 'look') {
       this.websocket.ms('service', ['list'], {
@@ -357,6 +358,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       });
     } else {
       this.terminal.outputText('usage: miner look|wallet|power|start');
+      return;
     }
 
   }
