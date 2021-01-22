@@ -2,7 +2,7 @@ name: Main
 
 on:
   push:
-    branches: [ actions ]
+    branches: [ master ]
     tags: [ 'v*' ]
   pull_request:
 
@@ -142,4 +142,3 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         run: |
           docker buildx imagetools inspect ${{ env.IMAGE_NAME }}:${{ steps.docker_meta.outputs.version }}
-          docker buildx imagetools inspect ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.docker_meta.outputs.version }}
