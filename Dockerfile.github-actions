@@ -1,7 +1,5 @@
 FROM nginx:stable-alpine
 
-LABEL maintainer="faq@cryptic-game.net"
-
 EXPOSE 80
 
 COPY nginx/nginx.conf /etc/nginx/
