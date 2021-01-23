@@ -14,4 +14,11 @@
   <textarea maxlength="255" class="editor-text-field" [(ngModel)]="fileContent" [disabled]="!fileOpened">
     {{(fileOpened) ? fileContent : 'No file open'}}
   </textarea>
+  <div *ngIf="deleted_popup" class="popup_deleted">
+    <div class="popup_deleted_text">
+      The File "{{filePath}}" was deleted.
+      <br>
+      <button class="close-btn" (click)="force_close()">Close this Editor</button>
+    </div>
+  </div>
 </div>
