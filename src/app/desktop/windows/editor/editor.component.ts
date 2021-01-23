@@ -25,6 +25,7 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
   chars_left: number;
   fileUUID: string;
   deleted_popup: boolean;
+  changed_popup: boolean;
   fileSubscription: Subscription;
 
   constructor(private fileService: FileService, private websocket: WebsocketService, private windowManager: WindowManager) {
@@ -34,6 +35,7 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
   ngOnInit() {
     this.fileOpened = false;
     this.deleted_popup = false;
+    this.changed_popup = false;
 
     if (this.delegate.openFile != null && !this.delegate.openFile.is_directory) {
       this.fileOpened = true;
@@ -52,18 +54,25 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
         if (this.fileUUID === undefined) {
           return;
         }
-        console.log(data);
         if (data.data.deleted !== undefined) {
           if (data.data.deleted.includes(this.fileUUID)) {
+            if (this.changed_popup) {
+              this.changed_popup = false;
+            }
             this.deleted_popup = true;
           }
         }
         if (data.data.changed !== undefined) {
           if (data.data.changed.includes(this.fileUUID)) {
-            console.log('WURDE GEÄNDERT');
+            this.fileService.getFile(this.delegate.device.uuid, this.fileUUID).subscribe(file => {
+              if (this.fileContent !== file.content) {
+                if (!this.deleted_popup) {
+                  this.changed_popup = true;
+                }
+              }
+            });
           }
         }
-        console.log('Logged');
       });
   }
 
@@ -102,7 +111,6 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
   save() {
     this.fileService.getFromPath(this.delegate.device.uuid, this.filePath).subscribe((file) => {
       this.fileService.changeFileContent(this.delegate.device.uuid, file.uuid, this.fileContent).subscribe((resp) => {
-        console.log(resp);
       }, (err) => {
         console.error(err);
         if (err === 'invalid_input_data') {
@@ -118,7 +126,14 @@ force_close() {
   this.windowManager.closeWindow(this.delegate);
 }
 
-
+reload() {
+  this.fileService.getFile(this.delegate.device.uuid, this.fileUUID).subscribe(file => {
+    if (this.fileContent !== file.content) {
+      this.fileContent = file.content;
+    }
+  });
+  this.changed_popup = false;
+}
 
 }
 
