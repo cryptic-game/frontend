@@ -1059,6 +1059,10 @@ export class DefaultTerminalState extends CommandTerminalState {
             if (differentServiceAttacked) {
               startAttack();
             }
+          }, (err) => {
+              if (err.message === 'service_not_running') {
+                this.terminal.outputText('This Computer or Service is not Online.');
+              }
           });
         }, error => {
           if (error.message === 'attack_not_running') {
