@@ -25,7 +25,7 @@ function reportError(error) {
 }
 
 export abstract class CommandTerminalState implements TerminalState {
-  abstract commands: { [name: string]: { executor: (args: string[]) => void, description: string } };
+  abstract commands: { [name: string]: { executor: (args: string[]) => void, description: string, hidden?: boolean } };
 
   protocol: string[] = [];
 
@@ -53,8 +53,9 @@ export abstract class CommandTerminalState implements TerminalState {
 
   autocomplete(content: string): string {
     return content
-      ? Object.keys(this.commands)
-        .filter(n => !['chaozz'].includes(n))
+      ? Object.entries(this.commands)
+        .filter(command => !command[1].hidden)
+        .map(([name]) => name)
         .sort()
         .find(n => n.startsWith(content))
       : '';
@@ -82,7 +83,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     },
     'status': {
       executor: this.status.bind(this),
-      description: 'displays the number of online plyers'
+      description: 'displays the number of online players'
     },
     'hostname': {
       executor: this.hostname.bind(this),
@@ -180,7 +181,8 @@ export class DefaultTerminalState extends CommandTerminalState {
     // easter egg
     'chaozz': {
       executor: () => this.terminal.outputText('"mess with the best, die like the rest :D`" - chaozz'),
-      description: ''
+      description: '',
+      hidden: true
     }
 
   };
@@ -188,8 +190,8 @@ export class DefaultTerminalState extends CommandTerminalState {
   working_dir: string = Path.ROOT;  // UUID of the working directory
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-    private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
-    protected terminal: TerminalAPI, public promptColor: string = null) {
+              private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
+              protected terminal: TerminalAPI, public promptColor: string = null) {
     super();
   }
 
@@ -246,8 +248,8 @@ export class DefaultTerminalState extends CommandTerminalState {
   help() {
     const table = document.createElement('table');
     Object.entries(this.commands)
+      .filter(command => !('hidden' in command[1]))
       .map(([name, value]) => ({ name: name, description: value.description }))
-      .filter(command => !['chaozz'].includes(command.name))
       .map(command => `<tr><td>${command.name}</td><td>${command.description}</td></tr>`)
       .forEach(row => {
         table.innerHTML += row;
@@ -262,6 +264,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     let text;
     if (args.length === 0) {
       this.terminal.outputText('usage: miner look|wallet|power|start');
+      return;
     }
     if (args[0] === 'look') {
       this.websocket.ms('service', ['list'], {
@@ -352,6 +355,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       });
     } else {
       this.terminal.outputText('usage: miner look|wallet|power|start');
+      return;
     }
 
   }
@@ -1605,9 +1609,9 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
   };
 
   constructor(terminal: TerminalAPI,
-    private domSanitizer: DomSanitizer,
-    private callback: (response: boolean) => void,
-    private startSeconds: number = 0) {
+              private domSanitizer: DomSanitizer,
+              private callback: (response: boolean) => void,
+              private startSeconds: number = 0) {
     super(terminal);
 
     this.intervalHandle = setInterval(() => {

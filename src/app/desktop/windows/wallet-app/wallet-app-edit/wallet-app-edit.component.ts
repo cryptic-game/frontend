@@ -17,7 +17,7 @@ export class WalletAppEditComponent {
   correctKey: boolean;
   error: boolean;
   @Output()
-  private close: EventEmitter<void> = new EventEmitter<void>();
+  private performClose: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
     private walletAppService: WalletAppService
@@ -39,7 +39,7 @@ export class WalletAppEditComponent {
           if (!data) {
             setTimeout(() => this.error = false, 5 * 1000);
           } else {
-            this.close.emit();
+            this.performClose.emit();
           }
         });
     }
