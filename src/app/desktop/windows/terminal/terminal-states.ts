@@ -1061,7 +1061,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             }
           }, (err) => {
               if (err.message === 'service_not_running') {
-                this.terminal.outputText('This Computer or Service is not Online.');
+                this.terminal.outputText('Target service is unreachable.');
               }
           });
         }, error => {
