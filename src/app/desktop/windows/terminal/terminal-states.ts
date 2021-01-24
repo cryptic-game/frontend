@@ -459,8 +459,8 @@ export class DefaultTerminalState extends CommandTerminalState {
 
 
     if (args.length === 0) {
-      this.fileService.getFiles(this.activeDevice['uuid'], this.working_dir).subscribe((files) => {
-        this.list_files(files, this.working_dir);
+      this.fileService.getFiles(this.activeDevice['uuid'], this.working_dir).subscribe(files => {
+        this.list_files(files);
       });
     } else if (args.length === 1) {
       let path: Path;
