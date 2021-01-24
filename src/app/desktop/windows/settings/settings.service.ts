@@ -42,4 +42,14 @@ export class SettingsService {
     return this.getSettings().tpc;
   }
 
+  // LS Folder color
+  getLSFC(): string {
+    return this.getSettings().lsfc;
+  }
+
+  // LS Prefix
+  getLSPrefix(): boolean {
+    return this.getSettings().lsfp;
+  }
+
 }

@@ -32,9 +32,19 @@ export class SettingsComponent extends WindowComponent implements OnInit {
     this.current.modify(x => (x.tpc = color));
   }
 
-  saveSettings(backgroundName: string, color: string) {
+  setLsFolderColor(color: string) {
+    this.current.modify(x => (x.lsfc = color));
+  }
+
+  setLsPrefix(lsfp: boolean) {
+    this.current.modify(x => (x.lsfp = lsfp));
+  }
+
+  saveSettings(backgroundName: string, tps: string, lsfc: string, lsfp: boolean) {
     this.setBackground(backgroundName);
-    this.setTerminalPromptColor(color);
+    this.setTerminalPromptColor(tps);
+    this.setLsFolderColor(lsfc);
+    this.setLsPrefix(lsfp);
   }
 
 }

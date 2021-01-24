@@ -24,6 +24,32 @@
         </label>
       </div>
     </div>
+    <div class="row">
+      <span>ls Folder Color</span>
+      <div class="setting">
+        <label>
+          <input
+            #lsFolderColorSetting
+            (change)="onChangeSetting()"
+            [value]="current.getSettings().lsfc"
+            type="color"
+          />
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <span>ls File/Folder Prefix</span>
+      <div class="setting">
+        <label>
+          <input
+            #lsPrefix
+            (change)="onChangeSetting()"
+            [checked]="current.getSettings().lsfp"
+            type="checkbox"
+          />
+        </label>
+      </div>
+    </div>
     <footer class="footer mt-auto py-3">
       <div class="container" id="settings-window-footer-content">
         <!--span-- class="text-muted">Place sticky footer content here.</!--span-->
@@ -37,7 +63,9 @@
             (click)="
               saveSettings(
                 backgroundSetting.value,
-                terminalPromptColorSetting.value
+                terminalPromptColorSetting.value,
+                lsFolderColorSetting.value,
+                lsPrefix.checked
               )">
             Save
           </button>

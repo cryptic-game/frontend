@@ -424,15 +424,30 @@ export class DefaultTerminalState extends CommandTerminalState {
     }
   }
 
-  list_files(files: File[]) {
+  count_files(path: Path) {
+    this.fileService.getFiles(this.activeDevice['uuid'], path.toString()).subscribe((files) => {
+      let folders;
+      files.forEach(file => {
+        if (file.is_directory) {
+          folders++;
+        }
+      });
+      return [folders, files.length - folders];
+    });
+  }
+
+  list_files(files: File[], path: string) {
     const folders = files.filter((file) => {
       return file.is_directory;
     });
     files = files.filter((file) => {
       return !file.is_directory;
     });
+    let count;
     folders.sort().forEach(folder => {
-      this.terminal.output('<span style="color: #41ABFC;">' + folder.filename + '</span>');
+      count = this.count_files(Path.fromString(folder.filename, path));
+      this.terminal.output('<span style="color: ' + this.settings.getLSFC() + ';">' + folder.filename + '</span>');
+      console.log('<span style="color: ' + this.settings.getLSFC() + ';">' + folder.filename + '</span>');
     });
 
     files.sort().forEach(file => {
@@ -445,7 +460,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
     if (args.length === 0) {
       this.fileService.getFiles(this.activeDevice['uuid'], this.working_dir).subscribe((files) => {
-        this.list_files(files);
+        this.list_files(files, this.working_dir);
       });
     } else if (args.length === 1) {
       let path: Path;
@@ -459,7 +474,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       this.fileService.getFromPath(this.activeDevice['uuid'], path).subscribe(target => {
         if (target.is_directory) {
           this.fileService.getFiles(this.activeDevice['uuid'], target.uuid).subscribe(files =>
-            this.list_files(files)
+            this.list_files(files, path.toString())
           );
         } else {
           this.terminal.outputText('That is not a directory');
