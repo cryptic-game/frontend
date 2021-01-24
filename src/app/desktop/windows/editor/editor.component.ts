@@ -117,23 +117,23 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
           this.error = '';
         }
       });
-  });
+    });
 
 
-}
+  }
 
-force_close() {
-  this.windowManager.closeWindow(this.delegate);
-}
+  force_close() {
+    this.windowManager.closeWindow(this.delegate);
+  }
 
-reload() {
-  this.fileService.getFile(this.delegate.device.uuid, this.fileUUID).subscribe(file => {
-    if (this.fileContent !== file.content) {
-      this.fileContent = file.content;
-    }
-  });
-  this.changed_popup = false;
-}
+  reload() {
+    this.fileService.getFile(this.delegate.device.uuid, this.fileUUID).subscribe(file => {
+      if (this.fileContent !== file.content) {
+        this.fileContent = file.content;
+      }
+    });
+    this.changed_popup = false;
+  }
 
 }
 
