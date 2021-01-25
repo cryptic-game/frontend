@@ -1,4 +1,3 @@
 {
-  "url": "wss://ws.cryptic.defelo.ml",
-  "url_test": "wss://ws.cryptic-game.net"
+  "url": "wss://ws.cryptic-game.net"
 }
