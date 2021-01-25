@@ -118,8 +118,6 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
         }
       });
     });
-
-
   }
 
   force_close() {
@@ -134,7 +132,6 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
     });
     this.changed_popup = false;
   }
-
 }
 
 
