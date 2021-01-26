@@ -42,7 +42,7 @@ export class SettingsService {
     return this.getSettings().tpc;
   }
 
-  // LS Folder color
+  // ls command folder color
   getLSFC(): string {
     return this.getSettings().lsfc;
   }
