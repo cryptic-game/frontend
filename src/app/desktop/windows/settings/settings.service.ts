@@ -47,7 +47,7 @@ export class SettingsService {
     return this.getSettings().lsfc;
   }
 
-  // LS Prefix
+  // ls command prefix
   getLSPrefix(): boolean {
     return this.getSettings().lsfp;
   }
