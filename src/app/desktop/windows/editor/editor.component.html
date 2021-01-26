@@ -1,14 +1,33 @@
 <div class="editor-container">
   <div class="editor-menu">
+
     <label>
       Path: <input #fileInput (keydown.enter)="enter(fileInput.value); $event.preventDefault()"
                    [style.border-color]="error ? 'red' : 'black'" type="text" class="file-input"
                    placeholder="/path/to/file">
     </label>
     <span class="error">{{error}}</span>
+    <button class="save-btn" (click)="save()" [disabled]=!fileOpened>Save</button>
+
   </div>
 
-  <div class="editor-text-field">
+  <textarea maxlength="255" class="editor-text-field" [(ngModel)]="fileContent" [disabled]="!fileOpened">
     {{(fileOpened) ? fileContent : 'No file open'}}
+  </textarea>
+  <div *ngIf="deleted_popup" class="popup">
+    <div class="popup_content">
+      The File "{{filePath}}" was deleted.
+      <br>
+      <button class="btn" (click)="force_close()">Close this Editor</button>
+    </div>
   </div>
+
+  <div *ngIf="changed_popup" class="popup">
+    <div class="popup_content">
+      The File "{{filePath}}" was changed.
+      <br>
+      <button class="btn" (click)="reload()">Reload File</button>
+    </div>
+  </div>
+
 </div>
