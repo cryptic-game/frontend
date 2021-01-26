@@ -440,8 +440,6 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
   ls(args: string[]) {
-
-
     if (args.length === 0) {
       this.fileService.getFiles(this.activeDevice['uuid'], this.working_dir).subscribe(files => {
         this.list_files(files);
