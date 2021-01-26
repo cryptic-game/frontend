@@ -1059,6 +1059,10 @@ export class DefaultTerminalState extends CommandTerminalState {
             if (differentServiceAttacked) {
               startAttack();
             }
+          }, (err) => {
+              if (err.message === 'service_not_running') {
+                this.terminal.outputText('Target service is unreachable.');
+              }
           });
         }, error => {
           if (error.message === 'attack_not_running') {
