@@ -133,8 +133,6 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
     this.changed_popup = false;
   }
 }
-
-
 export class EditorWindowDelegate extends WindowDelegate {
   title = 'Editor';
   icon = 'assets/desktop/img/editor.svg';
