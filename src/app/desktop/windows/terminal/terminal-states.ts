@@ -9,6 +9,7 @@ import { Path } from '../../../api/files/path';
 import { of } from 'rxjs';
 import { Device } from '../../../api/devices/device';
 import { WindowDelegate } from '../../window/window-delegate';
+import { File } from '../../../api/files/file';
 
 
 function escapeHtml(html) {
@@ -423,11 +424,26 @@ export class DefaultTerminalState extends CommandTerminalState {
     }
   }
 
+  list_files(files: File[]) {
+    files.filter((file) => {
+      return file.is_directory;
+    }).sort().forEach(folder => {
+      this.terminal.output(`<span style="color: ${this.settings.getLSFC()};">${(this.settings.getLSPrefix()) ? '[Folder] ' : ''}${folder.filename}</span>`);
+      console.log('<span style="color: ' + this.settings.getLSFC() + ';">' + folder.filename + '</span>');
+    });
+
+    files.filter((file) => {
+      return !file.is_directory;
+    }).sort().forEach(file => {
+      this.terminal.outputText(`${(this.settings.getLSPrefix() ? '[File] ' : '')}${file.filename}`);
+    });
+  }
+
   ls(args: string[]) {
     if (args.length === 0) {
-      this.fileService.getFiles(this.activeDevice['uuid'], this.working_dir).subscribe(files =>
-        files.forEach(f => this.terminal.outputText(f.filename))
-      );
+      this.fileService.getFiles(this.activeDevice['uuid'], this.working_dir).subscribe(files => {
+        this.list_files(files);
+      });
     } else if (args.length === 1) {
       let path: Path;
       try {
@@ -440,7 +456,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       this.fileService.getFromPath(this.activeDevice['uuid'], path).subscribe(target => {
         if (target.is_directory) {
           this.fileService.getFiles(this.activeDevice['uuid'], target.uuid).subscribe(files =>
-            files.forEach(f => this.terminal.outputText(f.filename))
+            this.list_files(files)
           );
         } else {
           this.terminal.outputText('That is not a directory');
