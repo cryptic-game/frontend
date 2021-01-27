@@ -1,16 +1,13 @@
 .wallet-first-startup {
   .background {
-    //position: absolute;
-    //height: 100%;
-    //width: 100%;
-  // background-image: url(../../../../../assets/desktop/img/wallet-app/background_wallet.svg);
-  // background-position: center;
-  //background-repeat: no-repeat;
-  //background-size: cover;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-image: url(../../../../../assets/desktop/img/wallet-app/background_wallet.svg);
+    background-position: center;
+    background-size: contain;
   }
   display: flex;
   flex-direction: column;
-  flex: 1 1;
-  min-height: 0em;
   overflow: hidden;
 }
