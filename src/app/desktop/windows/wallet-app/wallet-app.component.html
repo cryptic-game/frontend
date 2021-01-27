@@ -1,6 +1,6 @@
 <div class="wallet-app">
   <div class="header">
-    <app-wallet-app-header [(walletEdit)]="walletFirstStartup"></app-wallet-app-header>
+    <app-wallet-app-header *ngIf="!walletFirstStartup" [(walletEdit)]="walletFirstStartup"></app-wallet-app-header>
   </div>
   <div class="content">
     <div *ngIf="walletEdit" class="wallet-edit">
