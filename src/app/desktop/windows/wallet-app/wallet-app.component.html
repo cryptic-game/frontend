@@ -11,6 +11,8 @@
         <app-wallet-app-edit (performClose)="walletEdit = false"></app-wallet-app-edit>
       </div>
     </div>
+    <div class="wallet-first-startup" *ngIf="walletFirstStartup">
+    </div>
     <div *ngIf="!walletEdit && wallet" class="wallet-transaction-list">
       <div class="title wallet-app-header">
         <h1>Transactions ({{wallet.transactions}})</h1>

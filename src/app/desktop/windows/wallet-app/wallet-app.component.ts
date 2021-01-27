@@ -19,11 +19,12 @@ export class WalletAppComponent extends WindowComponent implements OnInit, OnDes
   pages = 0;
   itemsPerPage = 3;
   updateIntervalHandle: any;
+  walletFirstStartup: boolean;
 
   constructor(private walletAppService: WalletAppService) {
     super();
     walletAppService.updateWallet().then(loaded => {
-      this.walletEdit = !loaded;
+      this.walletFirstStartup = !loaded;
     });
 
     this.wallet = walletAppService.wallet;
