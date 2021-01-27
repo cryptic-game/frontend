@@ -1,6 +1,6 @@
 <div class="wallet-app">
   <div class="header">
-    <app-wallet-app-header [(walletEdit)]="walletEdit"></app-wallet-app-header>
+    <app-wallet-app-header [(walletEdit)]="walletFirstStartup"></app-wallet-app-header>
   </div>
   <div class="content">
     <div *ngIf="walletEdit" class="wallet-edit">
@@ -12,6 +12,7 @@
       </div>
     </div>
     <div class="wallet-first-startup" *ngIf="walletFirstStartup">
+      <app-wallet-first-startup></app-wallet-first-startup>
     </div>
     <div *ngIf="!walletEdit && wallet" class="wallet-transaction-list">
       <div class="title wallet-app-header">
