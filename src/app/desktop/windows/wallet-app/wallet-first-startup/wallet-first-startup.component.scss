@@ -1,13 +1,10 @@
 .wallet-first-startup {
-  .background {
-    position: absolute;
+  //position: absolute;
     height: 100%;
     width: 100%;
     background-image: url(../../../../../assets/desktop/img/wallet-app/background_wallet.svg);
     background-position: center;
-    background-size: contain;
-  }
+    background-size: cover;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
