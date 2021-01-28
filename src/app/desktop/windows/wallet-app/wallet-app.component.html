@@ -14,8 +14,11 @@
     <div class="wallet-first-startup" *ngIf="state == 'fistWalletAppStartup'">
       <app-wallet-first-startup (performClose)="state = 'fistWalletAppStartup2'"></app-wallet-first-startup>
     </div>
-    <div class="wallet-first-startup" *ngIf="state == 'fistWalletAppStartup2'">
+    <div class="wallet-first-startup-create-import" *ngIf="state == 'fistWalletAppStartup2'">
       <app-wallet-first-startup-create-import (create)="state = 'createFirstWallet'"></app-wallet-first-startup-create-import>
+    </div>
+    <div class="wallet-first-startup-create" *ngIf="state == 'createFirstWallet'">
+      <p>placeholder: Create Wallet</p>
     </div>
     <div *ngIf="!walletEdit && wallet" class="wallet-transaction-list">
       <div class="title wallet-app-header">

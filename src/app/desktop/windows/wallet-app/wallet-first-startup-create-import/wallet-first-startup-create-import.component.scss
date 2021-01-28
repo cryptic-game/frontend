@@ -1,0 +1,58 @@
+.app-wallet-first-startup-create-import {
+  display: flex;
+  height: 100%;
+  width:100%;
+  flex-direction: row;
+  background: #383F51;
+  color: white;
+  text-align: center;
+  font-size: 1.5em;
+  justify-content: center;
+
+  .create-wallet {
+    background: #1D1D2C;
+    border: #1D1D2C solid 1px;
+    border-radius: 10px;
+    width: 48%;
+    height: 97%;
+    p {
+      margin-top: 1em;
+    }
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    img {
+      height: 3em;
+      width: 3em;
+      margin-top: 5em;
+    }
+  }
+
+  .import-wallet {
+    background: #1D1D2C;
+    border: #1D1D2C solid 1px;
+    border-radius: 10px;
+    width: 48%;
+    height: 97%;
+    p {
+      margin-top: 1em;
+    }
+    margin-left: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    img {
+      height: 3em;
+      width: 3em;
+      margin-top: 5em;
+    }
+  }
+
+  .create-wallet:hover {
+    opacity: 0.8;
+  }
+
+
+  .import-wallet:hover {
+    opacity: 0.8;
+  }
+}
