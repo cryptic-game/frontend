@@ -47,6 +47,12 @@ div.wallet-app {
       }
     }
 
+    .wallet-first-startup {
+      height: 100%;
+      width: 100%;
+      display: flex;
+    }
+
     div.wallet-transaction-list {
       padding: 10px;
     }

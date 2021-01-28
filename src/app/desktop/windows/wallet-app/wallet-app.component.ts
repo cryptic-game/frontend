@@ -10,7 +10,6 @@ import { Transaction } from './transaction';
   styleUrls: ['./wallet-app.component.scss']
 })
 export class WalletAppComponent extends WindowComponent implements OnInit, OnDestroy {
-
   walletEdit = false;
   wallet: Wallet;
   transactions: Transaction[] = [];
@@ -20,11 +19,13 @@ export class WalletAppComponent extends WindowComponent implements OnInit, OnDes
   itemsPerPage = 3;
   updateIntervalHandle: any;
   walletFirstStartup: boolean;
+  state; string;
 
   constructor(private walletAppService: WalletAppService) {
     super();
     walletAppService.updateWallet().then(loaded => {
       this.walletFirstStartup = !loaded;
+      this.state = 'fistWalletAppStartup';
     });
 
     this.wallet = walletAppService.wallet;

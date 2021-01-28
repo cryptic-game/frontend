@@ -1,10 +1,54 @@
+:host {
+  flex-basis: 100%;
+}
+
+
 .wallet-first-startup {
-  //position: absolute;
+  .background {
     height: 100%;
-    width: 100%;
-    background-image: url(../../../../../assets/desktop/img/wallet-app/background_wallet.svg);
-    background-position: center;
-    background-size: cover;
+  width: 100%;
+  background-image: url(../../../../../assets/desktop/img/wallet-app/background_wallet.svg);
+  background-position: center;
+  background-size: cover;
+  }
+  height: 100%;
+  width:100%;
+  flex-flow: column;
   display: flex;
   flex-direction: column;
+
+  .content {
+    .add-wallet-btn {
+      background: none;
+      border: #F5C60C solid 3px;
+      border-radius: 50px;
+      color: #F5C60C;
+      padding-left: 6em;
+      padding-right: 6em;
+      padding-top: 0.7em;
+      padding-bottom: 0.7em;
+      font-size: 1.1em;
+      outline: none;
+
+    }
+
+    .add-wallet-btn:hover {
+      opacity: 0.7;
+    }
+
+    .welcome {
+      font-size: 2.1em;
+      font-weight: 285;
+      color: white;
+    }
+
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    position: absolute;
+    flex-direction: column;
+  }
+
 }
