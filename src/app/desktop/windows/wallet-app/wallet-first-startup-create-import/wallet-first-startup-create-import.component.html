@@ -1,9 +1,9 @@
-<div class="app-wallet-first-startup-create-import">
+<div class="app-wallet-first-startup-create-import" (click)="create.emit()">
   <div class="create-wallet">
     <p>Create new Wallet</p>
     <img src="../../../../../assets/desktop/img/wallet-app/plus.svg">
   </div>
-  <div class="import-wallet">
+  <div class="import-wallet" (click)="import.emit()">
     <p>Import existing Wallet</p>
     <img src="../../../../../assets/desktop/img/wallet-app/drag_n_drop.svg">
   </div>

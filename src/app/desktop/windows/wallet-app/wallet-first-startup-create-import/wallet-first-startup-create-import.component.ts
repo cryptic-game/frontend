@@ -8,6 +8,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 export class WalletFirstStartupCreateImportComponent implements OnInit {
   @Output()
   create: EventEmitter<void> = new EventEmitter<void>();
+  @Output()
   import: EventEmitter<void> = new EventEmitter<void>();
   constructor() { }
 
