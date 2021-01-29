@@ -11,6 +11,7 @@ import { Transaction } from './transaction';
 })
 export class WalletAppComponent extends WindowComponent implements OnInit, OnDestroy {
   walletEdit = false;
+  showWalletCreatePopup = false;
   wallet: Wallet;
   transactions: Transaction[] = [];
   lastTransactionCount = 0;

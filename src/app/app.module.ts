@@ -47,6 +47,7 @@ import { FileManagerComponent } from './desktop/windows/file-manager/file-manage
 import { ContextMenuModule } from 'ngx-contextmenu';
 import { WalletFirstStartupComponent } from './desktop/windows/wallet-app/wallet-first-startup/wallet-first-startup.component';
 import { WalletFirstStartupCreateImportComponent } from './desktop/windows/wallet-app/wallet-first-startup-create-import/wallet-first-startup-create-import.component';
+import { WalletCreatePopupComponent } from './desktop/windows/wallet-app/wallet-create-popup/wallet-create-popup.component';
 // tslint:enable:max-line-length
 
 const routes: Routes = [
@@ -100,7 +101,8 @@ const routes: Routes = [
     EditorComponent,
     FileManagerComponent,
     WalletFirstStartupComponent,
-    WalletFirstStartupCreateImportComponent
+    WalletFirstStartupCreateImportComponent,
+    WalletCreatePopupComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
