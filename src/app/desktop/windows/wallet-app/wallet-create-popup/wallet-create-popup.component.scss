@@ -10,21 +10,55 @@
     .modal-content {
       background-color: #fefefe;
       margin: auto;
-      padding: 20px;
       border: 1px solid #888;
       width: 80%;
-      margin-top: 10%;
-      height: 60%;
+      margin-top: 15%;
+      height: 50%;
+      position: relative;
+      padding-right: 20px;
+
+      display: flex;
+
+      .name_label {
+        font-weight: 300;
+      }
+
+      .path_label {
+        font-weight: 300;
+      }
+
+      .background {
+        position: relative;
+        height: 100%;
+        top: 0;
+        left: 0;
+
+      }
       .close {
-        color: #aaaaaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
+        width: 50px;
+        position: absolute;
+        right: 10px;
+        top: 10px;
       }
       .close:hover {
         color: #000;
         text-decoration: none;
         cursor: pointer;
+      }
+
+      .inputs{
+        display: flex;
+        flex-direction: column;
+        padding-left: 1em;
+
+        input {
+          border: darkgray solid 1px;
+          border-radius: 7px;
+          outline: none;
+          padding-top: 0.4em;
+          padding-bottom: 0.4em;
+          width: 140%;
+        }
       }
     }
   }

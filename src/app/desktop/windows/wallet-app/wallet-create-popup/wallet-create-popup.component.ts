@@ -13,4 +13,10 @@ export class WalletCreatePopupComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  modalClickHandler(e) {
+    if (e.toElement.classList[0] === 'modal') {
+      this.performClose.emit();
+    }
+  }
+
 }

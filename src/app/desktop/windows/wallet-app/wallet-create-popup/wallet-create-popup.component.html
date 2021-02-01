@@ -1,7 +1,24 @@
 <div class="wallet-create-popup">
-  <div class="modal">
+  <div class="modal" (click)="modalClickHandler($event)">
     <div class="modal-content">
-      <span class="close">&times;</span>
+
+
+      <img src="../../../../../assets/desktop/img/wallet-app/wallet_popup_back.svg" class="backround">
+      <div class="inputs">
+        <div class="name">
+          <label class="name_label">NAME</label><br>
+          <input type="text">
+        </div>
+        <div class="path">
+          <label class="path_label">PATH</label><br>
+          <input type="text">
+        </div>
+      </div>
+
+
+      <span class="close">
+        <img src="../../../../../assets/desktop/img/wallet-app/mini_logo.svg" (click)="performClose.emit()">
+      </span>
     </div>
   </div>
 </div>
