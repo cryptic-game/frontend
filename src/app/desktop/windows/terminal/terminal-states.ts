@@ -132,7 +132,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     },
     'mkdir': {
       executor: this.mkdir.bind(this),
-      description: 'creates a direcotry'
+      description: 'creates a directory'
     },
     'exit': {
       executor: this.exit.bind(this),
