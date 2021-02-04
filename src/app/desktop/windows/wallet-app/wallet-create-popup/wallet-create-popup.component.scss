@@ -13,7 +13,7 @@
       border: 1px solid #888;
       width: 80%;
       margin-top: 15%;
-      height: 50%;
+      height: 45%;
       position: relative;
       padding-right: 20px;
 
@@ -34,6 +34,30 @@
         left: 0;
 
       }
+
+      .btns {
+        outline: none;
+        border: none;
+        background: none;
+        padding-left: 10%;
+        padding-right: 10%;
+        padding-top: 2%;
+        padding-bottom: 2%;
+      }
+
+      .btns:hover {
+        background: lightgray;
+        border-radius: 5px;
+      }
+
+      .buttons {
+        position: absolute;
+        bottom: 10px;
+        width: 50%;
+        left: 25%;
+        text-align: center;
+      }
+
       .close {
         width: 50px;
         position: absolute;
@@ -57,7 +81,7 @@
           outline: none;
           padding-top: 0.4em;
           padding-bottom: 0.4em;
-          width: 140%;
+          width: 14em;
         }
       }
     }

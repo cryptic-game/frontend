@@ -3,6 +3,7 @@ import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window
 import { WalletAppService } from './wallet-app.service';
 import { Wallet } from './wallet';
 import { Transaction } from './transaction';
+import { Device } from '../../../api/devices/device';
 
 @Component({
   selector: 'app-wallet-app',
@@ -21,9 +22,11 @@ export class WalletAppComponent extends WindowComponent implements OnInit, OnDes
   updateIntervalHandle: any;
   walletFirstStartup: boolean;
   state; string;
+  deviceUUID: string;
 
-  constructor(private walletAppService: WalletAppService) {
+  constructor(private walletAppService: WalletAppService, protected windowDelegate: WindowDelegate) {
     super();
+    this.deviceUUID = windowDelegate.device.uuid;
     walletAppService.updateWallet().then(loaded => {
       this.walletFirstStartup = !loaded;
       this.state = 'fistWalletAppStartup';

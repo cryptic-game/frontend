@@ -19,7 +19,7 @@
       </app-wallet-first-startup-create-import>
     </div>
     <div class="wallet-first-startup-create-popup" *ngIf="showWalletCreatePopup">
-      <app-wallet-create-popup (performClose)="showWalletCreatePopup = false"></app-wallet-create-popup>
+      <app-wallet-create-popup (performClose)="showWalletCreatePopup = false" [activeDevice]="deviceUUID"></app-wallet-create-popup>
     </div>
     <div class="wallet-first-startup-import" *ngIf="state == 'importFirstWallet'">
       <p>placeholder: Import Wallet</p>
