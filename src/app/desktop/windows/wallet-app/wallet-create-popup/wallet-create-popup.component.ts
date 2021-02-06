@@ -3,6 +3,7 @@ import { WalletAppService } from '../wallet-app.service';
 import { FileService } from '../../../../api/files/file.service';
 import { WebsocketService } from '../../../../websocket.service';
 import { Path } from '../../../../api/files/path';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-wallet-create-popup',
@@ -14,8 +15,10 @@ export class WalletCreatePopupComponent implements OnInit {
   performClose: EventEmitter<void> = new EventEmitter<void>();
   @Output()
   ok: EventEmitter<void> = new EventEmitter<void>();
-  @Input() activeDevice;
+  @Input() deviceUUID;
   working_dir: string = Path.ROOT;
+  folder_path = '/';
+  file_name = 'wallet';
 
   error = 'No Error';
   constructor(private walletAppService: WalletAppService, private fileService: FileService,
@@ -32,35 +35,35 @@ export class WalletCreatePopupComponent implements OnInit {
   }
 
   createWallet() {
-    let path: Path = Path.fromString('/wallet');
-    let destUUID = path.parentUUID;
+    console.log(this.deviceUUID);
+    let path: Path = Path.fromString(this.folder_path + this.file_name);
     console.log('CREATEING WALLET...');
-    this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(-1), destUUID)).subscribe(() => {
-      this.error = 'That file already exists';
+    console.log(path);
+
+    this.fileService.getFromPath(this.deviceUUID, path).subscribe((file) => {
+      this.error = 'File already exists';
     }, error => {
       if (error.message === 'file_not_found') {
-        this.websocket.ms('currency', ['create'], {}).subscribe(wallet => {
-          const credentials = wallet.source_uuid + ' ' + wallet.key;
-
-          this.fileService.createFile(this.activeDevice['uuid'], path.path[path.path.length - 1], credentials, this.working_dir)
-            .subscribe({
-              error: err => {
-                this.error = 'That file couldn\'t be created. Please note your wallet credentials ' +
-                  'and put them in a new file with \'touch\' or contact the support: \'' + credentials + '\'';
-              }
+        console.log('File does not exists ;)');
+        this.fileService.getFromPath(this.deviceUUID, Path.fromString(this.folder_path)).subscribe((folder_path_file) => {
+          let folder_uuid = folder_path_file.uuid;
+          this.websocket.ms('currency', ['create'], {}).subscribe(wallet => {
+            const credentials = wallet.source_uuid + ' ' + wallet.key;
+            this.fileService.createFile(this.deviceUUID, this.file_name, credentials, folder_uuid).subscribe((wallet_file) => {
+              console.log('Created Wallet File');
             });
-        }, error1 => {
-          if (error1.message === 'already_own_a_wallet') {
-            this.error = 'You already own a wallet';
-          } else {
-            this.error = error1.message;
-          }
+          });
+        }, folder_path_error => {
+          this.error = 'Path does not exists';
         });
+
       } else {
-        console.log(error);
+        console.error(error);
       }
     });
-    this.walletAppService.loadNewWallet('', '');
+
+
+    //this.walletAppService.loadNewWallet('', '');
   }
 
 }

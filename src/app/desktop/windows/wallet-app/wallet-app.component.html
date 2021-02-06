@@ -1,6 +1,6 @@
 <div class="wallet-app">
   <div class="header">
-    <app-wallet-app-header *ngIf="!walletFirstStartup" [(walletEdit)]="walletFirstStartup"></app-wallet-app-header>
+    <app-wallet-app-header *ngIf="false" [(walletEdit)]="walletFirstStartup"></app-wallet-app-header>
   </div>
   <div class="content">
     <div *ngIf="walletEdit" class="wallet-edit">
@@ -19,12 +19,12 @@
       </app-wallet-first-startup-create-import>
     </div>
     <div class="wallet-first-startup-create-popup" *ngIf="showWalletCreatePopup">
-      <app-wallet-create-popup (performClose)="showWalletCreatePopup = false" [activeDevice]="deviceUUID"></app-wallet-create-popup>
+      <app-wallet-create-popup (performClose)="showWalletCreatePopup = false" [deviceUUID]="deviceUUID"></app-wallet-create-popup>
     </div>
     <div class="wallet-first-startup-import" *ngIf="state == 'importFirstWallet'">
       <p>placeholder: Import Wallet</p>
     </div>
-    <div *ngIf="!walletEdit && wallet" class="wallet-transaction-list">
+    <div *ngIf="false" class="wallet-transaction-list">
       <div class="title wallet-app-header">
         <h1>Transactions ({{wallet.transactions}})</h1>
         <div class="transaction-buttons">

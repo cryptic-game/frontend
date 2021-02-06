@@ -7,11 +7,11 @@
       <div class="inputs">
         <div class="name">
           <label class="name_label">PATH</label><br>
-          <input type="text" value="wallet">
+          <input type="text" [(ngModel)]="file_name">
         </div>
         <div class="path">
           <label class="path_label">PATH</label><br>
-          <input type="text" value="/">
+          <input type="text" [(ngModel)]="folder_path">
         </div>
         <div class="error">{{ error }}</div>
       </div>
