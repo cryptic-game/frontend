@@ -20,7 +20,7 @@ export class WalletCreatePopupComponent implements OnInit {
   folder_path = '/';
   file_name = 'wallet';
 
-  error = 'No Error';
+  error = '';
   constructor(private walletAppService: WalletAppService, private fileService: FileService,
               protected websocket: WebsocketService) {
    }
@@ -50,8 +50,25 @@ export class WalletCreatePopupComponent implements OnInit {
           this.websocket.ms('currency', ['create'], {}).subscribe(wallet => {
             const credentials = wallet.source_uuid + ' ' + wallet.key;
             this.fileService.createFile(this.deviceUUID, this.file_name, credentials, folder_uuid).subscribe((wallet_file) => {
-              console.log('Created Wallet File');
+              this.error = '';
+              this.ok.emit();
+            }, (file_create_error) => {
+              if (file_create_error.message === 'invalid_input_data') {
+                this.error = 'Filename/Path is not valid.';
+                this.websocket.ms('currency', ['reset'], {source_uuid: wallet.source_uuid}).subscribe((reset_wallet) => {
+                }, (error_reset_wallet) => {
+                  console.error(error_reset_wallet);
+                });
+              } else {
+                console.error(file_create_error);
+              }
             });
+          }, (wallet_error) => {
+            if (wallet_error.message === 'already_own_a_wallet') {
+              this.error = 'You already own a Wallet. Please import this.';
+            } else {
+              console.error(wallet_error);
+            }
           });
         }, folder_path_error => {
           this.error = 'Path does not exists';
