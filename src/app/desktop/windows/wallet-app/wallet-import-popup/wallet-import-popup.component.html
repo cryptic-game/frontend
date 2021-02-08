@@ -1,0 +1,30 @@
+<div class="wallet-import-popup">
+  <div class="modal" (click)="modalClickHandler($event)">
+    <div class="modal-content">
+
+
+      <img src="../../../../../assets/desktop/img/wallet-app/wallet_popup_back.svg" class="backround">
+      <div class="inputs">
+        <div class="name">
+          <label class="name_label">PATH</label><br>
+          <input type="text" [(ngModel)]="file_name">
+        </div>
+        <div class="path">
+          <label class="path_label">PATH</label><br>
+          <input type="text" [(ngModel)]="folder_path">
+        </div>
+        <div class="error">{{ error }}</div>
+      </div>
+
+      <div class="buttons">
+        <button class="btns" (click)="createWallet()">OK</button>
+        <button class="btns" (click)="performClose.emit()">CANCEL</button>
+      </div>
+
+
+      <span class="close">
+        <img src="../../../../../assets/desktop/img/wallet-app/mini_logo.svg" (click)="performClose.emit()">
+      </span>
+    </div>
+  </div>
+</div>

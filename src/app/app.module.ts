@@ -48,7 +48,8 @@ import { ContextMenuModule } from 'ngx-contextmenu';
 import { WalletFirstStartupComponent } from './desktop/windows/wallet-app/wallet-first-startup/wallet-first-startup.component';
 import { WalletFirstStartupCreateImportComponent } from './desktop/windows/wallet-app/wallet-first-startup-create-import/wallet-first-startup-create-import.component';
 import { WalletCreatePopupComponent } from './desktop/windows/wallet-app/wallet-create-popup/wallet-create-popup.component';
-import { WalletDashboardComponent } from './src/app/desktop/windows/wallet-app/wallet-dashboard/wallet-dashboard.component';
+import { WalletImportPopupComponent } from './desktop/windows/wallet-app/wallet-import-popup/wallet-import-popup.component';
+import { WalletDashboardComponent } from './desktop/windows/wallet-app/wallet-dashboard/wallet-dashboard.component';
 // tslint:enable:max-line-length
 
 const routes: Routes = [
@@ -104,6 +105,7 @@ const routes: Routes = [
     WalletFirstStartupComponent,
     WalletFirstStartupCreateImportComponent,
     WalletCreatePopupComponent,
+    WalletImportPopupComponent,
     WalletDashboardComponent
   ],
   imports: [
