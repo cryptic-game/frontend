@@ -429,7 +429,6 @@ export class DefaultTerminalState extends CommandTerminalState {
       return file.is_directory;
     }).sort().forEach(folder => {
       this.terminal.output(`<span style="color: ${this.settings.getLSFC()};">${(this.settings.getLSPrefix()) ? '[Folder] ' : ''}${folder.filename}</span>`);
-      console.log('<span style="color: ' + this.settings.getLSFC() + ';">' + folder.filename + '</span>');
     });
 
     files.filter((file) => {
