@@ -6,18 +6,22 @@
       <img src="../../../../../assets/desktop/img/wallet-app/wallet_popup_back.svg" class="backround">
       <div class="inputs">
         <div class="name">
-          <label class="name_label">PATH</label><br>
-          <input type="text" [(ngModel)]="file_name">
+          <label class="label">NAME</label><br>
+          <label> {{ name }}</label>
         </div>
-        <div class="path">
-          <label class="path_label">PATH</label><br>
-          <input type="text" [(ngModel)]="folder_path">
+        <div class="wallet-id">
+          <label class="label">WALLET ID</label><br>
+          <label> {{ wallet_id }}</label>
+        </div>
+        <div class="wallet-id">
+          <label class="label">WALLET KEY</label><br>
+          <label> {{ wallet_key }}</label>
         </div>
         <div class="error">{{ error }}</div>
       </div>
 
       <div class="buttons">
-        <button class="btns" (click)="createWallet()">OK</button>
+        <button class="btns" (click)="importWallet()">OK</button>
         <button class="btns" (click)="performClose.emit()">CANCEL</button>
       </div>
 

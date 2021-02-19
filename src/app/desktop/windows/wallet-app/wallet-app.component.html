@@ -15,14 +15,14 @@
       <app-wallet-first-startup (performClose)="state = 'fistWalletAppStartup2'"></app-wallet-first-startup>
     </div>
     <div class="wallet-first-startup-create-import" *ngIf="state == 'fistWalletAppStartup2'">
-      <app-wallet-first-startup-create-import (create)="showWalletCreatePopup = true" (import)="state = 'importFirstWallet'">
+      <app-wallet-first-startup-create-import (create)="showWalletCreatePopup = true" (import)="showWalletImportPopup = true">
       </app-wallet-first-startup-create-import>
     </div>
     <div class="wallet-first-startup-create-popup" *ngIf="showWalletCreatePopup">
       <app-wallet-create-popup (performClose)="showWalletCreatePopup = false" (ok)="showWalletCreatePopup = false; state = 'dashboard'" [deviceUUID]="deviceUUID"></app-wallet-create-popup>
     </div>
-    <div class="wallet-first-startup-import" *ngIf="state == 'importFirstWallet'">
-      <p>placeholder: Import Wallet</p>
+    <div class="wallet-first-startup-import" *ngIf="showWalletImportPopup">
+      <app-wallet-import-popup (performClose)="showWalletImportPopup = false" (ok)="showWalletImportPopup = false; state = 'dashboard'" [deviceUUID]="deviceUUID"></app-wallet-import-popup>
     </div>
     <div class="wallet-dashboard" *ngIf="state == 'dashboard'">
       <app-wallet-dashboard></app-wallet-dashboard>

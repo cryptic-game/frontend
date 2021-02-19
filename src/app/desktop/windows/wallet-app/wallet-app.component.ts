@@ -3,7 +3,6 @@ import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window
 import { WalletAppService } from './wallet-app.service';
 import { Wallet } from './wallet';
 import { Transaction } from './transaction';
-import { Device } from '../../../api/devices/device';
 
 @Component({
   selector: 'app-wallet-app',
@@ -13,6 +12,7 @@ import { Device } from '../../../api/devices/device';
 export class WalletAppComponent extends WindowComponent implements OnInit, OnDestroy {
   walletEdit = false;
   showWalletCreatePopup = false;
+  showWalletImportPopup = false;
   wallet: Wallet;
   transactions: Transaction[] = [];
   lastTransactionCount = 0;
