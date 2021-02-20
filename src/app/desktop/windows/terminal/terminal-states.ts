@@ -9,6 +9,7 @@ import { Path } from '../../../api/files/path';
 import { of } from 'rxjs';
 import { Device } from '../../../api/devices/device';
 import { WindowDelegate } from '../../window/window-delegate';
+import { File } from '../../../api/files/file';
 
 
 function escapeHtml(html) {
@@ -25,7 +26,7 @@ function reportError(error) {
 }
 
 export abstract class CommandTerminalState implements TerminalState {
-  abstract commands: { [name: string]: { executor: (args: string[]) => void, description: string } };
+  abstract commands: { [name: string]: { executor: (args: string[]) => void, description: string, hidden?: boolean } };
 
   protocol: string[] = [];
 
@@ -53,8 +54,9 @@ export abstract class CommandTerminalState implements TerminalState {
 
   autocomplete(content: string): string {
     return content
-      ? Object.keys(this.commands)
-        .filter(n => !['chaozz'].includes(n))
+      ? Object.entries(this.commands)
+        .filter(command => !command[1].hidden)
+        .map(([name]) => name)
         .sort()
         .find(n => n.startsWith(content))
       : '';
@@ -76,9 +78,13 @@ export class DefaultTerminalState extends CommandTerminalState {
       executor: this.help.bind(this),
       description: 'list of all commands'
     },
+    'miner': {
+      executor: this.miner.bind(this),
+      description: 'Manages Morphcoin miners'
+    },
     'status': {
       executor: this.status.bind(this),
-      description: 'displays the number of online plyers'
+      description: 'displays the number of online players'
     },
     'hostname': {
       executor: this.hostname.bind(this),
@@ -126,7 +132,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     },
     'mkdir': {
       executor: this.mkdir.bind(this),
-      description: 'creates a direcotry'
+      description: 'creates a directory'
     },
     'exit': {
       executor: this.exit.bind(this),
@@ -176,8 +182,10 @@ export class DefaultTerminalState extends CommandTerminalState {
     // easter egg
     'chaozz': {
       executor: () => this.terminal.outputText('"mess with the best, die like the rest :D`" - chaozz'),
-      description: ''
+      description: '',
+      hidden: true
     }
+
   };
 
   working_dir: string = Path.ROOT;  // UUID of the working directory
@@ -241,13 +249,116 @@ export class DefaultTerminalState extends CommandTerminalState {
   help() {
     const table = document.createElement('table');
     Object.entries(this.commands)
+      .filter(command => !('hidden' in command[1]))
       .map(([name, value]) => ({ name: name, description: value.description }))
-      .filter(command => !['chaozz'].includes(command.name))
       .map(command => `<tr><td>${command.name}</td><td>${command.description}</td></tr>`)
       .forEach(row => {
         table.innerHTML += row;
       });
     this.terminal.outputNode(table);
+  }
+
+  miner(args: string[]) {
+    let miner;
+    let wallet;
+    let power;
+    let text;
+    if (args.length === 0) {
+      this.terminal.outputText('usage: miner look|wallet|power|start');
+      return;
+    }
+    if (args[0] === 'look') {
+      this.websocket.ms('service', ['list'], {
+        'device_uuid': this.activeDevice['uuid'],
+      }).subscribe((listData) => {
+        listData.services.forEach((service) => {
+          if (service.name === 'miner') {
+            miner = service;
+            this.websocket.ms('service', ['miner', 'get'], {
+              'service_uuid': miner.uuid,
+            }).subscribe(data => {
+              wallet = data['wallet'];
+              power = Math.round(data['power'] * 100);
+              text =
+                'Wallet: ' + wallet + '<br>' +
+                'Mining Speed: ' + String(Number(miner.speed) * 60 * 60) + ' MC/h<br>' +
+                'Power: ' + power + '%';
+              this.terminal.output(text);
+            });
+          }
+        });
+      });
+
+    } else if (args[0] === 'wallet') {
+      if (args.length !== 2) {
+        this.terminal.outputText('usage: miner wallet <wallet-id>');
+        return;
+      }
+      this.websocket.ms('service', ['list'], {
+        'device_uuid': this.activeDevice['uuid'],
+      }).subscribe((listData) => {
+        listData.services.forEach((service) => {
+          if (service.name === 'miner') {
+            miner = service;
+            this.websocket.ms('service', ['miner', 'wallet'], {
+              'service_uuid': miner.uuid,
+              'wallet_uuid': args[1],
+            }).subscribe((walletData) => {
+              wallet = args[1];
+              power = walletData.power;
+              this.terminal.outputText(`Set wallet to ${args[1]}`);
+            }, () => {
+              this.terminal.outputText('Wallet is invalid.');
+            });
+          }
+        });
+      });
+    } else if (args[0] === 'power') {
+      if (args.length !== 2) {
+        this.terminal.outputText('usage: miner power <0-100>');
+        return;
+      }
+      if (isNaN(Number(args[1]))) {
+        return this.terminal.outputText('usage: miner power <0-100>');
+      }
+      if (0 > Number(args[1]) || Number(args[1]) > 100) {
+        return this.terminal.outputText('usage: miner power <0-100>');
+      }
+      this.websocket.ms('service', ['list'], {
+        'device_uuid': this.activeDevice['uuid'],
+      }).subscribe((listData) => {
+        listData.services.forEach((service) => {
+          if (service.name === 'miner') {
+            miner = service;
+            this.websocket.ms('service', ['miner', 'power'], {
+              'service_uuid': miner.uuid,
+              'power': Number(args[1]) / 100,
+            }).subscribe((data: { power: number }) => {
+              this.terminal.outputText('Set Power to ' + args[1] + '%');
+            });
+          }
+        });
+      });
+    } else if (args[0] === 'start') {
+      if (args.length !== 2) {
+        this.terminal.outputText('usage: miner start <wallet-id>');
+        return;
+      }
+      this.websocket.ms('service', ['create'], {
+        'device_uuid': this.activeDevice['uuid'],
+        'name': 'miner',
+        'wallet_uuid': args[1],
+      }).subscribe((service) => {
+        miner = service;
+      }, () => {
+        this.terminal.outputText('Invalid wallet');
+        return of<void>();
+      });
+    } else {
+      this.terminal.outputText('usage: miner look|wallet|power|start');
+      return;
+    }
+
   }
 
   status() {
@@ -313,11 +424,25 @@ export class DefaultTerminalState extends CommandTerminalState {
     }
   }
 
+  list_files(files: File[]) {
+    files.filter((file) => {
+      return file.is_directory;
+    }).sort().forEach(folder => {
+      this.terminal.output(`<span style="color: ${this.settings.getLSFC()};">${(this.settings.getLSPrefix()) ? '[Folder] ' : ''}${folder.filename}</span>`);
+    });
+
+    files.filter((file) => {
+      return !file.is_directory;
+    }).sort().forEach(file => {
+      this.terminal.outputText(`${(this.settings.getLSPrefix() ? '[File] ' : '')}${file.filename}`);
+    });
+  }
+
   ls(args: string[]) {
     if (args.length === 0) {
-      this.fileService.getFiles(this.activeDevice['uuid'], this.working_dir).subscribe(files =>
-        files.forEach(f => this.terminal.outputText(f.filename))
-      );
+      this.fileService.getFiles(this.activeDevice['uuid'], this.working_dir).subscribe(files => {
+        this.list_files(files);
+      });
     } else if (args.length === 1) {
       let path: Path;
       try {
@@ -330,7 +455,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       this.fileService.getFromPath(this.activeDevice['uuid'], path).subscribe(target => {
         if (target.is_directory) {
           this.fileService.getFiles(this.activeDevice['uuid'], target.uuid).subscribe(files =>
-            files.forEach(f => this.terminal.outputText(f.filename))
+            this.list_files(files)
           );
         } else {
           this.terminal.outputText('That is not a directory');
@@ -700,13 +825,14 @@ export class DefaultTerminalState extends CommandTerminalState {
 
       } else if (args[0] === 'create') {
         (path.path.length > 1
-            ? this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(0, -1), path.parentUUID))
-            : of({ uuid: path.parentUUID })
+          ? this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(0, -1), path.parentUUID))
+          : of({ uuid: path.parentUUID })
         ).subscribe(dest => {
           this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(-1), dest.uuid)).subscribe(() => {
             this.terminal.outputText('That file already exists');
           }, error => {
             if (error.message === 'file_not_found') {
+              if (path.path[path.path.length - 1].length < 65) {
               this.websocket.ms('currency', ['create'], {}).subscribe(wallet => {
                 const credentials = wallet.source_uuid + ' ' + wallet.key;
 
@@ -726,6 +852,9 @@ export class DefaultTerminalState extends CommandTerminalState {
                   reportError(error1);
                 }
               });
+              } else {
+                this.terminal.outputText('Filename too long. Only 64 chars allowed');
+              }
             } else {
               reportError(error);
             }
@@ -907,22 +1036,21 @@ export class DefaultTerminalState extends CommandTerminalState {
             service_uuid: bruteforceService['uuid'], device_uuid: activeDevice,
             target_device: targetDevice, target_service: targetService
           }).subscribe(() => {
-              this.terminal.outputText('You started a bruteforce attack');
-              this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
-                if (stop) {
-                  this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
-                }
-              }));
-            }, error1 => {
-              if (error1.message === 'could_not_start_service') {
-                this.terminal.outputText('There was an error while starting the bruteforce attack');
-              } else if (error1.message === 'invalid_input_data') {
-                this.terminal.outputText('The specified UUID is not valid');
-              } else {
-                reportError(error1);
+            this.terminal.outputText('You started a bruteforce attack');
+            this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
+              if (stop) {
+                this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
               }
+            }));
+          }, error1 => {
+            if (error1.message === 'could_not_start_service') {
+              this.terminal.outputText('There was an error while starting the bruteforce attack');
+            } else if (error1.message === 'invalid_input_data') {
+              this.terminal.outputText('The specified UUID is not valid');
+            } else {
+              reportError(error1);
             }
-          );
+          });
         };
 
         this.websocket.ms('service', ['bruteforce', 'status'], {
@@ -950,6 +1078,10 @@ export class DefaultTerminalState extends CommandTerminalState {
             if (differentServiceAttacked) {
               startAttack();
             }
+          }, (err) => {
+              if (err.message === 'service_not_running') {
+                this.terminal.outputText('Target service is unreachable.');
+              }
           });
         }, error => {
           if (error.message === 'attack_not_running') {
