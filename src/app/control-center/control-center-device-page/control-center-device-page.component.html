@@ -2,9 +2,9 @@
   <img [hidden]="!device.powered_on" [queryParams]="{'device': device.uuid}"
        [routerLink]="'/desktop'" [class.disabled]="powerButton.animating"
        alt="Online-Computer" class="computer-logo online" draggable="false"
-       src="../assets/device/desktop_computer_online.svg">
+       src="assets/device/desktop_computer_online.svg">
   <img [hidden]="device.powered_on" alt="Offline-Computer" class="computer-logo"
-       draggable="false" src="../assets/device/desktop_computer_offline.svg">
+       draggable="false" src="assets/device/desktop_computer_offline.svg">
   <div>
     <h1 [hidden]="renamingActive">{{device.name}}</h1>
     <h1 hidden="hidden" #deviceRename [class.changed]="nameChanged" (keypress)="deviceNameKeyPress($event)"
