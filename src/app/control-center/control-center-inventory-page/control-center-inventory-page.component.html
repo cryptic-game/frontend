@@ -2,7 +2,7 @@
 <div id="inventory">
   <div (dragstart)="dragStart($event, item)" *ngFor="let item of items" class="item" draggable="true">
     <img [alt]="getCategoryIconName(item.properties.category)"
-         [src]="'../assets/device/parts/' + getCategoryIconName(item.properties.category)" draggable="false"
+         [src]="'assets/device/parts/' + getCategoryIconName(item.properties.category)" draggable="false"
          height="128" width="128">
     <p>{{item.properties.name}}</p>
   </div>
