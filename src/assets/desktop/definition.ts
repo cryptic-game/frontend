@@ -27,7 +27,7 @@ export const desktopDefinition = {
       'file-manager',
       programWindows['file-manager'],
       'File-Manager',
-      '../../assets/desktop/img/filemanager.svg',
+      'assets/desktop/img/filemanager.svg',
       true,
       new Position(20, 30)
     ),
@@ -35,7 +35,7 @@ export const desktopDefinition = {
       'terminal',
       programWindows['terminal'],
       'Terminal',
-      '../../assets/desktop/img/terminal.svg',
+      'assets/desktop/img/terminal.svg',
       true,
       new Position(20, 130)
     ),
@@ -43,7 +43,7 @@ export const desktopDefinition = {
       'miner',
       programWindows['miner'],
       'Miner',
-      '../../assets/desktop/img/morphcoin_dark.svg',
+      'assets/desktop/img/morphcoin_dark.svg',
       true,
       new Position(20, 230)
     ),
@@ -51,7 +51,7 @@ export const desktopDefinition = {
       'settings',
       programWindows['settings'],
       'Settings',
-      '../../assets/desktop/img/gear.svg',
+      'assets/desktop/img/gear.svg',
       true,
       new Position(20, 330)
     ),
@@ -59,7 +59,7 @@ export const desktopDefinition = {
       'task-manager',
       programWindows['task-manager'],
       'Task-Manager',
-      '../../assets/desktop/img/task-manager.svg',
+      'assets/desktop/img/task-manager.svg',
       true,
       new Position(20, 430)
     ),
@@ -67,7 +67,7 @@ export const desktopDefinition = {
       'wallet-app',
       programWindows['wallet-app'],
       'Wallet-App',
-      '../../assets/desktop/img/wallet_app.svg',
+      'assets/desktop/img/wallet_app.svg',
       true,
       new Position(20, 530)
     ),
@@ -75,7 +75,7 @@ export const desktopDefinition = {
       'hardware-shop-app',
       programWindows['hardware-shop-app'],
       'Hardware-Shop-App',
-      '../../assets/desktop/img/hardware_shop_app.svg',
+      'assets/desktop/img/hardware_shop_app.svg',
       true,
       new Position(20, 630)
     ),
@@ -83,7 +83,7 @@ export const desktopDefinition = {
       'editor-app',
       programWindows['editor-app'],
       'Editor',
-      '../../assets/desktop/img/editor.svg',
+      'assets/desktop/img/editor.svg',
       true,
       new Position(110, 30)
     )
