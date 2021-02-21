@@ -80,7 +80,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     },
     'miner': {
       executor: this.miner.bind(this),
-      description: 'Manages Morphcoin miners'
+      description: 'manages morphcoin miners'
     },
     'status': {
       executor: this.status.bind(this),
