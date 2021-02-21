@@ -191,8 +191,8 @@ export class DefaultTerminalState extends CommandTerminalState {
   working_dir: string = Path.ROOT;  // UUID of the working directory
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-    private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
-    protected terminal: TerminalAPI, public promptColor: string = null) {
+              private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
+              protected terminal: TerminalAPI, public promptColor: string = null) {
     super();
   }
 
@@ -1075,9 +1075,9 @@ export class DefaultTerminalState extends CommandTerminalState {
               startAttack();
             }
           }, (err) => {
-            if (err.message === 'service_not_running') {
-              this.terminal.outputText('Target service is unreachable.');
-            }
+              if (err.message === 'service_not_running') {
+                this.terminal.outputText('Target service is unreachable.');
+              }
           });
         }, error => {
           if (error.message === 'attack_not_running') {
@@ -1628,9 +1628,9 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
   };
 
   constructor(terminal: TerminalAPI,
-    private domSanitizer: DomSanitizer,
-    private callback: (response: boolean) => void,
-    private startSeconds: number = 0) {
+              private domSanitizer: DomSanitizer,
+              private callback: (response: boolean) => void,
+              private startSeconds: number = 0) {
     super(terminal);
 
     this.intervalHandle = setInterval(() => {
