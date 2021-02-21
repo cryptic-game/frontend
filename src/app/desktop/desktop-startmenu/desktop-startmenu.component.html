@@ -1,6 +1,6 @@
 <div id="startmenu">
   <div id="info">
-    <img alt="" id="profile-icon" src="../../../assets/desktop/img/user_1.svg"/>
+    <img alt="" id="profile-icon" src="assets/desktop/img/user_1.svg"/>
     <div>
       <p id="user">{{ websocket.account.name }}</p>
       <p id="online">online: {{ websocket.onlinePlayers }}</p>
@@ -16,7 +16,7 @@
   <div id="programs">
     <div id="linkages">
       <div class="button">
-        <img alt="" class="icon" src="../../../assets/device/laptop_front.svg">
+        <img alt="" class="icon" src="assets/device/laptop_front.svg">
         Computer
         <div class="sub-menu">
           <div *ngFor="let device of parent.devices" [class.disabled]="!device.powered_on"
@@ -41,12 +41,12 @@
   </div>
   <div class="buttons">
     <div (click)="logout()" class="button" id="logout">
-      <img alt="" class="icon" src="../../../assets/desktop/img/logoutbutton.svg"/>
+      <img alt="" class="icon" src="assets/desktop/img/logoutbutton.svg"/>
       Logout
     </div>
     <div (click)="shutdown()" [queryParams]="{ device: parent.activeDevice.uuid }" class="button" id="shutdown"
          routerLink="/device">
-      <img alt="" class="icon" src="../../../assets/desktop/img/computer_on_off.svg"/>
+      <img alt="" class="icon" src="assets/desktop/img/computer_on_off.svg"/>
       Shutdown
     </div>
   </div>

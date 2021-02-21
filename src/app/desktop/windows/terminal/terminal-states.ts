@@ -832,6 +832,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             this.terminal.outputText('That file already exists');
           }, error => {
             if (error.message === 'file_not_found') {
+              if (path.path[path.path.length - 1].length < 65) {
               this.websocket.ms('currency', ['create'], {}).subscribe(wallet => {
                 const credentials = wallet.source_uuid + ' ' + wallet.key;
 
@@ -851,6 +852,9 @@ export class DefaultTerminalState extends CommandTerminalState {
                   reportError(error1);
                 }
               });
+              } else {
+                this.terminal.outputText('Filename too long. Only 64 chars allowed');
+              }
             } else {
               reportError(error);
             }
