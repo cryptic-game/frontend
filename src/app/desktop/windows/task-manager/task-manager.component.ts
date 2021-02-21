@@ -74,7 +74,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
 
 export class TaskManagerWindowDelegate extends WindowDelegate {
   title = 'Task-Manager';
-  icon = '../../assets/desktop/img/task-manager.svg';
+  icon = 'assets/desktop/img/task-manager.svg';
   type = TaskManagerComponent;
 
   constraints = new WindowConstraints({ minWidth: 400, minHeight: 350 });
