@@ -16,6 +16,7 @@ import { ControlCenterDevicePageHardwareResolver } from './control-center-device
 import { ControlCenterInventoryPageComponent } from './control-center-inventory-page/control-center-inventory-page.component';
 import { ControlCenterInventoryPageItemsResolver } from './control-center-inventory-page/control-center-inventory-page-items.resolver';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ControlCenterIntroductionPageComponent } from './control-center-introduction-page/control-center-introduction-page.component';
 
 
 const routes: Routes = [
@@ -46,7 +47,8 @@ const routes: Routes = [
       },
       { path: 'settings', component: ControlCenterSettingsPageComponent },
       { path: 'sound', component: ControlCenterSoundPageComponent },
-      { path: 'changelog', component: ControlCenterChangelogPageComponent }
+      { path: 'changelog', component: ControlCenterChangelogPageComponent },
+      { path: 'introduction', component: ControlCenterIntroductionPageComponent }
     ]
   }
 ];
@@ -62,7 +64,8 @@ const routes: Routes = [
     ControlCenterSettingsPageComponent,
     ControlCenterSoundPageComponent,
     ControlCenterChangelogPageComponent,
-    ControlCenterInventoryPageComponent
+    ControlCenterInventoryPageComponent,
+    ControlCenterIntroductionPageComponent
   ],
   imports: [
     CommonModule,

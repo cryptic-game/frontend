@@ -19,7 +19,8 @@ export class ControlCenterComponent implements OnInit {
     new SidebarMenu('Inventory', 'menu_inventory.svg', { routerLink: '/inventory' }),
     new SidebarMenu('Settings', 'menu_settings.svg', { routerLink: '/settings' }),
     new SidebarMenu('Sound', 'menu_sound.svg', { routerLink: '/sound' }),
-    new SidebarMenu('Changelog', 'menu_changelog.svg', { routerLink: '/changelog' })
+    new SidebarMenu('Changelog', 'menu_changelog.svg', { routerLink: '/changelog' }),
+    new SidebarMenu('Introduction', 'menu_changelog.svg', { routerLink: '/introduction' })
   ];
 
   constructor(private controlCenterService: ControlCenterService) {

@@ -13,7 +13,7 @@ interface StoredRoute {
  * Additionally, this preserves the contents of the i.e. login and sign-up.
  */
 export class AppRouteReuseStrategy implements RouteReuseStrategy {
-  pathReuse = ['', 'create-device', 'settings', 'sound', 'changelog', 'desktop'];
+  pathReuse = ['', 'create-device', 'settings', 'sound', 'changelog', 'desktop', 'introduction'];
   storedPaths: { [path: string]: StoredRoute } = {};
 
   reset() {
