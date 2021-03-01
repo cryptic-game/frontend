@@ -8,6 +8,7 @@ import { WalletAppWindowDelegate } from '../../app/desktop/windows/wallet-app/wa
 import { HardwareShopWindowDelegate } from '../../app/desktop/windows/hardware-shop/hardware-shop.component';
 import { EditorWindowDelegate } from '../../app/desktop/windows/editor/editor.component';
 import { FileManagerWindowDelegate } from '../../app/desktop/windows/file-manager/file-manager.component';
+import { IntroductionDelegate } from '../../app/desktop/windows/introduction/introduction.component';
 
 export const programWindows = {
   'file-manager': FileManagerWindowDelegate,
@@ -17,7 +18,8 @@ export const programWindows = {
   'task-manager': TaskManagerWindowDelegate,
   'wallet-app': WalletAppWindowDelegate,
   'hardware-shop-app': HardwareShopWindowDelegate,
-  'editor-app': EditorWindowDelegate
+  'editor-app': EditorWindowDelegate,
+  'introduction-app': IntroductionDelegate
 };
 
 export const desktopDefinition = {
@@ -86,6 +88,14 @@ export const desktopDefinition = {
       'assets/desktop/img/editor.svg',
       true,
       new Position(110, 30)
+    ),
+    new Program(
+      'introduction-app',
+      programWindows['introduction-app'],
+      'Introduction',
+      'assets/desktop/img/introduction-app.svg',
+      true,
+      new Position(110, 130)
     )
   ]
 };
