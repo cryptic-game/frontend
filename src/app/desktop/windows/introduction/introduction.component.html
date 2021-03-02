@@ -30,14 +30,43 @@
     </ul>-->
 
     <div class="side-menu">
-      <div>Introduction</div>
-      <div>Miner</div>
-      <div>Wallets</div>
-      <div>Portscaning</div>
-      <div>Bruteforcing</div>
-      <div>Terminal</div>
-      <div>Devices</div>
+      <div (click)="page = 'Introduction'" [class.active]="page == 'Introduction'">Introduction</div>
+      <div (click)="page = 'Miner'" [class.active]="page == 'Miner'">Miner</div>
+      <div (click)="page = 'Wallets'" [class.active]="page == 'Wallets'">Wallets</div>
+      <div (click)="page = 'Portscaning'" [class.active]="page == 'Portscaning'">Portscaning</div>
+      <div (click)="page = 'Bruteforcing'" [class.active]="page == 'Bruteforcing'">Bruteforcing</div>
+      <div (click)="page = 'Terminal'" [class.active]="page == 'Terminal'">Terminal</div>
+      <div (click)="page = 'Devices'" [class.active]="page == 'Devices'">Devices</div>
     </div>
+
+    <div *ngIf="page == 'Introduction'" class="page-text">
+      Introduction
+    </div>
+
+    <div *ngIf="page == 'Miner'" class="page-text">
+      Miner
+    </div>
+
+    <div *ngIf="page == 'Wallets'" class="page-text">
+      Wallets
+    </div>
+
+    <div *ngIf="page == 'Portscaning'" class="page-text">
+      Portscaning
+    </div>
+
+    <div *ngIf="page == 'Bruteforcing'" class="page-text">
+      Bruteforcing
+    </div>
+
+    <div *ngIf="page == 'Terminal'" class="page-text">
+      Terminal
+    </div>
+
+    <div *ngIf="page == 'Devices'" class="page-text">
+      Introduction
+    </div>
+
   </div>
 
 </div>
