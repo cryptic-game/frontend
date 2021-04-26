@@ -1,17 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg height="100%"
-     style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"
-     version="1.1" viewBox="0 0 534 534" width="100%"
-     xmlns="http://www.w3.org/2000/svg">
-  <rect height="533.333" id="GPU" style="fill:none;" width="533.333" x="0" y="0.507"/>
-  <rect height="222.811" style="fill:#171c1f;stroke:#fff;stroke-width:10px;" width="475" x="29.167" y="138.028"/>
-  <circle cx="392.761" cy="249.433" r="111.406" style="fill:#fff;stroke:#000;stroke-width:10px;"/>
-  <circle cx="392.761" cy="249.433" r="111.406" style="fill:#171c1f;stroke:#fff;stroke-width:10px;"/>
-  <circle cx="392.761" cy="249.433" r="28.435" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px;"/>
-  <rect height="20.602" style="fill:#171c1f;stroke:#fff;stroke-width:10px;" width="194.197" x="72.47" y="360.839"/>
-  <text style="font-family:'ArialMT', 'Arial', sans-serif;font-size:83.333px;fill:#fff;" x="80.897px"
-        y="281.5px">GPU
-  </text>
-  <path d="M29.167,360.839l0,35.482" style="fill:none;stroke:#fff;stroke-width:10px;"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5" width="100%" height="100%" version="1.1" viewBox="0 0 534 534"><rect id="GPU" width="533.333" height="533.333" x="0" y=".507" style="fill:none"/><rect style="fill:#171c1f;stroke:#fff;stroke-width:10px" width="475" height="222.811" x="29.167" y="138.028"/><circle cx="392.761" cy="249.433" r="111.406" style="fill:#fff;stroke:#000;stroke-width:10px"/><circle cx="392.761" cy="249.433" r="111.406" style="fill:#171c1f;stroke:#fff;stroke-width:10px"/><circle cx="392.761" cy="249.433" r="28.435" style="fill:#171c1f;stroke:#fff;stroke-width:8.33px"/><rect style="fill:#171c1f;stroke:#fff;stroke-width:10px" width="194.197" height="20.602" x="72.47" y="360.839"/><text style="font-family:'ArialMT','Arial',sans-serif;font-size:83.333px;fill:#fff" x="80.897" y="281.5">GPU</text><path d="M29.167,360.839l0,35.482" style="fill:none;stroke:#fff;stroke-width:10px"/></svg>
