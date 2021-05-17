@@ -1,6 +1,20 @@
 {
-  "latest": "Pre-Alpha 2.0",
+  "latest": "Pre-Alpha 2.1",
   "versions": [
+    {
+      "name": "Pre-Alpha 2.1",
+      "date": "2021-05-17T20:00:00.000Z",
+      "enhancements": [
+        "Editor writing capability",
+        "ls command",
+        "Locale formatter to morphcoin look command"
+      ],
+      "fixes": [
+        "Bug with bruteforce command",
+        "Several typing issues",
+        "Wallet command error handling"
+      ]
+    },
     {
       "name": "Pre-Alpha 2.0",
       "date": "2021-01-15T16:00:00.000Z",
