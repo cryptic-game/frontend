@@ -805,7 +805,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             const key = walletCred[1];
             if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
               this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(wallet => {
-                this.terminal.outputText(wallet.amount / 1000 + ' morphcoin');
+                this.terminal.outputText(new Intl.NumberFormat().format(wallet.amount / 1000) + ' morphcoin');
               }, () => {
                 this.terminal.outputText('That file is not connected with a wallet');
               });
