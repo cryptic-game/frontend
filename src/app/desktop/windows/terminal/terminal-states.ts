@@ -29,10 +29,17 @@ export abstract class CommandTerminalState implements TerminalState {
   protocol: string[] = [];
   variables: Map<string, string> = new Map();
 
-  executeCommand(command: string, args: string[]) {
-    command = command.toLowerCase(); const iohandler: IOHandler = {stdout: this.stdoutHandler.bind(this), stdin: this.stdinHandler.bind(this), stderr: this.stderrHandler.bind(this), args: args};
-    // reset the exit code
-    this.setExitCode(0);
+  // if an iohandler is given, the list of args is discarded
+  executeCommand(command: string, args: string[], io: IOHandler = null) {
+    const iohandler = io ? io : {
+      stdout: this.stdoutHandler.bind(this),
+      stdin: this.stdinHandler,
+      stderr: this.stderrHandler.bind(this),
+      args: args
+    };
+    command = command.toLowerCase();
+    // command not completed
+    this.setExitCode(-1);
     if (this.commands.hasOwnProperty(command)) {
       this.commands[command].executor(iohandler);
     } else if (command !== '') {
@@ -40,33 +47,102 @@ export abstract class CommandTerminalState implements TerminalState {
     }
   }
 
+  // wait until the command is completed => the exitCode is !== -1
+  waitForCompletion() {
+    const poll = (resolve: () => void) => {
+      if (this.getExitCode() !== -1) {
+        resolve();
+      } else {
+        setTimeout(_ => poll(resolve), 10);
+      }
+    };
+    return new Promise(poll);
+  }
+
+
+  executeCommandChain(commands: string[], previousStdout: string = null) {
+    let stdoutText = '';
+
+    const pipedStdout = (output: Stdout) => {
+      switch (output.outputType) {
+        case OutputType.NODE:
+          stdoutText = stdoutText + output.dataNode.toString() + '\n';
+          break;
+        case OutputType.RAW:
+          stdoutText = stdoutText + output.data;
+          break;
+        case OutputType.HTML:
+          stdoutText = stdoutText + output.data + '\n';
+          break;
+        case OutputType.TEXT:
+          stdoutText = stdoutText + output.data + '\n';
+          break;
+      }
+    };
+
+    const pipedStdin = (callback: (input: string) => void) => {
+      callback(previousStdout);
+    };
+
+    let command = commands[0].trim().split(' ');
+    if (command.length === 0) {
+      this.executeCommandChain(commands.slice(1));
+      return;
+    }
+    // replace variables with their values
+    command = command.map((arg) => {
+      if (arg.startsWith('$')) {
+        const name = arg.slice(1);
+        if (this.variables.has(name)) {
+          return this.variables.get(name);
+        }
+        return '';
+      }
+      return arg;
+    });
+
+    const stdout = commands.length > 1 ? pipedStdout : this.stdoutHandler.bind(this);
+    const stdin = previousStdout ? pipedStdin : this.stdinHandler.bind(this);
+    const iohandler: IOHandler = {stdout: stdout, stdin: stdin, stderr: this.stderrHandler.bind(this), args: command.slice(1)};
+    // args are in inclued in the iohandler, we don't have to give them twice
+    this.executeCommand(command[0], [], iohandler);
+    this.waitForCompletion().then(() => {
+      if (commands.length > 1) {
+        this.executeCommandChain(commands.slice(1), stdoutText);
+      }
+    });
+  }
+
+  execute(cmd: string) {
+    let commands = cmd.trim().split(';');
+    commands = [].concat(...commands.map((command) => command.split('\n')));
+    commands.forEach((command) => {
+      const pipedCommands = command.trim().split('|');
+      this.executeCommandChain(pipedCommands);
+    });
+    if (cmd) {
+      this.protocol.unshift(cmd);
+    }
+
+  }
+
   reportError(error) {
     console.warn(new Error(error.message));
     this.setExitCode(1);
   }
 
-
-  stdinHandler(_: Stdin) {}
-
-  /** default implementaion for stderr: printing to console**/
-  stderrHandler(stderr: Stderr) {
-    switch (stderr.outputType) {
-      case OutputType.HTML:
-        this.terminal.output(stderr.data);
-        break;
-      case OutputType.RAW:
-        this.terminal.outputRaw(stderr.data);
-        break;
-      case OutputType.TEXT:
-        this.terminal.outputText(stderr.data);
-        break;
-      case OutputType.NODE:
-        this.terminal.outputNode(stderr.dataNode);
-        break;
-    }
+  /** default implementaion for stdin: reading from console */
+  stdinHandler(callback: (input: string) => void) {
+    return new DefaultStdin(this.terminal).read(callback);
   }
 
-  /** default implementaion for stdout: printing to console**/
+
+  /** default implementaion for stderr: printing to console */
+  stderrHandler(stderr: string) {
+    this.terminal.output(stderr);
+  }
+
+  /** default implementaion for stdout: printing to console */
   stdoutHandler(stdout: Stdout) {
     switch (stdout.outputType) {
       case OutputType.HTML:
@@ -88,30 +164,8 @@ export abstract class CommandTerminalState implements TerminalState {
     this.variables.set('?', String(exitCode));
   }
 
-  execute(command: string) {
-    let commands = command.trim().split(';');
-    commands = [].concat(...commands.map((command_) => command_.split("\n")));
-    commands.forEach((command__) => {
-      let command_ = command__.trim().split(' ');
-      if (command_.length !== 0) {
-        // replace variables with their values
-        command_ = command_.map((arg) => {
-          if (arg.startsWith('$')) {
-            const name = arg.slice(1);
-            if (this.variables.has(name)) {
-              return this.variables.get(name);
-            }
-            return '';
-          }
-          return arg;
-        })
-
-        this.executeCommand(command_[0], command_.slice(1));
-        if (command) {
-          this.protocol.unshift(command);
-        }
-      }
-    });
+  getExitCode(): number {
+    return Number(this.variables.get('?'));
   }
 
   abstract commandNotFound(command: string, iohandler: IOHandler): void;
@@ -254,6 +308,10 @@ export class DefaultTerminalState extends CommandTerminalState {
       executor: this.echo.bind(this),
       description: 'display a line of text'
     },
+    'read': {
+      executor: this.read.bind(this),
+      description: 'read input of user'
+    },
 
     // easter egg
     'chaozz': {
@@ -267,8 +325,8 @@ export class DefaultTerminalState extends CommandTerminalState {
   working_dir: string = Path.ROOT;  // UUID of the working directory
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-    private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
-    protected terminal: TerminalAPI, public promptColor: string = null) {
+              private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
+              protected terminal: TerminalAPI, public promptColor: string = null) {
     super();
   }
 
@@ -304,8 +362,8 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
   commandNotFound(_: string, iohandler: IOHandler) {
-    iohandler.stderr(Stderr.html('Command could not be found.<br/>Type `help` for a list of commands.'));
-    this.setExitCode(1);
+    iohandler.stderr('Command could not be found.\nType `help` for a list of commands.');
+    this.setExitCode(127);
   }
 
   refreshPrompt() {
@@ -343,7 +401,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     let text;
     const args = iohandler.args;
     if (args.length === 0) {
-      iohandler.stderr(Stderr.text('usage: miner look|wallet|power|start'));
+      iohandler.stderr('usage: miner look|wallet|power|start');
       this.setExitCode(1);
       return;
     }
@@ -373,7 +431,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         break;
       case 'wallet':
         if (args.length !== 2) {
-          iohandler.stderr(Stderr.text('usage: miner wallet <wallet-id>'));
+          iohandler.stderr('usage: miner wallet <wallet-id>');
           this.setExitCode(1);
           return;
         }
@@ -392,7 +450,7 @@ export class DefaultTerminalState extends CommandTerminalState {
                 iohandler.stdout(Stdout.text(`Set wallet to ${args[1]}`));
                 this.setExitCode(0);
               }, () => {
-                iohandler.stderr(Stderr.text('Wallet is invalid.'));
+                iohandler.stderr('Wallet is invalid.');
                 this.setExitCode(1);
               });
             }
@@ -401,7 +459,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         break;
       case 'power':
         if (args.length !== 2 || isNaN(Number(args[1])) || 0 > Number(args[1]) || Number(args[1]) > 100) {
-          iohandler.stderr(Stderr.text('usage: miner power <0-100>'));
+          iohandler.stderr('usage: miner power <0-100>');
           this.setExitCode(1);
         }
         this.websocket.ms('service', ['list'], {
@@ -423,7 +481,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         break;
       case 'start':
         if (args.length !== 2) {
-          iohandler.stderr(Stderr.text('usage: miner start <wallet-id>'));
+          iohandler.stderr('usage: miner start <wallet-id>');
           this.setExitCode(1);
           return;
         }
@@ -433,13 +491,14 @@ export class DefaultTerminalState extends CommandTerminalState {
           'wallet_uuid': args[1],
         }).subscribe((service) => {
           miner = service;
+          this.setExitCode(0);
         }, () => {
-          iohandler.stderr(Stderr.text('Invalid wallet'));
+          iohandler.stderr('Invalid wallet');
           this.setExitCode(1);
         });
         break;
       default:
-        iohandler.stderr(Stderr.text('usage: miner look|wallet|power|start'));
+        iohandler.stderr('usage: miner look|wallet|power|start');
         this.setExitCode(1);
     }
   }
@@ -467,8 +526,9 @@ export class DefaultTerminalState extends CommandTerminalState {
         if (this.activeDevice.uuid === this.windowDelegate.device.uuid) {
           Object.assign(this.windowDelegate.device, newDevice);
         }
+        this.setExitCode(0);
       }, () => {
-        iohandler.stderr(Stderr.text('The hostname couldn\'t be changed'));
+        iohandler.stderr('The hostname couldn\'t be changed');
         this.setExitCode(1);
       });
     } else {
@@ -493,7 +553,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       try {
         path = Path.fromString(args[0], this.working_dir);
       } catch {
-        iohandler.stderr(Stderr.text('The specified path is not valid'));
+        iohandler.stderr('The specified path is not valid');
         this.setExitCode(1);
         return;
       }
@@ -501,13 +561,14 @@ export class DefaultTerminalState extends CommandTerminalState {
         if (file.is_directory) {
           this.working_dir = file.uuid;
           this.refreshPrompt();
+          this.setExitCode(0);
         } else {
-          iohandler.stderr(Stderr.text('That is not a directory'));
+          iohandler.stderr('That is not a directory');
           this.setExitCode(1);
         }
       }, error => {
         if (error.message === 'file_not_found') {
-          iohandler.stderr(Stderr.text('That directory does not exist'));
+          iohandler.stderr('That directory does not exist');
           this.setExitCode(1);
         } else {
           this.reportError(error);
@@ -516,55 +577,55 @@ export class DefaultTerminalState extends CommandTerminalState {
     }
   }
 
-  list_files(files: File[], stdout: (_: Stdout) => void) {
+  list_files(files: File[], iohandler: IOHandler) {
     files.filter((file) => {
       return file.is_directory;
     }).sort().forEach(folder => {
-      stdout(Stdout.html(`<span style="color: ${this.settings.getLSFC()};">${(this.settings.getLSPrefix()) ? '[Folder] ' : ''}${folder.filename}</span>`));
+      iohandler.stdout(Stdout.html(`<span style="color: ${this.settings.getLSFC()};">${(this.settings.getLSPrefix()) ? '[Folder] ' : ''}${folder.filename}</span>`));
     });
 
     files.filter((file) => {
       return !file.is_directory;
     }).sort().forEach(file => {
-      this.terminal.outputText(`${(this.settings.getLSPrefix() ? '[File] ' : '')}${file.filename}`);
+      iohandler.stdout(Stdout.text(`${(this.settings.getLSPrefix() ? '[File] ' : '')}${file.filename}`));
     });
+    this.setExitCode(0);
   }
 
   ls(iohandler: IOHandler) {
     const args = iohandler.args;
     if (args.length === 0) {
       this.fileService.getFiles(this.activeDevice['uuid'], this.working_dir).subscribe(files => {
-        this.list_files(files, iohandler.stdout);
+        this.list_files(files, iohandler);
       });
     } else if (args.length === 1) {
       let path: Path;
       try {
         path = Path.fromString(args[0], this.working_dir);
       } catch {
-        iohandler.stderr(Stderr.text('The specified path is not valid'));
+        iohandler.stderr('The specified path is not valid');
         this.setExitCode(1);
         return;
       }
 
       this.fileService.getFromPath(this.activeDevice['uuid'], path).subscribe(target => {
         if (target.is_directory) {
-          this.fileService.getFiles(this.activeDevice['uuid'], target.uuid).subscribe(files =>
-            this.list_files(files, iohandler.stdout)
-          );
+          this.fileService.getFiles(this.activeDevice['uuid'], target.uuid).subscribe(files => {
+            this.list_files(files, iohandler);
+          });
         } else {
-          iohandler.stderr(Stderr.text('That is not a directory'));
-          this.setExitCode(1);
+          this.list_files([target], iohandler);
         }
       }, error => {
         if (error.message === 'file_not_found') {
-          iohandler.stderr(Stderr.text('That directory does not exist'));
-          this.setExitCode(1);
+          iohandler.stderr('That directory does not exist');
+          this.setExitCode(2);
         } else {
           this.reportError(error);
         }
       });
     } else {
-      iohandler.stderr(Stderr.text('usage: ls [directory]'));
+      iohandler.stderr('usage: ls [directory]');
       this.setExitCode(1);
     }
   }
@@ -576,13 +637,13 @@ export class DefaultTerminalState extends CommandTerminalState {
       let content = '';
 
       if (!filename.match(/^[a-zA-Z0-9.\-_]+$/)) {
-        iohandler.stderr(Stderr.text('That filename is not valid'));
+        iohandler.stderr('That filename is not valid');
         this.setExitCode(1);
         return;
       }
 
       if (filename.length > 64) {
-        iohandler.stderr(Stderr.text('That filename is too long'));
+        iohandler.stderr('That filename is too long');
         this.setExitCode(1);
         return;
       }
@@ -591,18 +652,18 @@ export class DefaultTerminalState extends CommandTerminalState {
         content = args.slice(1).join(' ');
       }
 
-      this.fileService.createFile(this.activeDevice['uuid'], filename, content, this.working_dir).subscribe({
-        error: err => {
+      this.fileService.createFile(this.activeDevice['uuid'], filename, content, this.working_dir).subscribe(
+        _ => this.setExitCode(0),
+        err => {
           if (err.message === 'file_already_exists') {
-            iohandler.stderr(Stderr.text('That file already exists'));
+            iohandler.stderr('That file already exists');
             this.setExitCode(1);
           } else {
             this.reportError(err);
           }
-        }
-      });
+        });
     } else {
-      iohandler.stderr(Stderr.text('usage: touch <filename> [content]'));
+      iohandler.stderr('usage: touch <filename> [content]');
       this.setExitCode(1);
     }
   }
@@ -614,28 +675,32 @@ export class DefaultTerminalState extends CommandTerminalState {
       try {
         path = Path.fromString(args[0], this.working_dir);
       } catch {
-        iohandler.stderr(Stderr.text('The specified path is not valid'));
+        iohandler.stderr('The specified path is not valid');
         this.setExitCode(1);
         return;
       }
 
       this.fileService.getFromPath(this.activeDevice['uuid'], path).subscribe(file => {
         if (file.is_directory) {
-          iohandler.stderr(Stderr.text('That is not a file'));
+          iohandler.stderr('That is not a file');
           this.setExitCode(1);
         } else {
-          iohandler.stdout(Stdout.text(file.content));
+          const lines = file.content.split('\n');
+          lines.forEach((line) =>
+            iohandler.stdout(Stdout.text(line))
+          );
+          this.setExitCode(0);
         }
       }, error => {
         if (error.message === 'file_not_found') {
-          iohandler.stderr(Stderr.text('That file does not exist'));
+          iohandler.stderr('That file does not exist');
           this.setExitCode(1);
         } else {
           this.reportError(error);
         }
       });
     } else {
-      iohandler.stderr(Stderr.text('usage: cat <filename>'));
+      iohandler.stderr('usage: cat <filename>');
       this.setExitCode(1);
     }
   }
@@ -647,7 +712,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       try {
         path = Path.fromString(args[0], this.working_dir);
       } catch {
-        iohandler.stderr(Stderr.text('The specified path is not valid'));
+        iohandler.stderr('The specified path is not valid');
         this.setExitCode(1);
         return;
       }
@@ -658,6 +723,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             device_uuid: this.activeDevice['uuid'],
             file_uuid: file.uuid
           });
+          this.setExitCode(0);
         };
         if (file.content.trim().length === 47) {
           const walletCred = file.content.split(' ');
@@ -676,9 +742,10 @@ export class DefaultTerminalState extends CommandTerminalState {
                           device_uuid: this.activeDevice['uuid'],
                           file_uuid: file.uuid
                         });
+                        this.setExitCode(0);
                       }, error => {
-                        iohandler.stderr(Stderr.text('<span class="errorText"">The wallet couldn\'t be deleted successfully. ' +
-                          'Please report this bug.</span>'));
+                        iohandler.stderr('<span class="errorText"">The wallet couldn\'t be deleted successfully. ' +
+                          'Please report this bug.</span>');
                         this.setExitCode(1);
                         this.reportError(error);
                       });
@@ -695,14 +762,14 @@ export class DefaultTerminalState extends CommandTerminalState {
         }
       }, error => {
         if (error.message === 'file_not_found') {
-          iohandler.stderr(Stderr.text('That file does not exist'));
+          iohandler.stderr('That file does not exist');
           this.setExitCode(1);
         } else {
           this.reportError(error);
         }
       });
     } else {
-      iohandler.stderr(Stderr.text('usage: rm <filename>'));
+      iohandler.stderr('usage: rm <filename>');
       this.setExitCode(1);
     }
   }
@@ -716,36 +783,36 @@ export class DefaultTerminalState extends CommandTerminalState {
         srcPath = Path.fromString(args[0], this.working_dir);
         destPath = Path.fromString(args[1], this.working_dir);
       } catch {
-        iohandler.stderr(Stderr.text('The specified path is not valid'));
+        iohandler.stderr('The specified path is not valid');
         this.setExitCode(1);
         return;
       }
       const deviceUUID = this.activeDevice['uuid'];
 
       this.fileService.getFromPath(deviceUUID, srcPath).subscribe(source => {
-        this.fileService.copyFile(source, destPath).subscribe({
-          error: error => {
+        this.fileService.copyFile(source, destPath).subscribe(
+          _ => this.setExitCode(0),
+          error => {
             if (error.message === 'file_already_exists') {
-              iohandler.stderr(Stderr.text('That file already exists'));
+              iohandler.stderr('That file already exists');
             } else if (error.message === 'cannot_copy_directory') {
-              iohandler.stderr(Stderr.text('Cannot copy directories'));
+              iohandler.stderr('Cannot copy directories');
             } else if (error.message === 'destination_not_found') {
-              iohandler.stderr(Stderr.text('The destination folder was not found'));
+              iohandler.stderr('The destination folder was not found');
             } else {
               this.reportError(error);
             }
             this.setExitCode(1);
-          }
-        });
+          });
       }, error => {
         if (error.message === 'file_not_found') {
-          iohandler.stderr(Stderr.text('That file does not exist'));
+          iohandler.stderr('That file does not exist');
           this.setExitCode(1);
         }
       });
 
     } else {
-      iohandler.stderr(Stderr.text('usage: cp <source> <destination>'));
+      iohandler.stderr('usage: cp <source> <destination>');
       this.setExitCode(1);
     }
   }
@@ -759,36 +826,36 @@ export class DefaultTerminalState extends CommandTerminalState {
         srcPath = Path.fromString(args[0], this.working_dir);
         destPath = Path.fromString(args[1], this.working_dir);
       } catch {
-        iohandler.stderr(Stderr.text('The specified path is not valid'));
+        iohandler.stderr('The specified path is not valid');
         this.setExitCode(1);
         return;
       }
 
       this.fileService.getFromPath(this.activeDevice['uuid'], srcPath).subscribe(source => {
         if (source.is_directory) {
-          iohandler.stderr(Stderr.text('You cannot move directories'));
+          iohandler.stderr('You cannot move directories');
           this.setExitCode(1);
           return;
         }
-        this.fileService.moveToPath(source, destPath).subscribe({
-          error: err => {
+        this.fileService.moveToPath(source, destPath).subscribe(
+          _ => this.setExitCode(0),
+          err => {
             if (err.message === 'destination_is_file') {
-              iohandler.stderr(Stderr.text('The destination must be a directory'));
+              iohandler.stderr('The destination must be a directory');
               this.setExitCode(1);
             } else if (err.message === 'file_already_exists') {
-              iohandler.stderr(Stderr.text('A file with the specified name already exists in the destination directory'));
+              iohandler.stderr('A file with the specified name already exists in the destination directory');
               this.setExitCode(1);
             } else if (err.message === 'file_not_found') {
-              iohandler.stderr(Stderr.text('The destination directory does not exist'));
+              iohandler.stderr('The destination directory does not exist');
               this.setExitCode(1);
             } else {
               this.reportError(err);
             }
-          }
-        });
+          });
       }, error => {
         if (error.message === 'file_not_found') {
-          iohandler.stderr(Stderr.text('That file does not exist'));
+          iohandler.stderr('That file does not exist');
           this.setExitCode(1);
         } else {
           this.reportError(error);
@@ -796,7 +863,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       });
 
     } else {
-      iohandler.stderr(Stderr.text('usage: mv <source> <destination>'));
+      iohandler.stderr('usage: mv <source> <destination>');
       this.setExitCode(1);
     }
   }
@@ -808,7 +875,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       try {
         filePath = Path.fromString(args[0], this.working_dir);
       } catch {
-        iohandler.stderr(Stderr.text('The specified path is not valid'));
+        iohandler.stderr('The specified path is not valid');
         this.setExitCode(1);
         return;
       }
@@ -816,31 +883,31 @@ export class DefaultTerminalState extends CommandTerminalState {
       const name = args[1];
 
       if (!name.match(/^[a-zA-Z0-9.\-_]+$/)) {
-        iohandler.stderr(Stderr.text('That name is not valid'));
+        iohandler.stderr('That name is not valid');
         this.setExitCode(1);
         return;
       }
 
       if (name.length > 64) {
-        iohandler.stderr(Stderr.text('That name is too long'));
+        iohandler.stderr('That name is too long');
         this.setExitCode(1);
         return;
       }
 
       this.fileService.getFromPath(this.activeDevice['uuid'], filePath).subscribe(file => {
-        this.fileService.rename(file, name).subscribe({
-          error: err => {
+        this.fileService.rename(file, name).subscribe(
+          _ => this.setExitCode(0),
+          err => {
             if (err.message === 'file_already_exists') {
-              iohandler.stderr(Stderr.text('A file with the specified name already exists'));
+              iohandler.stderr('A file with the specified name already exists');
               this.setExitCode(1);
             } else {
               this.reportError(err);
             }
-          }
-        });
+          });
       }, error => {
         if (error.message === 'file_not_found') {
-          iohandler.stderr(Stderr.text('That file does not exist'));
+          iohandler.stderr('That file does not exist');
           this.setExitCode(1);
         } else {
           this.reportError(error);
@@ -848,7 +915,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       });
 
     } else {
-      iohandler.stderr(Stderr.text('usage: rename <file> <new name>'));
+      iohandler.stderr('usage: rename <file> <new name>');
       this.setExitCode(1);
     }
   }
@@ -858,49 +925,52 @@ export class DefaultTerminalState extends CommandTerminalState {
     if (args.length === 1) {
       const dirname = args[0];
       if (!dirname.match(/^[a-zA-Z0-9.\-_]+$/)) {
-        iohandler.stderr(Stderr.text('That directory name is not valid'));
+        iohandler.stderr('That directory name is not valid');
         this.setExitCode(1);
         return;
       }
 
       if (dirname.length > 64) {
-        iohandler.stderr(Stderr.text('That directory name is too long'));
+        iohandler.stderr('That directory name is too long');
         this.setExitCode(1);
         return;
       }
 
-      this.fileService.createDirectory(this.activeDevice['uuid'], dirname, this.working_dir).subscribe({
-        error: err => {
+      this.fileService.createDirectory(this.activeDevice['uuid'], dirname, this.working_dir).subscribe(
+        _ => this.setExitCode(0),
+        err => {
           if (err.message === 'file_already_exists') {
-            iohandler.stderr(Stderr.text('A file with the specified name already exists'));
+            iohandler.stderr('A file with the specified name already exists');
             this.setExitCode(1);
           } else {
             this.reportError(err);
           }
-        }
-      });
+        });
     } else {
-      iohandler.stderr(Stderr.text('usage: mkdir <directory>'));
+      iohandler.stderr('usage: mkdir <directory>');
       this.setExitCode(1);
     }
   }
 
   exit() {
     this.terminal.popState();
+    this.setExitCode(0);
   }
 
   clear() {
     this.terminal.clear();
+    this.setExitCode(0);
   }
 
-  history() {
+  history(iohandler: IOHandler) {
     const l = this.getHistory();
 
     l.reverse();
 
     l.forEach(e => {
-      this.terminal.outputText(e);
+      iohandler.stdout(Stdout.text(e));
     });
+    this.setExitCode(0);
   }
 
   morphcoin(iohandler: IOHandler) {
@@ -910,12 +980,13 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.websocket.ms('currency', ['reset'], {source_uuid: args[1]}).subscribe(
           () => {
             iohandler.stdout(Stdout.text('Wallet has been deleted successfully.'));
+            this.setExitCode(0);
           },
           error => {
             if (error.message === 'permission_denied') {
-              iohandler.stderr(Stderr.text('Permission denied.'));
+              iohandler.stderr('Permission denied.');
             } else {
-              iohandler.stderr(Stderr.text('Wallet does not exist.'));
+              iohandler.stderr('Wallet does not exist.');
             }
             this.setExitCode(1);
           }
@@ -927,7 +998,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       try {
         path = Path.fromString(args[1], this.working_dir);
       } catch {
-        iohandler.stderr(Stderr.text('The specified path is not valid'));
+        iohandler.stderr('The specified path is not valid');
         this.setExitCode(1);
         return;
       }
@@ -935,7 +1006,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       if (args[0] === 'look') {
         this.fileService.getFromPath(this.activeDevice['uuid'], path).subscribe(file => {
           if (file.is_directory) {
-            iohandler.stderr(Stderr.text('That file does not exist'));
+            iohandler.stderr('That file does not exist');
             this.setExitCode(1);
             return;
           }
@@ -947,21 +1018,22 @@ export class DefaultTerminalState extends CommandTerminalState {
             if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
               this.websocket.ms('currency', ['get'], {source_uuid: uuid, key: key}).subscribe(wallet => {
                 iohandler.stdout(Stdout.text(new Intl.NumberFormat().format(wallet.amount / 1000) + ' morphcoin'));
+                this.setExitCode(0);
               }, () => {
-                iohandler.stderr(Stderr.text('That file is not connected with a wallet'));
+                iohandler.stderr('That file is not connected with a wallet');
                 this.setExitCode(1);
               });
             } else {
-              iohandler.stderr(Stderr.text('That file is not a wallet file'));
+              iohandler.stderr('That file is not a wallet file');
               this.setExitCode(1);
             }
           } else {
-            iohandler.stderr(Stderr.text('That file is not a wallet file'));
+            iohandler.stderr('That file is not a wallet file');
             this.setExitCode(1);
           }
         }, error => {
           if (error.message === 'file_not_found') {
-            iohandler.stderr(Stderr.text('That file does not exist'));
+            iohandler.stderr('That file does not exist');
             this.setExitCode(1);
           } else {
             this.reportError(error);
@@ -974,7 +1046,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           : of({uuid: path.parentUUID})
         ).subscribe(dest => {
           this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(-1), dest.uuid)).subscribe(() => {
-            iohandler.stderr(Stderr.text('That file already exists'));
+            iohandler.stderr('That file already exists');
             this.setExitCode(1);
           }, error => {
             if (error.message === 'file_not_found') {
@@ -982,26 +1054,31 @@ export class DefaultTerminalState extends CommandTerminalState {
                 this.websocket.ms('currency', ['create'], {}).subscribe(wallet => {
                   const credentials = wallet.source_uuid + ' ' + wallet.key;
 
-                  this.fileService.createFile(this.activeDevice['uuid'], path.path[path.path.length - 1], credentials, this.working_dir)
-                    .subscribe({
-                      error: err => {
-                        iohandler.stderr(Stderr.text('That file touldn\'t be created. Please note your wallet credentials ' +
-                          'and put them in a new file with \'touch\' or contact the support: \'' + credentials + '\''));
+                  this.fileService.createFile(
+                    this.activeDevice['uuid'],
+                    path.path[path.path.length - 1],
+                    credentials,
+                    this.working_dir
+                  )
+                    .subscribe(
+                      _ => this.setExitCode(0),
+                      err => {
+                        iohandler.stderr('That file touldn\'t be created. Please note your wallet credentials ' +
+                          'and put them in a new file with \'touch\' or contact the support: \'' + credentials + '\'');
                         this.setExitCode(1);
                         this.reportError(err);
-                      }
-                    });
+                      });
                 }, error1 => {
                   if (error1.message === 'already_own_a_wallet') {
-                    iohandler.stderr(Stderr.text('You already own a wallet'));
+                    iohandler.stderr('You already own a wallet');
                   } else {
-                    iohandler.stderr(Stderr.text(error1.message));
+                    iohandler.stderr(error1.message);
                     this.reportError(error1);
                   }
                   this.setExitCode(1);
                 });
               } else {
-                iohandler.stderr(Stderr.text('Filename too long. Only 64 chars allowed'));
+                iohandler.stderr('Filename too long. Only 64 chars allowed');
                 this.setExitCode(1);
               }
             } else {
@@ -1010,7 +1087,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           });
         }, error => {
           if (error.message === 'file_not_found') {
-            iohandler.stderr(Stderr.text('That path does not exist'));
+            iohandler.stderr('That path does not exist');
             this.setExitCode(1);
           } else {
             this.reportError(error);
@@ -1020,7 +1097,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     } else if (args.length === 1 && args[0] === 'list') {
       this.websocket.ms('currency', ['list'], {}).subscribe(data => {
         if (data.wallets.length === 0) {
-          iohandler.stderr(Stderr.text('You don\'t own any wallet.'));
+          iohandler.stderr('You don\'t own any wallet.');
           this.setExitCode(1);
         } else {
           iohandler.stdout(Stdout.text('Your wallets:'));
@@ -1032,10 +1109,11 @@ export class DefaultTerminalState extends CommandTerminalState {
 
           iohandler.stdout(Stdout.node(el));
           DefaultTerminalState.registerPromptAppenders(el);
+          this.setExitCode(0);
         }
       });
     } else {
-      iohandler.stderr(Stderr.text('usage: morphcoin look|create|list|reset [<filename>|<uuid>]'));
+      iohandler.stderr('usage: morphcoin look|create|list|reset [<filename>|<uuid>]');
       this.setExitCode(1);
     }
   }
@@ -1047,7 +1125,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       try {
         walletPath = Path.fromString(args[0], this.working_dir);
       } catch {
-        iohandler.stderr(Stderr.text('The specified path is not valid'));
+        iohandler.stderr('The specified path is not valid');
         this.setExitCode(1);
         return;
       }
@@ -1060,12 +1138,12 @@ export class DefaultTerminalState extends CommandTerminalState {
       }
 
       if (isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
-        iohandler.stderr(Stderr.html('<em>amount</em> is not a valid number'));
+        iohandler.stderr('<em>amount</em> is not a valid number');
         this.setExitCode(1);
       } else {
         this.fileService.getFromPath(this.activeDevice['uuid'], walletPath).subscribe(walletFile => {
           if (walletFile.is_directory) {
-            iohandler.stderr(Stderr.text('That file does not exist'));
+            iohandler.stderr('That file does not exist');
             this.setExitCode(1);
             return;
           }
@@ -1084,25 +1162,26 @@ export class DefaultTerminalState extends CommandTerminalState {
                   usage: usage
                 }).subscribe(() => {
                   iohandler.stdout(Stdout.text('Successfully sent ' + amount + ' to ' + receiver));
+                  this.setExitCode(0);
                 }, error => {
-                  iohandler.stderr(Stderr.text(error.message));
+                  iohandler.stderr(error.message);
                   this.reportError(error);
                 });
               }, () => {
-                iohandler.stderr(Stderr.text('That file is not connected with a wallet'));
+                iohandler.stderr('That file is not connected with a wallet');
                 this.setExitCode(1);
               });
             } else {
-              iohandler.stderr(Stderr.text('That file is not a wallet file'));
+              iohandler.stderr('That file is not a wallet file');
               this.setExitCode(1);
             }
           } else {
-            iohandler.stderr(Stderr.text('That file is not a wallet file'));
+            iohandler.stderr('That file is not a wallet file');
             this.setExitCode(1);
           }
         }, error => {
           if (error.message === 'file_not_found') {
-            iohandler.stderr(Stderr.text('That file does not exist'));
+            iohandler.stderr('That file does not exist');
             this.setExitCode(1);
           } else {
             this.reportError(error);
@@ -1110,7 +1189,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         });
       }
     } else {
-      iohandler.stderr(Stderr.text('usage: pay <filename> <receiver> <amount> [usage]'));
+      iohandler.stderr('usage: pay <filename> <receiver> <amount> [usage]');
       this.setExitCode(1);
     }
   }
@@ -1133,7 +1212,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
     if (args.length >= 1 && args[0].toLowerCase() === 'create') {
       if (args.length !== 2) {
-        iohandler.stderr(Stderr.text('usage: service create <bruteforce|portscan|telnet|ssh>'));
+        iohandler.stderr('usage: service create <bruteforce|portscan|telnet|ssh>');
         this.setExitCode(1);
         return;
       }
@@ -1141,15 +1220,16 @@ export class DefaultTerminalState extends CommandTerminalState {
       const service = args[1];
       const services = ['bruteforce', 'portscan', 'telnet', 'ssh'];
       if (!services.includes(service)) {
-        iohandler.stderr(Stderr.text('Unknown service. Available services: ' + services.join(', ')));
+        iohandler.stderr('Unknown service. Available services: ' + services.join(', '));
         this.setExitCode(1);
         return;
       }
       this.websocket.ms('service', ['create'], {name: service, device_uuid: activeDevice}).subscribe(() => {
         iohandler.stdout(Stdout.text('Service was created'));
+        this.setExitCode(0);
       }, error => {
         if (error === 'already_own_this_service') {
-          iohandler.stderr(Stderr.text('You already created this service'));
+          iohandler.stderr('You already created this service');
           this.setExitCode(1);
         } else {
           this.reportError(error);
@@ -1157,18 +1237,19 @@ export class DefaultTerminalState extends CommandTerminalState {
       });
     } else if (args.length >= 1 && args[0] === 'list') {
       if (args.length !== 1) {
-        iohandler.stderr(Stderr.text('usage: service list'));
+        iohandler.stderr('usage: service list');
         this.setExitCode(1);
         return;
       }
 
       getServices().subscribe(services => {
         if (services.length === 0) {
-          iohandler.stderr(Stderr.text('There is no service on this device'));
+          iohandler.stderr('There is no service on this device');
           this.setExitCode(1);
         } else {
           const dev = document.createElement('span');
-          dev.innerHTML = '\'' + this.activeDevice['name'] + '\' (' + DefaultTerminalState.promptAppender(this.activeDevice['uuid']) + '):';
+          dev.innerHTML = '\'' + this.activeDevice['name'] + '\' ('
+            + DefaultTerminalState.promptAppender(this.activeDevice['uuid']) + '):';
 
           const el = document.createElement('ul');
           el.innerHTML = services
@@ -1183,11 +1264,12 @@ export class DefaultTerminalState extends CommandTerminalState {
           iohandler.stdout(Stdout.node(el));
           DefaultTerminalState.registerPromptAppenders(dev);
           DefaultTerminalState.registerPromptAppenders(el);
+          this.setExitCode(0);
         }
       });
     } else if (args.length >= 1 && args[0] === 'bruteforce') {
       if (args.length !== 3) {
-        iohandler.stderr(Stderr.text('usage: service bruteforce <target-device> <target-service>'));
+        iohandler.stderr('usage: service bruteforce <target-device> <target-service>');
         this.setExitCode(1);
         return;
       }
@@ -1195,7 +1277,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       const [targetDevice, targetService] = args.slice(1);
       getService('bruteforce').subscribe(bruteforceService => {
         if (bruteforceService == null || bruteforceService['uuid'] == null) {
-          iohandler.stderr(Stderr.text('You have to create a bruteforce service before you use it'));
+          iohandler.stderr('You have to create a bruteforce service before you use it');
           this.setExitCode(1);
           return;
         }
@@ -1209,13 +1291,14 @@ export class DefaultTerminalState extends CommandTerminalState {
             this.terminal.pushState(new BruteforceTerminalState(this.terminal, this.domSanitizer, stop => {
               if (stop) {
                 this.executeCommand('service', ['bruteforce', targetDevice, targetService]);
+                this.setExitCode(0);
               }
             }));
           }, error1 => {
             if (error1.message === 'could_not_start_service') {
-              iohandler.stderr(Stderr.text('There was an error while starting the bruteforce attack'));
+              iohandler.stderr('There was an error while starting the bruteforce attack');
             } else if (error1.message === 'invalid_input_data') {
-              iohandler.stderr(Stderr.text('The specified UUID is not valid'));
+              iohandler.stderr('The specified UUID is not valid');
             } else {
               this.reportError(error1);
             }
@@ -1234,6 +1317,7 @@ export class DefaultTerminalState extends CommandTerminalState {
               '. Stopping...';
             iohandler.stdout(Stdout.node(div));
             DefaultTerminalState.registerPromptAppenders(div);
+            this.setExitCode(255);
           }
 
           this.websocket.ms('service', ['bruteforce', 'stop'], {
@@ -1241,8 +1325,9 @@ export class DefaultTerminalState extends CommandTerminalState {
           }).subscribe(stopData => {
             if (stopData['access'] === true) {
               iohandler.stdout(Stdout.text('Access granted - use `connect <device>`'));
+              this.setExitCode(0);
             } else {
-              iohandler.stderr(Stderr.text('Access denied. The bruteforce attack was not successful'));
+              iohandler.stderr('Access denied. The bruteforce attack was not successful');
               this.setExitCode(255);
             }
 
@@ -1251,7 +1336,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             }
           }, (err) => {
             if (err.message === 'service_not_running') {
-              iohandler.stderr(Stderr.text('Target service is unreachable.'));
+              iohandler.stderr('Target service is unreachable.');
               this.setExitCode(255);
             }
           });
@@ -1265,7 +1350,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       });
     } else if (args.length >= 1 && args[0] === 'portscan') {
       if (args.length !== 2) {
-        iohandler.stderr(Stderr.text('usage: service portscan <device>'));
+        iohandler.stderr('usage: service portscan <device>');
         this.setExitCode(1);
         return;
       }
@@ -1273,7 +1358,7 @@ export class DefaultTerminalState extends CommandTerminalState {
       const targetDevice = args[1];
       getService('portscan').subscribe(portscanService => {
         if (portscanService == null || portscanService['uuid'] == null) {
-          iohandler.stderr(Stderr.text('You have to create a portscan service before you use it'));
+          iohandler.stderr('You have to create a portscan service before you use it');
           this.setExitCode(1);
           return;
         }
@@ -1284,7 +1369,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         }).subscribe(data => {
           const runningServices = data['services'];
           if (runningServices == null || !(runningServices instanceof Array) || (runningServices as any[]).length === 0) {
-            iohandler.stderr(Stderr.text('That device doesn\'t have any running services'));
+            iohandler.stderr('That device doesn\'t have any running services');
             this.setExitCode(1);
             return;
           }
@@ -1303,10 +1388,11 @@ export class DefaultTerminalState extends CommandTerminalState {
 
           iohandler.stdout(Stdout.node(list));
           DefaultTerminalState.registerPromptAppenders(list);
+          this.setExitCode(0);
         });
       });
     } else {
-      iohandler.stderr(Stderr.text('usage: service create|list|bruteforce|portscan'));
+      iohandler.stderr('usage: service create|list|bruteforce|portscan');
       this.setExitCode(1);
     }
   }
@@ -1316,11 +1402,11 @@ export class DefaultTerminalState extends CommandTerminalState {
       this.websocket.ms('service', ['list'], {'device_uuid': this.activeDevice['uuid']}).subscribe(localServices => {
         const portScanner = (localServices['services'] || []).filter(service => service.name === 'portscan')[0];
         if (portScanner == null || portScanner['uuid'] == null) {
-          iohandler.stderr(Stderr.text('\'' + random_device['name'] + '\':'));
-          iohandler.stderr(Stderr.raw('<ul>' +
+          iohandler.stderr('\'' + random_device['name'] + '\':');
+          iohandler.stderr('<ul>' +
             '<li>UUID: ' + random_device['uuid'] + '</li>' +
             '<li>Services: <em class="errorText"">portscan failed</em></li>' +
-            '</ul>'));
+            '</ul>');
           this.setExitCode(1);
           return;
         }
@@ -1335,13 +1421,15 @@ export class DefaultTerminalState extends CommandTerminalState {
             '<li>Services:</li>' +
             '<ul>' +
             remoteServices['services']
-              .map(service => '<li>' + escapeHtml(service['name']) + ' (' + DefaultTerminalState.promptAppender(service['uuid']) + ')</li>')
+              .map(service => '<li>' + escapeHtml(service['name']) + ' ('
+                + DefaultTerminalState.promptAppender(service['uuid']) + ')</li>')
               .join('\n') +
             '</ul>';
           iohandler.stdout(Stdout.node(list));
           DefaultTerminalState.registerPromptAppenders(list);
+          this.setExitCode(0);
         }, error => {
-          iohandler.stderr(Stderr.html('<span class="errorText">An error occurred</span>'));
+          iohandler.stderr('<span class="errorText">An error occurred</span>');
           this.reportError(error);
           return;
         });
@@ -1352,7 +1440,7 @@ export class DefaultTerminalState extends CommandTerminalState {
   connect(iohandler: IOHandler) {
     const args = iohandler.args;
     if (args.length !== 1) {
-      iohandler.stderr(Stderr.text('usage: connect <device>'));
+      iohandler.stderr('usage: connect <device>');
       this.setExitCode(1);
       return;
     }
@@ -1362,16 +1450,17 @@ export class DefaultTerminalState extends CommandTerminalState {
         if (infoData['owner'] === this.websocket.account.uuid || partOwnerData['ok'] === true) {
           this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.fileService, this.domSanitizer,
             this.windowDelegate, infoData, this.terminal, '#DD2C00'));
+          this.setExitCode(0);
         } else {
-          iohandler.stderr(Stderr.text('Access denied'));
+          iohandler.stderr('Access denied');
           this.setExitCode(255);
         }
       }, error => {
-        iohandler.stderr(Stderr.text(error.message));
+        iohandler.stderr(error.message);
         this.reportError(error);
       });
     }, error => {
-      iohandler.stderr(Stderr.text(error.message));
+      iohandler.stderr(error.message);
       this.reportError(error);
     });
   }
@@ -1395,10 +1484,11 @@ export class DefaultTerminalState extends CommandTerminalState {
             });
 
             iohandler.stdout(Stdout.node(element));
+            this.setExitCode(0);
 
             DefaultTerminalState.registerPromptAppenders(element);
           } else {
-            iohandler.stderr(Stderr.text('No public networks found'));
+            iohandler.stderr('No public networks found');
             this.setExitCode(1);
           }
         });
@@ -1430,10 +1520,11 @@ export class DefaultTerminalState extends CommandTerminalState {
             });
 
             iohandler.stdout(Stdout.node(element));
+            this.setExitCode(0);
 
             DefaultTerminalState.registerPromptAppenders(element);
           } else {
-            iohandler.stderr(Stderr.text('This device is not part of a network'));
+            iohandler.stderr('This device is not part of a network');
             this.setExitCode(1);
           }
         });
@@ -1448,7 +1539,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           const invitations = invitationsData['invitations'];
 
           if (invitations.length === 0) {
-            iohandler.stderr(Stderr.text('No invitations found'));
+            iohandler.stderr('No invitations found');
             this.setExitCode(1);
           } else {
             iohandler.stdout(Stdout.text('Found ' + invitations.length + ' invitations: '));
@@ -1467,10 +1558,11 @@ export class DefaultTerminalState extends CommandTerminalState {
             });
 
             iohandler.stdout(Stdout.node(element));
+            this.setExitCode(0);
           }
         }, error => {
           if (error.message === 'no_permissions') {
-            iohandler.stderr(Stderr.text('Access denied'));
+            iohandler.stderr('Access denied');
           } else {
             this.reportError(error);
           }
@@ -1488,8 +1580,9 @@ export class DefaultTerminalState extends CommandTerminalState {
 
         this.websocket.ms('network', ['delete'], data).subscribe(() => {
           iohandler.stdout(Stdout.text('Network deleted'));
+          this.setExitCode(0);
         }, () => {
-          iohandler.stderr(Stderr.text('Access denied'));
+          iohandler.stderr('Access denied');
           this.setExitCode(255);
         });
 
@@ -1503,15 +1596,16 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.websocket.ms('network', ['request'], data).subscribe(requestData => {
           iohandler.stdout(Stdout.text('Request sent:'));
           iohandler.stdout(Stdout.text(this.activeDevice['name'] + ' -> ' + requestData['network']));
+          this.setExitCode(0);
         }, error => {
           if (error.message === 'network_not_found') {
-            iohandler.stderr(Stderr.text('Network not found: ' + args[1]));
+            iohandler.stderr('Network not found: ' + args[1]);
           } else if (error.message === 'already_member_of_network') {
-            iohandler.stderr(Stderr.text('You are already a member of this network'));
+            iohandler.stderr('You are already a member of this network');
           } else if (error.message === 'invitation_already_exists') {
-            iohandler.stderr(Stderr.text('You already requested to enter this network'));
+            iohandler.stderr('You already requested to enter this network');
           } else {
-            iohandler.stderr(Stderr.text('Access denied'));
+            iohandler.stderr('Access denied');
           }
           this.setExitCode(1);
         });
@@ -1526,7 +1620,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           const requests = requestsData['requests'];
 
           if (requests.length === 0) {
-            iohandler.stderr(Stderr.text('No requests found'));
+            iohandler.stderr('No requests found');
             this.setExitCode(1);
           } else {
             iohandler.stdout(Stdout.text('Found ' + requests.length + ' requests: '));
@@ -1542,11 +1636,12 @@ export class DefaultTerminalState extends CommandTerminalState {
             });
 
             iohandler.stdout(Stdout.node(element));
+            this.setExitCode(0);
 
             DefaultTerminalState.registerPromptAppenders(element);
           }
         }, () => {
-          iohandler.stderr(Stderr.text('Access denied'));
+          iohandler.stderr('Access denied');
           this.setExitCode(255);
         });
 
@@ -1558,12 +1653,13 @@ export class DefaultTerminalState extends CommandTerminalState {
 
         this.websocket.ms('network', [args[0]], data).subscribe(() => {
           iohandler.stdout(Stdout.text(args[1] + ' -> ' + args[0]));
+          this.setExitCode(0);
         }, error => {
           if (error.message === 'invitation_not_found') {
-            iohandler.stderr(Stderr.text('Invitation not found'));
+            iohandler.stderr('Invitation not found');
             this.setExitCode(1);
           } else {
-            iohandler.stderr(Stderr.text('Access denied'));
+            iohandler.stderr('Access denied');
             this.setExitCode(255);
           }
         });
@@ -1577,12 +1673,13 @@ export class DefaultTerminalState extends CommandTerminalState {
 
         this.websocket.ms('network', ['leave'], data).subscribe(() => {
           iohandler.stdout(Stdout.text('You left the network: ' + args[1]));
+          this.setExitCode(0);
         }, error => {
           if (error.message === 'cannot_leave_own_network') {
-            iohandler.stderr(Stderr.text('You cannot leave your own network'));
+            iohandler.stderr('You cannot leave your own network');
             this.setExitCode(1);
           } else {
-            iohandler.stderr(Stderr.text('Access denied'));
+            iohandler.stderr('Access denied');
             this.setExitCode(255);
           }
         });
@@ -1600,10 +1697,11 @@ export class DefaultTerminalState extends CommandTerminalState {
           element.innerHTML += 'Owner: <span style="color: grey;">' + DefaultTerminalState.promptAppender(getData['owner']) + '</span>';
 
           iohandler.stdout(Stdout.node(element));
+          this.setExitCode(0);
 
           DefaultTerminalState.registerPromptAppenders(element);
         }, () => {
-          iohandler.stderr(Stderr.text('Network not found: ' + args[1]));
+          iohandler.stderr('Network not found: ' + args[1]);
           this.setExitCode(1);
         });
 
@@ -1631,14 +1729,15 @@ export class DefaultTerminalState extends CommandTerminalState {
             });
 
             iohandler.stdout(Stdout.node(element));
+            this.setExitCode(0);
 
             DefaultTerminalState.registerPromptAppenders(element);
           } else {
-            iohandler.stderr(Stderr.text('This network has no members'));
+            iohandler.stderr('This network has no members');
             this.setExitCode(1);
           }
         }, () => {
-          iohandler.stderr(Stderr.text('Access denied'));
+          iohandler.stderr('Access denied');
           this.setExitCode(255);
         });
 
@@ -1659,20 +1758,21 @@ export class DefaultTerminalState extends CommandTerminalState {
           this.websocket.ms('network', ['create'], data).subscribe(createData => {
             iohandler.stdout(Stdout.text('Name: ' + createData['name']));
             iohandler.stdout(Stdout.text('Visibility: ' + (createData['hidden'] ? 'private' : 'public')));
+            this.setExitCode(0);
           }, error => {
             if (error.message === 'invalid_name') {
-              iohandler.stderr(Stderr.text('Name is invalid: Use 5 - 20 characters'));
+              iohandler.stderr('Name is invalid: Use 5 - 20 characters');
               this.setExitCode(1);
             } else if (error.message === 'name_already_in_use') {
-              iohandler.stderr(Stderr.text('Name already in use'));
+              iohandler.stderr('Name already in use');
               this.setExitCode(1);
             } else {
-              iohandler.stderr(Stderr.text('Access denied'));
+              iohandler.stderr('Access denied');
               this.setExitCode(255);
             }
           });
         } else {
-          iohandler.stderr(Stderr.text('Please use public or private as mode'));
+          iohandler.stderr('Please use public or private as mode');
           this.setExitCode(1);
         }
 
@@ -1685,18 +1785,19 @@ export class DefaultTerminalState extends CommandTerminalState {
 
         this.websocket.ms('network', ['invite'], data).subscribe(() => {
           iohandler.stdout(Stdout.text(args[2] + ' invited to ' + args[1]));
+          this.setExitCode(0);
         }, error => {
           if (error.message === 'network_not_found') {
-            iohandler.stderr(Stderr.text('Network not found: ' + args[1]));
+            iohandler.stderr('Network not found: ' + args[1]);
             this.setExitCode(1);
           } else if (error.message === 'already_member_of_network') {
-            iohandler.stderr(Stderr.text('This device is already a member of this network'));
+            iohandler.stderr('This device is already a member of this network');
             this.setExitCode(1);
           } else if (error.message === 'invitation_already_exists') {
-            iohandler.stderr(Stderr.text('You already invited this device'));
+            iohandler.stderr('You already invited this device');
             this.setExitCode(1);
           } else {
-            iohandler.stderr(Stderr.text('Access denied'));
+            iohandler.stderr('Access denied');
             this.setExitCode(255);
           }
         });
@@ -1709,7 +1810,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         };
 
         if (data['device'] === this.activeDevice['uuid']) {
-          iohandler.stderr(Stderr.text('You cannot kick yourself'));
+          iohandler.stderr('You cannot kick yourself');
           this.setExitCode(1);
           return;
         }
@@ -1717,16 +1818,17 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.websocket.ms('network', ['kick'], data).subscribe(kickData => {
           if (kickData['result']) {
             iohandler.stdout(Stdout.text('Kicked successfully'));
+            this.setExitCode(0);
           } else {
-            iohandler.stderr(Stderr.text('The device is not a member of the network'));
+            iohandler.stderr('The device is not a member of the network');
             this.setExitCode(1);
           }
         }, error => {
           if (error.message === 'cannot_kick_owner') {
-            iohandler.stderr(Stderr.text('You cannot kick the owner of the network'));
+            iohandler.stderr('You cannot kick the owner of the network');
             this.setExitCode(1);
           } else {
-            iohandler.stderr(Stderr.text('Access denied'));
+            iohandler.stderr('Access denied');
             this.setExitCode(255);
           }
         });
@@ -1734,22 +1836,24 @@ export class DefaultTerminalState extends CommandTerminalState {
         return;
       }
     }
-    iohandler.stdout(Stdout.text('network list  # show all networks of this device'));
-    iohandler.stdout(Stdout.text('network public   # show all public networks'));
-    iohandler.stdout(Stdout.text('network invitations  # show invitations of a this device'));
-    iohandler.stdout(Stdout.text('network info <uuid> # show info of network'));
-    iohandler.stdout(Stdout.text('network get <name> # show info of network'));
-    iohandler.stdout(Stdout.text('network members <uuid> # show members of network'));
-    iohandler.stdout(Stdout.text('network leave <uuid> # leave a network'));
-    iohandler.stdout(Stdout.text('network delete <uuid> # delete a network'));
-    iohandler.stdout(Stdout.text('network request <uuid> # create a join request to a network'));
-    iohandler.stdout(Stdout.text('network requests <uuid> # show requests of a network'));
-    iohandler.stdout(Stdout.text('network accept <uuid> # accept an invitation or request'));
-    iohandler.stdout(Stdout.text('network deny <uuid> # accept an invitation or request'));
-    iohandler.stdout(Stdout.text('network invite <uuid> <device> # invite to network'));
-    iohandler.stdout(Stdout.text('network revoke <uuid> # revoke an invitation'));
-    iohandler.stdout(Stdout.text('network kick <uuid> <device> # kick device out of network'));
-    iohandler.stdout(Stdout.text('network create <name> <private|public>   # create a network'));
+    iohandler.stderr('usage: ');
+    iohandler.stderr('network list  # show all networks of this device');
+    iohandler.stderr('network public   # show all public networks');
+    iohandler.stderr('network invitations  # show invitations of a this device');
+    iohandler.stderr('network info <uuid> # show info of network');
+    iohandler.stderr('network get <name> # show info of network');
+    iohandler.stderr('network members <uuid> # show members of network');
+    iohandler.stderr('network leave <uuid> # leave a network');
+    iohandler.stderr('network delete <uuid> # delete a network');
+    iohandler.stderr('network request <uuid> # create a join request to a network');
+    iohandler.stderr('network requests <uuid> # show requests of a network');
+    iohandler.stderr('network accept <uuid> # accept an invitation or request');
+    iohandler.stderr('network deny <uuid> # accept an invitation or request');
+    iohandler.stderr('network invite <uuid> <device> # invite to network');
+    iohandler.stderr('network revoke <uuid> # revoke an invitation');
+    iohandler.stderr('network kick <uuid> <device> # kick device out of network');
+    iohandler.stderr('network create <name> <private|public>   # create a network');
+    this.setExitCode(1);
   }
 
   info(iohandler: IOHandler) {
@@ -1757,8 +1861,10 @@ export class DefaultTerminalState extends CommandTerminalState {
     iohandler.stdout(Stdout.text('Host: ' + this.activeDevice['name']));
 
     const element = document.createElement('div');
-    element.innerHTML = `Address: <span style="color: silver;">${DefaultTerminalState.promptAppender(this.activeDevice['uuid'])}</span>`;
+    element.innerHTML = 'Address: <span style="color: silver;">'
+      + DefaultTerminalState.promptAppender(this.activeDevice['uuid']) + '</span>';
     iohandler.stdout(Stdout.node(element));
+    this.setExitCode(0);
 
     DefaultTerminalState.registerPromptAppenders(element);
   }
@@ -1766,7 +1872,7 @@ export class DefaultTerminalState extends CommandTerminalState {
   run(iohandler: IOHandler) {
     const args = iohandler.args;
     if (args.length === 0) {
-      iohandler.stderr(Stderr.text('usage: run <filename>'));
+      iohandler.stderr('usage: run <filename>');
       this.setExitCode(1);
       return;
     }
@@ -1774,13 +1880,13 @@ export class DefaultTerminalState extends CommandTerminalState {
     try {
       path = Path.fromString(args[0], this.working_dir);
     } catch {
-      iohandler.stderr(Stderr.text('The specified path is not valid'));
+      iohandler.stderr('The specified path is not valid');
       this.setExitCode(1);
       return;
     }
     this.fileService.getFromPath(this.activeDevice['uuid'], path).subscribe(file => {
       if (file.is_directory) {
-        iohandler.stderr(Stderr.text('That is not a file'));
+        iohandler.stderr('That is not a file');
         this.setExitCode(1);
       } else {
         // set special variables
@@ -1797,14 +1903,15 @@ export class DefaultTerminalState extends CommandTerminalState {
         // reset special variables
         '#0*@'.split('').forEach((variable: string) => {
           this.variables.delete(variable);
-        })
+        });
         for (let i = 0; i <= numberOfArgs; i++) {
           this.variables.delete(String(i));
         }
+        this.setExitCode(0);
       }
     }, error => {
       if (error.message === 'file_not_found') {
-        iohandler.stderr(Stderr.text('That file does not exist'));
+        iohandler.stderr('That file does not exist');
         this.setExitCode(1);
       } else {
         this.reportError(error);
@@ -1815,15 +1922,30 @@ export class DefaultTerminalState extends CommandTerminalState {
   setVariable(iohandler: IOHandler) {
     const args = iohandler.args;
     if (args.length !== 2) {
-      iohandler.stderr(Stderr.text('usage: set <name of variable> <value>'));
+      iohandler.stderr('usage: set <name of variable> <value>');
       this.setExitCode(1);
       return;
     }
     this.variables.set(args[0], args[1]);
+    this.setExitCode(0);
   }
 
   echo(iohandler: IOHandler) {
     iohandler.stdout(Stdout.text(iohandler.args.join(' ')));
+    this.setExitCode(0);
+  }
+
+  read(iohandler: IOHandler) {
+    const args = iohandler.args;
+    if (args.length !== 1) {
+      iohandler.stderr('usage: read <name of variable>');
+      this.setExitCode(1);
+      return;
+    }
+    iohandler.stdin((input) => {
+      this.variables.set(args[0], input);
+      this.setExitCode(0);
+    });
   }
 }
 
@@ -1903,9 +2025,9 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
   };
 
   constructor(terminal: TerminalAPI,
-    private domSanitizer: DomSanitizer,
-    private callback: (response: boolean) => void,
-    private startSeconds: number = 0) {
+              private domSanitizer: DomSanitizer,
+              private callback: (response: boolean) => void,
+              private startSeconds: number = 0) {
     super(terminal);
 
     this.intervalHandle = setInterval(() => {
@@ -1922,14 +2044,43 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
   }
 }
 
+class DefaultStdin implements TerminalState {
+  private callback: (stdin: string) => void;
+
+  constructor(private terminal: TerminalAPI) {}
+
+  read(callback: (stdin: string) => void) {
+    this.callback = callback;
+    this.terminal.pushState(this);
+  }
+
+  execute(command: string) {
+    const input = command ? command : '';
+    this.terminal.popState();
+    this.callback(input);
+  }
+
+  autocomplete(_: string): string {
+    return '';
+  }
+
+  getHistory(): string[] {
+    return [];
+  }
+
+  refreshPrompt() {
+    this.terminal.changePrompt('>');
+  }
+}
+
+
 class IOHandler {
   stdout: (stdout: Stdout) => void;
-  stdin: (stdin: Stdin) => void;
-  stderr: (stderr: Stderr) => void;
+  stdin: (callback: (stdin: string) => void) => void;
+  stderr: (stderr: string) => void;
   args: string[];
 }
 
-class Stdin {}
 class Stderr {
   outputType: OutputType;
   data: string;
