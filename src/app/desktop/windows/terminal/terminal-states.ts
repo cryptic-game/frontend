@@ -10,6 +10,8 @@ import {of} from 'rxjs';
 import {Device} from '../../../api/devices/device';
 import {WindowDelegate} from '../../window/window-delegate';
 import {File} from '../../../api/files/file';
+import {Shell} from 'src/app/shell/shell';
+import {ShellApi} from 'src/app/shell/shellapi';
 
 
 function escapeHtml(html: string): string {
@@ -33,7 +35,7 @@ export abstract class CommandTerminalState implements TerminalState {
   executeCommand(command: string, args: string[], io: IOHandler = null) {
     const iohandler = io ? io : {
       stdout: this.stdoutHandler.bind(this),
-      stdin: this.stdinHandler,
+      stdin: this.stdinHandler.bind(this),
       stderr: this.stderrHandler.bind(this),
       args: args
     };
@@ -170,7 +172,7 @@ export abstract class CommandTerminalState implements TerminalState {
 
   abstract commandNotFound(command: string, iohandler: IOHandler): void;
 
-  autocomplete(content: string): string {
+  async autocomplete(content: string): Promise<string> {
     return content
       ? Object.entries(this.commands)
         .filter(command => !command[1].hidden)
@@ -311,6 +313,10 @@ export class DefaultTerminalState extends CommandTerminalState {
     'read': {
       executor: this.read.bind(this),
       description: 'read input of user'
+    },
+    'msh': {
+      executor: this.msh.bind(this),
+      description: 'create a new shell'
     },
 
     // easter egg
@@ -1947,6 +1953,16 @@ export class DefaultTerminalState extends CommandTerminalState {
       this.setExitCode(0);
     });
   }
+
+  msh(_: IOHandler) {
+    this.terminal.pushState(
+      new ShellTerminal(
+        this.websocket, this.settings, this.fileService,
+        this.domSanitizer, this.windowDelegate, this.activeDevice,
+        this.terminal, this.promptColor
+      )
+    );
+  }
 }
 
 
@@ -1972,7 +1988,7 @@ export abstract class ChoiceTerminalState implements TerminalState {
     this.terminal.outputText('\'' + choice + '\' is not one of the following: ' + Object.keys(this.choices).join(', '));
   }
 
-  autocomplete(content: string): string {
+  async autocomplete(content: string): Promise<string> {
     return content ? Object.keys(this.choices).sort().find(choice => choice.startsWith(content)) : '';
   }
 
@@ -2060,7 +2076,7 @@ class DefaultStdin implements TerminalState {
     this.callback(input);
   }
 
-  autocomplete(_: string): string {
+  async autocomplete(_: string): Promise<string> {
     return '';
   }
 
@@ -2144,3 +2160,63 @@ enum OutputType {
   TEXT,
   NODE,
 }
+
+class ShellTerminal implements TerminalState {
+  private shell: Shell;
+
+  constructor(private websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
+              private domSanitizer: DomSanitizer, windowDelegate: WindowDelegate, private activeDevice: Device,
+              private terminal: TerminalAPI, private promptColor: string = null
+  ) {
+    const shellApi = new ShellApi(
+      this.websocket, this.settings, this.fileService,
+      this.domSanitizer, windowDelegate, this.activeDevice,
+      terminal, this.promptColor, this.refreshPrompt.bind(this),
+      Path.ROOT
+    );
+    this.shell = new Shell(
+      this.terminal.output.bind(this.terminal),
+      // TODO use this
+      // this.terminal.outputText.bind(this.terminal),
+      this.stdinHandler.bind(this),
+      this.terminal.outputText.bind(this.terminal),
+      shellApi,
+    );
+  }
+
+  /** default implementaion for stdin: reading from console */
+  stdinHandler(callback: (input: string) => void) {
+    return new DefaultStdin(this.terminal).read(callback);
+  }
+
+  execute(command: string) {
+    this.shell.execute(command);
+  }
+
+  async autocomplete(content: string): Promise<string> {
+    return await this.shell.autocomplete(content);
+  }
+
+  getHistory(): string[] {
+    return this.shell.getHistory();
+  }
+
+  refreshPrompt() {
+    this.fileService.getAbsolutePath(this.activeDevice['uuid'], this.shell.api.working_dir).subscribe(path => {
+      // const color = this.domSanitizer.sanitize(SecurityContext.STYLE, this.promptColor || this.settings.getTPC());
+      // TODO undo this
+      const color = 'yellow';
+      const prompt = this.domSanitizer.bypassSecurityTrustHtml(
+        `<span style="color: ${color}">` +
+        `${escapeHtml(this.websocket.account.name)}@${escapeHtml(this.activeDevice['name'])}` +
+        `<span style="color: white">:</span>` +
+        `<span style="color: #0089ff;">/${path.join('/')}</span>$` +
+        `</span>`
+      );
+      this.terminal.changePrompt(prompt);
+    });
+
+  }
+
+}
+

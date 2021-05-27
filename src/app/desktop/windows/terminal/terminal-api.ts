@@ -46,7 +46,7 @@ export interface TerminalAPI {
 export interface TerminalState {
   execute(command: string);
 
-  autocomplete(content: string): string;
+  autocomplete(content: string): Promise<string>;
 
   getHistory(): string[];
 
