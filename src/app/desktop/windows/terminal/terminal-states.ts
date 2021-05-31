@@ -12,6 +12,7 @@ import {WindowDelegate} from '../../window/window-delegate';
 import {File} from '../../../api/files/file';
 import {Shell} from 'src/app/shell/shell';
 import {ShellApi} from 'src/app/shell/shellapi';
+import {DeviceService} from 'src/app/api/devices/device.service';
 
 
 function escapeHtml(html: string): string {
@@ -331,8 +332,8 @@ export class DefaultTerminalState extends CommandTerminalState {
   working_dir: string = Path.ROOT;  // UUID of the working directory
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-              private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
-              protected terminal: TerminalAPI, public promptColor: string = null) {
+              private deviceService: DeviceService, private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate,
+              protected activeDevice: Device, protected terminal: TerminalAPI, public promptColor: string = null) {
     super();
   }
 
@@ -1454,8 +1455,8 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.websocket.ms('device', ['device', 'info'], {device_uuid: args[0]}).subscribe(infoData => {
       this.websocket.ms('service', ['part_owner'], {device_uuid: args[0]}).subscribe(partOwnerData => {
         if (infoData['owner'] === this.websocket.account.uuid || partOwnerData['ok'] === true) {
-          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.fileService, this.domSanitizer,
-            this.windowDelegate, infoData, this.terminal, '#DD2C00'));
+          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.fileService, this.deviceService,
+            this.domSanitizer, this.windowDelegate, infoData, this.terminal, '#DD2C00'));
           this.setExitCode(0);
         } else {
           iohandler.stderr('Access denied');
@@ -1957,7 +1958,7 @@ export class DefaultTerminalState extends CommandTerminalState {
   msh(_: IOHandler) {
     this.terminal.pushState(
       new ShellTerminal(
-        this.websocket, this.settings, this.fileService,
+        this.websocket, this.settings, this.fileService, this.deviceService,
         this.domSanitizer, this.windowDelegate, this.activeDevice,
         this.terminal, this.promptColor
       )
@@ -2165,11 +2166,11 @@ class ShellTerminal implements TerminalState {
   private shell: Shell;
 
   constructor(private websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-              private domSanitizer: DomSanitizer, windowDelegate: WindowDelegate, private activeDevice: Device,
-              private terminal: TerminalAPI, private promptColor: string = null
+              private deviceService: DeviceService, private domSanitizer: DomSanitizer, windowDelegate: WindowDelegate,
+              private activeDevice: Device, private terminal: TerminalAPI, private promptColor: string = null
   ) {
     const shellApi = new ShellApi(
-      this.websocket, this.settings, this.fileService,
+      this.websocket, this.settings, this.fileService, this.deviceService,
       this.domSanitizer, windowDelegate, this.activeDevice,
       terminal, this.promptColor, this.refreshPrompt.bind(this),
       Path.ROOT

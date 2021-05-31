@@ -5,6 +5,10 @@ import {Cd} from './cd';
 import {Ls} from './ls';
 import {Clear} from './clear';
 import {Exit} from './exit';
+import {Dl} from './dl';
+import {Shutdown} from './shutdown';
+import {Ping} from './ping';
+import {Credits} from './credits';
 
-export const BUILTINS = [Status, Hostname, Miner, Cd, Ls, Clear, Exit];
+export const BUILTINS = [Status, Hostname, Miner, Cd, Ls, Clear, Exit, Dl, Shutdown, Ping, Credits];
 

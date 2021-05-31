@@ -6,6 +6,7 @@ import {FileService} from '../api/files/file.service';
 import {Device} from '../api/devices/device';
 import {WindowDelegate} from '../desktop/window/window-delegate';
 import {File} from 'src/app/api/files/file';
+import {DeviceService} from '../api/devices/device.service';
 
 
 export class ShellApi {
@@ -13,6 +14,7 @@ export class ShellApi {
   public websocket: WebsocketService,
   public settings: SettingsService,
   public fileService: FileService,
+  public deviceService: DeviceService,
   public domSanitizer: DomSanitizer,
   public windowDelegate: WindowDelegate,
   public activeDevice: Device,

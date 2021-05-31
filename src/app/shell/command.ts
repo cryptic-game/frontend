@@ -1,10 +1,22 @@
 import {ShellApi} from './shellapi';
+import {File} from 'src/app/api/files/file';
 
 export enum ArgType {
   RAW,       // just a String
   PATH,      // FILE or DIRECTORY
-  FILE,      // only FILE
-  DIRECTORY  // only DIRECTORY
+  FILE,      // only file
+  DIRECTORY, // only directory
+  UUID
+}
+
+export function checkArgType(argType: ArgType, arg: string): boolean {
+  if (argType === ArgType.UUID) {
+    return arg.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) !== null;
+  } else {
+    // TODO validate also PATH, FILE & DIRECTORY
+    // so that the commands do not have to do this
+    return true;
+  }
 }
 
 export interface PositionalArgument {
@@ -17,8 +29,8 @@ export interface PositionalArgument {
 export abstract class Command {
   public description = '';
   private positionalArgs: PositionalArgument[] = [];
-  public optionalArgs = 0;
-  public capturesAllArgs = false;
+  private optionalArgs = 0;
+  private capturesAllArgs = false;
   private subcommands: Map<string, Command> = new Map();
 
   // TODO add named arguments
@@ -60,8 +72,9 @@ export abstract class Command {
     if (this.subcommands.size > 0) {
       stdout('subcommands:');
       this.subcommands.forEach((subcommand: Command, name: string) => {
-        // TODO use \t
-        // TODO align the descriptions
+        // TODO:
+        // use \t
+        // align the descriptions
         stdout(`    ${name} - ${subcommand.description}`);
       });
     }
@@ -82,14 +95,23 @@ export abstract class Command {
       this.showHelp(iohandler.stdout);
       return 0;
     }
+
     const posArgsLen = this.positionalArgs.length;
-    if (posArgsLen < args.length && this.capturesAllArgs
-      || args.length <= posArgsLen && args.length >= posArgsLen - this.optionalArgs
+    if (!(posArgsLen < args.length && this.capturesAllArgs
+      || args.length <= posArgsLen && args.length >= posArgsLen - this.optionalArgs)
     ) {
-      return await this.run(iohandler);
+      this.showHelp(iohandler.stdout);
+      return 1;
     }
-    this.showHelp(iohandler.stdout);
-    return 1;
+    // check all args for validity
+    for (let i = 0; i < args.length; i++) {
+      const arg = i >= posArgsLen ? this.positionalArgs[posArgsLen - 1] : this.positionalArgs[i];
+      if (!checkArgType(arg.argType, args[i])) {
+        iohandler.stderr(`Arg "${args[i]}" is invalid`);
+        return 1;
+      }
+    }
+    return await this.run(iohandler);
   }
 
 
@@ -121,7 +143,7 @@ export abstract class Command {
     }
     // autocomplete the last word if its type is a file or directory
     const arg = this.positionalArgs[words.length - 1];
-    let files: any;
+    let files: File[];
     if (arg.argType === ArgType.DIRECTORY || arg.argType === ArgType.PATH) {
       files = await this.shellApi.listFilesOfWorkingDir();
       found = files.filter(n => n.is_directory).find(n => n.filename.startsWith(words[0]));
