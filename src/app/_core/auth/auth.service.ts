@@ -85,6 +85,10 @@ export class AuthService {
     return this.http.get<Provider[]>(`${environment.api}/oauth2/list`)
       .pipe(
         tap(provider => {
+          if (!this.provider) {
+            return;
+          }
+
           const currProvider = provider.find(p => p.id === this.provider.id);
           this.provider = this.provider && !currProvider ? null : currProvider;
         }),
