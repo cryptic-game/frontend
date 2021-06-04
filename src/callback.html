@@ -54,9 +54,15 @@
 </footer>
 
 <script defer>
-  main().then();
+  addEventListener('message', event => {
+    if (event.origin !== origin || !event.data.startsWith('http')) {
+      return;
+    }
 
-  async function main() {
+    main(event.data).then();
+  })
+
+  async function main(api) {
     const params = new URLSearchParams(location.search);
 
     const { access_token, new_user } = await callback(api, params.get('provider') || 'discord', params.get('code'))
@@ -67,7 +73,7 @@
 
     postMessage(access_token, origin);
 
-    setTimeout(() => close(), 1000 * 5);
+    // setTimeout(() => close(), 1000 * 5);
   }
 
   async function callback(api, provider, code) {

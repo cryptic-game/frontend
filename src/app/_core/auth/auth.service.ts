@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { fromEvent, Observable, of, Subject } from 'rxjs';
+import { fromEvent, interval, Observable, of, Subject } from 'rxjs';
 import { Provider, Session, Token } from './auth.domain';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
@@ -133,12 +133,20 @@ export class AuthService {
 
   private requestToken(provider: Provider): Observable<Token> {
     const popup = AuthService.createPopup(provider.auth_uri);
-    // @ts-ignore
-    popup.window.api = environment.api;
 
-    return fromEvent<MessageEvent>(popup, 'message')
+    return interval(500)
       .pipe(
-        filter(event => event.origin === origin),
+        filter(_ => {
+          try {
+            return popup.origin === origin;
+          } catch (_) {
+            return false;
+          }
+        }),
+        take(1),
+        tap(_ => popup.postMessage(environment.api, origin)),
+        mergeMap(_ => fromEvent<MessageEvent>(popup, 'message')),
+        filter(event => event.origin === origin && event.data !== environment.api),
         tap(_ => popup.close()),
         map(event => AuthService.decode(event.data)), take(1)
       );
