@@ -81,7 +81,7 @@ export class AuthService {
     return { value, userId: user_id, expire: exp };
   }
 
-  public getProvider(): Observable<Provider[]> {
+  public getProviders(): Observable<Provider[]> {
     return this.http.get<Provider[]>(`${environment.api}/oauth2/list`)
       .pipe(
         tap(provider => {
