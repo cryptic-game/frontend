@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  api: 'wss://ws.cryptic-game.net/'
+  ws: 'wss://server.cryptic-game.net/ws',
+  api: 'https://server.cryptic-game.net/api'
 };

@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "~9.1.4",
     "@angular/router": "~9.1.4",
     "@angular/service-worker": "^9.1.4",
+    "jwt-decode": "^3.1.2",
     "ngx-contextmenu": "^5.4.0",
     "particlesjs": "^2.2.3",
     "rxjs": "~6.5.5",

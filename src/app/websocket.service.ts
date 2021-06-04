@@ -33,7 +33,7 @@ export class WebsocketService {
     // rxjs webSocket automatically reconnects when subscribed again, so no need to recreate
     if (!this.socketSubject) {
       this.socketSubject = webSocket({
-        url: environment.api,
+        url: environment.ws,
         openObserver: {
           next: () => {
             if (this.connectedOnce) {

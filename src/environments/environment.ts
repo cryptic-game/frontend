@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  api: 'wss://ws.test.cryptic-game.net/'
+  ws: 'wss://server.staging.cryptic-game.net/ws',
+  api: 'https://server.staging.cryptic-game.net/api'
 };
 
 /*

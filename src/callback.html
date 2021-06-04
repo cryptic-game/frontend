@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Cryptic Authentication Callback</title>
+  <base href="/">
+
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <link href="src/favicon.ico" rel="icon" type="image/x-icon">
+</head>
+<body>
+
+<noscript style="text-align: center">
+  <h2>JavaScript could not be executed</h2>
+  <p>
+    To play Cryptic, your browser needs support for JavaScript.
+    <br>
+    <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">Here</a> you can find instructions
+    on how to enable JavaScript in your web browser.
+  </p>
+
+  <style>
+    #loading {
+      display: none;
+    }
+  </style>
+</noscript>
+
+<h1 id="loading">Loading, please wait...</h1>
+
+<main id="container" hidden>
+  <h1>Please select a username!</h1>
+
+  <form id="form">
+    <label>
+      Username (<code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>):
+      <input type="text" id="username" minlength="2" maxlength="24" required>
+    </label>
+
+    <span id="invalid-username" hidden>This username is violating username pattern.</span>
+    <span id="username-taken" hidden>This username is already taken!</span>
+
+    <label>
+      <input type="submit" value="Choose username">
+    </label>
+  </form>
+</main>
+
+<footer>
+  <p>
+    Imprint: <a href="https://the-morpheus.de/#contact" rel="noopener"
+                target="_blank">https://the-morpheus.de/#contact</a>
+  </p>
+</footer>
+
+<script defer>
+  main().then();
+
+  async function main() {
+    const params = new URLSearchParams(location.search);
+
+    const { access_token, new_user } = await callback(api, params.get('provider') || 'discord', params.get('code'))
+
+    if (new_user) {
+      await chooseUsername(api, access_token);
+    }
+
+    postMessage(access_token, origin);
+
+    setTimeout(() => close(), 1000 * 5);
+  }
+
+  async function callback(api, provider, code) {
+    const response = await fetch(`${api}/oauth2/callback`, {
+      method: 'POST',
+      body: JSON.stringify({ code: code, provider: provider })
+    })
+
+    return await response.json();
+  }
+
+  async function chooseUsername(api, token) {
+    document.getElementById('loading').hidden = true;
+    document.getElementById('container').hidden = false;
+
+    const form = document.getElementById('form');
+    const username = document.getElementById('username');
+
+    const invalidName = document.getElementById('invalid-username');
+    const nameTaken = document.getElementById('username-taken');
+
+    while (true) {
+      const event = await new Promise(resolve => form.addEventListener('submit', resolve));
+      event.preventDefault();
+
+      const response = await fetch(`${api}/user/register`, {
+        method: 'POST',
+        body: JSON.stringify({ access_token: token, username: username.value })
+      });
+
+      if (response.status < 400) {
+        return;
+      }
+
+      const { error } = await response.json();
+
+      switch (error) {
+        case 'INVALID_USERNAME': // [a-zA-Z0-9\\-_.]{2,24}$
+          showError(invalidName);
+          break;
+        case 'USERNAME_TAKEN':
+          showError(nameTaken);
+          break;
+
+        case 'INVALID_TOKEN': // invalid jwt
+        case 'TOKEN_EXPIRED': // tow weeks -> no need to catch this
+        case 'USER': // user was deleted
+        case 'USER_ALREADY_REGISTERED': // means username already set
+        default:
+          throw new Error(`Unexpected error ${response.status} ${response.statusText} - ${error}`);
+      }
+    }
+  }
+
+  function showError(element) {
+    element.hidden = false;
+    setTimeout(() => element.hidden = true, 1000 * 10);
+  }
+</script>
+
+</body>
+</html>
