@@ -18,6 +18,18 @@
       <label>
         <input (click)="login()" [disabled]="!form.valid" disabled type="submit" value="Log In">
       </label>
+
+      <label>
+        <input (click)="oauthLogin(0)" type="submit" value="Discord Log In">
+      </label>
+
+      <label>
+        <input (click)="oauthLogin(1)" type="submit" value="Github Log In">
+      </label>
+
+      <label>
+        <input (click)="logout()" type="submit" value="Log Out">
+      </label>
     </form>
 
     <p *ngIf="error" class="error">{{error}}</p>

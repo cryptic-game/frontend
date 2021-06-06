@@ -18,15 +18,15 @@ export class AuthService {
   private provider0?: Provider;
   private tokenRequesting?: Subject<Token>;
 
-  private get token(): Token | undefined {
-    return this.token0 || (this.token0 = AuthService.decode(localStorage.getItem('token')));
+  public get token(): Token | undefined {
+    return this.token0 || (this.token0 = AuthService.decode(localStorage.getItem('access_token')));
   }
 
-  private set token(value: Token | undefined) {
+  public set token(value: Token | undefined) {
     if (value) {
-      localStorage.setItem('token', value.value);
+      localStorage.setItem('access_token', value.value);
     } else {
-      localStorage.removeItem('token');
+      localStorage.removeItem('access_token');
     }
 
     this.token0 = value;
