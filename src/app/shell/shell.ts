@@ -5,7 +5,6 @@ import {ShellApi} from './shellapi';
 export class Shell {
   private history: string[] = [];
   public commands: Map<string, Command> = new Map();
-  private variables: Map<string, string> = new Map();
   private aliases: Map<string, string> = new Map();
 
   constructor(
@@ -44,61 +43,17 @@ export class Shell {
     }
   }
 
-  async executeCommandChain(
-    commands: string[],
-    previousStdout: string = null
-  ): Promise<number> {
-    let stdoutText = '';
-
-    const pipedStdout = (output: string) => {
-      stdoutText = stdoutText + output + '\n';
-    };
-
-    const pipedStdin = (callback: (input: string) => void) => {
-      callback(previousStdout);
-    };
-
-    let command = commands[0].trim().split(' ');
-    if (command.length === 0) {
-      return await this.executeCommandChain(commands.slice(1));
-    }
-    // replace variables with their values
-    command = command.map((arg) => {
-      if (arg.startsWith('$')) {
-        const name = arg.slice(1);
-        if (this.variables.has(name)) {
-          return this.variables.get(name);
-        }
-        return '';
-      }
-      return arg;
-    });
-
-    const stdout = commands.length > 1 ? pipedStdout : this.stdoutHandler.bind(this);
-    const stdin = previousStdout ? pipedStdin : this.stdinHandler.bind(this);
-    const iohandler: IOHandler = {stdout: stdout, stdin: stdin, stderr: this.stderrHandler.bind(this), positionalArgs: command.slice(1)};
-    await this.executeCommand(command[0], iohandler);
-    if (commands.length > 1) {
-      this.executeCommandChain(commands.slice(1), stdoutText);
-    }
-  }
-
   execute(cmd: string) {
     let commands = cmd.trim().split(';');
     commands = [].concat(...commands.map((command) => command.split('\n')));
-    commands.forEach((command) => {
-      const pipedCommands = command.trim().split('|');
-      this.executeCommandChain(pipedCommands).then((exitCode) => {
-        this.variables.set('?', String(exitCode));
-      });
+    commands.forEach((command_) => {
+    const command = command_.trim().split(' ');
+    const iohandler: IOHandler = {stdout: this.stdoutHandler.bind(this), stdin: this.stdinHandler.bind(this), stderr: this.stderrHandler.bind(this), positionalArgs: command.slice(1)};
+     this.executeCommand(command[0], iohandler)
     });
     if (cmd) {
       this.history.unshift(cmd);
     }
-  }
-
-  getExitCode(): number {
-    return Number(this.variables.get('?'));
   }
 
   getHistory(): string[] {

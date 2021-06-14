@@ -48,9 +48,9 @@ class MinerLook extends Command {
     });
     const wallet = data['wallet'];
     const power = Math.round(data['power'] * 100);
-    iohandler.stdout('Wallet: ' + wallet);
-    iohandler.stdout('Mining Speed: ' + String(Number(miner.speed) * 60 * 60) + ' MC/h');
-    iohandler.stdout('Power: ' + power + '%');
+    iohandler.stdout(`Wallet: ${wallet}`);
+    iohandler.stdout(`Mining Speed: ${Number(miner.speed) * 60 * 60} MC/h`);
+    iohandler.stdout(`Power: ${power}%`);
     return 0;
   }
 }

@@ -11,7 +11,7 @@ export class Status extends Command {
     const r = await this.shellApi.websocket.requestPromise({
       action: 'info'
     });
-    iohandler.stdout('Online players: ' + r.online);
+    iohandler.stdout(`Online players: ${r.online}`);
     return 0;
   }
 }
