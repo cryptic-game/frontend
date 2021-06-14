@@ -91,6 +91,10 @@ export class WebsocketService {
     return this.socketSubject.pipe(first(), map(checkResponseError));  // this will soon get tags too
   }
 
+  requestPromise(data: object): Promise<any> {
+    return this.request(data).toPromise();
+  }
+
   ms(name: string, endpoint: string[], data: object): Observable<any> {
     const tag = randomUUID();
     if (this.socketSubject.closed || this.socketSubject.hasError) {
