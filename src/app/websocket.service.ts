@@ -147,9 +147,14 @@ export class WebsocketService {
   }
 
   private handleMessage(message: object) {
-    if (message['error'] != null) {
-      this.open = {};
-    } else if (message['tag'] != null && message['data'] != null) {
+    if (message['error'] === 'timeout') {
+      // We can't redirect the error to the request because the error has no tag yet
+      console.warn('A microservice request timed out');
+    } else if (message['error'] != null) {
+      return;
+    }
+
+    if (message['tag'] != null && message['data'] != null) {
       const tag = message['tag'];
 
       if (this.open[tag] != null) {
