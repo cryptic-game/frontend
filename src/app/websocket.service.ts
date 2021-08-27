@@ -86,6 +86,11 @@ export class WebsocketService {
     return subject;
   }
 
+  requestMany(data: object): Observable<any> {
+    this.socketSubject.next(data);
+    return this.socketSubject.pipe(map(checkResponseError));
+  }
+
   request(data: object): Observable<any> {
     this.socketSubject.next(data);
     return this.socketSubject.pipe(first(), map(checkResponseError));  // this will soon get tags too

@@ -1,23 +1,31 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { WalletAppService } from '../wallet-app.service';
 import { Wallet } from '../wallet';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-wallet-app-header',
   templateUrl: './wallet-app-header.component.html',
   styleUrls: ['./wallet-app-header.component.scss']
 })
-export class WalletAppHeaderComponent {
+export class WalletAppHeaderComponent implements OnDestroy {
 
   wallet: Wallet;
 
   @Input() walletEdit: boolean;
   @Output() walletEditChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  updateSubscription: Subscription;
+
   constructor(private walletAppService: WalletAppService) {
-    walletAppService.update.subscribe((wallet) => {
+    this.wallet = walletAppService.wallet;
+    this.updateSubscription = walletAppService.update.subscribe((wallet) => {
       this.wallet = wallet;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.updateSubscription.unsubscribe();
   }
 
   showWalletEdit(): void {

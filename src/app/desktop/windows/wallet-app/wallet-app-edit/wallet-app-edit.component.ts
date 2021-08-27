@@ -26,15 +26,15 @@ export class WalletAppEditComponent {
     this.correctKey = false;
     this.error = false;
     this.form.valueChanges.subscribe(data => {
-      this.correctUuid = walletAppService.checkWalletUuidFormat(data.uuid);
-      this.correctKey = walletAppService.checkWalletKeyFormat(data.key);
+      this.correctUuid = WalletAppService.WALLET_UUID_REGEX.test(data.uuid);
+      this.correctKey = WalletAppService.WALLET_KEY_REGEX.test(data.key);
     });
   }
 
   save(): void {
     if (this.correctUuid && this.correctKey) {
-      this.walletAppService.loadNewWallet(this.form.get('uuid').value, this.form.get('key').value)
-        .subscribe(data => {
+      this.walletAppService.loadWallet(this.form.get('uuid').value, this.form.get('key').value)
+        .then(data => {
           this.error = !data;
           if (!data) {
             setTimeout(() => this.error = false, 5 * 1000);
