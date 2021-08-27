@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { WalletAppService } from '../wallet-app.service';
 
 @Component({
@@ -7,41 +7,47 @@ import { WalletAppService } from '../wallet-app.service';
   templateUrl: './wallet-app-edit.component.html',
   styleUrls: ['./wallet-app-edit.component.scss']
 })
-export class WalletAppEditComponent {
+export class WalletAppEditComponent implements OnInit {
 
   form = new FormGroup({
-    uuid: new FormControl(),
-    key: new FormControl()
+    uuid: new FormControl('', [
+      Validators.required,
+      Validators.pattern(WalletAppService.WALLET_UUID_REGEX)
+    ]),
+    key: new FormControl('', [
+      Validators.required,
+      Validators.pattern(WalletAppService.WALLET_KEY_REGEX)
+    ])
   });
-  correctUuid: boolean;
-  correctKey: boolean;
-  error: boolean;
+
+  error = false;
+
   @Output()
   private performClose: EventEmitter<void> = new EventEmitter<void>();
 
-  constructor(
-    private walletAppService: WalletAppService
-  ) {
-    this.correctUuid = false;
-    this.correctKey = false;
-    this.error = false;
-    this.form.valueChanges.subscribe(data => {
-      this.correctUuid = WalletAppService.WALLET_UUID_REGEX.test(data.uuid);
-      this.correctKey = WalletAppService.WALLET_KEY_REGEX.test(data.key);
-    });
+  constructor(private walletAppService: WalletAppService) {
+  }
+
+  ngOnInit() {
+    if (this.walletAppService.wallet) {
+      this.form.setValue({
+        uuid: this.walletAppService.wallet.source_uuid,
+        key: this.walletAppService.wallet.key
+      });
+    }
   }
 
   save(): void {
-    if (this.correctUuid && this.correctKey) {
-      this.walletAppService.loadWallet(this.form.get('uuid').value, this.form.get('key').value)
-        .then(data => {
-          this.error = !data;
-          if (!data) {
-            setTimeout(() => this.error = false, 5 * 1000);
-          } else {
-            this.performClose.emit();
-          }
-        });
+    if (this.form.valid) {
+      this.walletAppService.loadWallet(this.form.value.uuid, this.form.value.key).then(success => {
+        this.error = !success;
+        if (success) {
+          this.performClose.emit();
+        } else {
+          setTimeout(() => this.error = false, 5 * 1000);
+        }
+      });
     }
   }
+
 }
