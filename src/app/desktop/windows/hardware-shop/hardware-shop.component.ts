@@ -4,6 +4,7 @@ import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window
 import { HardwareShopService } from './hardware-shop.service';
 import { HardwareShopCategory } from './hardware-shop-category';
 import { HardwareShopDelegate } from './hardware-shop.delegate';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop',
@@ -12,7 +13,7 @@ import { HardwareShopDelegate } from './hardware-shop.delegate';
 })
 export class HardwareShopComponent extends WindowComponent implements HardwareShopDelegate, OnInit {
 
-  cartVisibility: boolean;
+  cartVisibility = false;
 
   selectedCategory: HardwareShopCategory;
 
@@ -31,7 +32,7 @@ export class HardwareShopComponent extends WindowComponent implements HardwareSh
   }
 
   ngOnInit(): void {
-    this.cartVisibility = false;
+    this.hardwareShopService.loadCartItems().then();
   }
 
   setCartVisibility(status: boolean) {

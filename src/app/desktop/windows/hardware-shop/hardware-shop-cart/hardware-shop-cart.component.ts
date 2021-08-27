@@ -33,14 +33,15 @@ export class HardwareShopCartComponent implements OnDestroy {
       this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet?.amount)
     );
     this.walletAppService.updateWallet().then();
+    this.hardwareShopService.loadCartItems().then();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
-  updateNumber(): void {
-    this.hardwareShopService.setCartItems(this.items);
+  updateNumber(save): void {
+    this.hardwareShopService.setCartItems(this.items, save);
   }
 
   update(): void {
