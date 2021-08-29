@@ -1,4 +1,4 @@
-import { Component, OnInit, Type } from '@angular/core';
+import { Component, OnDestroy, OnInit, Type } from '@angular/core';
 
 import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { HardwareShopService } from './hardware-shop.service';
@@ -11,28 +11,38 @@ import { Subscription } from 'rxjs';
   templateUrl: './hardware-shop.component.html',
   styleUrls: ['./hardware-shop.component.scss']
 })
-export class HardwareShopComponent extends WindowComponent implements HardwareShopDelegate, OnInit {
+export class HardwareShopComponent extends WindowComponent implements HardwareShopDelegate, OnInit, OnDestroy {
 
   cartVisibility = false;
 
   selectedCategory: HardwareShopCategory;
 
+  private subscriptions = new Subscription();
+
   constructor(private hardwareShopService: HardwareShopService) {
     super();
-    this.hardwareShopService.updateCategories.subscribe(() => {
-      if (this.selectedCategory) {
-        this.selectedCategory = this.hardwareShopService.getCategory(this.selectedCategory.name);
-      }
-    });
-    this.hardwareShopService.updateCartItems.subscribe(() => {
-      if (this.selectedCategory) {
-        this.selectedCategory = this.hardwareShopService.getCategory(this.selectedCategory.name);
-      }
-    });
+    this.subscriptions.add(
+      this.hardwareShopService.updateCategories.subscribe(() => {
+        if (this.selectedCategory) {
+          this.selectedCategory = this.hardwareShopService.getCategory(this.selectedCategory.name);
+        }
+      })
+    );
+    this.subscriptions.add(
+      this.hardwareShopService.updateCartItems.subscribe(() => {
+        if (this.selectedCategory) {
+          this.selectedCategory = this.hardwareShopService.getCategory(this.selectedCategory.name);
+        }
+      })
+    );
   }
 
   ngOnInit(): void {
     this.hardwareShopService.loadCartItems().then();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   setCartVisibility(status: boolean) {
