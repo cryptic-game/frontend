@@ -49,7 +49,8 @@ export class DesktopComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.linkages = this.programService.list();
+    this.linkages = this.programService.loadCached();
+    this.programService.loadFresh().then(programs => this.linkages = programs);
   }
 
   onDesktop(): Program[] {
@@ -99,7 +100,7 @@ export class DesktopComponent implements OnInit {
         if (this.checkDropAllowed(e)) {
           this.linkages[this.dragLinkageIndex].position.x = this.dragElement.offsetLeft;
           this.linkages[this.dragLinkageIndex].position.y = this.dragElement.offsetTop;
-          this.programService.update();
+          this.programService.save(this.linkages[this.dragLinkageIndex]).then();
         }
         this.dragElement.remove();
         this.dragElement = undefined;
