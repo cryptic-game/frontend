@@ -14,48 +14,34 @@
 }
 
 #settings-window {
+  box-sizing: border-box;
+  height: 100%;
   padding: 5px;
   display: flex;
   flex-direction: column;
-}
 
-#settings-window .row {
-  padding: 5px;
-  display: flex;
-  justify-content: space-between;
+  .row {
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
 
-  margin: 5px;
-  background: $window-background;
-  border: 2px solid #454546;
-}
+    margin: 5px;
+    background: $window-background;
+    border: 2px solid #454546;
+  }
 
-#settings-window-footer-content {
-  float: right;
-}
+  .buttons-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: auto;
+    padding-top: 1rem;
 
-.mt-auto,
-.my-auto {
-  margin-top: auto !important;
-}
+    .side-buttons {
+      margin-left: auto;
 
-.pb-3,
-.py-3 {
-  padding-bottom: 1rem !important;
-}
-
-.pt-3,
-.py-3 {
-  padding-top: 1rem !important;
-}
-
-#settings-window-container .h-100 {
-  height: 100% !important;
-}
-
-// Padding-Right-1
-#settings-window .p-r-1 {
-  padding-right: 1rem;
-}
-
-.setting {
+      button:not(:first-child) {
+        margin-left: 1rem;
+      }
+    }
+  }
 }

@@ -11,6 +11,7 @@ import { DeviceService } from '../api/devices/device.service';
 import { Device } from '../api/devices/device';
 import { WindowManager } from './window-manager/window-manager';
 import { VersionService } from '../version.service';
+import { availableBackgrounds } from '../../assets/desktop/backgrounds/backgrounds';
 
 @Component({
   selector: 'app-desktop',
@@ -51,6 +52,7 @@ export class DesktopComponent implements OnInit {
   ngOnInit(): void {
     this.linkages = this.programService.loadCached();
     this.programService.loadFresh().then(programs => this.linkages = programs);
+    this.settings.backgroundImage.getFresh().then();
   }
 
   onDesktop(): Program[] {
@@ -148,7 +150,8 @@ export class DesktopComponent implements OnInit {
 
   getBackground(): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(
-      `black url(${this.settings.getBackgroundUrl(this.settings.getSettings().backgroundImage)}) bottom/cover no-repeat`);
+      `black url(${availableBackgrounds[this.settings.backgroundImage.getCacheOrDefault()]}) bottom/cover no-repeat`
+    );
   }
 
   trackByUUID(index: number, device: Device) {
