@@ -1,57 +1,71 @@
 @import '../theme-colors';
-button.primary{
+
+button.primary {
   color: #2F2F36;
   background: $primary-default;
-  	&:disabled{
-      background-color: $primary-disabled;
-    }
-    &:hover{
-      background-color: $primary-hover;
-      color: white;
-    }
+
+  &:disabled {
+    background-color: $primary-disabled;
+  }
+
+  &:hover {
+    background-color: $primary-hover;
+    color: white;
+  }
 }
 
-button.success{
+button.success {
   color: #2F2F36;
   background: $success-default;
-  	&:disabled{
-      background-color: $success-disabled;
-    }
-    &:hover{
-      background-color: $success-hover;
-      color: white;
-    }
+
+  &:disabled {
+    background-color: $success-disabled;
+  }
+
+  &:hover {
+    background-color: $success-hover;
+    color: white;
+  }
 }
-button.warning{
+
+button.warning {
   color: #2F2F36;
   background: $warning-default;
-  	&:disabled{
-      background-color: $warning-disabled;
-    }
-    &:hover{
-      background-color: $warning-hover;
-      color: white;
-    }
+
+  &:disabled {
+    background-color: $warning-disabled;
+  }
+
+  &:hover {
+    background-color: $warning-hover;
+    color: white;
+  }
 }
-button.danger{
+
+button.danger {
   color: #2F2F36;
   background: $danger-default;
-  	&:disabled{
-      background-color: $danger-disabled;
-    }
-    &:hover{
-      background-color: $danger-hover;
-      color: white;
-    }
+
+  &:disabled {
+    background-color: $danger-disabled;
+  }
+
+  &:hover {
+    background-color: $danger-hover;
+    color: white;
+  }
 }
-button.info{
+
+button.info {
   color: #2F2F36;
   background: $info-default;
-  	&:disabled{
-      background-color: $info-disabled;
-    }
-    &:hover{
-      background-color: $info-hover;
-      color: white;
-    }
+
+  &:disabled {
+    background-color: $info-disabled;
+  }
+
+  &:hover {
+    background-color: $info-hover;
+    color: white;
+  }
 }
