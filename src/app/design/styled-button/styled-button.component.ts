@@ -1,4 +1,5 @@
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, Input } from '@angular/core';
+
 @Component({
   selector: 'app-styled-button',
   templateUrl: './styled-button.component.html',
@@ -7,10 +8,7 @@ import { Component, Input, OnInit} from '@angular/core';
 export class StyledButtonComponent {
 
   @Input() disabled = false;
-  @Input() styleClass: string;
-
+  @Input() styleClass: 'primary' | 'success' | 'warning' | 'danger' | 'info' = 'primary';
 
   @Input() onClick: (event: Event) => void = () => {};
-
-
 }
