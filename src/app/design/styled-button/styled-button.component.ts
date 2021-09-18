@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input} from '@angular/core';
 @Component({
   selector: 'app-styled-button',
   templateUrl: './styled-button.component.html',
   styleUrls: ['./styled-button.component.scss']
 })
-export class StyledButtonComponent implements OnInit {
+export class StyledButtonComponent {
 
   @Input() disabled = false;
   @Input() styleClass: string;
