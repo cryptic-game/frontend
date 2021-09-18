@@ -1,0 +1,57 @@
+@import '../theme-colors';
+button.primary{
+  color: #2F2F36;
+  background: $primary-default;
+  	&:disabled{
+      background-color: $primary-disabled;
+    }
+    &:hover{
+      background-color: $primary-hover;
+      color: white;
+    }
+}
+
+button.success{
+  color: #2F2F36;
+  background: $success-default;
+  	&:disabled{
+      background-color: $success-disabled;
+    }
+    &:hover{
+      background-color: $success-hover;
+      color: white;
+    }
+}
+button.warning{
+  color: #2F2F36;
+  background: $warning-default;
+  	&:disabled{
+      background-color: $warning-disabled;
+    }
+    &:hover{
+      background-color: $warning-hover;
+      color: white;
+    }
+}
+button.error{
+  color: #2F2F36;
+  background: $error-default;
+  	&:disabled{
+      background-color: $error-disabled;
+    }
+    &:hover{
+      background-color: $error-hover;
+      color: white;
+    }
+}
+button.info{
+  color: #2F2F36;
+  background: $info-default;
+  	&:disabled{
+      background-color: $info-disabled;
+    }
+    &:hover{
+      background-color: $info-hover;
+      color: white;
+    }
+}
