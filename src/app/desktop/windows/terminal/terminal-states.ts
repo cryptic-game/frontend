@@ -194,6 +194,7 @@ export class DefaultTerminalState extends CommandTerminalState {
               private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
               protected terminal: TerminalAPI, public promptColor: string = null) {
     super();
+    this.settings.terminalPromptColor.getFresh().then(() => this.refreshPrompt());
   }
 
   static registerPromptAppenders(element: HTMLElement) {
@@ -233,7 +234,8 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   refreshPrompt() {
     this.fileService.getAbsolutePath(this.activeDevice['uuid'], this.working_dir).subscribe(path => {
-      const color = this.domSanitizer.sanitize(SecurityContext.STYLE, this.promptColor || this.settings.getTPC());
+      const color = this.domSanitizer.sanitize(SecurityContext.STYLE,
+        this.promptColor || this.settings.terminalPromptColor.getCacheOrDefault());
       const prompt = this.domSanitizer.bypassSecurityTrustHtml(
         `<span style="color: ${color}">` +
         `${escapeHtml(this.websocket.account.name)}@${escapeHtml(this.activeDevice['name'])}` +
@@ -428,13 +430,18 @@ export class DefaultTerminalState extends CommandTerminalState {
     files.filter((file) => {
       return file.is_directory;
     }).sort().forEach(folder => {
-      this.terminal.output(`<span style="color: ${this.settings.getLSFC()};">${(this.settings.getLSPrefix()) ? '[Folder] ' : ''}${folder.filename}</span>`);
+      Promise.all([this.settings.terminalLsFolderColor.get(), this.settings.terminalLsPrefix.get()])
+        .then(([folderColor, lsPrefix]) => {
+          this.terminal.output(`<span style="color: ${folderColor};">${lsPrefix ? '[Folder] ' : ''}${folder.filename}</span>`);
+        });
     });
 
     files.filter((file) => {
       return !file.is_directory;
     }).sort().forEach(file => {
-      this.terminal.outputText(`${(this.settings.getLSPrefix() ? '[File] ' : '')}${file.filename}`);
+      this.settings.terminalLsPrefix.get().then(lsPrefix =>
+        this.terminal.outputText(`${(lsPrefix ? '[File] ' : '')}${file.filename}`)
+      );
     });
   }
 

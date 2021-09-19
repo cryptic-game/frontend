@@ -1,4 +1,4 @@
-import { of, Subject } from 'rxjs';
+import { NEVER, of, Subject } from 'rxjs';
 import { WindowDelegate } from './desktop/window/window-delegate';
 import { Device } from './api/devices/device';
 import { WebsocketService } from './websocket.service';
@@ -7,10 +7,11 @@ import { WindowManager } from './desktop/window-manager/window-manager';
 export function webSocketMock(): WebsocketService {
   const mock = jasmine.createSpyObj(
     'WebsocketService',
-    ['init', 'close', 'subscribeNotification', 'request', 'ms', 'msPromise', 'logout', 'refreshAccountInfo', 'trySession']
+    ['init', 'close', 'subscribeNotification', 'request', 'requestMany', 'ms', 'msPromise', 'logout', 'refreshAccountInfo', 'trySession']
   );
   mock.subscribeNotification.and.returnValue(new Subject());
   mock.request.and.returnValue(of());
+  mock.requestMany.and.returnValue(NEVER);
   mock.ms.and.returnValue(of());
   mock.msPromise.and.returnValue(of().toPromise());
   mock.refreshAccountInfo.and.returnValue(of());

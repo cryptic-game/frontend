@@ -7,6 +7,7 @@ import { HardwareService } from '../../../api/hardware/hardware.service';
 import { HardwareShopCartItem } from './hardware-shop-cart-item';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
+import { SettingService } from '../../../api/setting/setting.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,19 +23,29 @@ export class HardwareShopService {
   constructor(
     private websocketService: WebsocketService,
     private walletAppService: WalletAppService,
-    private hardwareService: HardwareService
+    private hardwareService: HardwareService,
+    private settingService: SettingService
   ) {
-    hardwareService.getAvailableParts().pipe(switchMap(() =>
-      this.updateHardwareParts())
+    hardwareService.getAvailableParts().pipe(
+      switchMap(() => this.updateHardwareParts())
     ).subscribe(() => {
-      this.loadCartItems();
+      this.loadCartItems().then();
     });
   }
 
-  loadCartItems() {
+  async loadCartItems(): Promise<void> {
+    if (this.categories == null) {
+      return;
+    }
     const items = this.getItems(this.categories);
-    // TODO: Use Server Action Settings
-    const storedCart: { [id: number]: number } = JSON.parse(localStorage.getItem('cart'));
+    let storedCart: { [id: number]: number } = {};
+    try {
+      storedCart = JSON.parse(await this.settingService.get('shop_cart').toPromise()) ?? {};
+    } catch (e) {
+      if (e.message !== 'unknown setting') {
+        console.warn(e);
+      }
+    }
 
     this.cartItems = items.filter(item => storedCart.hasOwnProperty(item.part.id)).map(shopItem => ({
       id: shopItem.part.id,
@@ -48,12 +59,14 @@ export class HardwareShopService {
     return this.cartItems;
   }
 
-  setCartItems(items: HardwareShopCartItem[]): void {
+  setCartItems(items: HardwareShopCartItem[], save: boolean = true): void {
     this.cartItems = items;
-    // TODO: Use Server Action Settings
-    localStorage.setItem('cart', JSON.stringify(
-      items.reduce((acc, item) => ({ ...acc, [item.id]: item.quantity }), {}))
-    );
+    if (save) {
+      this.settingService.set('shop_cart', JSON.stringify(
+        items.reduce((acc, item) => ({ ...acc, [item.id]: item.quantity }), {}))
+      );
+    }
+
     this.updateCartItems.emit();
   }
 

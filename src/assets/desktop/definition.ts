@@ -9,23 +9,11 @@ import { HardwareShopWindowDelegate } from '../../app/desktop/windows/hardware-s
 import { EditorWindowDelegate } from '../../app/desktop/windows/editor/editor.component';
 import { FileManagerWindowDelegate } from '../../app/desktop/windows/file-manager/file-manager.component';
 
-export const programWindows = {
-  'file-manager': FileManagerWindowDelegate,
-  'terminal': TerminalWindowDelegate,
-  'miner': MinerWindowDelegate,
-  'settings': SettingsWindowDelegate,
-  'task-manager': TaskManagerWindowDelegate,
-  'wallet-app': WalletAppWindowDelegate,
-  'hardware-shop-app': HardwareShopWindowDelegate,
-  'editor-app': EditorWindowDelegate
-};
-
 export const desktopDefinition = {
-  username: localStorage.getItem('username'),
   programs: [
     new Program(
       'file-manager',
-      programWindows['file-manager'],
+      FileManagerWindowDelegate,
       'File-Manager',
       'assets/desktop/img/filemanager.svg',
       true,
@@ -33,7 +21,7 @@ export const desktopDefinition = {
     ),
     new Program(
       'terminal',
-      programWindows['terminal'],
+      TerminalWindowDelegate,
       'Terminal',
       'assets/desktop/img/terminal.svg',
       true,
@@ -41,7 +29,7 @@ export const desktopDefinition = {
     ),
     new Program(
       'miner',
-      programWindows['miner'],
+      MinerWindowDelegate,
       'Miner',
       'assets/desktop/img/morphcoin_dark.svg',
       true,
@@ -49,7 +37,7 @@ export const desktopDefinition = {
     ),
     new Program(
       'settings',
-      programWindows['settings'],
+      SettingsWindowDelegate,
       'Settings',
       'assets/desktop/img/gear.svg',
       true,
@@ -57,7 +45,7 @@ export const desktopDefinition = {
     ),
     new Program(
       'task-manager',
-      programWindows['task-manager'],
+      TaskManagerWindowDelegate,
       'Task-Manager',
       'assets/desktop/img/task-manager.svg',
       true,
@@ -65,7 +53,7 @@ export const desktopDefinition = {
     ),
     new Program(
       'wallet-app',
-      programWindows['wallet-app'],
+      WalletAppWindowDelegate,
       'Wallet-App',
       'assets/desktop/img/wallet_app.svg',
       true,
@@ -73,7 +61,7 @@ export const desktopDefinition = {
     ),
     new Program(
       'hardware-shop-app',
-      programWindows['hardware-shop-app'],
+      HardwareShopWindowDelegate,
       'Hardware-Shop-App',
       'assets/desktop/img/hardware_shop_app.svg',
       true,
@@ -81,7 +69,7 @@ export const desktopDefinition = {
     ),
     new Program(
       'editor-app',
-      programWindows['editor-app'],
+      EditorWindowDelegate,
       'Editor',
       'assets/desktop/img/editor.svg',
       true,
