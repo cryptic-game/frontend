@@ -73,10 +73,7 @@
         "Services: ssh, telnet, portscan",
         "Access to remote systems by entering specific commands",
         "Basic filesystem: create, open, rename and delete files (e.g. wallet is a file)"
-      ],
-      "enhancements": [],
-      "changes": [],
-      "fixes": []
+      ]
     }
   ],
   "start_date": "2017-10-15T10:00:00.000Z"
