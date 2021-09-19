@@ -16,8 +16,8 @@
         "createDefaultProgram": true
       },
       "extends": [
-        "plugin:@typescript-eslint/recommended",
         "plugin:@angular-eslint/recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
@@ -53,17 +53,50 @@
           }
         ],
         "@angular-eslint/no-empty-lifecycle-method": "off",
-        "semi": "off",
-        "@typescript-eslint/semi": [
-          "error"
+        "@typescript-eslint/member-delimiter-style": [
+          "error",
+          {
+            "multiline": {
+              "delimiter": "semi",
+              "requireLast": true
+            },
+            "singleline": {
+              "delimiter": "semi",
+              "requireLast": false
+            }
+          }
         ],
+        "curly": [
+          "error",
+          "all"
+        ],
+        "eol-last": [
+          "error",
+          "always"
+        ],
+        "no-multiple-empty-lines": "off",
+        "no-trailing-spaces": "error",
+        "quote-props": [
+          "error",
+          "consistent"
+        ],
+        "space-before-function-paren": [
+          "error",
+          {
+            "anonymous": "never",
+            "asyncArrow": "always",
+            "named": "never"
+          }
+        ],
+        "semi": "off",
+        "@typescript-eslint/semi": "error",
         "eqeqeq": [
           "error",
           "smart"
         ],
         "quotes": "off",
         "@typescript-eslint/quotes": [
-          "warn",
+          "error",
           "single"
         ],
         "indent": "off",
@@ -87,7 +120,17 @@
         "@typescript-eslint/object-curly-spacing": [
           "error",
           "always"
-        ]
+        ],
+        "object-shorthand": [
+          "warn",
+          "consistent-as-needed"
+        ],
+        "no-lonely-if": "warn",
+        "@typescript-eslint/await-thenable": "error",
+        "@typescript-eslint/no-floating-promises": "warn",
+        "@typescript-eslint/no-for-in-array": "error",
+        "@typescript-eslint/no-misused-promises": "error",
+        "@typescript-eslint/no-unnecessary-type-assertion": "warn"
       }
     },
     {
