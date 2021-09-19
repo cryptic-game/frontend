@@ -9,7 +9,7 @@
   <div class="content">
     <div *ngFor="let item of items" class="item">
       <app-hardware-shop-cart-item
-        (update)="update()" (updateQuantity)="updateNumber()" [item]="item"
+        (update)="update()" (updateQuantity)="updateNumber($event)" [item]="item"
       ></app-hardware-shop-cart-item>
     </div>
   </div>

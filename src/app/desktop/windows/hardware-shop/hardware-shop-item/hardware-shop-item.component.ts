@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { HardwareShopService } from '../hardware-shop.service';
 import { HardwareShopItem } from '../hardware-shop-item';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Case, CPU, Disk, GPU, Mainboard, PartCategory, PowerPack, ProcessorCooler, RAM } from '../../../../api/hardware/hardware-parts';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop-item',
@@ -46,7 +47,7 @@ import { Case, CPU, Disk, GPU, Mainboard, PartCategory, PowerPack, ProcessorCool
     ])
   ]
 })
-export class HardwareShopItemComponent implements OnInit {
+export class HardwareShopItemComponent implements OnInit, OnDestroy {
   specifications: { [category: string]: { [property: string]: any } };
   specificationsVisible = false;
 
@@ -63,14 +64,22 @@ export class HardwareShopItemComponent implements OnInit {
 
   inCart = false;
 
+  private subscriptions = new Subscription();
+
   constructor(public hardwareShopService: HardwareShopService) {
-    hardwareShopService.updateCartItems.subscribe(() =>
-      this.inCart = this.hardwareShopService.cartContains(this.item)
+    this.subscriptions.add(
+      hardwareShopService.updateCartItems.subscribe(() =>
+        this.inCart = this.hardwareShopService.cartContains(this.item)
+      )
     );
   }
 
   ngOnInit() {
     this.inCart = this.hardwareShopService.cartContains(this.item);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   addToCart(): void {
