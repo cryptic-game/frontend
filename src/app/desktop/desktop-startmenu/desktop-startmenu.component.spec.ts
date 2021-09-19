@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DesktopStartmenuComponent } from './desktop-startmenu.component';
 import { FormsModule } from '@angular/forms';
@@ -18,7 +18,7 @@ describe('DesktopStartmenuComponent', () => {
   let fixture: ComponentFixture<DesktopStartmenuComponent>;
   let desktop;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     desktop = jasmine.createSpyObj('DesktopComponent', ['openProgramWindow', 'hideStartMenu']);
     desktop.activeDevice = emptyDevice();
     desktop.devices = [];

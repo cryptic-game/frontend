@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { HardwareShopSidebarItemComponent } from './hardware-shop-sidebar-item.component';
 import { HardwareShopDelegate } from '../hardware-shop.delegate';
@@ -8,7 +8,7 @@ describe('HardwareShopSidebarItemComponent', () => {
   let fixture: ComponentFixture<HardwareShopSidebarItemComponent>;
   let shopDelegate: HardwareShopDelegate;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [HardwareShopSidebarItemComponent]
     }).compileComponents();

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ControlCenterSidebarComponent } from './control-center-sidebar.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -8,7 +8,7 @@ describe('ControlCenterSidebarComponent', () => {
   let component: ControlCenterSidebarComponent;
   let fixture: ComponentFixture<ControlCenterSidebarComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [{ provide: RouteReuseStrategy, useValue: {} }],
       declarations: [ControlCenterSidebarComponent],

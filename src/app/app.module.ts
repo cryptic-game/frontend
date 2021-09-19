@@ -99,7 +99,7 @@ const routes: Routes = [
     FileManagerComponent
   ],
   imports: [
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
     BrowserModule,
     ControlCenterModule,
     HttpClientModule,

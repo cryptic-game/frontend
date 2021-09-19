@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ControlCenterInventoryPageComponent } from './control-center-inventory-page.component';
 import { ActivatedRoute } from '@angular/router';
@@ -9,7 +9,7 @@ describe('ControlCenterInventoryPageComponent', () => {
   let fixture: ComponentFixture<ControlCenterInventoryPageComponent>;
   let activatedRoute;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     activatedRoute = { queryParamMap: jasmine.createSpyObj(['subscribe']), data: jasmine.createSpyObj(['subscribe']) };
 
     TestBed.configureTestingModule({

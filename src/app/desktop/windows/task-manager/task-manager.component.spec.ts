@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TaskManagerComponent, TaskManagerWindowDelegate } from './task-manager.component';
 import { HardwareService } from '../../../api/hardware/hardware.service';
@@ -16,7 +16,7 @@ describe('TaskManagerComponent', () => {
   let component: TaskManagerComponent;
   let fixture: ComponentFixture<TaskManagerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     webSocket = jasmine.createSpyObj('WebsocketService', ['ms', 'subscribeNotification']);
     webSocket.ms.and.returnValue(rxjs.of({}));
     notification_subject = new Subject();
@@ -67,7 +67,7 @@ describe('TaskManagerComponent', () => {
   });
 
   it('should register a notification handler for "resource-usage" and update the utilization if the device uuid matches',
-    async(() => {
+    waitForAsync(() => {
       const deviceUUID = 'test123-456';
       const cpuUtilization = 6226;
 
@@ -81,7 +81,7 @@ describe('TaskManagerComponent', () => {
       });
     }));
 
-  it('should not update the utilization if the device uuid does not match', async(() => {
+  it('should not update the utilization if the device uuid does not match', waitForAsync(() => {
     component.delegate.device = { uuid: '123456', name: '', powered_on: true, owner: '', starter_device: false };
     const cpuUtilBefore = 15;
     component.utilization.cpu = cpuUtilBefore;

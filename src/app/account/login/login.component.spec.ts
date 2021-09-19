@@ -1,5 +1,5 @@
 import { LoginComponent } from './login.component';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AccountPageBaseComponent } from '../account-page-base/account-page-base.component';
@@ -12,7 +12,7 @@ describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     accountService = jasmine.createSpyObj('AccountService', ['login', 'finalLogin']);
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, RouterTestingModule],
