@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { WalletAppHeaderComponent } from './wallet-app-header.component';
 import { WebsocketService } from '../../../../websocket.service';
@@ -8,7 +8,7 @@ describe('WalletAppHeaderComponent', () => {
   let component: WalletAppHeaderComponent;
   let fixture: ComponentFixture<WalletAppHeaderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [{ provide: WebsocketService, useValue: webSocketMock() }],
       declarations: [WalletAppHeaderComponent]

@@ -1,4 +1,4 @@
-import { async, inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { DesktopComponent } from './desktop/desktop.component';
 import { DesktopMenuComponent } from './desktop/desktop-menu/desktop-menu.component';
@@ -15,7 +15,7 @@ import { swUpdateMock, webSocketMock } from './test-utils';
 import { SwUpdate } from '@angular/service-worker';
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [
         { provide: WebsocketService, useValue: webSocketMock() },

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ControlCenterComponent } from './control-center.component';
 import { WebsocketService } from '../websocket.service';
@@ -14,7 +14,7 @@ describe('ControlCenterComponent', () => {
   let component: ControlCenterComponent;
   let fixture: ComponentFixture<ControlCenterComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ControlCenterComponent, ControlCenterSidebarComponent, ControlCenterSidebarMenuComponent],
       providers: [

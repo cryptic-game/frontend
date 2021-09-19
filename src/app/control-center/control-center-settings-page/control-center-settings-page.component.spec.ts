@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ControlCenterSettingsPageComponent } from './control-center-settings-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ describe('ControlCenterSettingsPageComponent', () => {
   let component: ControlCenterSettingsPageComponent;
   let fixture: ComponentFixture<ControlCenterSettingsPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ControlCenterSettingsPageComponent],
       providers: [

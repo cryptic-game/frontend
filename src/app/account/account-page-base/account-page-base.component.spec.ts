@@ -1,11 +1,11 @@
 import { AccountPageBaseComponent } from './account-page-base.component';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 describe('AccountPageBaseComponent', () => {
   let component: AccountPageBaseComponent;
   let fixture: ComponentFixture<AccountPageBaseComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [AccountPageBaseComponent]
     })
