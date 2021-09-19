@@ -1,3 +1,4 @@
+@use "sass:math";
 @import "../control-center-style";
 @import "variables";
 
@@ -18,7 +19,7 @@ h1 {
     border-left: 1px solid $button-border-color;
     padding: 0 $version-bar-gap;
     // make sure the extended out header stays inside the page
-    margin: 0 ($version-text-width / 2);
+    margin: 0 math.div($version-text-width, 2);
 
     table {
       border-spacing: 0;
