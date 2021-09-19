@@ -1,4 +1,4 @@
-// tslint:disable:max-line-length
+/* eslint-disable max-len */
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -45,7 +45,7 @@ import { DesktopDeviceResolver } from './desktop/desktop-device.resolver';
 import { EditorComponent } from './desktop/windows/editor/editor.component';
 import { FileManagerComponent } from './desktop/windows/file-manager/file-manager.component';
 import { ContextMenuModule } from 'ngx-contextmenu';
-// tslint:enable:max-line-length
+/* eslint-enable max-len */
 
 const routes: Routes = [
   {
