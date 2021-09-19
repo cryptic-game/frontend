@@ -1,4 +1,5 @@
 import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy } from '@angular/router';
+import { Injectable } from '@angular/core';
 
 
 interface StoredRoute {
@@ -12,6 +13,7 @@ interface StoredRoute {
  * when navigating between desktop and control center.
  * Additionally, this preserves the contents of the i.e. login and sign-up.
  */
+@Injectable()
 export class AppRouteReuseStrategy implements RouteReuseStrategy {
   pathReuse = ['', 'create-device', 'settings', 'sound', 'changelog', 'desktop'];
   storedPaths: { [path: string]: StoredRoute } = {};
