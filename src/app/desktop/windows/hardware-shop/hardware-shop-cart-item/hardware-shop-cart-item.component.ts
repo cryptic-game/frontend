@@ -12,7 +12,7 @@ export class HardwareShopCartItemComponent implements OnInit {
 
   @Input() item: HardwareShopCartItem;
 
-  @Output() updateQuantity: EventEmitter<any> = new EventEmitter<any>();
+  @Output() updateQuantity: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @Output() update: EventEmitter<any> = new EventEmitter<any>();
 
@@ -36,7 +36,7 @@ export class HardwareShopCartItemComponent implements OnInit {
         field.setValue(50);
       }
       this.item.quantity = field.value;
-      this.updateQuantity.emit();
+      this.updateQuantity.emit(false);
     });
   }
 
@@ -55,6 +55,6 @@ export class HardwareShopCartItemComponent implements OnInit {
       field.setValue(50);
     }
     this.item.quantity = field.value;
-    this.updateQuantity.emit();
+    this.updateQuantity.emit(true);
   }
 }

@@ -3,6 +3,7 @@ import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window
 import { WalletAppService } from './wallet-app.service';
 import { Wallet } from './wallet';
 import { Transaction } from './transaction';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-wallet-app',
@@ -18,30 +19,35 @@ export class WalletAppComponent extends WindowComponent implements OnInit, OnDes
   currentPage = 0;
   pages = 0;
   itemsPerPage = 3;
-  updateIntervalHandle: any;
+
+  private updateSubscription: Subscription;
 
   constructor(private walletAppService: WalletAppService) {
     super();
-    walletAppService.updateWallet().then(loaded => {
-      this.walletEdit = !loaded;
-    });
 
     this.wallet = walletAppService.wallet;
 
-    walletAppService.update.subscribe(wallet => {
+    this.updateSubscription = walletAppService.update.subscribe(wallet => {
+      if (wallet == null) {
+        this.walletEdit = true;
+        this.currentPage = 0;
+        this.pages = 0;
+        this.lastTransactionCount = 0;
+        this.transactions = [];
+      }
       this.wallet = wallet;
       if (wallet) {
         this.pages = Math.ceil(this.wallet.transactions / this.itemsPerPage);
         if (this.pages === 0) {
           this.currentPage = 0;
+          this.lastTransactionCount = 0;
           this.transactions = [];
         } else {
           if (this.currentPage === 0 || this.currentPage > this.pages) {
             this.currentPage = 1;
           }
           if (this.wallet.transactions !== this.lastTransactionCount) {
-            this.walletAppService.getTransactions((this.currentPage - 1) * (this.itemsPerPage), this.itemsPerPage)
-              .subscribe((data) => this.transactions = data);
+            this.loadTransactions().then();
             this.lastTransactionCount = this.wallet.transactions;
           }
         }
@@ -50,28 +56,34 @@ export class WalletAppComponent extends WindowComponent implements OnInit, OnDes
   }
 
   ngOnInit() {
-    this.updateIntervalHandle = setInterval(() => this.walletAppService.updateWallet(), 1000 * 15);
+    this.walletAppService.updateWallet().then();
   }
 
   ngOnDestroy() {
-    clearInterval(this.updateIntervalHandle);
+    this.updateSubscription.unsubscribe();
   }
 
-  nextPage() {
+  async nextPage() {
     if (this.currentPage < this.pages) {
       this.currentPage++;
-      this.walletAppService.getTransactions((this.currentPage - 1) * (this.itemsPerPage), this.itemsPerPage)
-        .subscribe((data) => this.transactions = data);
+      await this.loadTransactions();
     }
   }
 
-  previousPage() {
+  async previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.walletAppService.getTransactions((this.currentPage - 1) * (this.itemsPerPage), this.itemsPerPage)
-        .subscribe((data) => this.transactions = data);
+      await this.loadTransactions();
     }
   }
+
+  private async loadTransactions() {
+    this.transactions = await this.walletAppService.getTransactions(
+      (this.currentPage - 1) * this.itemsPerPage,
+      this.itemsPerPage
+    );
+  }
+
 }
 
 export class WalletAppWindowDelegate extends WindowDelegate {

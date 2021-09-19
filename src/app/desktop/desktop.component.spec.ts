@@ -18,7 +18,7 @@ import { Position } from '../../dataclasses/position';
 import { By } from '@angular/platform-browser';
 import { WindowManagerService } from './window-manager/window-manager.service';
 import { WindowDelegate } from './window/window-delegate';
-import { emptyDevice, webSocketMock, windowManagerMock } from '../test-utils';
+import { emptyDevice, FakePromise, webSocketMock, windowManagerMock } from '../test-utils';
 import { DeviceService } from '../api/devices/device.service';
 import { ActivatedRoute, RouteReuseStrategy } from '@angular/router';
 import { VersionService } from '../version.service';
@@ -31,6 +31,7 @@ describe('DesktopComponent', () => {
   let windowManagerService;
   let windowManager;
   let versionService;
+  let programService;
 
   beforeEach(async(() => {
     const deviceService = jasmine.createSpyObj('DeviceService', ['getDevices']);
@@ -47,6 +48,11 @@ describe('DesktopComponent', () => {
     versionService.previousVersion = null;
     versionService.justUpdated = false;
 
+    programService = jasmine.createSpyObj('ProgramService', ['loadCached', 'loadFresh', 'loadProgram', 'save']);
+    programService.loadCached.and.returnValue([]);
+    programService.loadFresh.and.returnValue(new FakePromise());
+    programService.save.and.returnValue(new FakePromise());
+
     TestBed.configureTestingModule({
       providers: [
         { provide: WebsocketService, useValue: webSocketMock() },
@@ -55,7 +61,7 @@ describe('DesktopComponent', () => {
         { provide: WindowManagerService, useValue: windowManagerService },
         { provide: RouteReuseStrategy, useValue: {} },
         { provide: VersionService, useValue: versionService },
-        ProgramService
+        { provide: ProgramService, useValue: programService }
       ],
       imports: [
         HttpClientModule,
@@ -88,6 +94,18 @@ describe('DesktopComponent', () => {
   it('should get the window manager for the active device', () => {
     expect(component.windowManager).toEqual(windowManager);
     expect(windowManagerService.forDevice).toHaveBeenCalledWith(testDevice);
+  });
+
+  it('#ngOnInit() should load the program linkages', () => {
+    const cachedPrograms = [new Program('test-program-1', null, '', '', false, new Position(73, 15, 25))];
+    const freshPrograms = [new Program('test-program-2', null, '', '', true, new Position(85, 74, 63))];
+    const freshProgramsPromise = new FakePromise();
+    programService.loadCached.and.returnValue(cachedPrograms);
+    programService.loadFresh.and.returnValue(freshProgramsPromise);
+    component.ngOnInit();
+    expect(component.linkages).toEqual(cachedPrograms);
+    freshProgramsPromise.resolve(freshPrograms);
+    expect(component.linkages).toEqual(freshPrograms);
   });
 
   it('#onDesktop() should return all desktop shortcuts which have the onDesktop property set to true', () => {
@@ -182,6 +200,7 @@ describe('DesktopComponent', () => {
 
     expect({ x: testProgram.position.x, y: testProgram.position.y })
       .toEqual(testDropPos, 'Shortcut was not dropped at the right position');
+    expect(programService.save).toHaveBeenCalledWith(testProgram);
   });
 
   it('#checkDropAllowed() should only allow dragging a shortcut ' +
