@@ -10,7 +10,7 @@ WORKDIR /ng-app
 
 COPY . .
 
-RUN $(npm bin)/ng build --prod --build-optimizer
+RUN npm run build:ci -- --output-path=./dist
 
 
 FROM nginx:stable-alpine
@@ -24,7 +24,7 @@ COPY nginx/default.conf /etc/nginx/conf.d/
 
 RUN rm -rf /usr/share/nginx/html/*
 
-COPY --from=builder /ng-app/dist/frontend/ /usr/share/nginx/html
+COPY --from=builder /ng-app/dist/ /usr/share/nginx/html
 RUN chown -R nginx:nginx /usr/share/nginx/html/
 
 COPY docker-write-api-file.sh /docker-entrypoint.d/
