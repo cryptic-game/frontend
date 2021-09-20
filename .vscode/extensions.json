@@ -1,9 +1,10 @@
 {
   "recommendations": [
-    "eg2.tslint",
     "msjsdiag.debugger-for-chrome",
     "loiane.angular-extension-pack",
     "Angular.ng-template",
+    "dbaeumer.vscode-eslint",
+    "stylelint.vscode-stylelint",
     "knisterpeter.vscode-github"
   ]
 }
