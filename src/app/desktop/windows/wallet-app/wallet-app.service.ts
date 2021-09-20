@@ -66,7 +66,7 @@ export class WalletAppService {
 
   async getTransactions(offset: number, count: number): Promise<Transaction[]> {
     const response = await this.websocketService.msPromise('currency', ['transactions'],
-      { source_uuid: this.wallet.source_uuid, key: this.wallet.key, offset, count });
+      { source_uuid: this.wallet.source_uuid, key: this.wallet.key, offset: offset, count: count });
     return response.transactions;
   }
 
@@ -83,7 +83,7 @@ export class WalletAppService {
     }
   }
 
-  private getCredentials(): Promise<{ id: string, key: string }> {
+  private getCredentials(): Promise<{ id: string; key: string }> {
     return forkJoin({
       id: this.settingService.get('wallet_id'),
       key: this.settingService.get('wallet_key')

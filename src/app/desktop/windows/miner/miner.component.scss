@@ -19,7 +19,7 @@
       flex-direction: column;
 
       label {
-        color: #fff;
+        color: white;
         margin-bottom: 0.8rem;
         text-align: center;
       }
@@ -28,7 +28,7 @@
         outline: none;
         padding: 0.5rem;
         background-color: transparent;
-        color: #fff;
+        color: white;
         border: 0.1rem solid #b6b6b6;
         font-size: 1rem;
         font-family: $default-font;
@@ -53,7 +53,7 @@
         flex-grow: 1;
 
         input.miner-power-range {
-          -webkit-appearance: none;
+          appearance: none;
           appearance: none;
           width: 100%;
           height: 15px;
@@ -93,7 +93,7 @@
       }
 
       span.miner-power-value {
-        color: #ffF;
+        color: white;
         font-size: 1.3rem;
         font-weight: bold;
         margin-left: 0.7rem;

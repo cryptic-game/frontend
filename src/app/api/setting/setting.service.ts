@@ -21,7 +21,7 @@ export class SettingService {
    */
   public get(key: string): Observable<string> {
     // requestMany and key check because non-ms requests don't have tags yet
-    return this.websocketService.requestMany({ action: 'setting', key }).pipe(
+    return this.websocketService.requestMany({ action: 'setting', key: key }).pipe(
       first(setting => setting.key === key && typeof setting.value === 'string'),
       map(setting => setting.value)
     );
@@ -35,8 +35,8 @@ export class SettingService {
    * @param key the key of the setting
    * @param value the value of the setting
    */
-  public set(key: string, value: string): Observable<{ key: string, value: string }> {
-    return this.websocketService.request({ action: 'setting', key, value });
+  public set(key: string, value: string): Observable<{ key: string; value: string }> {
+    return this.websocketService.request({ action: 'setting', key: key, value: value });
   }
 
   /**
@@ -47,6 +47,6 @@ export class SettingService {
    * @param key the name of a setting
    */
   public delete(key: string): Observable<{ success: boolean }> {
-    return this.websocketService.request({ action: 'setting', key, delete: '' });
+    return this.websocketService.request({ action: 'setting', key: key, delete: '' });
   }
 }

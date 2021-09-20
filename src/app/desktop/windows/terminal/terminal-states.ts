@@ -27,10 +27,10 @@ function reportError(error) {
 
 export abstract class CommandTerminalState implements TerminalState {
   abstract commands: { [name: string]: {
-    executor: (args: string[]) => void,
-    description: string,
-    hideFromHelp?: boolean,
-    hideFromProtocol?: boolean
+    executor: (args: string[]) => void;
+    description: string;
+    hideFromHelp?: boolean;
+    hideFromProtocol?: boolean;
   } };
 
   protocol: string[] = [];
@@ -155,8 +155,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     },
     'history': {
       executor: this.history.bind(this),
-      description: 'shows or clears the command history of the current terminal session',
-      hideFromProtocol: true
+      description: 'shows the command history of the current terminal session'
     },
     'morphcoin': {
       executor: this.morphcoin.bind(this),
@@ -191,7 +190,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     'chaozz': {
       executor: () => this.terminal.outputText('"mess with the best, die like the rest :D`" - chaozz'),
       description: '',
-      hideFromHelp: true
+      hidden: true
     }
 
   };
@@ -247,9 +246,9 @@ export class DefaultTerminalState extends CommandTerminalState {
       const prompt = this.domSanitizer.bypassSecurityTrustHtml(
         `<span style="color: ${color}">` +
         `${escapeHtml(this.websocket.account.name)}@${escapeHtml(this.activeDevice['name'])}` +
-        `<span style="color: white">:</span>` +
+        '<span style="color: white">:</span>' +
         `<span style="color: #0089ff;">/${path.join('/')}</span>$` +
-        `</span>`
+        '</span>'
       );
       this.terminal.changePrompt(prompt);
     });
@@ -259,7 +258,7 @@ export class DefaultTerminalState extends CommandTerminalState {
   help() {
     const table = document.createElement('table');
     Object.entries(this.commands)
-      .filter(command => !('hideFromHelp' in command[1]))
+      .filter(command => !('hidden' in command[1]))
       .map(([name, value]) => ({ name: name, description: value.description }))
       .map(command => `<tr><td>${command.name}</td><td>${command.description}</td></tr>`)
       .forEach(row => {
@@ -583,7 +582,7 @@ export class DefaultTerminalState extends CommandTerminalState {
                           file_uuid: file.uuid
                         });
                       }, error => {
-                        this.terminal.output('<span class="errorText"">The wallet couldn\'t be deleted successfully. ' +
+                        this.terminal.output('<span class="error-text"">The wallet couldn\'t be deleted successfully. ' +
                           'Please report this bug.</span>');
                         reportError(error);
                       });
@@ -771,20 +770,14 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.terminal.clear();
   }
 
-  history(args: string[]) {
-    if (args[0] === 'clear') {
-      this.protocol = [];
-    } else if (args.length === 0) {
-      const history: string[] = this.getHistory();
+  history() {
+    const l = this.getHistory();
 
-      history.reverse();
+    l.reverse();
 
-      history.forEach(e => {
-        this.terminal.outputText(e);
-      });
-    } else {
-      this.terminal.outputText('usage: history [clear]');
-    }
+    l.forEach(e => {
+      this.terminal.outputText(e);
+    });
   }
 
   morphcoin(args: string[]) {
@@ -854,25 +847,25 @@ export class DefaultTerminalState extends CommandTerminalState {
           }, error => {
             if (error.message === 'file_not_found') {
               if (path.path[path.path.length - 1].length < 65) {
-              this.websocket.ms('currency', ['create'], {}).subscribe(wallet => {
-                const credentials = wallet.source_uuid + ' ' + wallet.key;
+                this.websocket.ms('currency', ['create'], {}).subscribe(wallet => {
+                  const credentials = wallet.source_uuid + ' ' + wallet.key;
 
-                this.fileService.createFile(this.activeDevice['uuid'], path.path[path.path.length - 1], credentials, this.working_dir)
-                  .subscribe({
-                    error: err => {
-                      this.terminal.outputText('That file couldn\'t be created. Please note your wallet credentials ' +
-                        'and put them in a new file with \'touch\' or contact the support: \'' + credentials + '\'');
-                      reportError(err);
-                    }
-                  });
-              }, error1 => {
-                if (error1.message === 'already_own_a_wallet') {
-                  this.terminal.outputText('You already own a wallet');
-                } else {
-                  this.terminal.outputText(error1.message);
-                  reportError(error1);
-                }
-              });
+                  this.fileService.createFile(this.activeDevice['uuid'], path.path[path.path.length - 1], credentials, this.working_dir)
+                    .subscribe({
+                      error: err => {
+                        this.terminal.outputText('That file couldn\'t be created. Please note your wallet credentials ' +
+                          'and put them in a new file with \'touch\' or contact the support: \'' + credentials + '\'');
+                        reportError(err);
+                      }
+                    });
+                }, error1 => {
+                  if (error1.message === 'already_own_a_wallet') {
+                    this.terminal.outputText('You already own a wallet');
+                  } else {
+                    this.terminal.outputText(error1.message);
+                    reportError(error1);
+                  }
+                });
               } else {
                 this.terminal.outputText('Filename too long. Only 64 chars allowed');
               }
@@ -1100,9 +1093,9 @@ export class DefaultTerminalState extends CommandTerminalState {
               startAttack();
             }
           }, (err) => {
-              if (err.message === 'service_not_running') {
-                this.terminal.outputText('Target service is unreachable.');
-              }
+            if (err.message === 'service_not_running') {
+              this.terminal.outputText('Target service is unreachable.');
+            }
           });
         }, error => {
           if (error.message === 'attack_not_running') {
@@ -1130,7 +1123,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           target_device: targetDevice
         }).subscribe(data => {
           const runningServices = data['services'];
-          if (runningServices == null || !(runningServices instanceof Array) || (runningServices as any[]).length === 0) {
+          if (runningServices == null || !(runningServices instanceof Array) || (runningServices).length === 0) {
             this.terminal.outputText('That device doesn\'t have any running services');
             return;
           }
@@ -1139,7 +1132,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
           const list = document.createElement('ul');
           list.innerHTML = '<ul>' +
-            (runningServices as any[])
+            (runningServices)
               .map(service =>
                 '<li>' + escapeHtml(service['name']) + ' (UUID: ' +
                 DefaultTerminalState.promptAppender(service['uuid']) +
@@ -1164,7 +1157,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           this.terminal.outputText('\'' + random_device['name'] + '\':');
           this.terminal.outputRaw('<ul>' +
             '<li>UUID: ' + random_device['uuid'] + '</li>' +
-            '<li>Services: <em class="errorText"">portscan failed</em></li>' +
+            '<li>Services: <em class="error-text"">portscan failed</em></li>' +
             '</ul>');
           return;
         }
@@ -1185,7 +1178,7 @@ export class DefaultTerminalState extends CommandTerminalState {
           this.terminal.outputNode(list);
           DefaultTerminalState.registerPromptAppenders(list);
         }, error => {
-          this.terminal.output('<span class="errorText">An error occurred</span>');
+          this.terminal.output('<span class="error-text">An error occurred</span>');
           reportError(error);
           return;
         });

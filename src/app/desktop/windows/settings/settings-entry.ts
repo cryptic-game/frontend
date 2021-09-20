@@ -41,13 +41,13 @@ export abstract class SettingsEntry<T> {
 
   async set(value: T) {
     this.cached = value;
-    await this.settingService.set(this.key, this.serialize(value));
+    await this.settingService.set(this.key, this.serialize(value)).toPromise();
   }
 
   async reset() {
     this.cached = this.defaultValue;
     try {
-      await this.settingService.set(this.key, this.serialize(this.defaultValue));
+      await this.settingService.set(this.key, this.serialize(this.defaultValue)).toPromise();
     } catch (e) {
       console.warn(e);
     }

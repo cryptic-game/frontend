@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, OnDestroy, Type, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Type, ViewChild } from '@angular/core';
 import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
 import { WebsocketService } from '../../../websocket.service';
 import { FileService } from '../../../api/files/file.service';
@@ -49,7 +49,7 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
       this.fileInput.nativeElement.disabled = true;
     }
     this.fileSubscription = this.websocket
-      .subscribeNotification<{ created: string[], changed: string[], deleted: string[] }>('file-update')
+      .subscribeNotification<{ created: string[]; changed: string[]; deleted: string[] }>('file-update')
       .subscribe((data) => {
         if (this.fileUUID === undefined) {
           return;

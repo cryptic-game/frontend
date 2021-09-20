@@ -8,10 +8,10 @@ export interface Device {
 
 export interface DeviceWithHardware extends Device {
   hardware: {
-    uuid: string,
-    device_uuid: string,
-    hardware_element: string,
-    hardware_type: string
+    uuid: string;
+    device_uuid: string;
+    hardware_element: string;
+    hardware_type: string;
   }[];
 }
 

@@ -3,14 +3,14 @@ import { Part } from './hardware-parts';
 
 export class HardwareList {
   'start_pc': {
-    'mainboard': string,
-    'cpu': string[],
-    'processorCooler': string[],
-    'gpu': string[],
-    'ram': string[],
-    'disk': string[]
-    'powerPack': string,
-    'case': string
+    'mainboard': string;
+    'cpu': string[];
+    'processorCooler': string[];
+    'gpu': string[];
+    'ram': string[];
+    'disk': string[];
+    'powerPack': string;
+    'case': string;
   } = {
     'mainboard': '',
     'cpu': [],

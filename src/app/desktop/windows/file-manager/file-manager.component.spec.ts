@@ -25,7 +25,7 @@ describe('FileManagerComponent', () => {
         FormsModule
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

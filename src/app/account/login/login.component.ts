@@ -26,7 +26,7 @@ export class LoginComponent {
 
   login(): void {
     if (this.form.valid) {
-      const value: { username: string, password: string } = this.form.value;
+      const value: { username: string; password: string } = this.form.value;
 
       this.accountService.login(value.username, value.password).subscribe(data => {
         this.accountService.finalLogin(data.token, '/');

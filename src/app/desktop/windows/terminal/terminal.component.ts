@@ -57,7 +57,7 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
     this.getState().refreshPrompt();
   }
 
-  changePrompt(prompt: string | SafeHtml, trust: boolean = false) {
+  changePrompt(prompt: string | SafeHtml, trust = false) {
     if (trust && typeof prompt === 'string') {
       this.promptHtml = this.domSanitizer.bypassSecurityTrustHtml(prompt);
       return;

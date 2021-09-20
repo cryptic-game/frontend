@@ -15,7 +15,7 @@
     {{(fileOpened) ? fileContent : 'No file open'}}
   </textarea>
   <div *ngIf="deleted_popup" class="popup">
-    <div class="popup_content">
+    <div class="popup-content">
       The File "{{filePath}}" was deleted.
       <br>
       <button class="btn" (click)="force_close()">Close this Editor</button>
@@ -23,7 +23,7 @@
   </div>
 
   <div *ngIf="changed_popup" class="popup">
-    <div class="popup_content">
+    <div class="popup-content">
       The File "{{filePath}}" was changed.
       <br>
       <button class="btn" (click)="reload()">Reload File</button>

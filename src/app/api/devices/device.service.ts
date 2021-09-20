@@ -48,8 +48,8 @@ export class DeviceService {
   }
 
   checkHardwareCompatibility(hardware: DeviceHardwareSpec): Observable<{
-    success: true,
-    performance: [number, number, number, number, number]
+    success: true;
+    performance: [number, number, number, number, number];
   }> {
     return this.deviceRequest(['hardware', 'build'], hardware);
   }
@@ -62,7 +62,7 @@ export class DeviceService {
     return this.deviceRequest(['hardware', 'process'], { service_uuid: serviceUUID });
   }
 
-  private deviceRequest<T>(endpoint: string[], data: object): Observable<T> {
+  private deviceRequest<T>(endpoint: string[], data: any): Observable<T> {
     return this.webSocket.ms('device', endpoint, data);
   }
 

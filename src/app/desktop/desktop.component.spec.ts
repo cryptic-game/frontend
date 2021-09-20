@@ -36,7 +36,7 @@ describe('DesktopComponent', () => {
   beforeEach(waitForAsync(() => {
     const deviceService = jasmine.createSpyObj('DeviceService', ['getDevices']);
     deviceService.getDevices.and.returnValue(of({ 'devices': [testDevice] }));
-    activatedRouteDataSubject = new Subject<object>();
+    activatedRouteDataSubject = new Subject<any>();
 
     windowManager = windowManagerMock();
     windowManagerService = jasmine.createSpyObj('WindowManagerService', ['forDevice']);
@@ -349,7 +349,7 @@ describe('DesktopComponent', () => {
 });
 
 
-function simulateShortcutDrag(linkageElement: HTMLElement, dropPos: { x: number, y: number }, release = true) {
+function simulateShortcutDrag(linkageElement: HTMLElement, dropPos: { x: number; y: number }, release = true) {
   const linkageBounds = linkageElement.getBoundingClientRect();
   linkageElement.dispatchEvent(new MouseEvent('mousedown', { clientX: linkageBounds.left, clientY: linkageBounds.top }));
   document.dispatchEvent(new MouseEvent('mousemove', { clientX: linkageBounds.left, clientY: linkageBounds.top }));

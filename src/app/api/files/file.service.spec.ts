@@ -20,14 +20,14 @@ describe('FileService', () => {
 
   let webSocket;
 
-  function getTestFiles(deviceUUID: string = '', parentUUID: string = Path.ROOT): Observable<File[]> {
+  function getTestFiles(deviceUUID = '', parentUUID: string = Path.ROOT): Observable<File[]> {
     if (!(parentUUID === Path.ROOT || testFiles.find(f => f.uuid === parentUUID))) {
       fail('An unknown parent directory UUID was requested: ' + parentUUID);
     }
     return rxjs.of(testFiles.filter(f => f.parent_dir_uuid === parentUUID));
   }
 
-  function getTestFile(deviceUUID: string = '', uuid: string): Observable<File> {
+  function getTestFile(deviceUUID = '', uuid: string): Observable<File> {
     const file = testFiles.find(f => f.uuid === uuid);
     if (file) {
       return rxjs.of(file);
@@ -163,7 +163,8 @@ describe('FileService', () => {
     expect(file.content).toEqual('');
   }));
 
-  it('#getFile() should return the root file from getRootFile() if the UUID is Path.ROOT', inject([FileService], (service: FileService) => {
+  it('#getFile() should return the root file from getRootFile() if the UUID is Path.ROOT',
+    inject([FileService], (service: FileService) => {
       spyOn(service, 'getRootFile').and.returnValue(testFiles[4]);
 
       service.getFile(testUUIDs[0], Path.ROOT).subscribe(file => {

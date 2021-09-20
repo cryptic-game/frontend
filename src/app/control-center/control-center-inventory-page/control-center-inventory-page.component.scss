@@ -1,4 +1,4 @@
-@use 'sass:color';
+@use "sass:color";
 @import "../control-center-style";
 
 h1 {
@@ -59,7 +59,8 @@ h1 {
     margin-top: 3em;
     font-size: 20px;
 
-    input[type=text], input[type=submit] {
+    input[type=text],
+    input[type=submit] {
       background-color: $page-background;
       border: none;
       box-shadow: 0 0 8px 0 black;
