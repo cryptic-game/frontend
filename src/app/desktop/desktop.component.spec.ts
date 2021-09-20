@@ -339,10 +339,12 @@ describe('DesktopComponent', () => {
   });
 
   function setAllowShortcutDropping(allow: boolean): jasmine.Spy {
+    // eslint-disable-next-line jasmine/no-unsafe-spy
     return spyOn(component, 'checkDropAllowed').and.returnValue(allow);
   }
 
   function pretendSurfaceSize(width = 600, height = 400): jasmine.Spy {
+    // eslint-disable-next-line jasmine/no-unsafe-spy
     return spyOn(component.surface.nativeElement, 'getBoundingClientRect').and.returnValue(new DOMRect(0, 0, width, height));
   }
 

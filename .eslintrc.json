@@ -148,6 +148,25 @@
           }
         ]
       }
+    },
+    {
+      "files": [
+        "*.spec.ts"
+      ],
+      "plugins": [
+        "jasmine"
+      ],
+      "env": {
+        "jasmine": true
+      },
+      "extends": [
+        "plugin:jasmine/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/no-floating-promises": "off",
+        "jasmine/new-line-before-expect": "off",
+        "jasmine/prefer-toHaveBeenCalledWith": "off"
+      }
     }
   ]
 }
