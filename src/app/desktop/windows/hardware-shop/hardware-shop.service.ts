@@ -59,7 +59,7 @@ export class HardwareShopService {
     return this.cartItems;
   }
 
-  setCartItems(items: HardwareShopCartItem[], save: boolean = true): void {
+  setCartItems(items: HardwareShopCartItem[], save = true): void {
     this.cartItems = items;
     if (save) {
       this.settingService.set('shop_cart', JSON.stringify(

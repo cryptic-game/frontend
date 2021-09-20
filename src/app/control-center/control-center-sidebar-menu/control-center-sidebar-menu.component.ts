@@ -80,8 +80,8 @@ export class SidebarMenu {
   constructor(title: string,
               icon: string,
               options: {
-                items?: SidebarMenuItem[], displayCount?: boolean, specialItems?: number,
-                routerLink?: string, queryParams?: Params
+                items?: SidebarMenuItem[]; displayCount?: boolean; specialItems?: number;
+                routerLink?: string; queryParams?: Params;
               } = {}) {
     this.title = title;
     this.icon = icon;

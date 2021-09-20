@@ -67,8 +67,8 @@ export class ControlCenterDevicePageComponent implements OnInit, OnDestroy {
   hardware: DeviceHardware;
   deviceResources: DeviceResources;
   services: {
-    service: { uuid: string, name: string, running: boolean },
-    usage: ResourceUsage
+    service: { uuid: string; name: string; running: boolean };
+    usage: ResourceUsage;
   }[] = [];
   powerButton: {
     state: 'off' | 'fast-off' | 'on' | 'fast-on';
@@ -113,7 +113,7 @@ export class ControlCenterDevicePageComponent implements OnInit, OnDestroy {
         this.deviceResources = resources;
 
         this.webSocket.ms('service', ['list'], { device_uuid: this.device.uuid }).pipe(
-          switchMap(response => from(response.services as { uuid: string, name: string, running: boolean }[])),
+          switchMap(response => from(response.services as { uuid: string; name: string; running: boolean }[])),
           filter(service => service.running),
           flatMap(service =>
             this.deviceService.getServiceResourceUsage(service.uuid).pipe(map(serviceUsage =>

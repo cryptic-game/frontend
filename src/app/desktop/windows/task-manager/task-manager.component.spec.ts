@@ -93,7 +93,7 @@ describe('TaskManagerComponent', () => {
   }));
 
   it('should unsubscribe the notification when it gets destroyed', () => {
-    component.resourceNotifySubscription = jasmine.createSpyObj('Subscription', ['unsubscribe']) as any;
+    component.resourceNotifySubscription = jasmine.createSpyObj('Subscription', ['unsubscribe']);
     fixture.destroy();
     expect(component.resourceNotifySubscription.unsubscribe).toHaveBeenCalled();
   });

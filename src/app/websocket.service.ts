@@ -86,17 +86,17 @@ export class WebsocketService {
     return subject;
   }
 
-  requestMany(data: object): Observable<any> {
+  requestMany(data: any): Observable<any> {
     this.socketSubject.next(data);
     return this.socketSubject.pipe(map(checkResponseError));
   }
 
-  request(data: object): Observable<any> {
+  request(data: any): Observable<any> {
     this.socketSubject.next(data);
     return this.socketSubject.pipe(first(), map(checkResponseError));  // this will soon get tags too
   }
 
-  ms(name: string, endpoint: string[], data: object): Observable<any> {
+  ms(name: string, endpoint: string[], data: any): Observable<any> {
     const tag = randomUUID();
     if (this.socketSubject.closed || this.socketSubject.hasError) {
       return throwError(new Error('socket-closed'));
@@ -112,7 +112,7 @@ export class WebsocketService {
     return this.open[tag] = new Subject().pipe(map(checkResponseError));
   }
 
-  msPromise(name: string, endpoint: string[], data: object): Promise<any> {
+  msPromise(name: string, endpoint: string[], data: any): Promise<any> {
     return this.ms(name, endpoint, data).toPromise();
   }
 
@@ -146,7 +146,7 @@ export class WebsocketService {
     }
   }
 
-  private handleMessage(message: object) {
+  private handleMessage(message: any) {
     if (message['error'] === 'timeout') {
       // We can't redirect the error to the request because the error has no tag yet
       console.warn('A microservice request timed out');

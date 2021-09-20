@@ -40,7 +40,7 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     this.goToFolderUUID(this.delegate.openDirectory?.is_directory ? this.delegate.openDirectory.uuid : Path.ROOT).then();
 
     this.fileUpdateSubscription = this.apiService
-      .subscribeNotification<{ created: string[], changed: string[], deleted: string[] }>('file-update')
+      .subscribeNotification<{ created: string[]; changed: string[]; deleted: string[] }>('file-update')
       .subscribe(notification => {
         if (notification.data.created || notification.data.changed) {
           this.updateFiles().then();
@@ -147,7 +147,7 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     }
   }
 
-  async dropMove(event: { event: Event; item: { file: File, destinationUUID: string } }) {
+  async dropMove(event: { event: Event; item: { file: File; destinationUUID: string } }) {
     const file = event.item?.file;
     const destinationUUID = event.item?.destinationUUID;
 
@@ -165,7 +165,7 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     }
   }
 
-  async dropCopy(event: { event: Event; item: { file: File, destinationUUID: string } }) {
+  async dropCopy(event: { event: Event; item: { file: File; destinationUUID: string } }) {
     const file = event.item?.file;
     const destinationUUID = event.item?.destinationUUID;
 
@@ -282,7 +282,7 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     }
 
     if (confirmed) {
-      await this.fileService.deleteFile(this.delegate.device.uuid, file.uuid);
+      await this.fileService.deleteFile(this.delegate.device.uuid, file.uuid).toPromise();
     }
   }
 

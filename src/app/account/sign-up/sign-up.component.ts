@@ -42,7 +42,7 @@ export class SignUpComponent {
 
   signUp(): void {
     if (this.form.valid) {
-      const value: { username: string, password: string, passwordConfirm: string } = this.form.value;
+      const value: { username: string; password: string; passwordConfirm: string } = this.form.value;
       if (value.password !== value.passwordConfirm) {
         this.error = 'The passwords do not match.';
         this.decayError(10);

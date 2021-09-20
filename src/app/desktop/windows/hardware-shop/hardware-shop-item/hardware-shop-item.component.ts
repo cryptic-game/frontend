@@ -129,7 +129,7 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
           'Mainboard ports': {
             [mainboard.diskStorage.interface.map(type => type.join(' ').concat('.0')).join(', ')]: `${mainboard.diskStorage.diskSlots}x (internal)`,
             'USB': mainboard.usbPorts ? `${mainboard.usbPorts}x (external)` : undefined,
-            'Ethernet': `1x (external)`
+            'Ethernet': '1x (external)'
           },
           'Mainboard network': {
             'LAN controller': mainboard.networkPort.name,

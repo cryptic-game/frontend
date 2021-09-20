@@ -118,7 +118,7 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
     return this.form.get(name) as FormArray;
   }
 
-  getFormArrayControls(name: string): { control: FormControl, props: ControlProperties }[] {
+  getFormArrayControls(name: string): { control: FormControl; props: ControlProperties }[] {
     return (this.getFormArray(name).controls as FormControl[])
       .map(control => ({ control: control, props: this.controlProperties.get(control) }));
   }

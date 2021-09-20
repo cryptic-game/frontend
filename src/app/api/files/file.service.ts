@@ -62,7 +62,7 @@ export class FileService {
     return this.webSocket.ms('device', ['file', 'delete'], { device_uuid: deviceUUID, file_uuid: fileUUID });
   }
 
-  createFile(deviceUUID: string, name: string, content: string = '', parentUUID: string = Path.ROOT): Observable<File> {
+  createFile(deviceUUID: string, name: string, content = '', parentUUID: string = Path.ROOT): Observable<File> {
     return this.webSocket.ms('device', ['file', 'create'], {
       device_uuid: deviceUUID,
       filename: name,
@@ -151,13 +151,12 @@ export class FileService {
         throw new Error('destination_is_file');
       }
       return this.getFiles(deviceUUID, destination.uuid).pipe(flatMap(destinationFiles => {
-          if (destinationFiles.find(f => f.filename === source.filename)) {
-            throw new Error('file_already_exists');
-          } else {
-            return this.move(deviceUUID, source.uuid, destination.uuid, source.filename);
-          }
+        if (destinationFiles.find(f => f.filename === source.filename)) {
+          throw new Error('file_already_exists');
+        } else {
+          return this.move(deviceUUID, source.uuid, destination.uuid, source.filename);
         }
-      ));
+      }));
     }));
   }
 

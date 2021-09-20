@@ -154,7 +154,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
     }
   }
 
-  private setPower(power: number, syncSlider: boolean = true): void {
+  private setPower(power: number, syncSlider = true): void {
     this.power = power;
     this.active = power > 0;
     if (syncSlider) {

@@ -16,8 +16,8 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   resourceNotifySubscription: Subscription;
 
   deviceHardware: DeviceHardware;
-  cpu: { name?: string, frequencyMax: number } = { name: '', frequencyMax: 0 };
-  gpu: { name?: string, frequency: number } = { name: '', frequency: 0 };
+  cpu: { name?: string; frequencyMax: number } = { name: '', frequencyMax: 0 };
+  gpu: { name?: string; frequency: number } = { name: '', frequency: 0 };
   ram = { totalMemory: 0, type: '' };
   diskName = '';
   utilization: ResourceUsage = new ResourceUsage();

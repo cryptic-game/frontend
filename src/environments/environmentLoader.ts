@@ -1,6 +1,6 @@
 import { environment } from './environment';
 
-export const environmentLoader = new Promise<{ api: string, production: boolean }>((resolve => {
+export const environmentLoader = new Promise<{ api: string; production: boolean }>((resolve => {
   const request = new XMLHttpRequest();
   request.open('GET', './assets/api.json', true);
   request.onload = () => {
