@@ -1,0 +1,33 @@
+{
+  "extends": [
+    "stylelint-config-sass-guidelines"
+  ],
+  "rules": {
+    "indentation": [
+      2,
+      {
+        "ignore": [
+          "inside-parens"
+        ]
+      }
+    ],
+    "function-parentheses-space-inside": "never-single-line",
+    "order/properties-alphabetical-order": null,
+    "max-nesting-depth": null,
+    "color-named": "always-where-possible",
+    "declaration-block-no-shorthand-property-overrides": true,
+    "declaration-property-value-disallowed-list": null,
+    "selector-max-id": 3,
+    "selector-max-compound-selectors": null,
+    "selector-no-qualifying-type": null,
+    "selector-pseudo-element-no-unknown": [
+      true,
+      {
+        "ignorePseudoElements": [
+          "ng-deep"
+        ]
+      }
+    ],
+    "string-quotes": "double"
+  }
+}
