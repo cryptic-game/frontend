@@ -1,4 +1,11 @@
 @import 'theme-colors';
+button{
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 8px;
+  width: 100%;
+  color: white;
+}
 button.primary {
   color: #2F2F36;
   background: $primary-default;
