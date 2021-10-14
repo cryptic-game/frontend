@@ -11,6 +11,5 @@ export class StyledButtonComponent {
   // tslint:disable-next-line: no-output-on-prefix
   @Output() onClick: EventEmitter<any> = new EventEmitter();
 
-  // @Input() onClick: (event: Event) => void = () => {};
 
 }
