@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
-  selector: 'app-styled-button',
+  selector: 'styled-button',
   templateUrl: './styled-button.component.html',
   styleUrls: ['./styled-button.component.scss']
 })
