@@ -60,6 +60,7 @@ import {EditorComponent} from './desktop/windows/editor/editor.component';
 import {FileManagerComponent} from './desktop/windows/file-manager/file-manager.component';
 import {NgParticlesModule} from "ng-particles";
 import {ContextMenuModule} from "./design/context-menu/context-menu.module";
+import {ProgressbarComponent} from './design/progressbar/progressbar.component';
 /* eslint-enable max-len */
 
 const routes: Routes = [
@@ -111,7 +112,8 @@ const routes: Routes = [
     WalletAppTransactionComponent,
     HardwareShopSidebarComponent,
     EditorComponent,
-    FileManagerComponent
+    FileManagerComponent,
+    ProgressbarComponent
   ],
   imports: [
     RouterModule.forRoot(routes, {relativeLinkResolution: 'legacy'}),
