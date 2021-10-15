@@ -51,9 +51,9 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
   }
 
   focusCommandLine() {
-    let rect = this.cmdLine.nativeElement.getBoundingClientRect();
-    let wpos = rect.x + rect.width;
-    let hpos = rect.y + rect.height;
+    const rect = this.cmdLine.nativeElement.getBoundingClientRect();
+    const wpos = rect.x + rect.width;
+    const hpos = rect.y + rect.height;
     if (wpos > window.innerWidth || hpos > window.innerHeight - 200) {
       console.log('out of bounds!');
       return;
