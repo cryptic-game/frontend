@@ -7,6 +7,6 @@ import { Component, Input} from '@angular/core';
 })
 export class ProgressbarComponent {
 
-  @Input() value = "100";
+  @Input() value = '100';
 
 }
