@@ -1,4 +1,7 @@
-<div>
+<div class="bar">
   <p>{{value}}%</p>
-<progress [value]="value" [max]="max">{{value}}%</progress>
+  <p class="desc"><ng-content></ng-content></p>
+<div class="styled-p-bar-v2">
+  <div class="styled-p-bar-v2-value" style="width:{{value}}%">&nbsp;</div>
+</div>
 </div>

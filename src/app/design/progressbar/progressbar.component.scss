@@ -1,14 +1,35 @@
-progress{
-  /*remove default styles*/
-  appearance: none;
-	-moz-appearance: none;
-	-webkit-appearance: none;
-	border: none;
-  background-size: auto;
-	width: 400px;
-	height: 60px;
-
-  /*add own styles*/
+@import 'theme-colors';
 
 
+p{
+  text-align: center;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  font-size: 1.2rem;
+  color: white;
+}
+.bar{
+  margin: 4px;
+  padding: 8px;
+}
+.desc{
+  font-size: 1rem;
+  color: grey;
+  margin-top: 0px;
+  margin-bottom: 4px;
+}
+
+.styled-p-bar-v2{
+  height: 1.8vh;
+  width: 100%;
+  border-radius: 100vw;
+  background-color: white;
+  margin-top: 5px;
+  overflow: hidden;
+}
+.styled-p-bar-v2-value{
+  height: 100%;
+  background-color: $primary-default;
+  width: 100%;
+  border-radius: 100px 0px 0px 100px;
 }
