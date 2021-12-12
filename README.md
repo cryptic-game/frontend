@@ -6,7 +6,7 @@ This is the official [Cryptic](https://play.cryptic-game.net/) frontend ([availa
 
 ## Set up a development environment
 
-NodeJS and NPM are required to compile and start of the application. Refer to [https://nodejs.org/de/](https://nodejs.org/de/) for download/installation instructions. To get help, run `ng --help` or check the [Angular documentation](https://angular.io/docs) / [Angular CLI documentation](https://github.com/angular/angular-cli/wiki).
+NodeJS and NPM are required to compile and start the application. Refer to [https://nodejs.org/de/](https://nodejs.org/de/) for download/installation instructions. To get help, run `ng --help` or check the [Angular documentation](https://angular.io/docs) / [Angular CLI documentation](https://github.com/angular/angular-cli/wiki).
 
 [Microsoft Visual Studio Code](https://code.visualstudio.com) is the recommended editor. Visual Studio Code (VSCode) provides a build-in debugger and a _git_ client.  
 
