@@ -46,4 +46,4 @@ To check browser-compatibility, use [Can I use](https://caniuse.com/). You shoul
 
 ## Debugging
 
-VSCode comes with a build-in, ready-to-use [debugger](https://code.visualstudio.com/Docs/editor/debugging). Run  the task `run`, switch to the debug section, and start `Run`. **Important:** For the debugger the extension, _Debugger for Chrome_ must be installed.
+VSCode comes with a build-in, ready-to-use [debugger](https://code.visualstudio.com/Docs/editor/debugging)  that requires the  _Debugger for Chrome_  browser extension. To use it, run  the task `run`, switch to the debug section, and start `Run`.
