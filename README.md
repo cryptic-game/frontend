@@ -10,7 +10,7 @@ NodeJS and NPM are required to compile and start the application. Refer to [http
 
 [Microsoft Visual Studio Code](https://code.visualstudio.com) is the recommended editor. Visual Studio Code (VSCode) provides a build-in debugger and a _git_ client.  
 
-To open the repository in **VSCode**:  
+If you use VSCode**:  
 
 1. Press _Ctrl+Shift+P / CMD+Shift+P_.
 2. Type `Task: Run Task` to enter task mode. 
