@@ -31,7 +31,7 @@ If you use **IntelliJ/Webstorm**:
 3. Press Shift twice. Run `npm install`. 
 4. Click the green play button in the top right to start the Angular CLI Server. 
 
-Note: You can reate a new component using the command `ng generate component component-name` (short: `ng g c component-name`).
+Note: Create a new component with the command `ng generate component component-name` (short: `ng g c component-name`).
 
 ### Tasks
 
