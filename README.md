@@ -26,7 +26,7 @@ If you use the **CLI**:
 
 If you use **IntelliJ/Webstorm**:
 
-1. Click File -> New -> Project from Version Control
+1. Click File -> New -> Project from Version Control (Welcome Screen: `Get from VSC`)
 2. Paste the [GitHub repository url](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/GitHub-URL-find-use-example).
 3. Press Shift twice. Run `npm install`. 
 4. Click the green play button in the top right to start the Angular CLI Server. 
