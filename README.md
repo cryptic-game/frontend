@@ -22,7 +22,14 @@ If you use the **CLI**:
 
 1. Open the repository in the terminal. 
 2. Run `npm install`. Brew a fresh coffee, because this process can take a bit time.
-3. Run `ng serve` or `npm start` to start a development server listening on [http://localhost:4200](http://localhost:4200), .
+3. Run `ng serve` or `npm start` to start a development server listening on [http://localhost:4200](http://localhost:4200). 
+
+If you use **IntelliJ/Webstorm**:
+
+1. Click File -> New -> Project from Version Control
+2. Paste the [GitHub repository url](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/GitHub-URL-find-use-example).
+3. Press Shift twice. Run `npm install`. 
+4. Click the green play button in the top right to start the Angular CLI Server. 
 
 Note: You can reate a new component using the command `ng generate component component-name` (short: `ng g c component-name`).
 
