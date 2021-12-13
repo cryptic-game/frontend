@@ -42,7 +42,9 @@ Tasks:
 
 ## Check browser compatibility
 
-To check browser-compatibility, use [Can I use](https://caniuse.com/). You should test your code at minimum with one WebKit browser (Chrome, Chromium, Safari, or Opera) and one non-WebKit browser (Firefox, Internet Explorer, or Edge). [CSS tricks](https://css-tricks.com) delivers tips for CSS/SCSS (e.g. centering, flex-box, grid etc.).
+To check browser-compatibility, use [Can I use](https://caniuse.com/). You should test your code at minimum with one WebKit browser (Chrome, Chromium, Safari, or Opera) and one non-WebKit browser (Firefox or Microsoft Edge). 
+
+Note: [CSS tricks](https://css-tricks.com) delivers tips for CSS/SCSS (e.g. centering, flex-box, grid etc.).
 
 ## Debugging
 
