@@ -1,0 +1,40 @@
+:root {
+  // Primary //
+  --Primary-Default: #2ecc70;
+  --Primary-Hover: #1f8c4c;
+  --Primary-Disabled: #2e473e;
+
+  // Success //
+  --Success-Default: #3abb18;
+  --Success-Hover: #277a10;
+  --Success-Disabled: #2f5629;
+
+  // Warning //
+  --Warning-Default: #f1c30e;
+  --Warning-Hover: #b3910b;
+  --Warning-Disabled: #675926;
+
+  // Danger / Error //
+  --Danger-Default: #f00040;
+  --Danger-Hover: #b0002f;
+  --Danger-Disabled: #671e35;
+
+  // Info //
+  --Info-Default: #3281f6;
+  --Info-Hover: #245eb5;
+  --Info-Disabled: #2d456c;
+
+  // Background / Font / Other //
+  --MainComponents: #748781; // Checkbox, radio, switch and light font disabled
+  --Button-Font-Dark-Disabled: #222d2d;
+  --Input-Background-Disabled: #25252b;
+  --Background-Sidebar-Submenu: #2b2b31;
+  --Background: #2f2f36;
+  --Font-Dark: #1a1c23;
+  --Background-Inputs: #1d1d24; // Also Popup background dark
+  --Background-Sidebar: #1e1e24;
+  --Font-Placeholder-Disabled: #434349;
+  --Button-Font-Disabled: #888888; // Also Placholder
+  --Font-Grey: #bebebe;
+  --Font-Light: #ffffff; // Also Popup background light
+}
