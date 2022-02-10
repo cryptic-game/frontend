@@ -26,7 +26,12 @@ function reportError(error) {
 }
 
 export abstract class CommandTerminalState implements TerminalState {
-  abstract commands: { [name: string]: { executor: (args: string[]) => void, description: string, hidden?: boolean } };
+  abstract commands: { [name: string]: {
+    executor: (args: string[]) => void,
+    description: string,
+    hideFromHelp?: boolean,
+    hideFromProtocol?: boolean
+  } };
 
   protocol: string[] = [];
 
@@ -34,6 +39,11 @@ export abstract class CommandTerminalState implements TerminalState {
     command = command.toLowerCase();
     if (this.commands.hasOwnProperty(command)) {
       this.commands[command].executor(args);
+
+      // Some commands won't be shown in the protocol
+      if (!this.commands[command].hideFromProtocol) {
+        this.protocol.unshift(command);
+      }
     } else if (command !== '') {
       this.commandNotFound(command);
     }
@@ -45,9 +55,6 @@ export abstract class CommandTerminalState implements TerminalState {
       return;
     }
     this.executeCommand(command_[0], command_.slice(1));
-    if (command) {
-      this.protocol.unshift(command);
-    }
   }
 
   abstract commandNotFound(command: string);
@@ -55,7 +62,7 @@ export abstract class CommandTerminalState implements TerminalState {
   autocomplete(content: string): string {
     return content
       ? Object.entries(this.commands)
-        .filter(command => !command[1].hidden)
+        .filter(command => !command[1].hideFromHelp)
         .map(([name]) => name)
         .sort()
         .find(n => n.startsWith(content))
@@ -152,7 +159,8 @@ export class DefaultTerminalState extends CommandTerminalState {
     },
     'clearhistory': {
       executor: this.historyClear.bind(this),
-      description: 'clears the history of used commands in this terminal session'
+      description: 'clears the history of used commands in this terminal session',
+      hideFromProtocol: true
     },
     'morphcoin': {
       executor: this.morphcoin.bind(this),
@@ -187,7 +195,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     'chaozz': {
       executor: () => this.terminal.outputText('"mess with the best, die like the rest :D`" - chaozz'),
       description: '',
-      hidden: true
+      hideFromHelp: true
     }
 
   };
