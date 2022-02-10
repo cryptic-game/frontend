@@ -1,6 +1,16 @@
 {
-  "latest": "Pre-Alpha 2.1",
+  "latest": "Pre-Alpha 2.2",
   "versions": [
+    {
+      "name": "Pre-Alpha 2.2",
+      "date": "2022-02-10T21:50:00.000Z",
+      "enhancements": [
+        "Terminal history can be cleared"
+      ],
+      "fixes": [
+        "Terminal logging unsuccessful commands"
+      ]
+    },
     {
       "name": "Pre-Alpha 2.1",
       "date": "2021-05-17T20:00:00.000Z",
