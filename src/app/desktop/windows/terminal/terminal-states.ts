@@ -155,11 +155,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     },
     'history': {
       executor: this.history.bind(this),
-      description: 'shows the command history of the current terminal session'
-    },
-    'clearhistory': {
-      executor: this.historyClear.bind(this),
-      description: 'clears the history of used commands in this terminal session',
+      description: 'shows or clears the command history of the current terminal session',
       hideFromProtocol: true
     },
     'morphcoin': {
@@ -775,18 +771,20 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.terminal.clear();
   }
 
-  history() {
-    const l = this.getHistory();
+  history(args: string[]) {
+    if (args[0] === 'clear') {
+      this.protocol = [];
+    } else if (args.length === 0) {
+      const history: string[] = this.getHistory();
 
-    l.reverse();
+      history.reverse();
 
-    l.forEach(e => {
-      this.terminal.outputText(e);
-    });
-  }
-
-  historyClear() {
-    this.protocol = [];
+      history.forEach(e => {
+        this.terminal.outputText(e);
+      });
+    } else {
+      this.terminal.outputText('usage: history [clear]');
+    }
   }
 
   morphcoin(args: string[]) {

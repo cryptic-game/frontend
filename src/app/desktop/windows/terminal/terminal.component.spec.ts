@@ -45,7 +45,7 @@ describe('TerminalComponent', () => {
     component.execute('test');
     component.execute('help');
     component.execute('help');
-    component.execute('clearHistory');
+    component.execute('history clear');
     expect(component.getHistory().length).toBe(0);
   });
 });
