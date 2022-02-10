@@ -31,4 +31,21 @@ describe('TerminalComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should add commands to the protocol', () => {
+    component.execute('test');
+    component.execute('help');
+    component.execute('help');
+    expect(component.getHistory().length).toBe(2);
+    // History is printed in reverse
+    expect(component.getHistory()).toEqual(['help', 'help']);
+  });
+
+  it('should clear the protocol with clearHistory', () => {
+    component.execute('test');
+    component.execute('help');
+    component.execute('help');
+    component.execute('clearHistory');
+    expect(component.getHistory().length).toBe(0);
+  });
 });
