@@ -150,6 +150,10 @@ export class DefaultTerminalState extends CommandTerminalState {
       executor: this.history.bind(this),
       description: 'shows the command history of the current terminal session'
     },
+    'clearhistory': {
+      executor: this.historyClear.bind(this),
+      description: 'clears the history of used commands in this terminal session'
+    },
     'morphcoin': {
       executor: this.morphcoin.bind(this),
       description: 'shows wallet'
@@ -771,6 +775,10 @@ export class DefaultTerminalState extends CommandTerminalState {
     l.forEach(e => {
       this.terminal.outputText(e);
     });
+  }
+
+  historyClear() {
+    this.protocol = [];
   }
 
   morphcoin(args: string[]) {
