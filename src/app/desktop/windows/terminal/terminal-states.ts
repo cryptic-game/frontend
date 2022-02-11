@@ -40,7 +40,7 @@ export abstract class CommandTerminalState implements TerminalState {
     if (this.commands.hasOwnProperty(command)) {
       this.commands[command].executor(args);
 
-      // Some commands won't be shown in the protocol
+      // Only successful and not-flagged commands will be shown in the protocol.
       if (!this.commands[command].hideFromProtocol) {
         this.protocol.unshift(command);
       }
