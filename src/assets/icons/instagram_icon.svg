@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="instagram_icon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#0f0f0f"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="false"
+     viewbox-height="128"
+     inkscape:zoom="3.5"
+     inkscape:cx="68.571429"
+     inkscape:cy="81.285714"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="display:inline;fill:#e5e5e5;fill-opacity:1;stroke-width:0.499999"
+       inkscape:connector-curvature="0"
+       id="path1285"
+       fill="#343433"
+       d="M 113.23381,127.99992 H 14.766185 C 6.6120195,127.99992 -4.9999999e-7,121.38576 -4.9999999e-7,113.22591 V 14.766264 C -4.9999999e-7,6.6108255 6.6120195,8.15e-5 14.766185,8.15e-5 H 113.23381 C 121.38922,8.15e-5 128,6.6108255 128,14.766264 v 98.459646 c 0,8.15985 -6.61078,14.77401 -14.76619,14.77401 z M 63.999511,39.3832 c -13.595746,0 -24.615515,11.018524 -24.615515,24.614519 0,13.59344 11.019769,24.61794 24.615515,24.61794 13.59571,0 24.61762,-11.0245 24.61762,-24.61794 0,-13.595995 -11.02191,-24.614519 -24.61762,-24.614519 z M 113.23381,19.688797 c 0,-2.717579 -2.20509,-4.922533 -4.92795,-4.922533 H 93.53952 c -2.719399,0 -4.922389,2.204954 -4.922389,4.922533 v 14.771725 c 0,2.717437 2.20299,4.922678 4.92239,4.922678 h 14.766339 c 2.72286,0 4.92795,-2.205241 4.92795,-4.922678 z m 0,34.459444 h -11.14313 c 0.81217,3.151547 1.29151,6.444467 1.29151,9.849478 0,21.75485 -17.631529,39.385401 -39.382679,39.385401 -21.750024,0 -39.382867,-17.630551 -39.382867,-39.385401 0,-3.405011 0.480768,-6.69793 1.292937,-9.849478 h -11.14396 v 54.158409 c 0,2.71502 2.205098,4.91926 4.928221,4.91926 h 88.611448 c 2.72286,0 4.92796,-2.20424 4.92796,-4.91926 z" />
+  </g>
+</svg>

@@ -44,6 +44,17 @@ div.base {
     }
   }
 
+  div.socials {
+    display: inline-flex;
+
+    position: absolute;
+    bottom: 40px;
+
+    .icon {
+      padding: 7px;
+    }
+  }
+
   h1 {
     letter-spacing: 0.3em;
     font-weight: bolder;
@@ -60,8 +71,6 @@ div.base {
     right: 5%;
 
     width: 20%;
-    max-width: 80%;
-    max-height: 80%;
     margin-left: 5em;
     padding: 1em;
 
@@ -72,12 +81,5 @@ div.base {
 
     overflow-y: auto;
     z-index: 2;
-
-    scrollbar-width: thin;
-
-    ::-webkit-scrollbar {
-      width: 5px;
-    }
   }
-
 }
