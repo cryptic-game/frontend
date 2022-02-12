@@ -5,7 +5,7 @@ import { SwUpdate, UpdateAvailableEvent } from '@angular/service-worker';
   providedIn: 'root'
 })
 export class VersionService {
-  CURRENT_VERSION = 'Pre-Alpha 2.1';
+  CURRENT_VERSION = 'Pre-Alpha 2.2';
 
   availableUpdate: UpdateAvailableEvent;
 

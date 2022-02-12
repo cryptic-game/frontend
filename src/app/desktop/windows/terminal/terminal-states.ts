@@ -26,7 +26,12 @@ function reportError(error) {
 }
 
 export abstract class CommandTerminalState implements TerminalState {
-  abstract commands: { [name: string]: { executor: (args: string[]) => void, description: string, hidden?: boolean } };
+  abstract commands: { [name: string]: {
+    executor: (args: string[]) => void,
+    description: string,
+    hideFromHelp?: boolean,
+    hideFromProtocol?: boolean
+  } };
 
   protocol: string[] = [];
 
@@ -34,6 +39,11 @@ export abstract class CommandTerminalState implements TerminalState {
     command = command.toLowerCase();
     if (this.commands.hasOwnProperty(command)) {
       this.commands[command].executor(args);
+
+      // Only successful and not-flagged commands will be shown in the protocol.
+      if (!this.commands[command].hideFromProtocol) {
+        this.protocol.unshift(command);
+      }
     } else if (command !== '') {
       this.commandNotFound(command);
     }
@@ -45,9 +55,6 @@ export abstract class CommandTerminalState implements TerminalState {
       return;
     }
     this.executeCommand(command_[0], command_.slice(1));
-    if (command) {
-      this.protocol.unshift(command);
-    }
   }
 
   abstract commandNotFound(command: string);
@@ -55,7 +62,7 @@ export abstract class CommandTerminalState implements TerminalState {
   autocomplete(content: string): string {
     return content
       ? Object.entries(this.commands)
-        .filter(command => !command[1].hidden)
+        .filter(command => !command[1].hideFromHelp)
         .map(([name]) => name)
         .sort()
         .find(n => n.startsWith(content))
@@ -148,7 +155,8 @@ export class DefaultTerminalState extends CommandTerminalState {
     },
     'history': {
       executor: this.history.bind(this),
-      description: 'shows the command history of the current terminal session'
+      description: 'shows or clears the command history of the current terminal session',
+      hideFromProtocol: true
     },
     'morphcoin': {
       executor: this.morphcoin.bind(this),
@@ -183,7 +191,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     'chaozz': {
       executor: () => this.terminal.outputText('"mess with the best, die like the rest :D`" - chaozz'),
       description: '',
-      hidden: true
+      hideFromHelp: true
     }
 
   };
@@ -251,7 +259,7 @@ export class DefaultTerminalState extends CommandTerminalState {
   help() {
     const table = document.createElement('table');
     Object.entries(this.commands)
-      .filter(command => !('hidden' in command[1]))
+      .filter(command => !('hideFromHelp' in command[1]))
       .map(([name, value]) => ({ name: name, description: value.description }))
       .map(command => `<tr><td>${command.name}</td><td>${command.description}</td></tr>`)
       .forEach(row => {
@@ -763,14 +771,20 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.terminal.clear();
   }
 
-  history() {
-    const l = this.getHistory();
+  history(args: string[]) {
+    if (args[0] === 'clear') {
+      this.protocol = [];
+    } else if (args.length === 0) {
+      const history: string[] = this.getHistory();
 
-    l.reverse();
+      history.reverse();
 
-    l.forEach(e => {
-      this.terminal.outputText(e);
-    });
+      history.forEach(e => {
+        this.terminal.outputText(e);
+      });
+    } else {
+      this.terminal.outputText('usage: history [clear]');
+    }
   }
 
   morphcoin(args: string[]) {
