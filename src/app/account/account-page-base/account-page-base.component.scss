@@ -43,4 +43,43 @@ div.base {
       color: #fff;
     }
   }
+
+  div.socials {
+    display: inline-flex;
+
+    position: absolute;
+    bottom: 40px;
+
+    .icon {
+      padding: 7px;
+    }
+  }
+
+  h1 {
+    letter-spacing: 0.3em;
+    font-weight: bolder;
+    color: darkred;
+    text-align: center;
+  }
+
+  h3 {
+    text-align: center;
+  }
+
+  div.bots {
+    position: absolute;
+    right: 5%;
+
+    width: 20%;
+    margin-left: 5em;
+    padding: 1em;
+
+    text-align: justify;
+
+    background-color: rgb(220, 220, 220, 0.8);
+    border-radius: 20px;
+
+    overflow-y: auto;
+    z-index: 2;
+  }
 }

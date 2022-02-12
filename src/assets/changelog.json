@@ -8,7 +8,8 @@
         "Terminal history can be cleared"
       ],
       "fixes": [
-        "Terminal logging unsuccessful commands"
+        "Terminal logging unsuccessful commands",
+        "Removed unnecessary control center menu entry 'Servers'"
       ]
     },
     {
