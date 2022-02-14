@@ -3,7 +3,8 @@
      [style.display]="delegate.position.minimized ? 'none' : 'flex'" [style.height.px]="delegate.position.height"
      [style.width.px]="delegate.position.width"
      class="window">
-  <div (dblclick)="maximize()"       (mousedown)=" asElement($event.target!).closest('.window-icons') || startDragging($event)"
+  <div (dblclick)="maximize()"
+       (mousedown)=" asElement($event.target!).closest('.window-icons') || startDragging($event)"
        class="window-header">
     <img [src]="delegate.icon" alt="" class="window-icon" draggable="false" height="25px" width="30px"/>
     <span class="window-title">{{delegate.title}}</span>

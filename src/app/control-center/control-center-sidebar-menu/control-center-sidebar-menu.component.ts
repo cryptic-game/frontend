@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Params, Router } from '@angular/router';
+import {Component, Input} from '@angular/core';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {Params, Router} from '@angular/router';
 
 @Component({
   selector: 'app-control-center-sidebar-menu',
@@ -47,12 +47,12 @@ export class ControlCenterSidebarMenuComponent {
     }
 
     if (this.menu.routerLink) {
-      this.router.navigate([this.menu.routerLink], { queryParams: this.menu.queryParams }).then();
+      this.router.navigate([this.menu.routerLink], {queryParams: this.menu.queryParams}).then();
     }
   }
 
   itemClicked(item: SidebarMenuItem) {
-    this.router.navigate([item.routerLink], { queryParams: item.queryParams }).then();
+    this.router.navigate([item.routerLink], {queryParams: item.queryParams}).then();
   }
 
   isItemActive(item: SidebarMenuItem) {
@@ -60,7 +60,7 @@ export class ControlCenterSidebarMenuComponent {
     if (!item.routerLink) {
       return false;
     }
-    return this.router.isActive(this.router.createUrlTree([item.routerLink], { queryParams: item.queryParams }), false);
+    return this.router.isActive(this.router.createUrlTree([item.routerLink], {queryParams: item.queryParams}), false);
   }
 
 }

@@ -4,9 +4,9 @@
   </div>
 
   <app-hardware-shop-sidebar-item
+    (selectCategory)="selectCategory.emit($event)"
     *ngFor="let category of categories"
-    [delegate]="delegate"
     [category]="category"
-    (selectCategory)="selectCategory.emit($event)">
+    [delegate]="delegate">
   </app-hardware-shop-sidebar-item>
 </div>

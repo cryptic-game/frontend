@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { WebsocketService } from '../../websocket.service';
-import { from, Observable } from 'rxjs';
-import { InventoryItem, InventoryItemWithHardware } from './inventory-item';
-import { filter, flatMap, map, switchMap, toArray } from 'rxjs/operators';
-import { HardwareService } from '../hardware/hardware.service';
+import {Injectable} from '@angular/core';
+import {WebsocketService} from '../../websocket.service';
+import {from, Observable} from 'rxjs';
+import {InventoryItem, InventoryItemWithHardware} from './inventory-item';
+import {filter, flatMap, map, switchMap, toArray} from 'rxjs/operators';
+import {HardwareService} from '../hardware/hardware.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,7 @@ export class InventoryService {
    * @param destination UUID of the receiving player
    */
   sendItem(elementUUID: string, destination: string): Observable<{ ok: true }> {
-    return this.webSocket.ms('inventory', ['inventory', 'trade'], { element_uuid: elementUUID, target: destination });
+    return this.webSocket.ms('inventory', ['inventory', 'trade'], {element_uuid: elementUUID, target: destination});
   }
 
   getInventoryItemsWithHardware(): Observable<InventoryItemWithHardware[]> {
@@ -42,7 +42,7 @@ export class InventoryService {
           return valid;
         }),
         map(item => {
-          return { ...item, properties: hardware.getByName(item.element_name) };
+          return {...item, properties: hardware.getByName(item.element_name)};
         }),
         toArray(),
         map(items => items.sort((a, b) => a.properties.category! - b.properties.category!))

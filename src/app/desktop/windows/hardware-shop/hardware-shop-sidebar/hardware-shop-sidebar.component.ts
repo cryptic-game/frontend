@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { HardwareShopService } from '../hardware-shop.service';
-import { HardwareShopCategory } from '../hardware-shop-category';
-import { HardwareShopDelegate } from '../hardware-shop.delegate';
-import { Subscription } from 'rxjs';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
+import {HardwareShopService} from '../hardware-shop.service';
+import {HardwareShopCategory} from '../hardware-shop-category';
+import {HardwareShopDelegate} from '../hardware-shop.delegate';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop-sidebar',

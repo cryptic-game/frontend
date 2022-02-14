@@ -1,8 +1,8 @@
-import { NEVER, of, Subject } from 'rxjs';
-import { WindowDelegate } from './desktop/window/window-delegate';
-import { Device } from './api/devices/device';
-import { WebsocketService } from './websocket.service';
-import { WindowManager } from './desktop/window-manager/window-manager';
+import {NEVER, of, Subject} from 'rxjs';
+import {WindowDelegate} from './desktop/window/window-delegate';
+import {Device} from './api/devices/device';
+import {WebsocketService} from './websocket.service';
+import {WindowManager} from './desktop/window-manager/window-manager';
 
 export function webSocketMock(): WebsocketService {
   const mock = jasmine.createSpyObj(
@@ -29,7 +29,7 @@ export function webSocketMock(): WebsocketService {
 }
 
 export function emptyDevice(partial: Partial<Device> = {}): Device {
-  return { name: '', owner: '', powered_on: false, uuid: '', starter_device: false, ...partial };
+  return {name: '', owner: '', powered_on: false, uuid: '', starter_device: false, ...partial};
 }
 
 export function emptyWindowDelegate(): WindowDelegate {

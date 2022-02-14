@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { TestWindowComponent } from './test-window.component';
+import {TestWindowComponent} from './test-window.component';
 
 describe('TestWindowComponent', () => {
   let component: TestWindowComponent;

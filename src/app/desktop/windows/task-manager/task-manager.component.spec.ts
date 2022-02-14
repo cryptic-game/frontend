@@ -1,13 +1,13 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { TaskManagerComponent, TaskManagerWindowDelegate } from './task-manager.component';
-import { HardwareService } from '../../../api/hardware/hardware.service';
+import {TaskManagerComponent, TaskManagerWindowDelegate} from './task-manager.component';
+import {HardwareService} from '../../../api/hardware/hardware.service';
 import * as rxjs from 'rxjs';
-import { Subject } from 'rxjs';
-import { WebsocketService } from '../../../websocket.service';
-import { DeviceHardware } from '../../../api/hardware/device-hardware';
-import { emptyDevice, emptyWindowDelegate } from '../../../test-utils';
-import { WindowDelegate } from '../../window/window-delegate';
+import {Subject} from 'rxjs';
+import {WebsocketService} from '../../../websocket.service';
+import {DeviceHardware} from '../../../api/hardware/device-hardware';
+import {emptyDevice, emptyWindowDelegate} from '../../../test-utils';
+import {WindowDelegate} from '../../window/window-delegate';
 
 describe('TaskManagerComponent', () => {
   let webSocket;
@@ -48,9 +48,9 @@ describe('TaskManagerComponent', () => {
     TestBed.configureTestingModule({
       declarations: [TaskManagerComponent],
       providers: [
-        { provide: WebsocketService, useValue: webSocket },
-        { provide: HardwareService, useValue: hardwareService },
-        { provide: WindowDelegate, useValue: emptyWindowDelegate() }
+        {provide: WebsocketService, useValue: webSocket},
+        {provide: HardwareService, useValue: hardwareService},
+        {provide: WindowDelegate, useValue: emptyWindowDelegate()}
       ]
     })
       .compileComponents();
@@ -71,23 +71,23 @@ describe('TaskManagerComponent', () => {
       const deviceUUID = 'test123-456';
       const cpuUtilization = 6226;
 
-      component.delegate.device = { uuid: deviceUUID, name: '', powered_on: true, owner: '', starter_device: false };
+      component.delegate.device = {uuid: deviceUUID, name: '', powered_on: true, owner: '', starter_device: false};
 
       fixture.whenStable().then(() => {
         expect(webSocket.subscribeNotification).toHaveBeenCalledWith('resource-usage');
 
-        notification_subject.next({ 'device_uuid': deviceUUID, 'data': { cpu: cpuUtilization } });
+        notification_subject.next({'device_uuid': deviceUUID, 'data': {cpu: cpuUtilization}});
         expect(component.utilization.cpu).toEqual(cpuUtilization);
       });
     }));
 
   it('should not update the utilization if the device uuid does not match', waitForAsync(() => {
-    component.delegate.device = { uuid: '123456', name: '', powered_on: true, owner: '', starter_device: false };
+    component.delegate.device = {uuid: '123456', name: '', powered_on: true, owner: '', starter_device: false};
     const cpuUtilBefore = 15;
     component.utilization.cpu = cpuUtilBefore;
 
     fixture.whenStable().then(() => {
-      notification_subject.next({ 'device_uuid': '32692145', 'data': { cpu: 236723 } });
+      notification_subject.next({'device_uuid': '32692145', 'data': {cpu: 236723}});
       expect(component.utilization.cpu).toEqual(cpuUtilBefore);
     });
   }));

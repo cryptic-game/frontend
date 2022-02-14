@@ -1,12 +1,12 @@
-import { inject, TestBed } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
-import { ProgramService } from './program.service';
+import {ProgramService} from './program.service';
 import * as Definition from '../../assets/desktop/definition';
-import { Program } from '../../dataclasses/program';
-import { Position } from '../../dataclasses/position';
-import { WindowDelegate } from './window/window-delegate';
-import { NEVER, of, throwError } from 'rxjs';
-import { SettingService } from '../api/setting/setting.service';
+import {Program} from '../../dataclasses/program';
+import {Position} from '../../dataclasses/position';
+import {WindowDelegate} from './window/window-delegate';
+import {NEVER, of, throwError} from 'rxjs';
+import {SettingService} from '../api/setting/setting.service';
 
 function newTestProgram(data: Partial<Program> = {}): Program {
   return new Program(
@@ -35,13 +35,13 @@ describe('ProgramService', () => {
 
     settingService = jasmine.createSpyObj('SettingService', ['get', 'set', 'delete']);
     settingService.get.and.returnValue(NEVER);
-    settingService.set.and.returnValue(of({ 'success': true }));
+    settingService.set.and.returnValue(of({'success': true}));
     settingService.delete.and.returnValue(NEVER);
 
     TestBed.configureTestingModule({
       providers: [
         ProgramService,
-        { provide: SettingService, useValue: settingService }
+        {provide: SettingService, useValue: settingService}
       ]
     });
   });
@@ -57,15 +57,15 @@ describe('ProgramService', () => {
   it('#loadCached() should return programs from the definition, with data from localStorage if there is any',
     inject([ProgramService], (service: ProgramService) => {
       const program1 = newTestProgram();
-      const program2 = newTestProgram({ id: 'testProgram2' });
+      const program2 = newTestProgram({id: 'testProgram2'});
       Definition.desktopDefinition.programs = [program1, program2];
-      const cachedProgram2 = newTestProgram({ id: program2.id, onDesktop: false, position: new Position(12, 14, 6) });
-      const cachedProgram3 = newTestProgram({ id: 'testProgram3', onDesktop: false, position: new Position(62, 36, 3) });
+      const cachedProgram2 = newTestProgram({id: program2.id, onDesktop: false, position: new Position(12, 14, 6)});
+      const cachedProgram3 = newTestProgram({id: 'testProgram3', onDesktop: false, position: new Position(62, 36, 3)});
 
       fakeLocalStorage[settingKey(cachedProgram2)] =
-        JSON.stringify({ onDesktop: cachedProgram2.onDesktop, position: cachedProgram2.position });
+        JSON.stringify({onDesktop: cachedProgram2.onDesktop, position: cachedProgram2.position});
       fakeLocalStorage[settingKey(cachedProgram3)] =
-        JSON.stringify({ onDesktop: cachedProgram3.onDesktop, position: cachedProgram3.position });
+        JSON.stringify({onDesktop: cachedProgram3.onDesktop, position: cachedProgram3.position});
 
       const programs = service.loadCached();
       expect(programs).toEqual([program1, cachedProgram2]);
@@ -76,9 +76,9 @@ describe('ProgramService', () => {
 
   it('#loadFresh() should load all programs from the definition and save them to the localStorage',
     inject([ProgramService], async (service: ProgramService) => {
-      const program1 = newTestProgram({ id: 'testProgram1', position: new Position(1, 6) });
-      const program2 = newTestProgram({ id: 'testProgram2', onDesktop: false, position: new Position(6, 2, 1) });
-      const program3 = newTestProgram({ id: 'testProgram3', onDesktop: false });
+      const program1 = newTestProgram({id: 'testProgram1', position: new Position(1, 6)});
+      const program2 = newTestProgram({id: 'testProgram2', onDesktop: false, position: new Position(6, 2, 1)});
+      const program3 = newTestProgram({id: 'testProgram3', onDesktop: false});
       Definition.desktopDefinition.programs = [program1, program2, program3];
       spyOn(service, 'loadProgram').and.returnValues(
         new Promise(resolve => resolve(program1)),
@@ -91,18 +91,18 @@ describe('ProgramService', () => {
       expect(service.loadProgram).toHaveBeenCalledWith(program2);
       expect(service.loadProgram).toHaveBeenCalledWith(program3);
       expect(fakeLocalStorage[settingKey(program1)])
-        .toEqual(JSON.stringify({ onDesktop: program1.onDesktop, position: program1.position }));
+        .toEqual(JSON.stringify({onDesktop: program1.onDesktop, position: program1.position}));
       expect(fakeLocalStorage[settingKey(program2)])
-        .toEqual(JSON.stringify({ onDesktop: program2.onDesktop, position: program2.position }));
+        .toEqual(JSON.stringify({onDesktop: program2.onDesktop, position: program2.position}));
       expect(fakeLocalStorage[settingKey(program3)])
-        .toEqual(JSON.stringify({ onDesktop: program3.onDesktop, position: program3.position }));
+        .toEqual(JSON.stringify({onDesktop: program3.onDesktop, position: program3.position}));
       expect(result).toEqual([program1, program2, program3]);
     }));
 
   it('#loadProgram() should load the program from the passed definition, with data from the user settings if there is any',
     inject([ProgramService], async (service: ProgramService) => {
-      const definition = newTestProgram({ onDesktop: false, position: new Position(63, 214, 78) });
-      const data = { onDesktop: true, position: new Position(125, 263, 67) };
+      const definition = newTestProgram({onDesktop: false, position: new Position(63, 214, 78)});
+      const data = {onDesktop: true, position: new Position(125, 263, 67)};
 
       settingService.get.and.returnValue(of(JSON.stringify(data)));
 
@@ -128,7 +128,7 @@ describe('ProgramService', () => {
 
   it('#save() should save the program data to the backend user settings and to the localStorage',
     inject([ProgramService], async (service: ProgramService) => {
-      const data = { onDesktop: false, position: new Position(125, 236, 75) };
+      const data = {onDesktop: false, position: new Position(125, 236, 75)};
       const program = newTestProgram(data);
 
       await service.save(program);

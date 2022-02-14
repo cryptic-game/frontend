@@ -1,10 +1,10 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { DesktopGuard } from './desktop.guard';
-import { WebsocketService } from '../websocket.service';
-import { Observable, of } from 'rxjs';
-import { webSocketMock } from '../test-utils';
-import { Router } from '@angular/router';
+import {DesktopGuard} from './desktop.guard';
+import {WebsocketService} from '../websocket.service';
+import {Observable, of} from 'rxjs';
+import {webSocketMock} from '../test-utils';
+import {Router} from '@angular/router';
 
 describe('DesktopGuard', () => {
   let webSocketService;
@@ -18,8 +18,8 @@ describe('DesktopGuard', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        { provide: WebsocketService, useValue: webSocketService },
-        { provide: Router, useValue: router }
+        {provide: WebsocketService, useValue: webSocketService},
+        {provide: Router, useValue: router}
       ]
     });
 

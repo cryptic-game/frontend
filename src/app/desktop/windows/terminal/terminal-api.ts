@@ -1,4 +1,4 @@
-import { SafeHtml } from '@angular/platform-browser';
+import {SafeHtml} from '@angular/platform-browser';
 
 export interface TerminalAPI {
   /**

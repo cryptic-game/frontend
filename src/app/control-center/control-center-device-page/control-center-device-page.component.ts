@@ -1,33 +1,33 @@
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { WebsocketService } from '../../websocket.service';
-import { DeviceService } from '../../api/devices/device.service';
-import { from } from 'rxjs';
-import { filter, flatMap, map, switchMap, toArray } from 'rxjs/operators';
-import { Device, DeviceResources, ResourceUsage } from '../../api/devices/device';
-import { animate, animateChild, keyframes, query, state, style, transition, trigger } from '@angular/animations';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DeviceHardware } from '../../api/hardware/device-hardware';
-import { ControlCenterService } from '../control-center.service';
+import {Component, ElementRef, HostListener, OnDestroy, ViewChild} from '@angular/core';
+import {WebsocketService} from '../../websocket.service';
+import {DeviceService} from '../../api/devices/device.service';
+import {from} from 'rxjs';
+import {filter, flatMap, map, switchMap, toArray} from 'rxjs/operators';
+import {Device, DeviceResources, ResourceUsage} from '../../api/devices/device';
+import {animate, animateChild, keyframes, query, state, style, transition, trigger} from '@angular/animations';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DeviceHardware} from '../../api/hardware/device-hardware';
+import {ControlCenterService} from '../control-center.service';
 
 
 function powerButtonColorAnimation(triggerName, property) {
   return trigger(triggerName, [
-    state('off', style({ [property]: '#D41C1C' })),
-    state('fast-off', style({ [property]: '#D41C1C' })),
-    state('on', style({ [property]: '#1BD41F' })),
-    state('fast-on', style({ [property]: '#1BD41F' })),
+    state('off', style({[property]: '#D41C1C'})),
+    state('fast-off', style({[property]: '#D41C1C'})),
+    state('on', style({[property]: '#1BD41F'})),
+    state('fast-on', style({[property]: '#1BD41F'})),
     transition('* => on', [
       animate('20s', keyframes([
-        style({ [property]: '#D41C1C', 'offset': 0.0 }),
-        style({ [property]: '#d4691e', 'offset': 0.3 }),
-        style({ [property]: '#1BD41F', 'offset': 1.0 })
+        style({[property]: '#D41C1C', 'offset': 0.0}),
+        style({[property]: '#d4691e', 'offset': 0.3}),
+        style({[property]: '#1BD41F', 'offset': 1.0})
       ]))
     ]),
     transition('* => off', [
       animate('30s', keyframes([
-        style({ [property]: '#1BD41F', 'offset': 0.0 }),
-        style({ [property]: '#d4691e', 'offset': 0.3 }),
-        style({ [property]: '#D41C1C', 'offset': 1.0 })
+        style({[property]: '#1BD41F', 'offset': 0.0}),
+        style({[property]: '#d4691e', 'offset': 0.3}),
+        style({[property]: '#D41C1C', 'offset': 1.0})
       ]))
     ]),
   ]);
@@ -47,10 +47,10 @@ function powerButtonColorAnimation(triggerName, property) {
     powerButtonColorAnimation('powerButtonFill', 'fill'),
     powerButtonColorAnimation('powerButtonStroke', 'stroke'),
     trigger('powerButtonProgress', [
-      state('off', style({ 'stroke-dashoffset': '2224.24759874' })),
-      state('fast-off', style({ 'stroke-dashoffset': '2224.24759874' })),
-      state('on', style({ 'stroke-dashoffset': '0' })),
-      state('fast-on', style({ 'stroke-dashoffset': '0' })),
+      state('off', style({'stroke-dashoffset': '2224.24759874'})),
+      state('fast-off', style({'stroke-dashoffset': '2224.24759874'})),
+      state('on', style({'stroke-dashoffset': '0'})),
+      state('fast-on', style({'stroke-dashoffset': '0'})),
       transition('* => on', [
         animate('20s')
       ]),
@@ -109,12 +109,12 @@ export class ControlCenterDevicePageComponent implements OnDestroy {
       this.deviceService.getDeviceResourceUsage(this.device.uuid).subscribe(resources => {
         this.deviceResources = resources;
 
-        this.webSocket.ms('service', ['list'], { device_uuid: this.device.uuid }).pipe(
+        this.webSocket.ms('service', ['list'], {device_uuid: this.device.uuid}).pipe(
           switchMap(response => from(response.services as { uuid: string; name: string; running: boolean }[])),
           filter(service => service.running),
           flatMap(service =>
             this.deviceService.getServiceResourceUsage(service.uuid).pipe(map(serviceUsage =>
-              ({ service: service, usage: new ResourceUsage(serviceUsage).relativeToDevice(this.deviceResources) })
+              ({service: service, usage: new ResourceUsage(serviceUsage).relativeToDevice(this.deviceResources)})
             ))),
           toArray(),
           map(serviceUsages => serviceUsages.sort((a, b) => a.service.name.localeCompare(b.service.name)))

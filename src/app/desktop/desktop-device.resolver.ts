@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
-import { Device } from '../api/devices/device';
-import { EMPTY, Observable, of } from 'rxjs';
-import { DeviceService } from '../api/devices/device.service';
-import { catchError, flatMap } from 'rxjs/operators';
-import { WebsocketService } from '../websocket.service';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
+import {Device} from '../api/devices/device';
+import {EMPTY, Observable, of} from 'rxjs';
+import {DeviceService} from '../api/devices/device.service';
+import {catchError, flatMap} from 'rxjs/operators';
+import {WebsocketService} from '../websocket.service';
 
 @Injectable({
   providedIn: 'root'

@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { catchError, first, flatMap, map } from 'rxjs/operators';
-import { Observable, of, Subject, throwError } from 'rxjs';
-import { environment } from '../environments/environment';
-import { v4 as randomUUID } from 'uuid';
-import { Account } from '../dataclasses/account';
+import {Injectable} from '@angular/core';
+import {webSocket, WebSocketSubject} from 'rxjs/webSocket';
+import {catchError, first, flatMap, map} from 'rxjs/operators';
+import {Observable, of, Subject, throwError} from 'rxjs';
+import {environment} from '../environments/environment';
+import {v4 as randomUUID} from 'uuid';
+import {Account} from '../dataclasses/account';
 
 @Injectable({
   providedIn: 'root'
@@ -73,7 +73,7 @@ export class WebsocketService {
   }
 
   close() {
-    this.socketSubject.error({ code: 4000, reason: 'client-close' });
+    this.socketSubject.error({code: 4000, reason: 'client-close'});
   }
 
   subscribeNotification<T>(notify_id: string): Subject<Notification<T>> {
@@ -117,7 +117,7 @@ export class WebsocketService {
   }
 
   refreshAccountInfo(): Observable<Account> {
-    return this.request({ action: 'info' }).pipe(map(data => {
+    return this.request({action: 'info'}).pipe(map(data => {
       this.account.name = data['name'];
       this.account.uuid = data['uuid'];
       this.account.created = data['created'];
@@ -133,7 +133,7 @@ export class WebsocketService {
     } else if (localStorage.getItem('token') == null) {
       return of(false);
     } else {
-      return this.request({ action: 'session', token: localStorage.getItem('token') }).pipe(
+      return this.request({action: 'session', token: localStorage.getItem('token')}).pipe(
         flatMap(() => this.refreshAccountInfo().pipe(map(() => {
           this.loggedIn = true;
           return true;
@@ -166,7 +166,7 @@ export class WebsocketService {
       const subject = this.notification_subjects[message['notify-id']];
 
       if (subject != null) {
-        subject.next({ data: message['data'], device_uuid: message['device_uuid'], origin: message['origin'] });
+        subject.next({data: message['data'], device_uuid: message['device_uuid'], origin: message['origin']});
       }
     }
   }

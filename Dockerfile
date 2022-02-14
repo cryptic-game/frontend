@@ -29,6 +29,6 @@ RUN chown -R nginx:nginx /usr/share/nginx/html/
 
 COPY docker-write-api-file.sh /docker-entrypoint.d/
 
-RUN chmod +x /docker-entrypoint.d/docker-write-api-file.sh && apk add jq
+RUN chmod +x /docker-entrypoint.d/docker-write-api-file.sh && apk add --no-cache jq
 
 CMD ["nginx", "-g", "daemon off;"]

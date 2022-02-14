@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
-import { HardwareService } from '../../api/hardware/hardware.service';
-import { EMPTY, Observable } from 'rxjs';
-import { DeviceHardware } from '../../api/hardware/device-hardware';
-import { catchError } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
+import {HardwareService} from '../../api/hardware/hardware.service';
+import {EMPTY, Observable} from 'rxjs';
+import {DeviceHardware} from '../../api/hardware/device-hardware';
+import {catchError} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

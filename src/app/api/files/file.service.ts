@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { WebsocketService } from '../../websocket.service';
-import { combineLatest, Observable, of, throwError } from 'rxjs';
-import { catchError, flatMap, map, take } from 'rxjs/operators';
-import { File } from './file';
-import { Path } from './path';
+import {Injectable} from '@angular/core';
+import {WebsocketService} from '../../websocket.service';
+import {combineLatest, Observable, of, throwError} from 'rxjs';
+import {catchError, flatMap, map, take} from 'rxjs/operators';
+import {File} from './file';
+import {Path} from './path';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class FileService {
   }
 
   getFiles(deviceUUID: string, parentUUID: string = Path.ROOT!): Observable<File[]> {
-    return this.webSocket.ms('device', ['file', 'all'], { device_uuid: deviceUUID, parent_dir_uuid: parentUUID })
+    return this.webSocket.ms('device', ['file', 'all'], {device_uuid: deviceUUID, parent_dir_uuid: parentUUID})
       .pipe(map((response: any) => {
         return response['files'];
       }));
@@ -34,7 +34,14 @@ export class FileService {
   }
 
   getRootFile(deviceUUID: string): File {
-    return { content: '', device: deviceUUID, filename: '', is_directory: true, parent_dir_uuid: Path.ROOT!, uuid: Path.ROOT! };
+    return {
+      content: '',
+      device: deviceUUID,
+      filename: '',
+      is_directory: true,
+      parent_dir_uuid: Path.ROOT!,
+      uuid: Path.ROOT!
+    };
   }
 
   getFile(deviceUUID: string, fileUUID: string): Observable<File> {
@@ -42,7 +49,7 @@ export class FileService {
       return of(this.getRootFile(deviceUUID));
     }
 
-    return this.webSocket.ms('device', ['file', 'info'], { device_uuid: deviceUUID, file_uuid: fileUUID });
+    return this.webSocket.ms('device', ['file', 'info'], {device_uuid: deviceUUID, file_uuid: fileUUID});
   }
 
   move(deviceUUID: string, fileUUID: string, parentUUID: string, filename: string): Observable<File> {
@@ -55,11 +62,15 @@ export class FileService {
   }
 
   changeFileContent(deviceUUID: string, fileUUID: string, content: string): Observable<File> {
-    return this.webSocket.ms('device', ['file', 'update'], { device_uuid: deviceUUID, file_uuid: fileUUID, content: content });
+    return this.webSocket.ms('device', ['file', 'update'], {
+      device_uuid: deviceUUID,
+      file_uuid: fileUUID,
+      content: content
+    });
   }
 
   deleteFile(deviceUUID: string, fileUUID: string): Observable<any> {
-    return this.webSocket.ms('device', ['file', 'delete'], { device_uuid: deviceUUID, file_uuid: fileUUID });
+    return this.webSocket.ms('device', ['file', 'delete'], {device_uuid: deviceUUID, file_uuid: fileUUID});
   }
 
   createFile(deviceUUID: string, name: string, content = '', parentUUID: string = Path.ROOT!): Observable<File> {

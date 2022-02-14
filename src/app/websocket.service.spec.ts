@@ -1,7 +1,7 @@
-import { inject, TestBed } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
-import { WebsocketService } from './websocket.service';
-import { of, throwError } from 'rxjs';
+import {WebsocketService} from './websocket.service';
+import {of, throwError} from 'rxjs';
 
 describe('WebsocketService', () => {
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe('WebsocketService', () => {
         created: 262476,
         last: 124215
       };
-      const infoResponse = { ...testAccount, online: 15 };
+      const infoResponse = {...testAccount, online: 15};
       spyOn(service, 'request').and.returnValue(of(infoResponse));
 
       service.refreshAccountInfo().subscribe(account => {
@@ -66,13 +66,13 @@ describe('WebsocketService', () => {
   it('#trySession() should refresh the account information and return true if the authentication using the token in the localstorage succeeded',
     inject([WebsocketService], (service: WebsocketService) => {
       const testToken = 'ca3657dc-b69c-45cb-97c9-9d863a5e93f4';
-      spyOn(service, 'request').and.returnValue(of({ token: testToken }));
+      spyOn(service, 'request').and.returnValue(of({token: testToken}));
       spyOn(service, 'refreshAccountInfo').and.returnValue(of({} as any));
       (localStorage.getItem as jasmine.Spy).and.returnValue(testToken);
       service.loggedIn = false;
 
       service.trySession().subscribe(success => {
-        expect(service.request).toHaveBeenCalledWith({ action: 'session', token: testToken });
+        expect(service.request).toHaveBeenCalledWith({action: 'session', token: testToken});
         expect(service.refreshAccountInfo).toHaveBeenCalled();
         expect(localStorage.getItem).toHaveBeenCalledWith('token');
         expect(success).toBeTrue();
@@ -90,7 +90,7 @@ describe('WebsocketService', () => {
       service.loggedIn = false;
 
       service.trySession().subscribe(success => {
-        expect(service.request).toHaveBeenCalledWith({ action: 'session', token: testToken });
+        expect(service.request).toHaveBeenCalledWith({action: 'session', token: testToken});
         expect(service.refreshAccountInfo).not.toHaveBeenCalled();
         expect(localStorage.getItem).toHaveBeenCalledWith('token');
         expect(localStorage.removeItem).toHaveBeenCalledWith('token');

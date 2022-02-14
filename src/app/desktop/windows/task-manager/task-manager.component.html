@@ -12,8 +12,8 @@
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
-                <div [style.height.%]="utilization.cpu * 100" class="indicator usage-indicator"
-                     [class.high-usage]="utilization.cpu >= 0.8"></div>
+                <div [class.high-usage]="utilization.cpu >= 0.8" [style.height.%]="utilization.cpu * 100"
+                     class="indicator usage-indicator"></div>
               </div>
               <p style="text-align: center; margin: 0;">{{utilization.cpu | percent}}</p>
             </div>
@@ -30,8 +30,8 @@
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
-                <div [style.height.%]="utilization.gpu * 100" class="indicator usage-indicator"
-                     [class.high-usage]="utilization.gpu >= 0.8"></div>
+                <div [class.high-usage]="utilization.gpu >= 0.8" [style.height.%]="utilization.gpu * 100"
+                     class="indicator usage-indicator"></div>
               </div>
               <p style="text-align: center; margin: 0;">{{utilization.gpu | percent}}</p>
             </div>
@@ -50,8 +50,8 @@
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
-                <div [style.height.%]="utilization.ram * 100" class="indicator usage-indicator"
-                     [class.high-usage]="utilization.ram >= 0.8"></div>
+                <div [class.high-usage]="utilization.ram >= 0.8" [style.height.%]="utilization.ram * 100"
+                     class="indicator usage-indicator"></div>
               </div>
               <p style="text-align: center; margin: 0;">{{utilization.ram | percent}}</p>
             </div>
@@ -68,8 +68,8 @@
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
-                <div [style.height.%]="utilization.disk * 100" class="indicator usage-indicator"
-                     [class.high-usage]="utilization.disk >= 0.8"></div>
+                <div [class.high-usage]="utilization.disk >= 0.8" [style.height.%]="utilization.disk * 100"
+                     class="indicator usage-indicator"></div>
               </div>
               <p style="text-align: center; margin: 0;">{{utilization.disk | percent}}</p>
             </div>
@@ -88,8 +88,8 @@
           <div class="chart-container">
             <div class="chart-container-2">
               <div class="chart">
-                <div [style.height.%]="utilization.network * 100" class="indicator usage-indicator"
-                     [class.high-usage]="utilization.network >= 0.8"></div>
+                <div [class.high-usage]="utilization.network >= 0.8" [style.height.%]="utilization.network * 100"
+                     class="indicator usage-indicator"></div>
               </div>
               <p style="text-align: center; margin: 0;">{{utilization.network | percent}}</p>
             </div>

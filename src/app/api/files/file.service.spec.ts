@@ -1,11 +1,11 @@
-import { inject, TestBed } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
-import { FileService } from './file.service';
+import {FileService} from './file.service';
 import * as rxjs from 'rxjs';
-import { Observable } from 'rxjs';
-import { WebsocketService } from '../../websocket.service';
-import { File } from './file';
-import { Path } from './path';
+import {Observable} from 'rxjs';
+import {WebsocketService} from '../../websocket.service';
+import {File} from './file';
+import {Path} from './path';
 
 describe('FileService', () => {
   const testUUIDs = [
@@ -43,7 +43,7 @@ describe('FileService', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        { provide: WebsocketService, useValue: webSocket }
+        {provide: WebsocketService, useValue: webSocket}
       ]
     });
   });
@@ -57,12 +57,12 @@ describe('FileService', () => {
       //     - 3 (file)
       //     - 4 (dir)
       //   - 5 (file)
-      { uuid: testUUIDs[0], parent_dir_uuid: Path.ROOT, is_directory: false, filename: '0' } as any,
-      { uuid: testUUIDs[1], parent_dir_uuid: Path.ROOT, is_directory: true, filename: '1' } as any,
-      { uuid: testUUIDs[2], parent_dir_uuid: testUUIDs[1], is_directory: true, filename: '2' } as any,
-      { uuid: testUUIDs[3], parent_dir_uuid: testUUIDs[2], is_directory: false, filename: '3' } as any,
-      { uuid: testUUIDs[4], parent_dir_uuid: testUUIDs[2], is_directory: true, filename: '4' } as any,
-      { uuid: testUUIDs[5], parent_dir_uuid: testUUIDs[1], is_directory: false, filename: '5' } as any,
+      {uuid: testUUIDs[0], parent_dir_uuid: Path.ROOT, is_directory: false, filename: '0'} as any,
+      {uuid: testUUIDs[1], parent_dir_uuid: Path.ROOT, is_directory: true, filename: '1'} as any,
+      {uuid: testUUIDs[2], parent_dir_uuid: testUUIDs[1], is_directory: true, filename: '2'} as any,
+      {uuid: testUUIDs[3], parent_dir_uuid: testUUIDs[2], is_directory: false, filename: '3'} as any,
+      {uuid: testUUIDs[4], parent_dir_uuid: testUUIDs[2], is_directory: true, filename: '4'} as any,
+      {uuid: testUUIDs[5], parent_dir_uuid: testUUIDs[1], is_directory: false, filename: '5'} as any,
     ];
   });
 
@@ -77,11 +77,14 @@ describe('FileService', () => {
   it('#getFiles() should make a request to device/file/all and return files of the response',
     inject([FileService], (service: FileService) => {
       const data = ['123', '24536', '6342'] as any;
-      webSocket.ms.and.returnValue(rxjs.of({ files: data }));
+      webSocket.ms.and.returnValue(rxjs.of({files: data}));
 
       service.getFiles(testUUIDs[0], testUUIDs[1]).subscribe(files => {
         expect(files).toEqual(data);
-        expect(webSocket.ms).toHaveBeenCalledWith('device', ['file', 'all'], { device_uuid: testUUIDs[0], parent_dir_uuid: testUUIDs[1] });
+        expect(webSocket.ms).toHaveBeenCalledWith('device', ['file', 'all'], {
+          device_uuid: testUUIDs[0],
+          parent_dir_uuid: testUUIDs[1]
+        });
       });
     })
   );
@@ -89,7 +92,10 @@ describe('FileService', () => {
   it('#getFiles() should use Path.ROOT as default if parentUUID is not specified',
     inject([FileService], (service: FileService) => {
       service.getFiles(testUUIDs[2]);
-      expect(webSocket.ms).toHaveBeenCalledWith('device', ['file', 'all'], { device_uuid: testUUIDs[2], parent_dir_uuid: Path.ROOT });
+      expect(webSocket.ms).toHaveBeenCalledWith('device', ['file', 'all'], {
+        device_uuid: testUUIDs[2],
+        parent_dir_uuid: Path.ROOT
+      });
     })
   );
 
@@ -142,13 +148,16 @@ describe('FileService', () => {
 
   it('#getFile() should make a request to device/file/info and return the response',
     inject([FileService], (service: FileService) => {
-      const data = { a: 'b', c: 'd', e: 'f', ghi: 'jkl' } as any;
+      const data = {a: 'b', c: 'd', e: 'f', ghi: 'jkl'} as any;
       webSocket.ms.and.returnValue(rxjs.of(data));
 
 
       service.getFile(testUUIDs[0], testUUIDs[1]).subscribe(response => {
         expect(response).toEqual(data);
-        expect(webSocket.ms).toHaveBeenCalledWith('device', ['file', 'info'], { device_uuid: testUUIDs[0], file_uuid: testUUIDs[1] });
+        expect(webSocket.ms).toHaveBeenCalledWith('device', ['file', 'info'], {
+          device_uuid: testUUIDs[0],
+          file_uuid: testUUIDs[1]
+        });
       });
     })
   );
@@ -179,7 +188,7 @@ describe('FileService', () => {
   it('#move() should make a request to device/file/move and return the response',
     inject([FileService], (service: FileService) => {
       const fileName = 'testfilename_xyz';
-      const data = { a: 'b', c: 'd', e: 'f', ghi: 'jkl' } as any;
+      const data = {a: 'b', c: 'd', e: 'f', ghi: 'jkl'} as any;
       webSocket.ms.and.returnValue(rxjs.of(data));
 
       service.move(testUUIDs[0], testUUIDs[1], testUUIDs[2], fileName).subscribe(response => {
@@ -197,7 +206,7 @@ describe('FileService', () => {
   it('#changeFileContent() should make a request to device/file/update and return the response',
     inject([FileService], (service: FileService) => {
       const fileContent = 'This is the content of a test file.';
-      const data = { a: 'b', c: 'd', e: 'f', ghi: 'jkl' } as any;
+      const data = {a: 'b', c: 'd', e: 'f', ghi: 'jkl'} as any;
       webSocket.ms.and.returnValue(rxjs.of(data));
 
       service.changeFileContent(testUUIDs[0], testUUIDs[1], fileContent).subscribe(response => {
@@ -213,12 +222,15 @@ describe('FileService', () => {
 
   it('#deleteFile() should make a request to device/file/delete and return the response',
     inject([FileService], (service: FileService) => {
-      const data = { a: 'b', c: 'd', e: 'f', ghi: 'jkl' } as any;
+      const data = {a: 'b', c: 'd', e: 'f', ghi: 'jkl'} as any;
       webSocket.ms.and.returnValue(rxjs.of(data));
 
       service.deleteFile(testUUIDs[0], testUUIDs[1]).subscribe(response => {
         expect(response).toEqual(data);
-        expect(webSocket.ms).toHaveBeenCalledWith('device', ['file', 'delete'], { device_uuid: testUUIDs[0], file_uuid: testUUIDs[1] });
+        expect(webSocket.ms).toHaveBeenCalledWith('device', ['file', 'delete'], {
+          device_uuid: testUUIDs[0],
+          file_uuid: testUUIDs[1]
+        });
       });
     })
   );
@@ -227,7 +239,7 @@ describe('FileService', () => {
     inject([FileService], (service: FileService) => {
       const fileName = 'some_file_name';
       const fileContent = 'This is an example file content.';
-      const data = { a: 'b', c: 'd', e: 'f', ghi: 'jkl' } as any;
+      const data = {a: 'b', c: 'd', e: 'f', ghi: 'jkl'} as any;
       webSocket.ms.and.returnValue(rxjs.of(data));
 
       service.createFile(testUUIDs[0], fileName, fileContent, testUUIDs[1]).subscribe(response => {
@@ -260,7 +272,7 @@ describe('FileService', () => {
   it('#createDirectory() should make a request to device/file/create with is_directory set to true and content set empty and return the response',
     inject([FileService], (service: FileService) => {
       const dirName = 'some_directory_name';
-      const data = { a: 'b', c: 'd', e: 'f', ghi: 'jkl' } as any;
+      const data = {a: 'b', c: 'd', e: 'f', ghi: 'jkl'} as any;
       webSocket.ms.and.returnValue(rxjs.of(data));
 
       service.createDirectory(testUUIDs[0], dirName, testUUIDs[1]).subscribe(response => {
@@ -493,7 +505,7 @@ describe('FileService', () => {
 
   it('#moveToPath() should throw a "destination_is_file" error if the destination path is not a directory',
     inject([FileService], (service: FileService) => {
-      spyOn(service, 'getFromPath').and.returnValue(rxjs.of({ is_directory: false } as any));
+      spyOn(service, 'getFromPath').and.returnValue(rxjs.of({is_directory: false} as any));
       const destPath = new Path([], '');
 
       service.moveToPath({} as any, destPath).subscribe(() => {
@@ -509,7 +521,12 @@ describe('FileService', () => {
   it('#moveToPath() should throw a "file_already_exists" error if a file with the same name already exists',
     inject([FileService], (service: FileService) => {
       const dest: File = {
-        content: '', device: testUUIDs[0], filename: '1', is_directory: true, parent_dir_uuid: Path.ROOT, uuid: testUUIDs[1]
+        content: '',
+        device: testUUIDs[0],
+        filename: '1',
+        is_directory: true,
+        parent_dir_uuid: Path.ROOT,
+        uuid: testUUIDs[1]
       };
       const source: File = {
         content: '', device: testUUIDs[0], filename: '2',
@@ -550,11 +567,11 @@ describe('FileService', () => {
       };
       spyOn(service, 'getFromPath').and.returnValue(rxjs.of(dest));
       spyOn(service, 'getFiles').and.returnValue(rxjs.of([]));
-      spyOn(service, 'move').and.returnValue(rxjs.of({ abc: 'def' } as any));
+      spyOn(service, 'move').and.returnValue(rxjs.of({abc: 'def'} as any));
       const destPath = new Path(['1'], testUUIDs[5]);
 
       service.moveToPath(source, destPath).subscribe(file => {
-        expect(file).toEqual({ abc: 'def' } as any);
+        expect(file).toEqual({abc: 'def'} as any);
       }, error => {
         fail(error.message);
       });
@@ -569,7 +586,7 @@ describe('FileService', () => {
     const renameFile: File = {
       content: 'abc', device: 'def', filename: 'ghi', is_directory: false, parent_dir_uuid: 'jkl', uuid: 'mno'
     };
-    const testResult = rxjs.of({ abc: 'def' }) as any;
+    const testResult = rxjs.of({abc: 'def'}) as any;
     spyOn(service, 'move').and.returnValue(testResult);
 
     expect(service.rename(renameFile, 'test')).toEqual(testResult);

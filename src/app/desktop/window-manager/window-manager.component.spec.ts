@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { WindowManagerComponent } from './window-manager.component';
-import { WindowFrameComponent } from '../window/window-frame.component';
-import { windowManagerMock } from '../../test-utils';
+import {WindowManagerComponent} from './window-manager.component';
+import {WindowFrameComponent} from '../window/window-frame.component';
+import {windowManagerMock} from '../../test-utils';
 
 describe('WindowManagerComponent', () => {
   let component: WindowManagerComponent;

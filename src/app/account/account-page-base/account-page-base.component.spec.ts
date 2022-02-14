@@ -1,5 +1,5 @@
-import { AccountPageBaseComponent } from './account-page-base.component';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {AccountPageBaseComponent} from './account-page-base.component';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 describe('AccountPageBaseComponent', () => {
   let component: AccountPageBaseComponent;

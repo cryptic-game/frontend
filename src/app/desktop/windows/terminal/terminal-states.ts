@@ -262,7 +262,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     const table = document.createElement('table');
     Object.entries(this.commands)
       .filter(command => !('hideFromHelp' in command[1]))
-      .map(([name, value]) => ({ name: name, description: value.description }))
+      .map(([name, value]) => ({name: name, description: value.description}))
       .map(command => `<tr><td>${command.name}</td><td>${command.description}</td></tr>`)
       .forEach(row => {
         table.innerHTML += row;

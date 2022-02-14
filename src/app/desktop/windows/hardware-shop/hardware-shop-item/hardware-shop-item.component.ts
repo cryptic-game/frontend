@@ -1,9 +1,19 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { HardwareShopService } from '../hardware-shop.service';
-import { HardwareShopItem } from '../hardware-shop-item';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Case, CPU, Disk, GPU, Mainboard, PartCategory, PowerPack, ProcessorCooler, RAM } from '../../../../api/hardware/hardware-parts';
-import { Subscription } from 'rxjs';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {HardwareShopService} from '../hardware-shop.service';
+import {HardwareShopItem} from '../hardware-shop-item';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {
+  Case,
+  CPU,
+  Disk,
+  GPU,
+  Mainboard,
+  PartCategory,
+  PowerPack,
+  ProcessorCooler,
+  RAM
+} from '../../../../api/hardware/hardware-parts';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop-item',
@@ -50,6 +60,16 @@ import { Subscription } from 'rxjs';
 export class HardwareShopItemComponent implements OnInit, OnDestroy {
   specifications: { [category: string]: { [property: string]: any } };
   specificationsVisible = false;
+  inCart = false;
+  private subscriptions = new Subscription();
+
+  constructor(public hardwareShopService: HardwareShopService) {
+    this.subscriptions.add(
+      hardwareShopService.updateCartItems.subscribe(() =>
+        this.inCart = this.hardwareShopService.cartContains(this.item)
+      )
+    );
+  }
 
   private _item: HardwareShopItem;
 
@@ -61,18 +81,6 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
     this._item = value;
     // @ts-ignore
     this.specifications = this.getSpecifications();
-  }
-
-  inCart = false;
-
-  private subscriptions = new Subscription();
-
-  constructor(public hardwareShopService: HardwareShopService) {
-    this.subscriptions.add(
-      hardwareShopService.updateCartItems.subscribe(() =>
-        this.inCart = this.hardwareShopService.cartContains(this.item)
-      )
-    );
   }
 
   ngOnInit() {
@@ -126,7 +134,7 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
           },
           'Expansion slots': mainboard.expansionSlots
             .reduce((acc, expansion) =>
-              ({ ...acc, [expansion.interface.join(' ').concat('.0')]: `${expansion.interfaceSlots}x` }), {}),
+              ({...acc, [expansion.interface.join(' ').concat('.0')]: `${expansion.interfaceSlots}x`}), {}),
           'Mainboard ports': {
             [mainboard.diskStorage.interface.map(type => type.join(' ').concat('.0')).join(', ')]: `${mainboard.diskStorage.diskSlots}x (internal)`,
             'USB': mainboard.usbPorts ? `${mainboard.usbPorts}x (external)` : undefined,

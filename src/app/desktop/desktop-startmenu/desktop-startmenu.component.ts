@@ -1,15 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { DesktopComponent } from '../desktop.component';
-import { WebsocketService } from 'src/app/websocket.service';
-import { AccountService } from '../../account/account.service';
-import { DeviceService } from '../../api/devices/device.service';
+import {Component, Input} from '@angular/core';
+import {DesktopComponent} from '../desktop.component';
+import {WebsocketService} from 'src/app/websocket.service';
+import {AccountService} from '../../account/account.service';
+import {DeviceService} from '../../api/devices/device.service';
 
 @Component({
   selector: 'app-desktop-startmenu',
   templateUrl: './desktop-startmenu.component.html',
   styleUrls: ['./desktop-startmenu.component.scss']
 })
-export class DesktopStartmenuComponent   {
+export class DesktopStartmenuComponent {
   @Input() parent: DesktopComponent;
 
   searchTerm = '';

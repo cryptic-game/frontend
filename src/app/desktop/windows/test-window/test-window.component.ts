@@ -1,5 +1,5 @@
-import { Component, OnInit, Type } from '@angular/core';
-import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
+import {Component, Type} from '@angular/core';
+import {WindowComponent, WindowDelegate} from '../../window/window-delegate';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -7,7 +7,7 @@ import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
   templateUrl: './test-window.component.html',
   styleUrls: ['./test-window.component.scss']
 })
-export class TestWindowComponent extends WindowComponent   {
+export class TestWindowComponent extends WindowComponent {
 
   constructor() {
     super();

@@ -1,8 +1,8 @@
-import { Position } from '../../dataclasses/position';
-import { Program } from '../../dataclasses/program';
-import { Injectable } from '@angular/core';
-import { desktopDefinition } from '../../assets/desktop/definition';
-import { SettingService } from '../api/setting/setting.service';
+import {Position} from '../../dataclasses/position';
+import {Program} from '../../dataclasses/program';
+import {Injectable} from '@angular/core';
+import {desktopDefinition} from '../../assets/desktop/definition';
+import {SettingService} from '../api/setting/setting.service';
 
 @Injectable({
   providedIn: 'root'

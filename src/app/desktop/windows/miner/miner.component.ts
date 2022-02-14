@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit, Type } from '@angular/core';
-import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
-import { WebsocketService } from '../../../websocket.service';
-import { FormControl, Validators } from '@angular/forms';
-import { Observable, of, timer } from 'rxjs';
-import { catchError, debounce, map } from 'rxjs/operators';
+import {Component, OnInit, Type} from '@angular/core';
+import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/window-delegate';
+import {WebsocketService} from '../../../websocket.service';
+import {FormControl, Validators} from '@angular/forms';
+import {Observable, of, timer} from 'rxjs';
+import {catchError, debounce, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-miner',
@@ -20,7 +20,7 @@ export class MinerComponent extends WindowComponent implements OnInit {
   walletControl: FormControl = new FormControl('', [
     Validators.required, Validators.pattern(/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/)
   ]);
-  wallet: string|undefined;
+  wallet: string | undefined;
   errorMessage: string;
 
   minerPower: FormControl = new FormControl(0, [
@@ -144,10 +144,10 @@ export class MinerComponent extends WindowComponent implements OnInit {
     setTimeout(() => this.errorMessage = undefined!, 5000);
   }
 
-  private setWallet(uuid: string|undefined): void {
+  private setWallet(uuid: string | undefined): void {
     this.wallet = uuid;
     if (uuid) {
-      this.walletControl.setValue(uuid, { emitEvent: false });
+      this.walletControl.setValue(uuid, {emitEvent: false});
     }
   }
 
@@ -155,7 +155,7 @@ export class MinerComponent extends WindowComponent implements OnInit {
     this.power = power;
     this.active = power > 0;
     if (syncSlider) {
-      this.minerPower.setValue(power, { emitEvent: false });
+      this.minerPower.setValue(power, {emitEvent: false});
     }
   }
 }
@@ -165,7 +165,7 @@ export class MinerWindowDelegate extends WindowDelegate {
   public icon = 'assets/desktop/img/morphcoin_dark.svg';
   public type: Type<any> = MinerComponent;
 
-  public override constraints = new WindowConstraints({ singleInstance: true, resizable: false, maximizable: false });
+  public override constraints = new WindowConstraints({singleInstance: true, resizable: false, maximizable: false});
 
   constructor() {
     super();

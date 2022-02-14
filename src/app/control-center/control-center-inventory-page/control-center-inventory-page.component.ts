@@ -12,7 +12,7 @@ import {WebsocketService} from '../../websocket.service';
 })
 export class ControlCenterInventoryPageComponent {
   items: InventoryItemWithHardware[] = [];
-  tradeItem: InventoryItemWithHardware|undefined;
+  tradeItem: InventoryItemWithHardware | undefined;
 
   partCategoryIcons = {
     [PartCategory.MAINBOARD]: 'mainboard',

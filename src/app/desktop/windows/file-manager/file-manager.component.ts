@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit, Type, ViewChild } from '@angular/core';
-import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
-import { File } from '../../../api/files/file';
-import { Path } from '../../../api/files/path';
-import { FileService } from '../../../api/files/file.service';
-import { WebsocketService } from '../../../websocket.service';
-import { Subscription } from 'rxjs';
-import { WindowManager } from '../../window-manager/window-manager';
-import { EditorWindowDelegate } from '../editor/editor.component';
+import {Component, OnDestroy, OnInit, Type} from '@angular/core';
+import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/window-delegate';
+import {File} from '../../../api/files/file';
+import {Path} from '../../../api/files/path';
+import {FileService} from '../../../api/files/file.service';
+import {WebsocketService} from '../../../websocket.service';
+import {Subscription} from 'rxjs';
+import {WindowManager} from '../../window-manager/window-manager';
+import {EditorWindowDelegate} from '../editor/editor.component';
 
 @Component({
   selector: 'app-file-manager',
@@ -284,10 +284,10 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
 
       if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
         try {
-          await this.apiService.ms('currency', ['get'], { source_uuid: uuid, key: key }).toPromise();
+          await this.apiService.ms('currency', ['get'], {source_uuid: uuid, key: key}).toPromise();
           confirmed = await this.displayConfirm('Do you really want to delete this wallet? You will lose your coins.');
           if (confirmed) {
-            await this.apiService.ms('currency', ['delete'], { source_uuid: uuid, key: key }).toPromise();
+            await this.apiService.ms('currency', ['delete'], {source_uuid: uuid, key: key}).toPromise();
           }
         } catch (e) {
           // @ts-ignore
@@ -321,7 +321,7 @@ export class FileManagerWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/filemanager.svg';
   type: Type<any> = FileManagerComponent;
 
-  override constraints = new WindowConstraints({ minWidth: 330, minHeight: 280 });
+  override constraints = new WindowConstraints({minWidth: 330, minHeight: 280});
 
   constructor(public openDirectory?: File) {
     super();

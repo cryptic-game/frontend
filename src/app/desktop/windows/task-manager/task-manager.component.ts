@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
-import { WebsocketService } from '../../../websocket.service';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { HardwareService } from '../../../api/hardware/hardware.service';
-import { DeviceResources, ResourceUsage } from '../../../api/devices/device';
-import { DeviceHardware } from '../../../api/hardware/device-hardware';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/window-delegate';
+import {WebsocketService} from '../../../websocket.service';
+import {Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
+import {HardwareService} from '../../../api/hardware/hardware.service';
+import {DeviceResources, ResourceUsage} from '../../../api/devices/device';
+import {DeviceHardware} from '../../../api/hardware/device-hardware';
 
 @Component({
   selector: 'app-task-manager',
@@ -16,9 +16,9 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   resourceNotifySubscription: Subscription;
 
   deviceHardware: DeviceHardware;
-  cpu: { name?: string; frequencyMax: number } = { name: '', frequencyMax: 0 };
-  gpu: { name?: string; frequency: number } = { name: '', frequency: 0 };
-  ram = { totalMemory: 0, type: '' };
+  cpu: { name?: string; frequencyMax: number } = {name: '', frequencyMax: 0};
+  gpu: { name?: string; frequency: number } = {name: '', frequency: 0};
+  ram = {totalMemory: 0, type: ''};
   diskName = '';
   utilization: ResourceUsage = new ResourceUsage();
 
@@ -59,7 +59,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
 
       this.diskName = data.disk.length >= 1 ? data.disk[0].name! : 'Disk';
 
-      this.webSocket.ms('device', ['hardware', 'resources'], { device_uuid: this.delegate.device.uuid })
+      this.webSocket.ms('device', ['hardware', 'resources'], {device_uuid: this.delegate.device.uuid})
         .subscribe(resourceData => this.updateUtilization(resourceData, false));
     });
   }
@@ -77,7 +77,7 @@ export class TaskManagerWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/task-manager.svg';
   type = TaskManagerComponent;
 
-  override constraints = new WindowConstraints({ minWidth: 400, minHeight: 350 });
+  override constraints = new WindowConstraints({minWidth: 400, minHeight: 350});
 
   constructor() {
     super();

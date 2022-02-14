@@ -1,5 +1,5 @@
 import * as Parts from './hardware-parts';
-import { Part } from './hardware-parts';
+import {Part} from './hardware-parts';
 
 export class HardwareList {
   'start_pc': {

@@ -1,4 +1,4 @@
-import { HardwareShopCategory } from './hardware-shop-category';
+import {HardwareShopCategory} from './hardware-shop-category';
 
 export interface HardwareShopDelegate {
   selectedCategory: HardwareShopCategory;

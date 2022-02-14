@@ -1,9 +1,9 @@
-import { inject, TestBed } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
-import { ControlCenterGuard } from './control-center.guard';
-import { Router } from '@angular/router';
-import { WebsocketService } from '../websocket.service';
-import { Observable, of } from 'rxjs';
+import {ControlCenterGuard} from './control-center.guard';
+import {Router} from '@angular/router';
+import {WebsocketService} from '../websocket.service';
+import {Observable, of} from 'rxjs';
 
 describe('ControlCenterGuard', () => {
 
@@ -15,8 +15,8 @@ describe('ControlCenterGuard', () => {
     TestBed.configureTestingModule({
       providers: [
         ControlCenterGuard,
-        { provide: Router, useValue: router },
-        { provide: WebsocketService, useValue: webSocketService }
+        {provide: Router, useValue: router},
+        {provide: WebsocketService, useValue: webSocketService}
       ]
     });
   });

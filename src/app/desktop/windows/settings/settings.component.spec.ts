@@ -1,9 +1,9 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { SettingsComponent } from './settings.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { WebsocketService } from '../../../websocket.service';
-import { webSocketMock } from '../../../test-utils';
+import {SettingsComponent} from './settings.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {WebsocketService} from '../../../websocket.service';
+import {webSocketMock} from '../../../test-utils';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -13,7 +13,7 @@ describe('SettingsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [SettingsComponent],
       providers: [
-        { provide: WebsocketService, useValue: webSocketMock() }
+        {provide: WebsocketService, useValue: webSocketMock()}
       ],
       imports: [ReactiveFormsModule]
     })

@@ -1,5 +1,5 @@
-import { WindowDelegate } from '../window/window-delegate';
-import { Device } from '../../api/devices/device';
+import {WindowDelegate} from '../window/window-delegate';
+import {Device} from '../../api/devices/device';
 
 /**
  * The window manager maintains the open windows of a specific device.

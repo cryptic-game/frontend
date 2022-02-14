@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { WebsocketService } from '../../websocket.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AccountService } from '../../account/account.service';
+import {Component} from '@angular/core';
+import {WebsocketService} from '../../websocket.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AccountService} from '../../account/account.service';
 
 @Component({
   selector: 'app-control-center-settings-page',
@@ -34,7 +34,7 @@ export class ControlCenterSettingsPageComponent {
 
   changePassword() {
     if (this.passwordForm.valid) {
-      const { newPassword, passwordConfirm } = this.passwordForm.value;
+      const {newPassword, passwordConfirm} = this.passwordForm.value;
       if (newPassword !== passwordConfirm) {
         this.passwordError = 'The passwords do not match.';
         this.passwordChanged = false;
@@ -47,7 +47,7 @@ export class ControlCenterSettingsPageComponent {
         this.passwordError = '';
         this.passwordChanged = true;
         this.passwordStrength = 0;
-        this.passwordForm.reset({ newPassword: '', oldPassword: '', passwordConfirm: '' });
+        this.passwordForm.reset({newPassword: '', oldPassword: '', passwordConfirm: ''});
       }, error => {
         this.passwordChanged = false;
         if (error.message === 'permissions denied') {

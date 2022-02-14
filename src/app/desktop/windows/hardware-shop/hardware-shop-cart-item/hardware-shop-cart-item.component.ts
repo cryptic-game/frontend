@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { HardwareShopService } from '../hardware-shop.service';
-import { HardwareShopCartItem } from '../hardware-shop-cart-item';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {HardwareShopService} from '../hardware-shop.service';
+import {HardwareShopCartItem} from '../hardware-shop-cart-item';
 
 @Component({
   selector: 'app-hardware-shop-cart-item',
@@ -26,7 +26,7 @@ export class HardwareShopCartItemComponent implements OnInit {
     if (this.item.quantity == null) {
       this.item.quantity = 1;
     }
-    this.formGroup = this.formBuilder.group({ quantity: this.item.quantity });
+    this.formGroup = this.formBuilder.group({quantity: this.item.quantity});
 
     this.formGroup.valueChanges.subscribe(() => {
       const field = this.formGroup.get('quantity')!;

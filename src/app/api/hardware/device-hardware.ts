@@ -1,6 +1,6 @@
 import * as Parts from './hardware-parts';
-import { PartCategory } from './hardware-parts';
-import { Device } from '../devices/device';
+import {PartCategory} from './hardware-parts';
+import {Device} from '../devices/device';
 
 export class DeviceHardware {
   'mainboard': Parts.Mainboard = {
@@ -12,11 +12,11 @@ export class DeviceHardware {
     'cpuSlots': 0,
     'coreTemperatureControl': false,
     'usbPorts': 0,
-    'ram': { 'ramSlots': 0, 'maxRamSize': 0, 'ramTyp': [], 'frequency': [] },
+    'ram': {'ramSlots': 0, 'maxRamSize': 0, 'ramTyp': [], 'frequency': []},
     'graphicUnitOnBoard': null!,
     'expansionSlots': [],
-    'diskStorage': { 'diskSlots': 0, 'interface': [] },
-    'networkPort': { 'name': '', 'interface': '', 'speed': 0 },
+    'diskStorage': {'diskSlots': 0, 'interface': []},
+    'networkPort': {'name': '', 'interface': '', 'speed': 0},
     'power': 0
   };
   'cpu': Parts.CPU[] = [];

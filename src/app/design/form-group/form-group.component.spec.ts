@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { FormGroupComponent } from './form-group.component';
+import {FormGroupComponent} from './form-group.component';
 
 describe('FormGroupComponent', () => {
   let component: FormGroupComponent;

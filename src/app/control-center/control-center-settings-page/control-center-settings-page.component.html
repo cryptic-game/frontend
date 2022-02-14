@@ -2,14 +2,14 @@
 <p>Name: <span>{{apiService.account.name}}</span></p>
 <p>UUID: <span>{{apiService.account.uuid}}</span></p>
 <h2>Change password</h2>
-<form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="password-form">
+<form (ngSubmit)="changePassword()" [formGroup]="passwordForm" class="password-form">
   <label>
     Old password:
-    <input type="password" formControlName="oldPassword" autocomplete="password" placeholder="Password">
+    <input autocomplete="password" formControlName="oldPassword" placeholder="Password" type="password">
   </label>
   <label>
     New password:
-    <input type="password" formControlName="newPassword" autocomplete="new-password" placeholder="Password">
+    <input autocomplete="new-password" formControlName="newPassword" placeholder="Password" type="password">
   </label>
   <div class="strength">
     <div [class.red-box]="passwordStrength >= 1"></div>
@@ -20,9 +20,9 @@
   </div>
   <label>
     Confirm password:
-    <input type="password" formControlName="passwordConfirm" autocomplete="new-password" placeholder="Password">
+    <input autocomplete="new-password" formControlName="passwordConfirm" placeholder="Password" type="password">
   </label>
-  <input type="submit" value="Submit" [disabled]="passwordForm.invalid">
+  <input [disabled]="passwordForm.invalid" type="submit" value="Submit">
   <p>Your password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter
     and one number.</p>
   <p [hidden]="!passwordError" class="error">{{passwordError}}</p>

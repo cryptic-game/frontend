@@ -1,11 +1,11 @@
-import { Component, ElementRef, OnDestroy, OnInit, Type, ViewChild } from '@angular/core';
-import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
-import { WebsocketService } from '../../../websocket.service';
-import { FileService } from '../../../api/files/file.service';
-import { Path } from '../../../api/files/path';
-import { File } from '../../../api/files/file';
-import { Subscription } from 'rxjs';
-import { WindowManager } from '../../window-manager/window-manager';
+import {Component, ElementRef, OnDestroy, OnInit, Type, ViewChild} from '@angular/core';
+import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/window-delegate';
+import {WebsocketService} from '../../../websocket.service';
+import {FileService} from '../../../api/files/file.service';
+import {Path} from '../../../api/files/path';
+import {File} from '../../../api/files/file';
+import {Subscription} from 'rxjs';
+import {WindowManager} from '../../window-manager/window-manager';
 
 @Component({
   selector: 'app-editor',
@@ -14,7 +14,7 @@ import { WindowManager } from '../../window-manager/window-manager';
 })
 export class EditorComponent extends WindowComponent implements OnInit, OnDestroy {
 
-  @ViewChild('fileInput', { static: true }) fileInput: ElementRef;
+  @ViewChild('fileInput', {static: true}) fileInput: ElementRef;
 
   override delegate: EditorWindowDelegate;
 
@@ -133,12 +133,13 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
     this.changed_popup = false;
   }
 }
+
 export class EditorWindowDelegate extends WindowDelegate {
   title = 'Editor';
   icon = 'assets/desktop/img/editor.svg';
   type: Type<any> = EditorComponent;
 
-  override constraints = new WindowConstraints({ minWidth: 300, minHeight: 200 });
+  override constraints = new WindowConstraints({minWidth: 300, minHeight: 200});
 
   constructor(public openFile?: File) {
     super();

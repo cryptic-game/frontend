@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { WebsocketService } from '../../websocket.service';
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { Part, PartCategory } from './hardware-parts';
-import { DeviceHardware } from './device-hardware';
-import { HardwareList } from './hardware-list';
+import {Injectable} from '@angular/core';
+import {WebsocketService} from '../../websocket.service';
+import {Observable, of} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
+import {Part, PartCategory} from './hardware-parts';
+import {DeviceHardware} from './device-hardware';
+import {HardwareList} from './hardware-list';
 
 @Injectable({
   providedIn: 'root'
@@ -49,12 +49,12 @@ export class HardwareService {
   }
 
   getDeviceParts(device: string): Observable<DeviceHardware> {
-    return this.webSocket.ms('device', ['device', 'info'], { device_uuid: device }).pipe(
+    return this.webSocket.ms('device', ['device', 'info'], {device_uuid: device}).pipe(
       switchMap(data => this.getAvailableParts().pipe(map(() => data))),  // retrieve available parts if not saved yet
       map(data => {
         const hardware = new DeviceHardware(data);
 
-        for (const { hardware_element, hardware_type } of data['hardware']) {
+        for (const {hardware_element, hardware_type} of data['hardware']) {
           switch (hardware_type) {
             case 'mainboard':
               hardware.mainboard = this.hardwareAvailable.mainboard[hardware_element];

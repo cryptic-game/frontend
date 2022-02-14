@@ -1,4 +1,4 @@
-import { SettingService } from '../../../api/setting/setting.service';
+import {SettingService} from '../../../api/setting/setting.service';
 
 export abstract class SettingsEntry<T> {
   protected cached: T;

@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { ControlCenterDevicePageHardwareResolver } from './control-center-device-page-hardware.resolver';
-import { RouterTestingModule } from '@angular/router/testing';
-import { HardwareService } from '../../api/hardware/hardware.service';
+import {ControlCenterDevicePageHardwareResolver} from './control-center-device-page-hardware.resolver';
+import {RouterTestingModule} from '@angular/router/testing';
+import {HardwareService} from '../../api/hardware/hardware.service';
 
 describe('ControlCenterDevicePageHardwareResolver', () => {
   let hardwareService;
@@ -13,7 +13,7 @@ describe('ControlCenterDevicePageHardwareResolver', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
       providers: [
-        { provide: HardwareService, useValue: hardwareService }
+        {provide: HardwareService, useValue: hardwareService}
       ]
     });
     service = TestBed.inject(ControlCenterDevicePageHardwareResolver);

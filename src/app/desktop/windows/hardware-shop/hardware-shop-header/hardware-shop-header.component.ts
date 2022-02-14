@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { WalletAppService } from '../../wallet-app/wallet-app.service';
-import { HardwareShopService } from '../hardware-shop.service';
-import { Subscription } from 'rxjs';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
+import {WalletAppService} from '../../wallet-app/wallet-app.service';
+import {HardwareShopService} from '../hardware-shop.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop-header',

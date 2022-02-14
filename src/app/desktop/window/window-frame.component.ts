@@ -1,8 +1,8 @@
-import { Component, ComponentFactoryResolver, HostListener, Injector, Input, OnInit, ViewChild } from '@angular/core';
-import { WindowDelegate } from './window-delegate';
-import { WindowPlaceDirective } from './window-place.directive';
-import { GlobalCursorService } from '../../global-cursor.service';
-import { WindowManager } from '../window-manager/window-manager';
+import {Component, ComponentFactoryResolver, HostListener, Injector, Input, OnInit, ViewChild} from '@angular/core';
+import {WindowDelegate} from './window-delegate';
+import {WindowPlaceDirective} from './window-place.directive';
+import {GlobalCursorService} from '../../global-cursor.service';
+import {WindowManager} from '../window-manager/window-manager';
 
 @Component({
   selector: 'app-window-frame',
@@ -12,7 +12,7 @@ import { WindowManager } from '../window-manager/window-manager';
 export class WindowFrameComponent implements OnInit {
   cursorLock: number;
 
-  @ViewChild(WindowPlaceDirective, { static: true }) windowPlace: WindowPlaceDirective;
+  @ViewChild(WindowPlaceDirective, {static: true}) windowPlace: WindowPlaceDirective;
 
   @Input() delegate: WindowDelegate;
   @Input() windowManager: WindowManager;
@@ -36,8 +36,8 @@ export class WindowFrameComponent implements OnInit {
   loadWindowContent() {
     const inj = Injector.create({
       providers: [
-        { provide: WindowManager, useValue: this.windowManager },
-        { provide: WindowDelegate, useValue: this.delegate }
+        {provide: WindowManager, useValue: this.windowManager},
+        {provide: WindowDelegate, useValue: this.delegate}
       ],
       parent: this.injector
     });
@@ -238,7 +238,7 @@ export class WindowFrameComponent implements OnInit {
     }
   }
 
-  asElement(target: EventTarget) :Element{
+  asElement(target: EventTarget): Element {
     // @ts-ignore
     return target
   }

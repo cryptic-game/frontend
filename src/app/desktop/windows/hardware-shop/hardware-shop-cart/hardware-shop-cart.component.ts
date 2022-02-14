@@ -1,8 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
-import { HardwareShopService } from '../hardware-shop.service';
-import { WalletAppService } from '../../wallet-app/wallet-app.service';
-import { HardwareShopCartItem } from '../hardware-shop-cart-item';
-import { Subscription } from 'rxjs';
+import {Component, OnDestroy} from '@angular/core';
+import {HardwareShopService} from '../hardware-shop.service';
+import {WalletAppService} from '../../wallet-app/wallet-app.service';
+import {HardwareShopCartItem} from '../hardware-shop-cart-item';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop-cart',
