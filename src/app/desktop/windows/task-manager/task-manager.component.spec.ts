@@ -1,4 +1,3 @@
-/* eslint-disable jasmine/no-spec-dupes */
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TaskManagerComponent, TaskManagerWindowDelegate } from './task-manager.component';

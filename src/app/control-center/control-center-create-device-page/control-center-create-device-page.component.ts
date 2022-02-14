@@ -62,9 +62,6 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
       this.updateAvailableParts(items.inventoryItems));
   }
 
-  ngOnInit() {
-  }
-
   updateAvailableParts(items: InventoryItemWithHardware[]): any {
     this.cases = [];
     this.mainBoards = [];

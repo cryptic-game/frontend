@@ -25,7 +25,7 @@
              placeholder="Player UUID" required
              type="text">
     </label>
-    <input [disabled]="tradeItem == null" type="submit" value="!">
+    <input [disabled]="!tradeItem" type="submit" value="!">
     <span *ngIf="tradeErrorMessage" class="error-message">{{tradeErrorMessage}}</span>
   </form>
   <p>Your own UUID: <span class="uuid">{{apiService.account.uuid}}</span></p>

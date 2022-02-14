@@ -7,7 +7,7 @@ import { ControlCenterService } from './control-center.service';
   templateUrl: './control-center.component.html',
   styleUrls: ['./control-center.component.scss']
 })
-export class ControlCenterComponent implements OnInit {
+export class ControlCenterComponent   {
 
   menus: SidebarMenu[] = [
     new SidebarMenu(
@@ -22,9 +22,6 @@ export class ControlCenterComponent implements OnInit {
   ];
 
   constructor(private controlCenterService: ControlCenterService) {
-  }
-
-  ngOnInit(): void {
   }
 
 }

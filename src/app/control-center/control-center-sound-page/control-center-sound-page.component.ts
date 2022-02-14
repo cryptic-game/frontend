@@ -5,12 +5,5 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './control-center-sound-page.component.html',
   styleUrls: ['./control-center-sound-page.component.scss']
 })
-export class ControlCenterSoundPageComponent implements OnInit {
-
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
-
+export class ControlCenterSoundPageComponent   {
 }

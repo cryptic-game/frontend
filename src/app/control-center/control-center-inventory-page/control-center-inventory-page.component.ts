@@ -32,9 +32,6 @@ export class ControlCenterInventoryPageComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-  }
-
   getCategoryIconName(partCategory: PartCategory): string {
     return this.partCategoryIcons[partCategory] + '.svg';
   }

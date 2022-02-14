@@ -10,127 +10,32 @@
       ],
       "parserOptions": {
         "project": [
-          "tsconfig.json",
-          "e2e/tsconfig.json"
+          "tsconfig.json"
         ],
         "createDefaultProgram": true
       },
       "extends": [
         "plugin:@angular-eslint/recommended",
-        "plugin:@typescript-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "prefix": "app",
-            "style": "kebab-case",
-            "type": "element"
-          }
-        ],
         "@angular-eslint/directive-selector": [
           "error",
           {
+            "type": "attribute",
             "prefix": "app",
-            "style": "camelCase",
-            "type": "attribute"
+            "style": "camelCase"
           }
         ],
-        "@typescript-eslint/ban-types": [
-          "warn"
-        ],
-        "@typescript-eslint/no-inferrable-types": [
-          "warn"
-        ],
-        "@typescript-eslint/no-empty-function": "off",
-        "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/no-unused-vars": [
-          "warn",
-          {
-            "args": "none"
-          }
-        ],
-        "@angular-eslint/no-empty-lifecycle-method": "off",
-        "@typescript-eslint/member-delimiter-style": [
+        "@angular-eslint/component-selector": [
           "error",
           {
-            "multiline": {
-              "delimiter": "semi",
-              "requireLast": true
-            },
-            "singleline": {
-              "delimiter": "semi",
-              "requireLast": false
-            }
+            "type": "element",
+            "prefix": "app",
+            "style": "kebab-case"
           }
         ],
-        "curly": [
-          "error",
-          "all"
-        ],
-        "eol-last": [
-          "error",
-          "always"
-        ],
-        "no-multiple-empty-lines": "off",
-        "no-trailing-spaces": "error",
-        "quote-props": [
-          "error",
-          "consistent"
-        ],
-        "space-before-function-paren": [
-          "error",
-          {
-            "anonymous": "never",
-            "asyncArrow": "always",
-            "named": "never"
-          }
-        ],
-        "semi": "off",
-        "@typescript-eslint/semi": "error",
-        "eqeqeq": [
-          "error",
-          "smart"
-        ],
-        "quotes": "off",
-        "@typescript-eslint/quotes": [
-          "error",
-          "single"
-        ],
-        "indent": "off",
-        "@typescript-eslint/indent": [
-          "error",
-          2,
-          {
-            "SwitchCase": 1,
-            "CallExpression": {
-              "arguments": "off"
-            },
-            "FunctionDeclaration": {
-              "parameters": "first"
-            },
-            "FunctionExpression": {
-              "parameters": "first"
-            }
-          }
-        ],
-        "object-curly-spacing": "off",
-        "@typescript-eslint/object-curly-spacing": [
-          "error",
-          "always"
-        ],
-        "object-shorthand": [
-          "warn",
-          "consistent-as-needed"
-        ],
-        "no-lonely-if": "warn",
-        "@typescript-eslint/await-thenable": "error",
-        "@typescript-eslint/no-floating-promises": "warn",
-        "@typescript-eslint/no-for-in-array": "error",
-        "@typescript-eslint/no-misused-promises": "error",
-        "@typescript-eslint/no-unnecessary-type-assertion": "warn"
+        "object-curly-spacing": "off"
       }
     },
     {
@@ -140,33 +45,7 @@
       "extends": [
         "plugin:@angular-eslint/template/recommended"
       ],
-      "rules": {
-        "@angular-eslint/template/eqeqeq": [
-          "error",
-          {
-            "allowNullOrUndefined": true
-          }
-        ]
-      }
-    },
-    {
-      "files": [
-        "*.spec.ts"
-      ],
-      "plugins": [
-        "jasmine"
-      ],
-      "env": {
-        "jasmine": true
-      },
-      "extends": [
-        "plugin:jasmine/recommended"
-      ],
-      "rules": {
-        "@typescript-eslint/no-floating-promises": "off",
-        "jasmine/new-line-before-expect": "off",
-        "jasmine/prefer-toHaveBeenCalledWith": "off"
-      }
+      "rules": {}
     }
   ]
 }

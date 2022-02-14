@@ -7,15 +7,11 @@ import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
   templateUrl: './test-window.component.html',
   styleUrls: ['./test-window.component.scss']
 })
-export class TestWindowComponent extends WindowComponent implements OnInit {
+export class TestWindowComponent extends WindowComponent   {
 
   constructor() {
     super();
   }
-
-  ngOnInit() {
-  }
-
 }
 
 export class TestWindowDelegate extends WindowDelegate {

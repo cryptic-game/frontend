@@ -41,9 +41,6 @@ export class ControlCenterSidebarMenuComponent implements OnInit {
   constructor(private router: Router) {
   }
 
-  ngOnInit(): void {
-  }
-
   menuClicked() {
     if (this.menu.items.length !== 0) {
       this.expanded = !this.expanded;

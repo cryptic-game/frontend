@@ -10,7 +10,7 @@ import { catchError, debounce, map } from 'rxjs/operators';
   templateUrl: './miner.component.html',
   styleUrls: ['./miner.component.scss']
 })
-export class MinerComponent extends WindowComponent implements OnInit, OnDestroy {
+export class MinerComponent extends WindowComponent implements OnInit {
 
   active = false;
   power = 0.0;
@@ -65,9 +65,6 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
         }
       });
     });
-  }
-
-  ngOnDestroy() {
   }
 
   get() {

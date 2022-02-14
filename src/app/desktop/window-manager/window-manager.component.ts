@@ -8,7 +8,7 @@ import { WindowManager } from './window-manager';
   templateUrl: './window-manager.component.html',
   styleUrls: ['./window-manager.component.scss']
 })
-export class WindowManagerComponent implements OnInit {
+export class WindowManagerComponent   {
   @Input() active;
 
   windowManager: WindowManager;
@@ -19,8 +19,5 @@ export class WindowManagerComponent implements OnInit {
   @Input()
   set device(device: Device) {
     this.windowManager = this.windowManagerService.forDevice(device);
-  }
-
-  ngOnInit() {
   }
 }

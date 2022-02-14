@@ -9,7 +9,7 @@ import { DeviceService } from '../../api/devices/device.service';
   templateUrl: './desktop-startmenu.component.html',
   styleUrls: ['./desktop-startmenu.component.scss']
 })
-export class DesktopStartmenuComponent implements OnInit {
+export class DesktopStartmenuComponent   {
   @Input() parent: DesktopComponent;
 
   searchTerm = '';
@@ -17,9 +17,6 @@ export class DesktopStartmenuComponent implements OnInit {
   constructor(public websocket: WebsocketService,
               private accountService: AccountService,
               private deviceService: DeviceService) {
-  }
-
-  ngOnInit() {
   }
 
   search(term: string) {

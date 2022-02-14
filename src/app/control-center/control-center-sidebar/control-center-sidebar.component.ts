@@ -8,7 +8,7 @@ import { AccountService } from '../../account/account.service';
   templateUrl: './control-center-sidebar.component.html',
   styleUrls: ['./control-center-sidebar.component.scss']
 })
-export class ControlCenterSidebarComponent implements OnInit {
+export class ControlCenterSidebarComponent   {
   @ViewChildren(ControlCenterSidebarMenuComponent) menuComponents: ControlCenterSidebarMenuComponent[];
 
   @Input() menus: SidebarMenu[];
@@ -16,11 +16,7 @@ export class ControlCenterSidebarComponent implements OnInit {
   constructor(public apiService: WebsocketService, private accountService: AccountService) {
   }
 
-  ngOnInit(): void {
-  }
-
   logout(): void {
     this.accountService.logout();
   }
-
 }

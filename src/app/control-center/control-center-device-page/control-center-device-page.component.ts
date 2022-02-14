@@ -99,9 +99,6 @@ export class ControlCenterDevicePageComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
-  }
-
   ngOnDestroy() {
     this.powerButton.animating = false;
   }

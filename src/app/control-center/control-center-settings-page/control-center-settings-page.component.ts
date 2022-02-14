@@ -32,9 +32,6 @@ export class ControlCenterSettingsPageComponent implements OnInit {
     this.passwordForm.valueChanges.subscribe(data => this.passwordStrength = this.accountService.checkPassword(data.newPassword));
   }
 
-  ngOnInit(): void {
-  }
-
   changePassword() {
     if (this.passwordForm.valid) {
       const { newPassword, passwordConfirm } = this.passwordForm.value;
