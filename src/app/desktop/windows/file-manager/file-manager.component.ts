@@ -36,13 +36,13 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
 
   ngOnInit() {
     this.currentFolder = this.fileService.getRootFile(this.delegate.device.uuid);
-    this.goToFolderUUID(this.delegate.openDirectory?.is_directory ? this.delegate.openDirectory.uuid : Path.ROOT!).then();
+    this.goToFolderUUID(this.delegate.openDirectory?.is_directory ? this.delegate.openDirectory.uuid : Path.ROOT!);
 
     this.fileUpdateSubscription = this.apiService
       .subscribeNotification<{ created: string[]; changed: string[]; deleted: string[] }>('file-update')
       .subscribe(notification => {
         if (notification.data.created || notification.data.changed) {
-          this.updateFiles().then();
+          this.updateFiles();
         } else if (notification.data.deleted) {
           this.currentFolderFiles = this.currentFolderFiles.filter(file => file.uuid in notification.data.deleted);
         }
@@ -80,27 +80,60 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     this.confirmResolve = undefined!;
   }
 
-  async updateFiles() {
-    this.currentFolderFiles = (await this.fileService.getFiles(this.delegate.device.uuid, this.currentFolder.uuid).toPromise())!;
+  updateFiles() {
+    this.fileService.getFiles(this.delegate.device.uuid, this.currentFolder.uuid).subscribe({
+      next: (result: File[]) => this.currentFolderFiles = result
+    });
   }
 
-  async navigateByAddress() {
-    try {
-      const file = (await this.fileService.getFromPath(
-        this.delegate.device.uuid,
-        Path.fromString(this.addressBarURL, Path.ROOT!)
-      ).toPromise())!;
-      if (file.is_directory) {
-        this.currentFolder = file;
-        await this.updateFiles();
+  navigateByAddress() {
+    this.fileService.getFromPath(
+      this.delegate.device.uuid,
+      Path.fromString(this.addressBarURL, Path.ROOT!)
+    ).subscribe({
+      next: (result: File) => {
+        if (result.is_directory) {
+          this.currentFolder = result;
+          this.updateFiles();
+        }
+      },
+      error: (e: Error) => {
+        // @ts-ignore
+        if (e.message === 'file_not_found') {
+          this.displayError('The specified folder was not found.');
+          // @ts-ignore
+        } else if (e.message === 'invalid_path') {
+          this.displayError('The specified path is not valid.');
+        } else {
+          // @ts-ignore
+          this.displayError(e.message);
+          console.warn(e);
+        }
       }
+    })
+
+  }
+
+  updateAddressBar() {
+    this.fileService.getAbsolutePath(this.delegate.device.uuid, this.currentFolder.uuid).subscribe({
+      next: (result: string[]) => {
+        this.addressBarURL = new Path(result).toString();
+      }
+    })
+  }
+
+  goToFolderUUID(uuid: string) {
+    try {
+      this.fileService.getFile(this.delegate.device.uuid, uuid).subscribe({
+        next: (result: File) => this.currentFolder = result
+      })
+
+      this.updateFiles();
+      this.updateAddressBar();
     } catch (e) {
       // @ts-ignore
       if (e.message === 'file_not_found') {
         this.displayError('The specified folder was not found.');
-        // @ts-ignore
-      } else if (e.message === 'invalid_path') {
-        this.displayError('The specified path is not valid.');
       } else {
         // @ts-ignore
         this.displayError(e.message);
@@ -109,30 +142,8 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     }
   }
 
-  async updateAddressBar() {
-    const url = (await this.fileService.getAbsolutePath(this.delegate.device.uuid, this.currentFolder.uuid).toPromise())!;
-    this.addressBarURL = new Path(url).toString();
-  }
-
-  async goToFolderUUID(uuid: string) {
-    try {
-      this.currentFolder = (await this.fileService.getFile(this.delegate.device.uuid, uuid).toPromise())!;
-      await this.updateFiles();
-      await this.updateAddressBar();
-    } catch (e) {
-      // @ts-ignore
-      if (e.message === 'file_not_found') {
-        this.displayError('The specified folder was not found.');
-      } else {
-        // @ts-ignore
-        this.displayError(e.message);
-        console.warn(e);
-      }
-    }
-  }
-
-  async goToParent() {
-    await this.goToFolderUUID(this.currentFolder.parent_dir_uuid);
+  goToParent() {
+    this.goToFolderUUID(this.currentFolder.parent_dir_uuid);
   }
 
   dragStart(event: DragEvent, source: File) {
@@ -151,125 +162,138 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     }
   }
 
-  async dropMove(event: { event: Event; item: { file: File; destinationUUID: string } }) {
+  dropMove(event: { event: Event; item: { file: File; destinationUUID: string } }) {
     const file = event.item?.file;
     const destinationUUID = event.item?.destinationUUID;
 
-    try {
-      await this.fileService.move(this.delegate.device.uuid, file.uuid, destinationUUID, file.filename).toPromise();
-    } catch (e) {
-      // @ts-ignore
-      if (e.message === 'file_already_exists') {
-        this.displayError('A file with the same name already exists.');
+    this.fileService.move(this.delegate.device.uuid, file.uuid, destinationUUID, file.filename).subscribe({
+      error: (e: Error) => {
         // @ts-ignore
-      } else if (e.message === 'file_not_found') {
-        this.displayError('The dragged file was not found.');
-      } else {
-        // @ts-ignore
-        this.displayError(e.message);
-        console.warn(e);
+        if (e.message === 'file_already_exists') {
+          this.displayError('A file with the same name already exists.');
+          // @ts-ignore
+        } else if (e.message === 'file_not_found') {
+          this.displayError('The dragged file was not found.');
+        } else {
+          // @ts-ignore
+          this.displayError(e.message);
+          console.warn(e);
+        }
       }
-    }
+    });
+
   }
 
-  async dropCopy(event: { event: Event; item: { file: File; destinationUUID: string } }) {
+  dropCopy(event: { event: Event; item: { file: File; destinationUUID: string } }) {
     const file = event.item?.file;
     const destinationUUID = event.item?.destinationUUID;
 
-    try {
-      await this.fileService.createFile(this.delegate.device.uuid, file.filename, file.content, destinationUUID).toPromise();
-    } catch (e) {
-      // @ts-ignore
-      if (e.message === 'file_already_exists') {
-        this.displayError('A file with the same name already exists.');
-        // @ts-ignore
-      } else if (e.message === 'file_not_found') {
-        this.displayError('The dragged file was not found.');
-      } else {
-        // @ts-ignore
-        this.displayError(e.message);
-        console.warn(e);
-      }
-    }
+    this.fileService
+      .createFile(this.delegate.device.uuid, file.filename, file.content, destinationUUID)
+      .subscribe({
+        error: (e: Error) => {
+          // @ts-ignore
+          if (e.message === 'file_already_exists') {
+            this.displayError('A file with the same name already exists.');
+            // @ts-ignore
+          } else if (e.message === 'file_not_found') {
+            this.displayError('The dragged file was not found.');
+          } else {
+            // @ts-ignore
+            this.displayError(e.message);
+            console.warn(e);
+          }
+        }
+      })
+
+
   }
 
-  async dragDrop(event: DragEvent, destinationUUID: string) {
+  dragDrop(event: DragEvent, destinationUUID: string) {
     const sourceUUID = event.dataTransfer?.getData('cryptic/file')!;
 
     event.stopPropagation();
 
-    try {
-      const sourceFile = (await this.fileService.getFile(this.delegate.device.uuid, sourceUUID).toPromise())!;
-      if (sourceFile.parent_dir_uuid === destinationUUID) {
-        return;
+    this.fileService.getFile(this.delegate.device.uuid, sourceUUID).subscribe({
+        next: (result: File) => {
+          if (result.parent_dir_uuid === destinationUUID) {
+            return;
+          }
+          //TODO Implement context menu
+          // this.contextMenuService.show.next({
+          //   contextMenu: this.dragDropMenu,
+          //   item: { file: sourceFile, destinationUUID: destinationUUID },
+          //   event: event
+          // });
+        },
+        error: () => {
+          return;
+        }
       }
-
-      // this.contextMenuService.show.next({
-      //   contextMenu: this.dragDropMenu,
-      //   item: { file: sourceFile, destinationUUID: destinationUUID },
-      //   event: event
-      // });
-    } catch (e) {
-      return;
-    }
+    );
   }
 
-  async rename(file: File, newName: string) {
+  rename(file: File, newName: string) {
     if (file.filename === newName) {
       return;
     }
 
-    try {
-      Object.assign(file, await this.fileService.rename(file, newName).toPromise());
-    } catch (e) {
-      // @ts-ignore
-      if (e.message === 'file_already_exists') {
-        this.displayError('A file with the same name already exists.');
-        // @ts-ignore
-      } else if (e.message === 'invalid_input_data') {
-        this.displayError('The specified name is not valid.');
-      } else {
-        // @ts-ignore
-        this.displayError(e.message);
-        console.warn(e);
-      }
-    }
+    Object.assign(
+      file,
+      this.fileService.rename(file, newName).subscribe({
+        error: (e: Error) => {
+          // @ts-ignore
+          if (e.message === 'file_already_exists') {
+            this.displayError('A file with the same name already exists.');
+            // @ts-ignore
+          } else if (e.message === 'invalid_input_data') {
+            this.displayError('The specified name is not valid.');
+          } else {
+            // @ts-ignore
+            this.displayError(e.message);
+            console.warn(e);
+          }
+        }
+      })
+    );
   }
 
-  async newFile(name: string) {
-    try {
-      await this.fileService.createFile(this.delegate.device.uuid, name, '', this.currentFolder.uuid).toPromise();
-    } catch (e) {
-      // @ts-ignore
-      if (e.message === 'file_already_exists') {
-        this.displayError('A file with the same name already exists.');
-        // @ts-ignore
-      } else if (e.message === 'invalid_input_data') {
-        this.displayError('The specified name is not valid.');
-      } else {
-        // @ts-ignore
-        this.displayError(e.message);
-        console.warn(e);
-      }
-    }
+  newFile(name: string) {
+    this.fileService
+      .createFile(this.delegate.device.uuid, name, '', this.currentFolder.uuid)
+      .subscribe({
+        error: (e: Error) => {
+          // @ts-ignore
+          if (e.message === 'file_already_exists') {
+            this.displayError('A file with the same name already exists.');
+            // @ts-ignore
+          } else if (e.message === 'invalid_input_data') {
+            this.displayError('The specified name is not valid.');
+          } else {
+            // @ts-ignore
+            this.displayError(e.message);
+            console.warn(e);
+          }
+        }
+      });
   }
 
-  async newFolder(name: string) {
-    try {
-      await this.fileService.createDirectory(this.delegate.device.uuid, name, this.currentFolder.uuid).toPromise();
-    } catch (e) {
-      // @ts-ignore
-      if (e.message === 'file_already_exists') {
-        this.displayError('A file with the same name already exists.');
+  newFolder(name: string) {
+    this.fileService.createDirectory(this.delegate.device.uuid, name, this.currentFolder.uuid).subscribe({
+      error: (e: Error) => {
         // @ts-ignore
-      } else if (e.message === 'invalid_input_data') {
-        this.displayError('The specified folder name is not valid.');
-      } else {
-        // @ts-ignore
-        this.displayError(e.message);
-        console.warn(e);
+        if (e.message === 'file_already_exists') {
+          this.displayError('A file with the same name already exists.');
+          // @ts-ignore
+        } else if (e.message === 'invalid_input_data') {
+          this.displayError('The specified folder name is not valid.');
+        } else {
+          // @ts-ignore
+          this.displayError(e.message);
+          console.warn(e);
+        }
       }
-    }
+    });
   }
 
   async delete(file: File) {
@@ -303,7 +327,7 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     }
 
     if (confirmed) {
-      await this.fileService.deleteFile(this.delegate.device.uuid, file.uuid).toPromise();
+      this.fileService.deleteFile(this.delegate.device.uuid, file.uuid).subscribe();
     }
   }
 
@@ -311,9 +335,6 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     this.windowManager.openWindow(new EditorWindowDelegate(file));
   }
 
-  openInNewWindow(folder: File) {
-    this.windowManager.openWindow(new FileManagerWindowDelegate(folder));
-  }
 }
 
 export class FileManagerWindowDelegate extends WindowDelegate {

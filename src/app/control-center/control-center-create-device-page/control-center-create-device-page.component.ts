@@ -16,6 +16,7 @@ import {
 import {ActivatedRoute, Data, Router} from '@angular/router';
 import {InventoryItemWithHardware} from '../../api/inventory/inventory-item';
 import {ControlCenterService} from '../control-center.service';
+import {Device} from "../../api/devices/device";
 
 
 @Component({
@@ -282,11 +283,16 @@ export class ControlCenterCreateDevicePageComponent {
     try {
       const selectedHardware = this.getSelectedHardware();
 
-      this.deviceService.checkHardwareCompatibility(selectedHardware).subscribe(result => {
-        console.log('Performance: ' + result.performance);
-        this.error = '';
-        this.info = 'The configuration is compatible';
-      }, error => this.displayError(error));
+      this.deviceService.checkHardwareCompatibility(selectedHardware).subscribe({
+        next: (result) => {
+          console.log('Performance: ' + result.performance);
+          this.error = '';
+          this.info = 'The configuration is compatible';
+        },
+        error: (err: Error) => {
+          this.displayError(err)
+        }
+      });
     } catch (error) {// @ts-ignore
       this.displayError(error);
     }
@@ -296,19 +302,24 @@ export class ControlCenterCreateDevicePageComponent {
     try {
       const selectedHardware = this.getSelectedHardware();
 
-      this.deviceService.createDevice(selectedHardware).subscribe(device => {
-        this.controlCenterService.refreshDevices().subscribe(() => {
-          this.router.navigate(['/device'], {queryParams: {device: device.uuid}}).then();
-        });
-        this.error = '';
-        this.info = 'You successfully built a new device';
-      }, error => this.displayError(error));
+      this.deviceService.createDevice(selectedHardware).subscribe({
+        next: (device: Device) => {
+          this.controlCenterService.refreshDevices().subscribe(() => {
+            this.router.navigate(['/device'], {queryParams: {device: device.uuid}}).then();
+          });
+          this.error = '';
+          this.info = 'You successfully built a new device';
+        },
+        error: (err: Error) => this.displayError(err)
+      });
     } catch (error) {// @ts-ignore
       this.displayError(error);
     }
   }
 
-  trackByControl(index, {control}): FormControl {
+  trackByControl(index, {control})
+    :
+    FormControl {
     return control;
   }
 }

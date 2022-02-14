@@ -53,24 +53,28 @@ export class ControlCenterInventoryPageComponent {
   }
 
   sendTradeItem(destination: HTMLInputElement) {
-    this.inventoryService.sendItem(this.tradeItem!.element_uuid, destination.value).subscribe(() => {
-      this.tradeErrorMessage = '';
-      this.tradeItem = undefined;
-      this.inventoryService.getInventoryItemsWithHardware().subscribe(items => {
-        this.items = items;
-      });
-    }, error => {
-      if (error.message === 'item_not_found') {
-        this.tradeErrorMessage = 'You do not own this item.';
+    this.inventoryService.sendItem(this.tradeItem!.element_uuid, destination.value).subscribe({
+      next: () => {
+        this.tradeErrorMessage = '';
         this.tradeItem = undefined;
-      } else if (error.message === 'cannot_trade_with_yourself') {
-        this.tradeErrorMessage = 'You cannot send this item to yourself.';
-        destination.value = '';
-      } else if (error.message === 'user_uuid_does_not_exist') {
-        this.tradeErrorMessage = 'The specified UUID was not found.';
-        destination.value = '';
-      } else {
-        this.tradeErrorMessage = error.message;
+        this.inventoryService.getInventoryItemsWithHardware().subscribe(items => {
+          this.items = items;
+        });
+
+      },
+      error: (err: Error) => {
+        if (err.message === 'item_not_found') {
+          this.tradeErrorMessage = 'You do not own this item.';
+          this.tradeItem = undefined;
+        } else if (err.message === 'cannot_trade_with_yourself') {
+          this.tradeErrorMessage = 'You cannot send this item to yourself.';
+          destination.value = '';
+        } else if (err.message === 'user_uuid_does_not_exist') {
+          this.tradeErrorMessage = 'The specified UUID was not found.';
+          destination.value = '';
+        } else {
+          this.tradeErrorMessage = err.message;
+        }
       }
     });
   }

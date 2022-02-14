@@ -72,7 +72,7 @@ describe('LoginComponent', () => {
   it('#login() should set an error message if the server responds with an error', () => {
     component.form = {valid: true, value: {username: 'testUser', password: 'testPassword'}} as any;
 
-    accountService.login.and.callFake(() => throwError(new Error('permissions denied')));
+    accountService.login.and.callFake(() => throwError(() => new Error('permissions denied')));
     spyOn(component, 'decayError');
 
     component.login();
@@ -82,7 +82,7 @@ describe('LoginComponent', () => {
     expect(component.decayError).toHaveBeenCalledWith(10);
 
     const testError = 'This is a non-standard test error.';
-    accountService.login.and.callFake(() => throwError(new Error(testError)));
+    accountService.login.and.callFake(() => throwError(() => new Error(testError)));
 
     component.login();
     expect(accountService.login).toHaveBeenCalled();

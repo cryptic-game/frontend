@@ -27,42 +27,35 @@ export abstract class SettingsEntry<T> {
   }
 
   async getFresh(): Promise<T> {
-    try {
-      const data: string = (await this.settingService.get(this.key).toPromise())!;
-      this.cached = this.deserialize(data);
-    } catch (e) {
-      // @ts-ignore
-      if (e.message !== 'unknown setting') {
-        console.warn(e);
+    this.settingService.get(this.key).subscribe({
+      next: (data: string) => {
+        this.cached = this.deserialize(data);
+      },
+      error: (e: Error) => {
+        // @ts-ignore
+        if (e.message !== 'unknown setting') {
+          console.warn(e);
+        }
+        this.cached = this.defaultValue;
       }
-      this.cached = this.defaultValue;
-    }
+    })
     return this.cached;
   }
 
-  async set(value: T) {
+  set(value: T) {
     this.cached = value;
-    await this.settingService.set(this.key, this.serialize(value)).toPromise();
+    this.settingService.set(this.key, this.serialize(value)).subscribe();
   }
 
   async reset() {
     this.cached = this.defaultValue;
-    try {
-      await this.settingService.set(this.key, this.serialize(this.defaultValue)).toPromise();
-    } catch (e) {
-      console.warn(e);
-    }
-  }
-}
-
-export class StringSetting extends SettingsEntry<string> {
-  serialize(value: string): string {
-    return value;
+    await this.settingService.set(this.key, this.serialize(this.defaultValue)).subscribe({
+      error: (e: Error) => {
+        console.warn(e);
+      }
+    });
   }
 
-  deserialize(data: string): string {
-    return data;
-  }
 }
 
 export class BooleanSetting extends SettingsEntry<boolean> {

@@ -50,13 +50,16 @@ describe('HardwareService', () => {
   it('#updateParts() should call /hardware/list and do nothing if there was an error',
     inject([HardwareService], (service: HardwareService) => {
       service.hardwareAvailable = null;
-      const msSpy = webSocket.ms.and.callFake(() => throwError(new Error('Test error')));
+      const msSpy = webSocket.ms.and.callFake(() => throwError(() => new Error('Test error')));
 
-      service.updateParts().subscribe(() => {
-        fail('Expected an error but got a success');
-      }, () => {
-        expect(service.hardwareAvailable).toEqual(null);
-        expect(msSpy).toHaveBeenCalledWith('device', ['hardware', 'list'], {});
+      service.updateParts().subscribe({
+        next: () => {
+          fail('Expected an error but got a success');
+        },
+        error: () => {
+          expect(service.hardwareAvailable).toBeNull();
+          expect(msSpy).toHaveBeenCalledWith('device', ['hardware', 'list'], {});
+        }
       });
     }));
 
@@ -78,11 +81,14 @@ describe('HardwareService', () => {
       };
       service.hardwareAvailable = hardware;
 
-      service.getAvailableParts().subscribe(parts => {
-        expect(service.updateParts).not.toHaveBeenCalled();
-        expect(parts).toEqual(hardware);
-      }, error => {
-        fail(error);
+      service.getAvailableParts().subscribe({
+        next: (parts: HardwareList) => {
+          expect(service.updateParts).not.toHaveBeenCalled();
+          expect(parts).toEqual(hardware);
+        },
+        error: (error: Error) => {
+          fail(error);
+        }
       });
     }));
 

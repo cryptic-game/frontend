@@ -110,7 +110,7 @@ describe('ProgramService', () => {
       expect(settingService.get).toHaveBeenCalledWith(settingKey(definition));
       expect(program).toEqual(newTestProgram(Object.assign(definition, data)));
 
-      settingService.get.and.returnValue(throwError(new Error('unknown setting')));
+      settingService.get.and.returnValue(throwError(() => new Error('unknown setting')));
 
       const program2 = await service.loadProgram(definition);
       expect(settingService.get).toHaveBeenCalledWith(settingKey(definition));
@@ -118,7 +118,7 @@ describe('ProgramService', () => {
       expect(program2).toEqual(definition);
 
       const testError = new Error('some unknown error');
-      settingService.get.and.returnValue(throwError(testError));
+      settingService.get.and.returnValue(() => throwError(() =>testError));
       spyOn(console, 'warn');
 
       const program3 = await service.loadProgram(definition);
@@ -127,11 +127,11 @@ describe('ProgramService', () => {
     }));
 
   it('#save() should save the program data to the backend user settings and to the localStorage',
-    inject([ProgramService], async (service: ProgramService) => {
+    inject([ProgramService], (service: ProgramService) => {
       const data = {onDesktop: false, position: new Position(125, 236, 75)};
       const program = newTestProgram(data);
 
-      await service.save(program);
+      service.save(program);
       expect(settingService.set).toHaveBeenCalledWith(settingKey(program), JSON.stringify(data));
       expect(localStorage.setItem).toHaveBeenCalledWith(settingKey(program), JSON.stringify(data));
     }));

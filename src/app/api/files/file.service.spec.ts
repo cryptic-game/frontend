@@ -32,7 +32,7 @@ describe('FileService', () => {
     if (file) {
       return rxjs.of(file);
     } else {
-      return rxjs.throwError(new Error('file_not_found'));
+      return rxjs.throwError(() => new Error('file_not_found'));
     }
   }
 
@@ -103,13 +103,16 @@ describe('FileService', () => {
     inject([FileService], (service: FileService) => {
       spyOn(service, 'getFiles').and.callFake(getTestFiles);
 
-      service.getFilesRecursively(testUUIDs[0]).subscribe(files => {
-        expect(files.length).toEqual(testFiles.length);
-        for (const f of testFiles) {
-          expect(files).toContain(f);
+      service.getFilesRecursively(testUUIDs[0]).subscribe({
+        next: (files: File[]) => {
+          expect(files.length).toEqual(testFiles.length);
+          for (const f of testFiles) {
+            expect(files).toContain(f);
+          }
+        },
+        error: (error: Error) => {
+          fail(error.message);
         }
-      }, error => {
-        fail(error.message);
       });
       expect(service.getFiles).toHaveBeenCalledWith(testUUIDs[0], Path.ROOT);
       expect(service.getFiles).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[1]);
@@ -133,10 +136,13 @@ describe('FileService', () => {
     inject([FileService], (service: FileService) => {
       spyOn(service, 'getFiles').and.callFake(getTestFiles);
 
-      service.getFilesRecursively(testUUIDs[1], testUUIDs[2]).subscribe(value => {
-        expect(value).toEqual([testFiles[3], testFiles[4]]);
-      }, error => {
-        fail(error.message);
+      service.getFilesRecursively(testUUIDs[1], testUUIDs[2]).subscribe({
+        next: (files: File[]) => {
+          expect(files).toEqual([testFiles[3], testFiles[4]]);
+        },
+        error: (error: Error) => {
+          fail(error.message);
+        }
       });
 
       expect(service.getFiles).not.toHaveBeenCalledWith(testUUIDs[1], Path.ROOT);
@@ -176,11 +182,14 @@ describe('FileService', () => {
     inject([FileService], (service: FileService) => {
       spyOn(service, 'getRootFile').and.returnValue(testFiles[4]);
 
-      service.getFile(testUUIDs[0], Path.ROOT).subscribe(file => {
-        expect(service.getRootFile).toHaveBeenCalledWith(testUUIDs[0]);
-        expect(file).toEqual(testFiles[4]);
-      }, error => {
-        fail(error.message);
+      service.getFile(testUUIDs[0], Path.ROOT).subscribe({
+        next: (file: File) => {
+          expect(service.getRootFile).toHaveBeenCalledWith(testUUIDs[0]);
+          expect(file).toEqual(testFiles[4]);
+        },
+        error: (error: Error) => {
+          fail(error.message);
+        }
       });
     })
   );
@@ -303,10 +312,13 @@ describe('FileService', () => {
   );
 
   it('#getAbsolutePath() should return an empty list if the path is already the root', inject([FileService], (service: FileService) => {
-    service.getAbsolutePath(testUUIDs[0], Path.ROOT).subscribe(value => {
-      expect(value).toEqual([]);
-    }, error => {
-      fail(error.message);
+    service.getAbsolutePath(testUUIDs[0], Path.ROOT).subscribe({
+      next: (value: string[]) => {
+        expect(value).toEqual([]);
+      },
+      error: (error: Error) => {
+        fail(error.message);
+      }
     });
   }));
 
@@ -314,31 +326,40 @@ describe('FileService', () => {
     inject([FileService], (service: FileService) => {
       spyOn(service, 'getFile').and.callFake(getTestFile);
 
-      service.getAbsolutePath(testUUIDs[0], testUUIDs[3]).subscribe(value => {
-        expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[3]);
-        expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[2]);
-        expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[1]);
-        expect(value).toEqual(['1', '2', '3']);
-      }, error => {
-        fail(error.message);
+      service.getAbsolutePath(testUUIDs[0], testUUIDs[3]).subscribe({
+        next: (value: string[]) => {
+          expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[3]);
+          expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[2]);
+          expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[1]);
+          expect(value).toEqual(['1', '2', '3']);
+        },
+        error: (error: Error) => {
+          fail(error.message);
+        }
       });
 
-      service.getAbsolutePath(testUUIDs[0], testUUIDs[4]).subscribe(value => {
-        expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[4]);
-        expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[2]);
-        expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[1]);
-        expect(value).toEqual(['1', '2', '4']);
-      }, error => {
-        fail(error.message);
+      service.getAbsolutePath(testUUIDs[0], testUUIDs[4]).subscribe({
+        next: (value: string[]) => {
+          expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[4]);
+          expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[2]);
+          expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[1]);
+          expect(value).toEqual(['1', '2', '4']);
+        },
+        error: (error: Error) => {
+          fail(error.message);
+        }
       });
     })
   );
 
   it('#getFromPath() should throw a "file_not_found" error if the path is empty', inject([FileService], (service: FileService) => {
-    service.getFromPath(testUUIDs[0], new Path([])).subscribe(() => {
-      fail('getFromPath() unexpectedly returned a value instead of a file_not_found error');
-    }, error => {
-      expect(error.message).toEqual('file_not_found');
+    service.getFromPath(testUUIDs[0], new Path([])).subscribe({
+      next: () => {
+        fail('getFromPath() unexpectedly returned a value instead of a file_not_found error');
+      },
+      error: (error: Error) => {
+        expect(error.message).toEqual('file_not_found');
+      }
     });
   }));
 
@@ -346,11 +367,14 @@ describe('FileService', () => {
     inject([FileService], (service: FileService) => {
       spyOn(service, 'getFile').and.returnValue(rxjs.of(testFiles[1]));
 
-      service.getFromPath(testUUIDs[0], new Path(['.'], testUUIDs[1])).subscribe(file => {
-        expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[1]);
-        expect(file).toEqual(testFiles[1]);
-      }, error => {
-        fail(error.message);
+      service.getFromPath(testUUIDs[0], new Path(['.'], testUUIDs[1])).subscribe({
+        next: (file: File) => {
+          expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[1]);
+          expect(file).toEqual(testFiles[1]);
+        },
+        error: (error: Error) => {
+          fail(error.message);
+        }
       });
     })
   );
@@ -359,10 +383,13 @@ describe('FileService', () => {
     inject([FileService], (service: FileService) => {
       spyOn(service, 'getFiles').and.callFake(getTestFiles);
 
-      service.getFromPath(testUUIDs[0], new Path(['.', '1', '.', '2'])).subscribe(file => {
-        expect(file).toEqual(testFiles[2]);
-      }, error => {
-        fail(error.message);
+      service.getFromPath(testUUIDs[0], new Path(['.', '1', '.', '2'])).subscribe({
+        next: (file: File) => {
+          expect(file).toEqual(testFiles[2]);
+        },
+        error: (error: Error) => {
+          fail(error.message);
+        }
       });
     })
   );
@@ -372,23 +399,29 @@ describe('FileService', () => {
       spyOn(service, 'getFile').and.callFake(getTestFile);
       spyOn(service, 'getFiles').and.callFake(getTestFiles);
 
-      service.getFromPath(testUUIDs[0], new Path(['..'], testUUIDs[3])).subscribe(file => {
-        expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[3]);
-        expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[2]);
-        expect(file).toEqual(testFiles[2]);
-      }, error => {
-        fail(error.message);
+      service.getFromPath(testUUIDs[0], new Path(['..'], testUUIDs[3])).subscribe({
+        next: (file: File) => {
+          expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[3]);
+          expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[2]);
+          expect(file).toEqual(testFiles[2]);
+        },
+        error: (error: Error) => {
+          fail(error.message);
+        }
       });
 
-      service.getFromPath(testUUIDs[0], new Path(['..', '4', '..', '..', '5'], testUUIDs[3])).subscribe(file => {
-        expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[3]);
-        expect(service.getFiles).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[2]);
-        expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[4]);
-        expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[2]);
-        expect(service.getFiles).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[1]);
-        expect(file).toEqual(testFiles[5]);
-      }, error => {
-        fail(error.message);
+      service.getFromPath(testUUIDs[0], new Path(['..', '4', '..', '..', '5'], testUUIDs[3])).subscribe({
+        next: (file: File) => {
+          expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[3]);
+          expect(service.getFiles).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[2]);
+          expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[4]);
+          expect(service.getFile).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[2]);
+          expect(service.getFiles).toHaveBeenCalledWith(testUUIDs[0], testUUIDs[1]);
+          expect(file).toEqual(testFiles[5]);
+        },
+        error: (error: Error) => {
+          fail(error.message);
+        }
       });
     })
   );
@@ -430,7 +463,9 @@ describe('FileService', () => {
         successes += 1;
       });
 
-      expect(successes).toEqual(4, 'A getFromPath test case threw an error or did not return anything');
+      expect(successes)
+        .withContext('A getFromPath test case threw an error or did not return anything')
+        .toEqual(4);
     })
   );
 
@@ -444,16 +479,22 @@ describe('FileService', () => {
       //   - 5 (file)
       spyOn(service, 'getFiles').and.callFake(getTestFiles);
 
-      service.getFromPath(testUUIDs[0], new Path(['0', '2'])).subscribe(() => {
-        fail('getFromPath() with path 0/2 unexpectedly returned a file');
-      }, error => {
-        expect(error.message).toEqual('file_not_found');
+      service.getFromPath(testUUIDs[0], new Path(['0', '2'])).subscribe({
+        next: () => {
+          fail('getFromPath() with path 0/2 unexpectedly returned a file');
+        },
+        error: (error: Error) => {
+          expect(error.message).toEqual('file_not_found');
+        }
       });
 
-      service.getFromPath(testUUIDs[0], new Path(['1', '5', '4'])).subscribe(() => {
-        fail('getFromPath() with path 1/5/4 unexpectedly returned a file');
-      }, error => {
-        expect(error.message).toEqual('file_not_found');
+      service.getFromPath(testUUIDs[0], new Path(['1', '5', '4'])).subscribe({
+        next: () => {
+          fail('getFromPath() with path 1/5/4 unexpectedly returned a file');
+        },
+        error: (error: Error) => {
+          expect(error.message).toEqual('file_not_found');
+        }
       });
     })
   );
@@ -468,28 +509,40 @@ describe('FileService', () => {
       //   - 5 (file)
       spyOn(service, 'getFiles').and.callFake(getTestFiles);
 
-      service.getFromPath(testUUIDs[0], new Path(['10', '13'])).subscribe(() => {
-        fail('getFromPath() with path 10/13 unexpectedly returned a file');
-      }, error => {
-        expect(error.message).toEqual('file_not_found');
+      service.getFromPath(testUUIDs[0], new Path(['10', '13'])).subscribe({
+        next: () => {
+          fail('getFromPath() with path 10/13 unexpectedly returned a file');
+        },
+        error: (error: Error) => {
+          expect(error.message).toEqual('file_not_found');
+        }
       });
 
-      service.getFromPath(testUUIDs[0], new Path(['2', '3'])).subscribe(() => {
-        fail('getFromPath() with path 2/3 unexpectedly returned a file');
-      }, error => {
-        expect(error.message).toEqual('file_not_found');
+      service.getFromPath(testUUIDs[0], new Path(['2', '3'])).subscribe({
+        next: () => {
+          fail('getFromPath() with path 2/3 unexpectedly returned a file');
+        },
+        error: (error: Error) => {
+          expect(error.message).toEqual('file_not_found');
+        }
       });
 
-      service.getFromPath(testUUIDs[0], new Path(['5', '6'])).subscribe(() => {
-        fail('getFromPath() with path 5/6 unexpectedly returned a file');
-      }, error => {
-        expect(error.message).toEqual('file_not_found');
+      service.getFromPath(testUUIDs[0], new Path(['5', '6'])).subscribe({
+        next: () => {
+          fail('getFromPath() with path 5/6 unexpectedly returned a file');
+        },
+        error: (error: Error) => {
+          expect(error.message).toEqual('file_not_found');
+        }
       });
 
-      service.getFromPath(testUUIDs[0], new Path(['4', '7'])).subscribe(() => {
-        fail('getFromPath() with path 4/7 unexpectedly returned a file');
-      }, error => {
-        expect(error.message).toEqual('file_not_found');
+      service.getFromPath(testUUIDs[0], new Path(['4', '7'])).subscribe({
+        next: () => {
+          fail('getFromPath() with path 4/7 unexpectedly returned a file');
+        },
+        error: (error: Error) => {
+          expect(error.message).toEqual('file_not_found');
+        }
       });
     })
   );
@@ -508,10 +561,13 @@ describe('FileService', () => {
       spyOn(service, 'getFromPath').and.returnValue(rxjs.of({is_directory: false} as any));
       const destPath = new Path([], '');
 
-      service.moveToPath({} as any, destPath).subscribe(() => {
-        fail('moveToPath() with a file as destination unexpectedly returned a value');
-      }, error => {
-        expect(error.message).toEqual('destination_is_file');
+      service.moveToPath({} as any, destPath).subscribe({
+        next: () => {
+          fail('moveToPath() with a file as destination unexpectedly returned a value');
+        },
+        error: (error: Error) => {
+          expect(error.message).toEqual('destination_is_file');
+        }
       });
 
       expect(service.getFromPath).toHaveBeenCalledWith(undefined, destPath);
@@ -536,10 +592,13 @@ describe('FileService', () => {
       spyOn(service, 'getFiles').and.returnValue(rxjs.of([source]));
       const destPath = new Path(['1']);
 
-      service.moveToPath(source, destPath).subscribe(() => {
-        fail('moveToPath() with a destination that already exists unexpectedly returned a value');
-      }, error => {
-        expect(error.message).toEqual('file_already_exists');
+      service.moveToPath(source, destPath).subscribe({
+        next: () => {
+          fail('moveToPath() with a destination that already exists unexpectedly returned a value');
+        },
+        error: (error: Error) => {
+          expect(error.message).toEqual('file_already_exists');
+        }
       });
 
       expect(service.getFromPath).toHaveBeenCalledWith(testUUIDs[0], destPath);
@@ -570,10 +629,13 @@ describe('FileService', () => {
       spyOn(service, 'move').and.returnValue(rxjs.of({abc: 'def'} as any));
       const destPath = new Path(['1'], testUUIDs[5]);
 
-      service.moveToPath(source, destPath).subscribe(file => {
-        expect(file).toEqual({abc: 'def'} as any);
-      }, error => {
-        fail(error.message);
+      service.moveToPath(source, destPath).subscribe({
+        next: (file: File) => {
+          expect(file).toEqual({abc: 'def'} as any);
+        },
+        error: (error: Error) => {
+          fail(error.message);
+        }
       });
 
       expect(service.getFromPath).toHaveBeenCalledWith(testUUIDs[0], destPath);
@@ -594,10 +656,13 @@ describe('FileService', () => {
   }));
 
   it('#copyFile() should throw an error if the source is a directory', inject([FileService], (service: FileService) => {
-    service.copyFile(testFiles[1], new Path([])).subscribe(() => {
-      fail('copyFile() unexpectedly returned a value instead of an error');
-    }, error => {
-      expect(error.message).toEqual('cannot_copy_directory');
+    service.copyFile(testFiles[1], new Path([])).subscribe({
+      next: () => {
+        fail('copyFile() unexpectedly returned a value instead of an error');
+      },
+      error: (error: Error) => {
+        expect(error.message).toEqual('cannot_copy_directory');
+      }
     });
   }));
 
@@ -605,10 +670,13 @@ describe('FileService', () => {
     spyOn(service, 'getFile').and.callFake(getTestFile);
     spyOn(service, 'getFiles').and.callFake(getTestFiles);
 
-    service.copyFile(testFiles[0], new Path(['0'])).subscribe(() => {
-      fail('copyFile() unexpectedly returned a value instead of an error');
-    }, error => {
-      expect(error.message).toEqual('file_already_exists');
+    service.copyFile(testFiles[0], new Path(['0'])).subscribe({
+      next: () => {
+        fail('copyFile() unexpectedly returned a value instead of an error');
+      },
+      error: (error: Error) => {
+        expect(error.message).toEqual('file_already_exists');
+      }
     });
   }));
 
@@ -618,12 +686,15 @@ describe('FileService', () => {
       spyOn(service, 'getFiles').and.callFake(getTestFiles);
       spyOn(service, 'createFile').and.returnValue(rxjs.of(testFiles[5]));
 
-      service.copyFile(testFiles[0], new Path(['1'])).subscribe(file => {
-        expect(service.createFile)
-          .toHaveBeenCalledWith(testFiles[0].device, testFiles[0].filename, testFiles[0].content, testFiles[1].uuid);
-        expect(file).toEqual(testFiles[5]);
-      }, error => {
-        fail(error.message);
+      service.copyFile(testFiles[0], new Path(['1'])).subscribe({
+        next: (file: File) => {
+          expect(service.createFile)
+            .toHaveBeenCalledWith(testFiles[0].device, testFiles[0].filename, testFiles[0].content, testFiles[1].uuid);
+          expect(file).toEqual(testFiles[5]);
+        },
+        error: (error: Error) => {
+          fail(error.message);
+        }
       });
     })
   );
@@ -633,10 +704,13 @@ describe('FileService', () => {
       spyOn(service, 'getFile').and.callFake(getTestFile);
       spyOn(service, 'getFiles').and.callFake(getTestFiles);
 
-      service.copyFile(testFiles[0], new Path(['1', '2', 'abc321', 'def654'])).subscribe(() => {
-        fail('copyFile() unexpectedly returned a value instead of an error');
-      }, error => {
-        expect(error.message).toEqual('destination_not_found');
+      service.copyFile(testFiles[0], new Path(['1', '2', 'abc321', 'def654'])).subscribe({
+        next: () => {
+          fail('copyFile() unexpectedly returned a value instead of an error');
+        },
+        error: (error: Error) => {
+          expect(error.message).toEqual('destination_not_found');
+        }
       });
     })
   );
@@ -646,10 +720,13 @@ describe('FileService', () => {
       spyOn(service, 'getFile').and.callFake(getTestFile);
       spyOn(service, 'getFiles').and.callFake(getTestFiles);
 
-      service.copyFile(testFiles[0], new Path(['1', '5', 'abc321'])).subscribe(() => {
-        fail('copyFile() unexpectedly returned a value instead of an error');
-      }, error => {
-        expect(error.message).toEqual('destination_not_found');
+      service.copyFile(testFiles[0], new Path(['1', '5', 'abc321'])).subscribe({
+        next: () => {
+          fail('copyFile() unexpectedly returned a value instead of an error');
+        },
+        error: (error: Error) => {
+          expect(error.message).toEqual('destination_not_found');
+        }
       });
     })
   );
@@ -660,10 +737,13 @@ describe('FileService', () => {
       spyOn(service, 'getFile').and.callFake(getTestFile);
       spyOn(service, 'getFiles').and.callFake(getTestFiles);
 
-      service.copyFile(testFiles[3], new Path(['1', '2'])).subscribe(() => {
-        fail('copyFile() unexpectedly returned a value instead of an error');
-      }, error => {
-        expect(error.message).toEqual('file_already_exists');
+      service.copyFile(testFiles[3], new Path(['1', '2'])).subscribe({
+        next: () => {
+          fail('copyFile() unexpectedly returned a value instead of an error');
+        },
+        error: (error: Error) => {
+          expect(error.message).toEqual('file_already_exists');
+        }
       });
     })
   );
@@ -691,20 +771,26 @@ describe('FileService', () => {
       spyOn(service, 'getFiles').and.callFake(getTestFiles);
       spyOn(service, 'createFile').and.returnValue(rxjs.of(testFiles[4]));
 
-      service.copyFile(testFiles[5], new Path([], testFiles[2].uuid)).subscribe(file => {
-        expect(service.createFile)
-          .toHaveBeenCalledWith(testFiles[5].device, '5', testFiles[5].content, testFiles[2].uuid);
-        expect(file).toEqual(testFiles[4]);
-      }, error => {
-        fail(error.message);
+      service.copyFile(testFiles[5], new Path([], testFiles[2].uuid)).subscribe({
+        next: (file: File) => {
+          expect(service.createFile)
+            .toHaveBeenCalledWith(testFiles[5].device, '5', testFiles[5].content, testFiles[2].uuid);
+          expect(file).toEqual(testFiles[4]);
+        },
+        error: (error: Error) => {
+          fail(error.message);
+        }
       });
 
-      service.copyFile(testFiles[5], new Path(['abc'], testFiles[2].uuid)).subscribe(file => {
-        expect(service.createFile)
-          .toHaveBeenCalledWith(testFiles[5].device, 'abc', testFiles[5].content, testFiles[2].uuid);
-        expect(file).toEqual(testFiles[4]);
-      }, error => {
-        fail(error.message);
+      service.copyFile(testFiles[5], new Path(['abc'], testFiles[2].uuid)).subscribe({
+        next: (file: File) => {
+          expect(service.createFile)
+            .toHaveBeenCalledWith(testFiles[5].device, 'abc', testFiles[5].content, testFiles[2].uuid);
+          expect(file).toEqual(testFiles[4]);
+        },
+        error: (error: Error) => {
+          fail(error.message);
+        }
       });
     })
   );
@@ -712,22 +798,20 @@ describe('FileService', () => {
   it('#copyFile() should redirect error messages other than file_not_found from getFromPath()',
     inject([FileService], (service: FileService) => {
       spyOn(service, 'getFromPath').and.returnValues(
-        rxjs.throwError(new Error('test-error')),
-        rxjs.throwError(new Error('file_not_found')),
-        rxjs.throwError(new Error('test-error'))
+        rxjs.throwError(() => new Error('test-error')),
+        rxjs.throwError(() => new Error('file_not_found')),
+        rxjs.throwError(() => new Error('test-error'))
       );
 
-      service.copyFile(testFiles[0], new Path(['1', '2'])).subscribe(() => {
-        fail('copyFile() unexpectedly returned a value instead of an error');
-      }, error => {
-        expect(error.message).toEqual('test-error');
+      service.copyFile(testFiles[0], new Path(['1', '2'])).subscribe({
+        next: () => {
+          fail('copyFile() unexpectedly returned a value instead of an error');
+        },
+        error: (error: Error) => {
+          expect(error.message).toEqual('test-error');
+        }
       });
 
-      service.copyFile(testFiles[0], new Path(['1', '2'])).subscribe(() => {
-        fail('copyFile() unexpectedly returned a value instead of an error');
-      }, error => {
-        expect(error.message).toEqual('test-error');
-      });
     })
   );
 

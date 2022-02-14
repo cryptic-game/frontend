@@ -1,4 +1,4 @@
-<div #terminalContainer (click)="focusCommandLine()" (keydown.control.d)="$event.preventDefault(); cmdLine.value = ''"
+<div (click)="focusCommandLine()" (keydown.control.d)="$event.preventDefault(); cmdLine.value = ''"
      id="terminal-container">
   <div id="terminal-window">
     <output #history id="terminal-history"></output>

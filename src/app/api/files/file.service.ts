@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {WebsocketService} from '../../websocket.service';
 import {combineLatest, Observable, of, throwError} from 'rxjs';
-import {catchError, flatMap, map, take} from 'rxjs/operators';
+import {catchError, mergeMap, map, take} from 'rxjs/operators';
 import {File} from './file';
 import {Path} from './path';
 
@@ -21,7 +21,7 @@ export class FileService {
   }
 
   getFilesRecursively(deviceUUID: string, parentUUID: string = Path.ROOT!): Observable<File[]> {
-    return this.getFiles(deviceUUID, parentUUID).pipe(flatMap(files => {
+    return this.getFiles(deviceUUID, parentUUID).pipe(mergeMap(files => {
       const allChildren = files.filter(f => f.is_directory).map(f => this.getFilesRecursively(deviceUUID, f.uuid).pipe(take(1)));
       if (allChildren.length === 0) {
         return of(files);
@@ -102,21 +102,21 @@ export class FileService {
       if (file.parent_dir_uuid === Path.ROOT) {
         return of([file.filename]);
       }
-      return this.getFile(deviceUUID, file.parent_dir_uuid).pipe(flatMap(parent => {
+      return this.getFile(deviceUUID, file.parent_dir_uuid).pipe(mergeMap(parent => {
         return getTree(parent).pipe(map(tree => {
           return tree.concat(file.filename);
         }));
       }));
     };
 
-    return this.getFile(deviceUUID, fileId).pipe(flatMap(file => {
+    return this.getFile(deviceUUID, fileId).pipe(mergeMap(file => {
       return getTree(file);
     }));
   }
 
   getFromPath(deviceUUID: string, path: Path): Observable<File> {
     if (path.path.length === 0) {
-      return throwError(new Error('file_not_found'));
+      return throwError(() => new Error('file_not_found'));
     }
 
     if (path.path[0] === '.') {
@@ -128,7 +128,7 @@ export class FileService {
     }
 
     if (path.path[0] === '..') {
-      return this.getFile(deviceUUID, path.parentUUID).pipe(flatMap(par => {
+      return this.getFile(deviceUUID, path.parentUUID).pipe(mergeMap(par => {
         if (path.path.length === 1) {
           return this.getFile(deviceUUID, par.parent_dir_uuid);
         } else {
@@ -137,7 +137,7 @@ export class FileService {
       }));
     }
 
-    return this.getFiles(deviceUUID, path.parentUUID).pipe(flatMap(files => {
+    return this.getFiles(deviceUUID, path.parentUUID).pipe(mergeMap(files => {
       for (const file of files) {
         if (file.parent_dir_uuid === path.parentUUID && file.filename === path.path[0]) {
           if (path.path.length > 1) {
@@ -157,11 +157,11 @@ export class FileService {
 
   moveToPath(source: File, destPath: Path): Observable<File> {
     const deviceUUID = source.device;
-    return this.getFromPath(deviceUUID, destPath).pipe(flatMap(destination => {
+    return this.getFromPath(deviceUUID, destPath).pipe(mergeMap(destination => {
       if (!destination.is_directory) {
         throw new Error('destination_is_file');
       }
-      return this.getFiles(deviceUUID, destination.uuid).pipe(flatMap(destinationFiles => {
+      return this.getFiles(deviceUUID, destination.uuid).pipe(mergeMap(destinationFiles => {
         if (destinationFiles.find(f => f.filename === source.filename)) {
           throw new Error('file_already_exists');
         } else {
@@ -187,7 +187,7 @@ export class FileService {
      */
 
     if (source.is_directory) {
-      return throwError(new Error('cannot_copy_directory'));
+      return throwError(() => new Error('cannot_copy_directory'));
     }
 
     let destFileName = source.filename;
@@ -218,12 +218,12 @@ export class FileService {
       } else {
         throw err;
       }
-    }), flatMap(destination => {
+    }), mergeMap(destination => {
       if (!destination.is_directory) {
         throw new Error('file_already_exists');
       }
 
-      return this.getFiles(deviceUUID, destination.uuid).pipe(flatMap(destDirFiles => {
+      return this.getFiles(deviceUUID, destination.uuid).pipe(mergeMap(destDirFiles => {
         if (destDirFiles.find(f => f.filename === destFileName)) {
           throw new Error('file_already_exists');
         }

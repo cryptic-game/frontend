@@ -46,7 +46,10 @@ describe('DesktopDeviceResolver', () => {
 
     const observable = resolver.resolve(activatedRouteSnapshot, null) as Observable<Device>;
     let result: Device = null;
-    observable.subscribe(r => result = r, fail);
+    observable.subscribe({
+      next: (r: Device) => result = r,
+      error: () => fail
+    });
     expect(result).toEqual(testDevice);
     expect(activatedRouteSnapshot.queryParamMap.get).toHaveBeenCalledWith('device');
     expect(deviceService.getDeviceInfo).toHaveBeenCalledWith(routeDeviceUUID);
@@ -56,7 +59,10 @@ describe('DesktopDeviceResolver', () => {
   function expectBackToControlCenter() {
     const observable = resolver.resolve(activatedRouteSnapshot, null) as Observable<Device>;
     let result: Device = null;
-    observable.subscribe(r => result = r, fail);
+    observable.subscribe({
+      next: (r: Device) => result = r,
+      error: () => fail
+    });
 
     expect(activatedRouteSnapshot.queryParamMap.get).toHaveBeenCalledWith('device');
     expect(deviceService.getDeviceInfo).toHaveBeenCalledWith(routeDeviceUUID);
@@ -65,7 +71,7 @@ describe('DesktopDeviceResolver', () => {
   }
 
   it('should navigate back to the control center if the device does not exist', () => {
-    deviceService.getDeviceInfo.and.returnValue(throwError(new Error('device_not_found')));
+    deviceService.getDeviceInfo.and.returnValue(throwError(() => new Error('device_not_found')));
     expectBackToControlCenter();
   });
 

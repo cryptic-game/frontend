@@ -22,7 +22,6 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
   fileContent: string;
   fileOpened: boolean;
   filePath: Path;
-  chars_left: number;
   fileUUID: string;
   deleted_popup: boolean;
   changed_popup: boolean;
@@ -90,31 +89,37 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
       return;
     }
 
-    this.fileService.getFromPath(this.delegate.device.uuid, path).subscribe(file => {
-      if (file.is_directory) {
-        this.error = 'Not a file';
-      } else {
-        this.error = '';
-        this.fileOpened = true;
-        this.fileContent = file.content;
-        this.fileUUID = file.uuid;
-      }
-    }, error => {
-      if (error.message === 'file_not_found') {
-        this.error = 'File was not found';
-      } else {
-        this.error = error.toString();
+    this.fileService.getFromPath(this.delegate.device.uuid, path).subscribe({
+      next: (file: File) => {
+        if (file.is_directory) {
+          this.error = 'Not a file';
+        } else {
+          this.error = '';
+          this.fileOpened = true;
+          this.fileContent = file.content;
+          this.fileUUID = file.uuid;
+        }
+      },
+      error: (err: Error) => {
+        if (err.message === 'file_not_found') {
+          this.error = 'File was not found';
+        } else {
+          this.error = err.toString();
+        }
       }
     });
   }
 
   save() {
     this.fileService.getFromPath(this.delegate.device.uuid, this.filePath).subscribe((file) => {
-      this.fileService.changeFileContent(this.delegate.device.uuid, file.uuid, this.fileContent).subscribe((resp) => {
-      }, (err) => {
-        console.error(err);
-        if (err === 'invalid_input_data') {
-          this.error = '';
+      this.fileService.changeFileContent(this.delegate.device.uuid, file.uuid, this.fileContent).subscribe({
+        next: () => {
+        },
+        error: (err: string) => {
+          console.error(err);
+          if (err === 'invalid_input_data') {
+            this.error = '';
+          }
         }
       });
     });

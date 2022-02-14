@@ -122,7 +122,7 @@ describe('SignUpComponent', () => {
     } as any;
 
     const testError = 'This is a non-standard test error.';
-    accountService.signUp.and.callFake(() => throwError(new Error(testError)));
+    accountService.signUp.and.callFake(() => throwError(() => new Error(testError)));
     spyOn(component, 'decayError');
 
     component.signUp();
@@ -136,7 +136,7 @@ describe('SignUpComponent', () => {
     };
 
     for (const [errorName, translation] of Object.entries(knownErrors)) {
-      accountService.signUp.and.callFake(() => throwError(new Error(errorName)));
+      accountService.signUp.and.callFake(() => throwError(() => new Error(errorName)));
       component.errorLife = 0;
 
       component.signUp();

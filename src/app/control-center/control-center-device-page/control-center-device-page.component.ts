@@ -2,7 +2,7 @@ import {Component, ElementRef, HostListener, OnDestroy, ViewChild} from '@angula
 import {WebsocketService} from '../../websocket.service';
 import {DeviceService} from '../../api/devices/device.service';
 import {from} from 'rxjs';
-import {filter, flatMap, map, switchMap, toArray} from 'rxjs/operators';
+import {filter, mergeMap, map, switchMap, toArray} from 'rxjs/operators';
 import {Device, DeviceResources, ResourceUsage} from '../../api/devices/device';
 import {animate, animateChild, keyframes, query, state, style, transition, trigger} from '@angular/animations';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -112,7 +112,7 @@ export class ControlCenterDevicePageComponent implements OnDestroy {
         this.webSocket.ms('service', ['list'], {device_uuid: this.device.uuid}).pipe(
           switchMap(response => from(response.services as { uuid: string; name: string; running: boolean }[])),
           filter(service => service.running),
-          flatMap(service =>
+          mergeMap(service =>
             this.deviceService.getServiceResourceUsage(service.uuid).pipe(map(serviceUsage =>
               ({service: service, usage: new ResourceUsage(serviceUsage).relativeToDevice(this.deviceResources)})
             ))),
@@ -167,7 +167,7 @@ export class ControlCenterDevicePageComponent implements OnDestroy {
 
     const newName = this.deviceRenameField.nativeElement.innerText
       .replace(/[^a-zA-Z0-9\-_]+/g, '')
-      .substr(0, 15);
+      .substring(0, 15);
     if (newName.length === 0) {
       this.stopRenaming();
       return;

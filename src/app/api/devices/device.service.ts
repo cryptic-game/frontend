@@ -15,10 +15,6 @@ export class DeviceService {
     return this.deviceRequest(['device', 'info'], {device_uuid: deviceUUID});
   }
 
-  getDeviceState(deviceUUID): Observable<{ online: boolean }> {
-    return this.deviceRequest(['device', 'ping'], {device_uuid: deviceUUID});
-  }
-
   getDevices(): Observable<{ devices: Device[] }> {
     return this.deviceRequest(['device', 'all'], {});
   }

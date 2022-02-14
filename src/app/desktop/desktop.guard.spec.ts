@@ -36,11 +36,14 @@ describe('DesktopGuard', () => {
     const observable = guard.canActivate(null, null) as Observable<boolean>;
     expect(observable).toBeInstanceOf(Observable);
 
-    observable.subscribe(canActivate => {
-      expect(webSocketService.trySession).toHaveBeenCalled();
-      expect(canActivate).toBeTrue();
-      expect(router.navigateByUrl).not.toHaveBeenCalled();
-    }, fail);
+    observable.subscribe({
+      next: (canActivate: boolean) => {
+        expect(webSocketService.trySession).toHaveBeenCalled();
+        expect(canActivate).toBeTrue();
+        expect(router.navigateByUrl).not.toHaveBeenCalled();
+      },
+      error: () => fail
+    });
   });
 
   it('should try to login and navigate back to login if it failed', () => {
@@ -49,11 +52,14 @@ describe('DesktopGuard', () => {
     const observable = guard.canActivate(null, null) as Observable<boolean>;
     expect(observable).toBeInstanceOf(Observable);
 
-    observable.subscribe(canActivate => {
-      expect(webSocketService.trySession).toHaveBeenCalled();
-      expect(canActivate).toBeFalsy();
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
-    }, fail);
+    observable.subscribe({
+      next: (canActivate: boolean) => {
+        expect(webSocketService.trySession).toHaveBeenCalled();
+        expect(canActivate).toBeFalsy();
+        expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
+      },
+      error: () => fail
+    });
   });
 
 });

@@ -84,7 +84,7 @@ describe('WebsocketService', () => {
   it('#trySession() should remove the token from the localstorage if the authentication failed',
     inject([WebsocketService], (service: WebsocketService) => {
       const testToken = '3c0f0c90-dd6f-4c0c-bc77-639586e07cd9';
-      spyOn(service, 'request').and.returnValue(throwError(new Error('invalid token')));
+      spyOn(service, 'request').and.returnValue(throwError(() => new Error('invalid token')));
       spyOn(service, 'refreshAccountInfo').and.returnValue(of({} as any));
       (localStorage.getItem as jasmine.Spy).and.returnValue(testToken);
       service.loggedIn = false;

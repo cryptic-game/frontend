@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AccountService} from '../account.service';
+import {SignUpResponse} from "../interfaces/sign-up-response";
 
 @Component({
   selector: 'app-sign-up',
@@ -49,16 +50,18 @@ export class SignUpComponent {
         return;
       }
 
-      this.accountService.signUp(value.username, value.password).subscribe(data => {
-        this.accountService.finalLogin(data.token!, '/create-device');
-      }, error => {
-        if (error.message === 'username already exists') {
-          this.error = 'This username is already taken.';
-        } else {
-          this.error = error.message;
+      this.accountService.signUp(value.username, value.password).subscribe({
+        next: (data: SignUpResponse) => {
+          this.accountService.finalLogin(data.token!, '/create-device');
+        },
+        error: (error: Error) => {
+          if (error.message === 'username already exists') {
+            this.error = 'This username is already taken.';
+          } else {
+            this.error = error.message;
+          }
+          this.decayError(10);
         }
-
-        this.decayError(10);
       });
     }
   }

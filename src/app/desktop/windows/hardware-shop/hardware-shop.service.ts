@@ -102,10 +102,13 @@ export class HardwareShopService {
       products: this.getCartItems().reduce((acc, item) => ({...acc, [item.shopItem.name]: item.quantity}), {}),
       wallet_uuid: this.walletAppService.wallet!.source_uuid,
       key: this.walletAppService.wallet!.key
-    }).subscribe(() => {
-      this.cartItems.forEach(item => item.quantity = undefined!);
-      this.setCartItems([]);
-    }, error => console.error('[HardwareShopService] Error while buying items: ' + error.message));
+    }).subscribe({
+      next: () => {
+        this.cartItems.forEach(item => item.quantity = undefined!);
+        this.setCartItems([]);
+      },
+      error: (error: Error) => console.error('[HardwareShopService] Error while buying items: ' + error.message)
+    });
   }
 
   getItems(categories: HardwareShopCategory[], items?: HardwareShopItem[]): HardwareShopItem[] {

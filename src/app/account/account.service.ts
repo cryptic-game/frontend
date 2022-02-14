@@ -6,7 +6,7 @@ import {SignUpResponse} from './interfaces/sign-up-response';
 import {Router, RouteReuseStrategy} from '@angular/router';
 import {WindowManagerService} from '../desktop/window-manager/window-manager.service';
 import {AppRouteReuseStrategy} from '../app-route-reuse-strategy';
-import {flatMap} from 'rxjs/operators';
+import {mergeMap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +37,7 @@ export class AccountService {
 
   changePassword(oldPassword: string, newPassword: string) {
     return this.websocket.request({action: 'password', password: oldPassword, new: newPassword}).pipe(
-      flatMap(({token}) => {
+      mergeMap(({token}) => {
         localStorage.setItem('token', token);
         return this.websocket.refreshAccountInfo();
       })

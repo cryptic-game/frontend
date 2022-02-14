@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {WebsocketService} from '../../websocket.service';
 import {from, Observable} from 'rxjs';
 import {InventoryItem, InventoryItemWithHardware} from './inventory-item';
-import {filter, flatMap, map, switchMap, toArray} from 'rxjs/operators';
+import {filter, mergeMap, map, switchMap, toArray} from 'rxjs/operators';
 import {HardwareService} from '../hardware/hardware.service';
 
 @Injectable({
@@ -31,7 +31,7 @@ export class InventoryService {
   }
 
   getInventoryItemsWithHardware(): Observable<InventoryItemWithHardware[]> {
-    return this.hardwareService.getAvailableParts().pipe(flatMap(hardware => {
+    return this.hardwareService.getAvailableParts().pipe(mergeMap(hardware => {
       return this.getInventoryItems().pipe(
         switchMap(items => from(items)),
         filter(item => {

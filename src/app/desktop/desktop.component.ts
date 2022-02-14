@@ -100,7 +100,7 @@ export class DesktopComponent implements OnInit {
         if (this.checkDropAllowed(e)) {
           this.linkages[this.dragLinkageIndex].position.x = this.dragElement.offsetLeft;
           this.linkages[this.dragLinkageIndex].position.y = this.dragElement.offsetTop;
-          this.programService.save(this.linkages[this.dragLinkageIndex]).then();
+          this.programService.save(this.linkages[this.dragLinkageIndex]);
         }
         this.dragElement.remove();
         this.dragElement = undefined!;

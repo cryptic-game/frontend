@@ -43,18 +43,21 @@ export class ControlCenterSettingsPageComponent {
 
       this.accountService.changePassword(
         this.passwordForm.value.oldPassword, this.passwordForm.value.newPassword
-      ).subscribe(() => {
-        this.passwordError = '';
-        this.passwordChanged = true;
-        this.passwordStrength = 0;
-        this.passwordForm.reset({newPassword: '', oldPassword: '', passwordConfirm: ''});
-      }, error => {
-        this.passwordChanged = false;
-        if (error.message === 'permissions denied') {
-          this.passwordError = 'The old password is not correct.';
-        } else {
-          this.passwordError = error.message;
-          console.warn(error);
+      ).subscribe({
+        next: () => {
+          this.passwordError = '';
+          this.passwordChanged = true;
+          this.passwordStrength = 0;
+          this.passwordForm.reset({newPassword: '', oldPassword: '', passwordConfirm: ''});
+        },
+        error: (err: Error) => {
+          this.passwordChanged = false;
+          if (err.message === 'permissions denied') {
+            this.passwordError = 'The old password is not correct.';
+          } else {
+            this.passwordError = err.message;
+            console.warn(err);
+          }
         }
       });
     }

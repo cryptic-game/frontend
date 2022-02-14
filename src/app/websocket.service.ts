@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {webSocket, WebSocketSubject} from 'rxjs/webSocket';
-import {catchError, first, flatMap, map} from 'rxjs/operators';
+import {catchError, first, mergeMap, map} from 'rxjs/operators';
 import {Observable, of, Subject, throwError} from 'rxjs';
 import {environment} from '../environments/environment';
 import {v4 as randomUUID} from 'uuid';
@@ -99,7 +99,7 @@ export class WebsocketService {
   ms(name: string, endpoint: string[], data: any): Observable<any> {
     const tag = randomUUID();
     if (this.socketSubject.closed || this.socketSubject.hasError) {
-      return throwError(new Error('socket-closed'));
+      return throwError(() => new Error('socket-closed'));
     }
 
     this.socketSubject.next({
@@ -134,7 +134,7 @@ export class WebsocketService {
       return of(false);
     } else {
       return this.request({action: 'session', token: localStorage.getItem('token')}).pipe(
-        flatMap(() => this.refreshAccountInfo().pipe(map(() => {
+        mergeMap(() => this.refreshAccountInfo().pipe(map(() => {
           this.loggedIn = true;
           return true;
         }))),

@@ -197,7 +197,7 @@ describe('DesktopComponent', () => {
     simulateShortcutDrag(linkageElement, testDropPos);
 
     expect({x: testProgram.position.x, y: testProgram.position.y})
-      .toEqual(testDropPos, 'Shortcut was not dropped at the right position');
+      .withContext('Shortcut was not dropped at the right position').toEqual(testDropPos);
     expect(programService.save).toHaveBeenCalledWith(testProgram);
   });
 
@@ -250,10 +250,11 @@ describe('DesktopComponent', () => {
     simulateShortcutDrag(linkageElement, testDropPos);
 
     expect({x: testProgram.position.x, y: testProgram.position.y})
+      .withContext('Shortcut was not dropped at the right position')
       .toEqual({
         x: surfaceSize.width - linkageElement.clientWidth,
         y: 0
-      }, 'Shortcut was not dropped at the right position');
+      });
   });
 
   it('should move a clone of the linkage along the mouse cursor when dragging', () => {

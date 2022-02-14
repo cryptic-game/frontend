@@ -86,12 +86,12 @@ export class ProgramService {
     return ProgramService.deserializeProgram(definition, savedProgram);
   }
 
-  async save(program: Program) {
+  save(program: Program) {
     ProgramService.saveToCache(program);
-    await this.settingService.set(`program_${program.id}`, JSON.stringify({
+    this.settingService.set(`program_${program.id}`, JSON.stringify({
       onDesktop: program.onDesktop,
       position: program.position
-    })).toPromise();
+    })).subscribe();
   }
 
 }

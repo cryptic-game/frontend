@@ -1,5 +1,5 @@
-import {Component, Type} from '@angular/core';
-import {WindowComponent, WindowDelegate} from '../../window/window-delegate';
+import {Component} from '@angular/core';
+import {WindowComponent} from '../../window/window-delegate';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -14,8 +14,3 @@ export class TestWindowComponent extends WindowComponent {
   }
 }
 
-export class TestWindowDelegate extends WindowDelegate {
-  title = 'Testfenster';
-  icon = 'assets/desktop/img/filemanager.svg';
-  type: Type<any> = TestWindowComponent;
-}

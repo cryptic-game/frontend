@@ -109,13 +109,16 @@ export class MinerComponent extends WindowComponent implements OnInit {
       this.websocketService.ms('service', ['miner', 'wallet'], {
         'service_uuid': this.miner.uuid,
         'wallet_uuid': wallet,
-      }).subscribe((walletData) => {
-        this.errorMessage = undefined!;
-        this.setWallet(wallet);
-        this.setPower(walletData.power);
-        this.get();
-      }, () => {
-        this.setError('Invalid wallet');
+      }).subscribe({
+        next: (walletData) => {
+          this.errorMessage = undefined!;
+          this.setWallet(wallet);
+          this.setPower(walletData.power);
+          this.get();
+        },
+        error: () => {
+          this.setError('Invalid wallet');
+        }
       });
     }
   }
