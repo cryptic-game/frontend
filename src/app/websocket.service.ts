@@ -29,11 +29,25 @@ export class WebsocketService {
   constructor() {
   }
 
-  init() {
+  private static async getUrl(): Promise<string> {
+    const response = await fetch('./assets/api.json');
+
+    if (response.status === 200) {
+      try {
+        const {url}: { url: string } = await response.json();
+        return url;
+      } catch (e) {
+      }
+    }
+
+    return environment.api;
+  }
+
+  async init() {
     // rxjs webSocket automatically reconnects when subscribed again, so no need to recreate
     if (!this.socketSubject) {
       this.socketSubject = webSocket({
-        url: environment.api,
+        url: await WebsocketService.getUrl(),
         openObserver: {
           next: () => {
             if (this.connectedOnce) {
@@ -56,7 +70,7 @@ export class WebsocketService {
           next: (event) => {
             if (event.code !== 4000) {
               console.log('Lost connection to the server. Trying to reconnect in 10 seconds.');
-              setTimeout(this.init.bind(this), 10000);
+              setTimeout(() => this.init().then(), 10000);
               clearInterval(this.keepAliveHandle);
               this.keepAliveHandle = null;
             }

@@ -70,7 +70,7 @@ import {RouterOutlet} from '@angular/router';
 export class AppComponent implements OnDestroy {
 
   constructor(private websocket: WebsocketService) {
-    websocket.init();
+    websocket.init().then();
   }
 
   ngOnDestroy() {
