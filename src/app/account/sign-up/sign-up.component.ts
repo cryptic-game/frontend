@@ -50,7 +50,7 @@ export class SignUpComponent {
       }
 
       this.accountService.signUp(value.username, value.password).subscribe(data => {
-        this.accountService.finalLogin(data.token, '/create-device');
+        this.accountService.finalLogin(data.token!, '/create-device');
       }, error => {
         if (error.message === 'username already exists') {
           this.error = 'This username is already taken.';
@@ -72,7 +72,7 @@ export class SignUpComponent {
       }
 
       if (this.errorLife <= 0) {
-        this.error = undefined;
+        this.error = undefined!;
       }
     }, 1000);
   }

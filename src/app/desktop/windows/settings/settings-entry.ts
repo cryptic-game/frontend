@@ -28,9 +28,10 @@ export abstract class SettingsEntry<T> {
 
   async getFresh(): Promise<T> {
     try {
-      const data: string = await this.settingService.get(this.key).toPromise();
+      const data: string = (await this.settingService.get(this.key).toPromise())!;
       this.cached = this.deserialize(data);
     } catch (e) {
+      // @ts-ignore
       if (e.message !== 'unknown setting') {
         console.warn(e);
       }
@@ -70,11 +71,7 @@ export class BooleanSetting extends SettingsEntry<boolean> {
   }
 
   deserialize(data: string): boolean {
-    if (data === 'true') {
-      return true;
-    } else if (data === 'false') {
-      return false;
-    }
+    return data.toLowerCase() === 'true';
   }
 }
 

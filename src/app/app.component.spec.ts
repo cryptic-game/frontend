@@ -12,14 +12,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { swUpdateMock, webSocketMock } from './test-utils';
-import { SwUpdate } from '@angular/service-worker';
 
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [
         { provide: WebsocketService, useValue: webSocketMock() },
-        { provide: SwUpdate, useValue: swUpdateMock() }
       ],
       imports: [
         HttpClientModule,

@@ -29,7 +29,7 @@ export class HardwareShopCartItemComponent implements OnInit {
     this.formGroup = this.formBuilder.group({ quantity: this.item.quantity });
 
     this.formGroup.valueChanges.subscribe(() => {
-      const field = this.formGroup.get('quantity');
+      const field = this.formGroup.get('quantity')!;
       if (field.value < 0) {
         field.setValue(1);
       } else if (field.value > 50) {
@@ -41,13 +41,13 @@ export class HardwareShopCartItemComponent implements OnInit {
   }
 
   remove(): void {
-    this.item.quantity = undefined;
+    this.item.quantity = undefined!;
     this.hardwareShopService.removeCartItem(this.item.shopItem);
     this.update.emit();
   }
 
   updateQuantityField(): void {
-    const field = this.formGroup.get('quantity');
+    const field = this.formGroup.get('quantity')!;
     field.setValue(Math.floor(field.value));
     if (field.value < 1) {
       field.setValue(1);

@@ -13,14 +13,14 @@ export class FileService {
   constructor(private webSocket: WebsocketService) {
   }
 
-  getFiles(deviceUUID: string, parentUUID: string = Path.ROOT): Observable<File[]> {
+  getFiles(deviceUUID: string, parentUUID: string = Path.ROOT!): Observable<File[]> {
     return this.webSocket.ms('device', ['file', 'all'], { device_uuid: deviceUUID, parent_dir_uuid: parentUUID })
       .pipe(map((response: any) => {
         return response['files'];
       }));
   }
 
-  getFilesRecursively(deviceUUID: string, parentUUID: string = Path.ROOT): Observable<File[]> {
+  getFilesRecursively(deviceUUID: string, parentUUID: string = Path.ROOT!): Observable<File[]> {
     return this.getFiles(deviceUUID, parentUUID).pipe(flatMap(files => {
       const allChildren = files.filter(f => f.is_directory).map(f => this.getFilesRecursively(deviceUUID, f.uuid).pipe(take(1)));
       if (allChildren.length === 0) {
@@ -34,7 +34,7 @@ export class FileService {
   }
 
   getRootFile(deviceUUID: string): File {
-    return { content: '', device: deviceUUID, filename: '', is_directory: true, parent_dir_uuid: Path.ROOT, uuid: Path.ROOT };
+    return { content: '', device: deviceUUID, filename: '', is_directory: true, parent_dir_uuid: Path.ROOT!, uuid: Path.ROOT! };
   }
 
   getFile(deviceUUID: string, fileUUID: string): Observable<File> {
@@ -62,7 +62,7 @@ export class FileService {
     return this.webSocket.ms('device', ['file', 'delete'], { device_uuid: deviceUUID, file_uuid: fileUUID });
   }
 
-  createFile(deviceUUID: string, name: string, content = '', parentUUID: string = Path.ROOT): Observable<File> {
+  createFile(deviceUUID: string, name: string, content = '', parentUUID: string = Path.ROOT!): Observable<File> {
     return this.webSocket.ms('device', ['file', 'create'], {
       device_uuid: deviceUUID,
       filename: name,
@@ -72,7 +72,7 @@ export class FileService {
     });
   }
 
-  createDirectory(deviceUUID: string, name: string, parentUUID: string = Path.ROOT) {
+  createDirectory(deviceUUID: string, name: string, parentUUID: string = Path.ROOT!) {
     return this.webSocket.ms('device', ['file', 'create'], {
       device_uuid: deviceUUID,
       filename: name,

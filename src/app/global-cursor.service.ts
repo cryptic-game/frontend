@@ -1,13 +1,11 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalCursorService {
-  private currentLock: number;
 
-  constructor() {
-  }
+  private currentLock?: number;
 
   /**
    * Sets a global cursor if there is not another one currently set
@@ -16,7 +14,7 @@ export class GlobalCursorService {
    * @returns A number which can be used to release the cursor again or -1 if the cursor is locked
    */
   requestCursor(cursor: string, lock?: number): number {
-    if (this.currentLock === undefined || this.currentLock === lock) {
+    if (!this.currentLock || this.currentLock === lock) {
       if (document.body.style.cursor !== cursor) {
         document.body.style.setProperty('cursor', cursor, 'important');
       }
@@ -43,5 +41,4 @@ export class GlobalCursorService {
 
     return false;
   }
-
 }

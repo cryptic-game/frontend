@@ -4,7 +4,7 @@ export class Path {
   path: string[];
   parentUUID: string;
 
-  constructor(path: string[], parentUUID: string = Path.ROOT) {
+  constructor(path: string[], parentUUID: string = Path.ROOT!) {
     this.path = path;
     this.parentUUID = parentUUID;
   }

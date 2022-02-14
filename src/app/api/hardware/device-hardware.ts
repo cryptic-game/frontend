@@ -13,7 +13,7 @@ export class DeviceHardware {
     'coreTemperatureControl': false,
     'usbPorts': 0,
     'ram': { 'ramSlots': 0, 'maxRamSize': 0, 'ramTyp': [], 'frequency': [] },
-    'graphicUnitOnBoard': null,
+    'graphicUnitOnBoard': null!,
     'expansionSlots': [],
     'diskStorage': { 'diskSlots': 0, 'interface': [] },
     'networkPort': { 'name': '', 'interface': '', 'speed': 0 },

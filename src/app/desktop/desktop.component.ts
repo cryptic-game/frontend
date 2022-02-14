@@ -10,7 +10,6 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { DeviceService } from '../api/devices/device.service';
 import { Device } from '../api/devices/device';
 import { WindowManager } from './window-manager/window-manager';
-import { VersionService } from '../version.service';
 import { availableBackgrounds } from '../../assets/desktop/backgrounds/backgrounds';
 
 @Component({
@@ -37,8 +36,7 @@ export class DesktopComponent implements OnInit {
     private cursorService: GlobalCursorService,
     private settings: SettingsService,
     private sanitizer: DomSanitizer,
-    private windowManagerService: WindowManagerService,
-    public versionService: VersionService
+    private windowManagerService: WindowManagerService
   ) {
     this.activatedRoute.data.subscribe(data => {
       this.activeDevice = data['device'];
@@ -105,10 +103,10 @@ export class DesktopComponent implements OnInit {
           this.programService.save(this.linkages[this.dragLinkageIndex]).then();
         }
         this.dragElement.remove();
-        this.dragElement = undefined;
+        this.dragElement = undefined!;
       }
-      this.dragLinkageIndex = undefined;
-      this.dragOffset = undefined;
+      this.dragLinkageIndex = undefined!;
+      this.dragOffset = undefined!;
       this.cursorService.releaseCursor(this.dragCursorLock);
     }
   }

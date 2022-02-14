@@ -59,6 +59,7 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
 
   @Input() set item(value: HardwareShopItem) {
     this._item = value;
+    // @ts-ignore
     this.specifications = this.getSpecifications();
   }
 

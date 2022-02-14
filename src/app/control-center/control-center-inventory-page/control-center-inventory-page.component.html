@@ -1,8 +1,8 @@
 <h1>Inventory</h1>
 <div id="inventory">
   <div (dragstart)="dragStart($event, item)" *ngFor="let item of items" class="item" draggable="true">
-    <img [alt]="getCategoryIconName(item.properties.category)"
-         [src]="'assets/device/parts/' + getCategoryIconName(item.properties.category)" draggable="false"
+    <img [alt]="getCategoryIconName(item.properties.category!)"
+         [src]="'assets/device/parts/' + getCategoryIconName(item.properties.category!)" draggable="false"
          height="128" width="128">
     <p>{{item.properties.name}}</p>
   </div>
@@ -12,7 +12,7 @@
   <form (submit)="sendTradeItem(tradeDestination); $event.preventDefault()">
     <label for="inventory">
       Send
-      <input (dragover)="dragOver($event)" (drop)="dragDrop($event)" [value]="tradeItem?.properties.name"
+      <input (dragover)="dragOver($event)" (drop)="dragDrop($event)" [value]="tradeItem?.properties?.name"
              id="item-input" name="item"
              placeholder="Drag item here" readonly type="text">
     </label>

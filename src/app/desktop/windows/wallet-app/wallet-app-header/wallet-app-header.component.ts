@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 })
 export class WalletAppHeaderComponent implements OnDestroy {
 
-  wallet: Wallet;
+  wallet: Wallet|null;
 
   @Input() walletEdit: boolean;
   @Output() walletEditChange: EventEmitter<boolean> = new EventEmitter<boolean>();

@@ -51,7 +51,7 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
   }
 
   focusCommandLine() {
-    if (window.getSelection().type !== 'Range') {
+    if (window.getSelection()!.type !== 'Range') {
       this.cmdLine.nativeElement.focus();
     }
     this.getState().refreshPrompt();
@@ -64,6 +64,7 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
     }
 
     if (typeof prompt === 'string') {
+      // @ts-ignore
       this.promptHtml = this.domSanitizer.sanitize(
         SecurityContext.HTML,
         prompt
@@ -79,7 +80,7 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
   }
 
   popState(): TerminalState {
-    const popped = this.currentState.pop();
+    const popped = this.currentState.pop()!;
     if (this.currentState.length === 0) {
       this.closeTerminal();
       return popped;

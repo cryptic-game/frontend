@@ -1,15 +1,15 @@
-import { TerminalAPI, TerminalState } from './terminal-api';
-import { WebsocketService } from '../../../websocket.service';
-import { catchError, map } from 'rxjs/operators';
-import { DomSanitizer } from '@angular/platform-browser';
-import { SecurityContext } from '@angular/core';
-import { SettingsService } from '../settings/settings.service';
-import { FileService } from '../../../api/files/file.service';
-import { Path } from '../../../api/files/path';
-import { of } from 'rxjs';
-import { Device } from '../../../api/devices/device';
-import { WindowDelegate } from '../../window/window-delegate';
-import { File } from '../../../api/files/file';
+import {TerminalAPI, TerminalState} from './terminal-api';
+import {WebsocketService} from '../../../websocket.service';
+import {catchError, map} from 'rxjs/operators';
+import {DomSanitizer} from '@angular/platform-browser';
+import {SecurityContext} from '@angular/core';
+import {SettingsService} from '../settings/settings.service';
+import {FileService} from '../../../api/files/file.service';
+import {Path} from '../../../api/files/path';
+import {of} from 'rxjs';
+import {Device} from '../../../api/devices/device';
+import {WindowDelegate} from '../../window/window-delegate';
+import {File} from '../../../api/files/file';
 
 
 function escapeHtml(html) {
@@ -26,12 +26,14 @@ function reportError(error) {
 }
 
 export abstract class CommandTerminalState implements TerminalState {
-  abstract commands: { [name: string]: {
-    executor: (args: string[]) => void;
-    description: string;
-    hideFromHelp?: boolean;
-    hideFromProtocol?: boolean;
-  } };
+  abstract commands: {
+    [name: string]: {
+      executor: (args: string[]) => void;
+      description: string;
+      hideFromHelp?: boolean;
+      hideFromProtocol?: boolean;
+    }
+  };
 
   protocol: string[] = [];
 
@@ -65,7 +67,7 @@ export abstract class CommandTerminalState implements TerminalState {
         .filter(command => !command[1].hideFromHelp)
         .map(([name]) => name)
         .sort()
-        .find(n => n.startsWith(content))
+        .find(n => n.startsWith(content))!
       : '';
   }
 
@@ -196,11 +198,11 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   };
 
-  working_dir: string = Path.ROOT;  // UUID of the working directory
+  working_dir: string | null = Path.ROOT;  // UUID of the working directory
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
               private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
-              protected terminal: TerminalAPI, public promptColor: string = null) {
+              protected terminal: TerminalAPI, public promptColor: string | null = null) {
     super();
     this.settings.terminalPromptColor.getFresh().then(() => this.refreshPrompt());
   }
@@ -215,10 +217,10 @@ export class DefaultTerminalState extends CommandTerminalState {
     return `<span class="promptAppender" style="text-decoration: underline; cursor: pointer;">${escapeHtml(value)}</span>`;
   }
 
-  private static promptAppenderListener(evt: MouseEvent) {
+  private static promptAppenderListener(evt: Event) {
     evt.stopPropagation();
     const this_ = evt.target as HTMLElement;
-    const cmdline: HTMLInputElement = this_.closest('#terminal-window').querySelector('#cmdline');
+    const cmdline: HTMLInputElement = this_.closest('#terminal-window')!.querySelector('#cmdline')!;
     if (cmdline.selectionStart != null) {
       const startPos = cmdline.selectionStart;
       const addSpace = cmdline.selectionStart === cmdline.value.length;
@@ -226,7 +228,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         cmdline.value.substring(0, startPos) +
         this_.innerText +
         (addSpace ? ' ' : '') +
-        cmdline.value.substring(cmdline.selectionEnd);
+        cmdline.value.substring(cmdline.selectionEnd!);
       cmdline.focus();
       cmdline.selectionStart = startPos + this_.innerText.length + (addSpace ? 1 : 0);
       cmdline.selectionEnd = cmdline.selectionStart;
@@ -241,7 +243,7 @@ export class DefaultTerminalState extends CommandTerminalState {
   }
 
   refreshPrompt() {
-    this.fileService.getAbsolutePath(this.activeDevice['uuid'], this.working_dir).subscribe(path => {
+    this.fileService.getAbsolutePath(this.activeDevice['uuid'], this.working_dir!).subscribe(path => {
       const color = this.domSanitizer.sanitize(SecurityContext.STYLE,
         this.promptColor || this.settings.terminalPromptColor.getCacheOrDefault());
       const prompt = this.domSanitizer.bypassSecurityTrustHtml(
@@ -396,7 +398,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.terminal.outputText('The hostname couldn\'t be changed');
       });
     } else {
-      this.websocket.ms('device', ['device', 'info'], { device_uuid: this.activeDevice['uuid'] }).subscribe(device => {
+      this.websocket.ms('device', ['device', 'info'], {device_uuid: this.activeDevice['uuid']}).subscribe(device => {
         if (device['name'] !== this.activeDevice['name']) {
           this.activeDevice = device;
           this.refreshPrompt();
@@ -412,7 +414,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     if (args.length === 1) {
       let path: Path;
       try {
-        path = Path.fromString(args[0], this.working_dir);
+        path = Path.fromString(args[0], this.working_dir!);
       } catch {
         this.terminal.outputText('The specified path is not valid');
         return;
@@ -455,13 +457,13 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   ls(args: string[]) {
     if (args.length === 0) {
-      this.fileService.getFiles(this.activeDevice['uuid'], this.working_dir).subscribe(files => {
+      this.fileService.getFiles(this.activeDevice['uuid'], this.working_dir!).subscribe(files => {
         this.list_files(files);
       });
     } else if (args.length === 1) {
       let path: Path;
       try {
-        path = Path.fromString(args[0], this.working_dir);
+        path = Path.fromString(args[0], this.working_dir!);
       } catch {
         this.terminal.outputText('The specified path is not valid');
         return;
@@ -506,7 +508,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         content = args.slice(1).join(' ');
       }
 
-      this.fileService.createFile(this.activeDevice['uuid'], filename, content, this.working_dir).subscribe({
+      this.fileService.createFile(this.activeDevice['uuid'], filename, content, this.working_dir!).subscribe({
         error: err => {
           if (err.message === 'file_already_exists') {
             this.terminal.outputText('That file already exists');
@@ -524,7 +526,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     if (args.length === 1) {
       let path: Path;
       try {
-        path = Path.fromString(args[0], this.working_dir);
+        path = Path.fromString(args[0], this.working_dir!);
       } catch {
         this.terminal.outputText('The specified path is not valid');
         return;
@@ -552,7 +554,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     if (args.length === 1) {
       let path: Path;
       try {
-        path = Path.fromString(args[0], this.working_dir);
+        path = Path.fromString(args[0], this.working_dir!);
       } catch {
         this.terminal.outputText('The specified path is not valid');
         return;
@@ -570,14 +572,14 @@ export class DefaultTerminalState extends CommandTerminalState {
           const uuid = walletCred[0];
           const key = walletCred[1];
           if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
-            this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(() => {
+            this.websocket.ms('currency', ['get'], {source_uuid: uuid, key: key}).subscribe(() => {
               this.terminal.pushState(
                 new YesNoTerminalState(
                   this.terminal,
                   '<span class="errorText">Are you sure you want to delete your wallet? [yes|no]</span>',
                   answer => {
                     if (answer) {
-                      this.websocket.ms('currency', ['delete'], { source_uuid: uuid, key: key }).subscribe(() => {
+                      this.websocket.ms('currency', ['delete'], {source_uuid: uuid, key: key}).subscribe(() => {
                         this.websocket.ms('device', ['file', 'delete'], {
                           device_uuid: this.activeDevice['uuid'],
                           file_uuid: file.uuid
@@ -615,8 +617,8 @@ export class DefaultTerminalState extends CommandTerminalState {
       let srcPath: Path;
       let destPath: Path;
       try {
-        srcPath = Path.fromString(args[0], this.working_dir);
-        destPath = Path.fromString(args[1], this.working_dir);
+        srcPath = Path.fromString(args[0], this.working_dir!);
+        destPath = Path.fromString(args[1], this.working_dir!);
       } catch {
         this.terminal.outputText('The specified path is not valid');
         return;
@@ -653,8 +655,8 @@ export class DefaultTerminalState extends CommandTerminalState {
       let srcPath: Path;
       let destPath: Path;
       try {
-        srcPath = Path.fromString(args[0], this.working_dir);
-        destPath = Path.fromString(args[1], this.working_dir);
+        srcPath = Path.fromString(args[0], this.working_dir!);
+        destPath = Path.fromString(args[1], this.working_dir!);
       } catch {
         this.terminal.outputText('The specified path is not valid');
         return;
@@ -695,7 +697,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     if (args.length === 2) {
       let filePath: Path;
       try {
-        filePath = Path.fromString(args[0], this.working_dir);
+        filePath = Path.fromString(args[0], this.working_dir!);
       } catch {
         this.terminal.outputText('The specified path is not valid');
         return;
@@ -749,7 +751,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         return;
       }
 
-      this.fileService.createDirectory(this.activeDevice['uuid'], dirname, this.working_dir).subscribe({
+      this.fileService.createDirectory(this.activeDevice['uuid'], dirname, this.working_dir!).subscribe({
         error: err => {
           if (err.message === 'file_already_exists') {
             this.terminal.outputText('A file with the specified name already exists');
@@ -790,7 +792,7 @@ export class DefaultTerminalState extends CommandTerminalState {
   morphcoin(args: string[]) {
     if (args.length === 2) {
       if (args[0] === 'reset') {
-        this.websocket.ms('currency', ['reset'], { source_uuid: args[1] }).subscribe(
+        this.websocket.ms('currency', ['reset'], {source_uuid: args[1]}).subscribe(
           () => {
             this.terminal.outputText('Wallet has been deleted successfully.');
           },
@@ -807,7 +809,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
       let path: Path;
       try {
-        path = Path.fromString(args[1], this.working_dir);
+        path = Path.fromString(args[1], this.working_dir!);
       } catch {
         this.terminal.outputText('The specified path is not valid');
         return;
@@ -825,7 +827,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             const uuid = walletCred[0];
             const key = walletCred[1];
             if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
-              this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(wallet => {
+              this.websocket.ms('currency', ['get'], {source_uuid: uuid, key: key}).subscribe(wallet => {
                 this.terminal.outputText(new Intl.NumberFormat().format(wallet.amount / 1000) + ' morphcoin');
               }, () => {
                 this.terminal.outputText('That file is not connected with a wallet');
@@ -846,8 +848,8 @@ export class DefaultTerminalState extends CommandTerminalState {
 
       } else if (args[0] === 'create') {
         (path.path.length > 1
-          ? this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(0, -1), path.parentUUID))
-          : of({ uuid: path.parentUUID })
+            ? this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(0, -1), path.parentUUID))
+            : of({uuid: path.parentUUID})
         ).subscribe(dest => {
           this.fileService.getFromPath(this.activeDevice['uuid'], new Path(path.path.slice(-1), dest.uuid)).subscribe(() => {
             this.terminal.outputText('That file already exists');
@@ -857,7 +859,7 @@ export class DefaultTerminalState extends CommandTerminalState {
                 this.websocket.ms('currency', ['create'], {}).subscribe(wallet => {
                   const credentials = wallet.source_uuid + ' ' + wallet.key;
 
-                  this.fileService.createFile(this.activeDevice['uuid'], path.path[path.path.length - 1], credentials, this.working_dir)
+                  this.fileService.createFile(this.activeDevice['uuid'], path.path[path.path.length - 1], credentials, this.working_dir!)
                     .subscribe({
                       error: err => {
                         this.terminal.outputText('That file couldn\'t be created. Please note your wallet credentials ' +
@@ -913,7 +915,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     if (args.length === 3 || args.length === 4) {
       let walletPath: Path;
       try {
-        walletPath = Path.fromString(args[0], this.working_dir);
+        walletPath = Path.fromString(args[0], this.working_dir!);
       } catch {
         this.terminal.outputText('The specified path is not valid');
         return;
@@ -940,7 +942,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             const uuid = walletCred[0];
             const key = walletCred[1];
             if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
-              this.websocket.ms('currency', ['get'], { source_uuid: uuid, key: key }).subscribe(() => {
+              this.websocket.ms('currency', ['get'], {source_uuid: uuid, key: key}).subscribe(() => {
                 this.websocket.ms('currency', ['send'], {
                   source_uuid: uuid,
                   key: key,
@@ -979,7 +981,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     const activeDevice = this.activeDevice['uuid'];
 
     const getServices = () =>
-      this.websocket.ms('service', ['list'], { device_uuid: activeDevice }).pipe(map(data => {
+      this.websocket.ms('service', ['list'], {device_uuid: activeDevice}).pipe(map(data => {
         return data['services'];
       }), catchError(error => {
         reportError(error);
@@ -1002,7 +1004,7 @@ export class DefaultTerminalState extends CommandTerminalState {
         this.terminal.outputText('Unknown service. Available services: ' + services.join(', '));
         return;
       }
-      this.websocket.ms('service', ['create'], { name: service, device_uuid: activeDevice }).subscribe(() => {
+      this.websocket.ms('service', ['create'], {name: service, device_uuid: activeDevice}).subscribe(() => {
         this.terminal.outputText('Service was created');
       }, error => {
         if (error === 'already_own_this_service') {
@@ -1158,7 +1160,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   spot() {
     this.websocket.ms('device', ['device', 'spot'], {}).subscribe(random_device => {
-      this.websocket.ms('service', ['list'], { 'device_uuid': this.activeDevice['uuid'] }).subscribe(localServices => {
+      this.websocket.ms('service', ['list'], {'device_uuid': this.activeDevice['uuid']}).subscribe(localServices => {
         const portScanner = (localServices['services'] || []).filter(service => service.name === 'portscan')[0];
         if (portScanner == null || portScanner['uuid'] == null) {
           this.terminal.outputText('\'' + random_device['name'] + '\':');
@@ -1199,8 +1201,8 @@ export class DefaultTerminalState extends CommandTerminalState {
       return;
     }
 
-    this.websocket.ms('device', ['device', 'info'], { device_uuid: args[0] }).subscribe(infoData => {
-      this.websocket.ms('service', ['part_owner'], { device_uuid: args[0] }).subscribe(partOwnerData => {
+    this.websocket.ms('device', ['device', 'info'], {device_uuid: args[0]}).subscribe(infoData => {
+      this.websocket.ms('service', ['part_owner'], {device_uuid: args[0]}).subscribe(partOwnerData => {
         if (infoData['owner'] === this.websocket.account.uuid || partOwnerData['ok'] === true) {
           this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.fileService, this.domSanitizer,
             this.windowDelegate, infoData, this.terminal, '#DD2C00'));
@@ -1294,7 +1296,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             element.innerHTML = '';
 
             invitations.forEach(invitation => {
-              this.websocket.ms('network', ['get'], { 'uuid': invitation['network'] }).subscribe(network => {
+              this.websocket.ms('network', ['get'], {'uuid': invitation['network']}).subscribe(network => {
                 element.innerHTML += '<br>Invitation: ' + '<span style="color: grey">' +
                   DefaultTerminalState.promptAppender(invitation['uuid']) + '</span><br>' +
                   'Network: ' + escapeHtml(network['name']) + '<br>' +
@@ -1451,7 +1453,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             element.innerHTML = '';
 
             members.forEach(member => {
-              this.websocket.ms('device', ['device', 'info'], { 'device_uuid': member['device'] }).subscribe(deviceData => {
+              this.websocket.ms('device', ['device', 'info'], {'device_uuid': member['device']}).subscribe(deviceData => {
                 element.innerHTML += ' <span style="color: grey">' + DefaultTerminalState.promptAppender(member['device']) + '</span> '
                   + deviceData['name'] + '<br>';
               });
@@ -1601,7 +1603,7 @@ export abstract class ChoiceTerminalState implements TerminalState {
   }
 
   autocomplete(content: string): string {
-    return content ? Object.keys(this.choices).sort().find(choice => choice.startsWith(content)) : '';
+    return content ? Object.keys(this.choices).sort().find(choice => choice.startsWith(content)) || '' : '';
   }
 
   getHistory(): string[] {
@@ -1614,7 +1616,7 @@ export abstract class ChoiceTerminalState implements TerminalState {
 
 
 export class YesNoTerminalState extends ChoiceTerminalState {
-  choices = {
+  override choices = {
     'yes': () => {
       this.terminal.popState();
       this.callback(true);
@@ -1639,7 +1641,7 @@ export class YesNoTerminalState extends ChoiceTerminalState {
 export class BruteforceTerminalState extends ChoiceTerminalState {
   time = this.startSeconds;
   intervalHandle;
-  choices = {
+  override choices = {
     'stop': () => {
       clearInterval(this.intervalHandle);
       this.terminal.popState();

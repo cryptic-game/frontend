@@ -29,7 +29,7 @@ describe('ControlCenterGuard', () => {
     inject([ControlCenterGuard, WebsocketService, Router], (guard: ControlCenterGuard, webSocket: WebsocketService, router: Router) => {
       (webSocket.trySession as jasmine.Spy).and.returnValue(of(true));
 
-      const observable = guard.canActivate(null, null) as Observable<boolean>;
+      const observable = guard.canActivate(null!, null!) as Observable<boolean>;
       observable.subscribe(canActivate => {
         expect(webSocket.trySession).toHaveBeenCalled();
         expect(canActivate).toBeTruthy();
@@ -42,7 +42,7 @@ describe('ControlCenterGuard', () => {
     inject([ControlCenterGuard, WebsocketService, Router], (guard: ControlCenterGuard, webSocket: WebsocketService, router: Router) => {
       (webSocket.trySession as jasmine.Spy).and.returnValue(of(false));
 
-      const observable = guard.canActivate(null, null) as Observable<boolean>;
+      const observable = guard.canActivate(null!, null!) as Observable<boolean>;
       observable.subscribe(canActivate => {
         expect(webSocket.trySession).toHaveBeenCalled();
         expect(canActivate).toBeFalsy();

@@ -26,7 +26,7 @@ export class HardwareShopHeaderComponent implements OnDestroy {
     private hardwareShopService: HardwareShopService
   ) {
     this.subscriptions.add(
-      this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet?.amount)
+      this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet?.amount!)
     );
     this.subscriptions.add(
       this.hardwareShopService.updateCartItems.subscribe(() => this.updateCartSize())

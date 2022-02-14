@@ -62,7 +62,7 @@ function powerButtonColorAnimation(triggerName, property) {
   templateUrl: './control-center-device-page.component.html',
   styleUrls: ['./control-center-device-page.component.scss']
 })
-export class ControlCenterDevicePageComponent implements OnInit, OnDestroy {
+export class ControlCenterDevicePageComponent implements OnDestroy {
   device: Device;
   hardware: DeviceHardware;
   deviceResources: DeviceResources;

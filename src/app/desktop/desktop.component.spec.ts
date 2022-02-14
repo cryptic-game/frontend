@@ -21,7 +21,6 @@ import { WindowDelegate } from './window/window-delegate';
 import { emptyDevice, FakePromise, webSocketMock, windowManagerMock } from '../test-utils';
 import { DeviceService } from '../api/devices/device.service';
 import { ActivatedRoute, RouteReuseStrategy } from '@angular/router';
-import { VersionService } from '../version.service';
 
 describe('DesktopComponent', () => {
   const testDevice = { ...emptyDevice({ uuid: 'b8a67b5c-7aaa-4acb-805d-3d86af7a6fb7' }) };
@@ -60,7 +59,6 @@ describe('DesktopComponent', () => {
         { provide: ActivatedRoute, useValue: { data: activatedRouteDataSubject } },
         { provide: WindowManagerService, useValue: windowManagerService },
         { provide: RouteReuseStrategy, useValue: {} },
-        { provide: VersionService, useValue: versionService },
         { provide: ProgramService, useValue: programService }
       ],
       imports: [
@@ -97,8 +95,8 @@ describe('DesktopComponent', () => {
   });
 
   it('#ngOnInit() should load the program linkages', () => {
-    const cachedPrograms = [new Program('test-program-1', null, '', '', false, new Position(73, 15, 25))];
-    const freshPrograms = [new Program('test-program-2', null, '', '', true, new Position(85, 74, 63))];
+    const cachedPrograms = [new Program('test-program-1', null!, '', '', false, new Position(73, 15, 25))];
+    const freshPrograms = [new Program('test-program-2', null!, '', '', true, new Position(85, 74, 63))];
     const freshProgramsPromise = new FakePromise();
     programService.loadCached.and.returnValue(cachedPrograms);
     programService.loadFresh.and.returnValue(freshProgramsPromise);
@@ -110,11 +108,11 @@ describe('DesktopComponent', () => {
 
   it('#onDesktop() should return all desktop shortcuts which have the onDesktop property set to true', () => {
     component.linkages = [
-      new Program('testProgram1', null, 'Test Program', '', true, new Position(0, 0, 0)),
-      new Program('testProgram2', null, 'Test Program', '', false, new Position(0, 0, 0)),
-      new Program('testProgram3', null, 'Test Program', '', true, new Position(0, 0, 0)),
-      new Program('testProgram4', null, 'Test Program', '', true, new Position(0, 0, 0)),
-      new Program('testProgram5', null, 'Test Program', '', false, new Position(0, 0, 0)),
+      new Program('testProgram1', null!, 'Test Program', '', true, new Position(0, 0, 0)),
+      new Program('testProgram2', null!, 'Test Program', '', false, new Position(0, 0, 0)),
+      new Program('testProgram3', null!, 'Test Program', '', true, new Position(0, 0, 0)),
+      new Program('testProgram4', null!, 'Test Program', '', true, new Position(0, 0, 0)),
+      new Program('testProgram5', null!, 'Test Program', '', false, new Position(0, 0, 0)),
     ];
     expect(component.onDesktop()).toEqual(component.linkages.filter(linkage => linkage.onDesktop));
   });
@@ -151,11 +149,11 @@ describe('DesktopComponent', () => {
   });
 
   it('#openProgramWindow() should open a window using the window manager', () => {
-    const testProgram = new Program('testProgram', null, 'Test Program', '', true, new Position(0, 0, 0));
+    const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(0, 0, 0));
     const testDelegate = new class extends WindowDelegate {
       icon = '';
       title = 'This is a test window';
-      type = null;
+      type = null!;
     };
     const newWindowSpy = spyOn(testProgram, 'newWindow').and.returnValue(testDelegate);
 
@@ -177,8 +175,8 @@ describe('DesktopComponent', () => {
 
   it('should display programs from #onDesktop() as shortcuts', () => {
     const testPrograms = [
-      new Program('testProgram', null, 'Test Program', '', true, new Position(0, 0, 0)),
-      new Program('testProgram2', null, 'Test Program 2', '', true, new Position(0, 100, 0))
+      new Program('testProgram', null!, 'Test Program', '', true, new Position(0, 0, 0)),
+      new Program('testProgram2', null!, 'Test Program 2', '', true, new Position(0, 100, 0))
     ];
     const onDesktopSpy = spyOn(component, 'onDesktop').and.returnValue(testPrograms);
     fixture.detectChanges();
@@ -191,7 +189,7 @@ describe('DesktopComponent', () => {
   it('should move the position of a shortcut, when drag-and-dropping it, to the drop position', () => {
     setAllowShortcutDropping(true);
     pretendSurfaceSize();
-    const testProgram = new Program('testProgram', null, 'Test Program', '', true, new Position(0, 0, 0));
+    const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(0, 0, 0));
     component.linkages = [testProgram];
     fixture.detectChanges();
     const linkageElement: HTMLElement = fixture.debugElement.query(By.css('.linkage')).nativeElement;
@@ -216,15 +214,15 @@ describe('DesktopComponent', () => {
     expect(component.checkDropAllowed(new MouseEvent('mousemove', { clientX: movePosition.x, clientY: movePosition.y }))).toBeTruthy();
     expect(elementsFromPointSpy).toHaveBeenCalledWith(movePosition.x, movePosition.y);
 
-    elementsFromPointSpy.and.returnValue([null, originalLinkageElement]);
+    elementsFromPointSpy.and.returnValue([null!, originalLinkageElement]);
     expect(component.checkDropAllowed(new MouseEvent('mousemove', { clientX: movePosition.x, clientY: movePosition.y }))).toBeTruthy();
     expect(elementsFromPointSpy).toHaveBeenCalledWith(movePosition.x, movePosition.y);
 
-    elementsFromPointSpy.and.returnValue([null, anotherLinkageElement]);
+    elementsFromPointSpy.and.returnValue([null!, anotherLinkageElement]);
     expect(component.checkDropAllowed(new MouseEvent('mousemove', { clientX: movePosition.x, clientY: movePosition.y }))).toBeFalsy();
     expect(elementsFromPointSpy).toHaveBeenCalledWith(movePosition.x, movePosition.y);
 
-    elementsFromPointSpy.and.returnValue([null]);
+    elementsFromPointSpy.and.returnValue([null!]);
     expect(component.checkDropAllowed(new MouseEvent('mousemove', { clientX: movePosition.x, clientY: movePosition.y }))).toBeFalsy();
   });
 
@@ -232,7 +230,7 @@ describe('DesktopComponent', () => {
     setAllowShortcutDropping(true);
     const surfaceSize = { width: 200, height: 600 };
     pretendSurfaceSize(surfaceSize.width, surfaceSize.height);
-    const testProgram = new Program('testProgram', null, 'Test Program', '', true, new Position(0, 0, 0));
+    const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(0, 0, 0));
     component.linkages = [testProgram];
     fixture.detectChanges();
     const linkageElement: HTMLElement = fixture.debugElement.query(By.css('.linkage')).nativeElement;
@@ -247,7 +245,7 @@ describe('DesktopComponent', () => {
     pretendSurfaceSize();
     const startPosition = { x: 12, y: 25 };
     const endPosition = { x: 150, y: 64 };
-    const testProgram = new Program('testProgram', null, 'Test Program', '', true, new Position(startPosition.x, startPosition.y, 0));
+    const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(startPosition.x, startPosition.y, 0));
     component.linkages = [testProgram];
     fixture.detectChanges();
     const linkageElement: HTMLElement = fixture.debugElement.query(By.css('.linkage')).nativeElement;
@@ -263,7 +261,7 @@ describe('DesktopComponent', () => {
     setAllowShortcutDropping(false);
     pretendSurfaceSize();
     const startPosition = { x: 78, y: 134 };
-    const testProgram = new Program('testProgram', null, 'Test Program', '', true, new Position(startPosition.x, startPosition.y, 0));
+    const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(startPosition.x, startPosition.y, 0));
     component.linkages = [testProgram];
     fixture.detectChanges();
     const linkageElement: HTMLElement = fixture.debugElement.query(By.css('.linkage')).nativeElement;
@@ -275,7 +273,7 @@ describe('DesktopComponent', () => {
 
   it('should add the class "not-allowed" to the linkage clone when checkDropAllowed() returns false', () => {
     setAllowShortcutDropping(false);
-    const testProgram = new Program('testProgram', null, 'Test Program', '', true, new Position(0, 0, 0));
+    const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(0, 0, 0));
     component.linkages = [testProgram];
     fixture.detectChanges();
     const linkageElement: HTMLElement = fixture.debugElement.query(By.css('.linkage')).nativeElement;
@@ -289,7 +287,7 @@ describe('DesktopComponent', () => {
   it('should also release the dragged shortcut if it was not moved', () => {
     pretendSurfaceSize();
     const startPosition = { x: 25, y: 67 };
-    const testProgram = new Program('testProgram', null, 'Test Program', '', true, new Position(startPosition.x, startPosition.y, 0));
+    const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(startPosition.x, startPosition.y, 0));
     component.linkages = [testProgram];
     fixture.detectChanges();
     const linkageElement: HTMLElement = fixture.debugElement.query(By.css('.linkage')).nativeElement;
@@ -307,7 +305,7 @@ describe('DesktopComponent', () => {
     setAllowShortcutDropping(true);
     pretendSurfaceSize();
     const startPosition = { x: 21, y: 258 };
-    const testProgram = new Program('testProgram', null, 'Test Program', '', true, new Position(startPosition.x, startPosition.y, 0));
+    const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(startPosition.x, startPosition.y, 0));
     component.linkages = [testProgram];
 
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 124, clientY: 56 }));
@@ -318,7 +316,7 @@ describe('DesktopComponent', () => {
   it('#checkDropAllowed should use "msElementsFromPoint" if "elementsFromPoint" does not exist on document', () => {
     const elementsFromPoint = document.elementsFromPoint;
     const spy = document['msElementsFromPoint'] = jasmine.createSpy('msElementsFromPoint', document['msElementsFromPoint']);
-    document.elementsFromPoint = undefined;
+    document.elementsFromPoint = undefined!;
     component.checkDropAllowed(new MouseEvent('mousemove'));
 
     expect(spy).toHaveBeenCalled();
@@ -329,7 +327,7 @@ describe('DesktopComponent', () => {
   it('#checkDropAllowed should return true if neither "elementsFromPoint" nor "msElementsFromPoint" exists', () => {
     const elementsFromPoint = document.elementsFromPoint;
     const msElementsFromPoint = document['msElementsFromPoint'];
-    document.elementsFromPoint = undefined;
+    document.elementsFromPoint = undefined!;
     document['msElementsFromPoint'] = undefined;
 
     expect(component.checkDropAllowed(new MouseEvent('mousemove'))).toBeTruthy();
@@ -345,9 +343,7 @@ describe('DesktopComponent', () => {
   function pretendSurfaceSize(width = 600, height = 400): jasmine.Spy {
     return spyOn(component.surface.nativeElement, 'getBoundingClientRect').and.returnValue(new DOMRect(0, 0, width, height));
   }
-
 });
-
 
 function simulateShortcutDrag(linkageElement: HTMLElement, dropPos: { x: number; y: number }, release = true) {
   const linkageBounds = linkageElement.getBoundingClientRect();

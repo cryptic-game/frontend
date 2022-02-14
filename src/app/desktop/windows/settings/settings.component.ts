@@ -64,5 +64,5 @@ export class SettingsWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/gear.svg';
   type: Type<any> = SettingsComponent;
 
-  constraints = new WindowConstraints({ minWidth: 300, minHeight: 200 });
+  override constraints = new WindowConstraints({ minWidth: 300, minHeight: 200 });
 }

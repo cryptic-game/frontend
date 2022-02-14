@@ -55,7 +55,7 @@ export class HardwareList {
   }
 
   getByID(id: number): Part {
-    return Object.values(this.getAllParts()).find(part => part.id === id);
+    return Object.values(this.getAllParts()).find(part => part.id === id)!;
   }
 
 }

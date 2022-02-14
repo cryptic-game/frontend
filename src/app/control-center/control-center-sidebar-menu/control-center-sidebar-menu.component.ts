@@ -33,7 +33,7 @@ import { Params, Router } from '@angular/router';
   templateUrl: './control-center-sidebar-menu.component.html',
   styleUrls: ['./control-center-sidebar-menu.component.scss']
 })
-export class ControlCenterSidebarMenuComponent implements OnInit {
+export class ControlCenterSidebarMenuComponent {
   expanded = false;
 
   @Input() menu: SidebarMenu;

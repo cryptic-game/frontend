@@ -30,7 +30,7 @@ describe('AccountGuard', () => {
       (router.navigate as jasmine.Spy).and.returnValue(new Promise(() => {
       }));
 
-      const observable = guard.canActivate(null, null) as Observable<boolean>;
+      const observable = guard.canActivate(null!, null!) as Observable<boolean>;
       observable.subscribe(canActivate => {
         expect(webSocket.trySession).toHaveBeenCalled();
         expect(canActivate).toBeFalsy();
@@ -45,7 +45,7 @@ describe('AccountGuard', () => {
       (router.navigate as jasmine.Spy).and.returnValue(new Promise(() => {
       }));
 
-      const observable = guard.canActivate(null, null) as Observable<boolean>;
+      const observable = guard.canActivate(null!, null!) as Observable<boolean>;
       observable.subscribe(canActivate => {
         expect(webSocket.trySession).toHaveBeenCalled();
         expect(canActivate).toBeTruthy();

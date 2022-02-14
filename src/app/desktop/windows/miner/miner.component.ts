@@ -20,7 +20,7 @@ export class MinerComponent extends WindowComponent implements OnInit {
   walletControl: FormControl = new FormControl('', [
     Validators.required, Validators.pattern(/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/)
   ]);
-  wallet: string;
+  wallet: string|undefined;
   errorMessage: string;
 
   minerPower: FormControl = new FormControl(0, [
@@ -87,7 +87,7 @@ export class MinerComponent extends WindowComponent implements OnInit {
         'wallet_uuid': wallet,
       }).pipe(
         map(createData => {
-          this.errorMessage = null;
+          this.errorMessage = null!;
 
           this.miner = createData;
           this.miningRate = createData.speed;
@@ -99,7 +99,7 @@ export class MinerComponent extends WindowComponent implements OnInit {
           return of<void>();
         }));
     }
-    return undefined;
+    return undefined!;
   }
 
   private updateMinerWallet(wallet: string): void {
@@ -110,7 +110,7 @@ export class MinerComponent extends WindowComponent implements OnInit {
         'service_uuid': this.miner.uuid,
         'wallet_uuid': wallet,
       }).subscribe((walletData) => {
-        this.errorMessage = undefined;
+        this.errorMessage = undefined!;
         this.setWallet(wallet);
         this.setPower(walletData.power);
         this.get();
@@ -141,10 +141,10 @@ export class MinerComponent extends WindowComponent implements OnInit {
   private setError(error: string): void {
     this.errorMessage = error;
     this.wallet = undefined;
-    setTimeout(() => this.errorMessage = undefined, 5000);
+    setTimeout(() => this.errorMessage = undefined!, 5000);
   }
 
-  private setWallet(uuid: string): void {
+  private setWallet(uuid: string|undefined): void {
     this.wallet = uuid;
     if (uuid) {
       this.walletControl.setValue(uuid, { emitEvent: false });
@@ -165,7 +165,7 @@ export class MinerWindowDelegate extends WindowDelegate {
   public icon = 'assets/desktop/img/morphcoin_dark.svg';
   public type: Type<any> = MinerComponent;
 
-  public constraints = new WindowConstraints({ singleInstance: true, resizable: false, maximizable: false });
+  public override constraints = new WindowConstraints({ singleInstance: true, resizable: false, maximizable: false });
 
   constructor() {
     super();

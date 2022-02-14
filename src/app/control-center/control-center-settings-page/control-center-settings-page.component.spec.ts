@@ -1,11 +1,11 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { ControlCenterSettingsPageComponent } from './control-center-settings-page.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { WebSocketSubject } from 'rxjs/internal-compatibility';
-import { webSocketMock } from '../../test-utils';
-import { RouterTestingModule } from '@angular/router/testing';
-import { RouteReuseStrategy } from '@angular/router';
+import {ControlCenterSettingsPageComponent} from './control-center-settings-page.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {webSocketMock} from '../../test-utils';
+import {RouterTestingModule} from '@angular/router/testing';
+import {RouteReuseStrategy} from '@angular/router';
+import {WebSocketSubject} from "rxjs/webSocket";
 
 describe('ControlCenterSettingsPageComponent', () => {
   let component: ControlCenterSettingsPageComponent;
@@ -15,8 +15,8 @@ describe('ControlCenterSettingsPageComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ControlCenterSettingsPageComponent],
       providers: [
-        { provide: WebSocketSubject, useValue: webSocketMock() },
-        { provide: RouteReuseStrategy, useValue: {} }
+        {provide: WebSocketSubject, useValue: webSocketMock()},
+        {provide: RouteReuseStrategy, useValue: {}}
       ],
       imports: [ReactiveFormsModule, RouterTestingModule]
     })

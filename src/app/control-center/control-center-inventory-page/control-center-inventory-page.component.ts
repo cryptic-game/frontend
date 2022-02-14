@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { InventoryItemWithHardware } from '../../api/inventory/inventory-item';
-import { ActivatedRoute } from '@angular/router';
-import { PartCategory } from '../../api/hardware/hardware-parts';
-import { InventoryService } from '../../api/inventory/inventory.service';
-import { WebsocketService } from '../../websocket.service';
+import {Component} from '@angular/core';
+import {InventoryItemWithHardware} from '../../api/inventory/inventory-item';
+import {ActivatedRoute} from '@angular/router';
+import {PartCategory} from '../../api/hardware/hardware-parts';
+import {InventoryService} from '../../api/inventory/inventory.service';
+import {WebsocketService} from '../../websocket.service';
 
 @Component({
   selector: 'app-control-center-inventory-page',
   templateUrl: './control-center-inventory-page.component.html',
   styleUrls: ['./control-center-inventory-page.component.scss']
 })
-export class ControlCenterInventoryPageComponent implements OnInit {
+export class ControlCenterInventoryPageComponent {
   items: InventoryItemWithHardware[] = [];
-  tradeItem: InventoryItemWithHardware;
+  tradeItem: InventoryItemWithHardware|undefined;
 
   partCategoryIcons = {
     [PartCategory.MAINBOARD]: 'mainboard',
@@ -37,32 +37,32 @@ export class ControlCenterInventoryPageComponent implements OnInit {
   }
 
   dragStart(event: DragEvent, item: InventoryItemWithHardware) {
-    event.dataTransfer.setData('text/plain', item.element_uuid);
+    event.dataTransfer!.setData('text/plain', item.element_uuid);
   }
 
   dragOver(event: DragEvent) {
-    if (event.dataTransfer.types.length === 1 && event.dataTransfer.types[0] === 'text/plain') {
+    if (event.dataTransfer!.types.length === 1 && event.dataTransfer!.types[0] === 'text/plain') {
       event.preventDefault();
     }
   }
 
   dragDrop(event: DragEvent) {
     event.preventDefault();
-    const itemUUID = event.dataTransfer.getData('text/plain');
-    this.tradeItem = this.items.find(item => item.element_uuid === itemUUID);
+    const itemUUID = event.dataTransfer!.getData('text/plain');
+    this.tradeItem = this.items.find(item => item.element_uuid === itemUUID)!;
   }
 
   sendTradeItem(destination: HTMLInputElement) {
-    this.inventoryService.sendItem(this.tradeItem.element_uuid, destination.value).subscribe(() => {
+    this.inventoryService.sendItem(this.tradeItem!.element_uuid, destination.value).subscribe(() => {
       this.tradeErrorMessage = '';
-      this.tradeItem = null;
+      this.tradeItem = undefined;
       this.inventoryService.getInventoryItemsWithHardware().subscribe(items => {
         this.items = items;
       });
     }, error => {
       if (error.message === 'item_not_found') {
         this.tradeErrorMessage = 'You do not own this item.';
-        this.tradeItem = null;
+        this.tradeItem = undefined;
       } else if (error.message === 'cannot_trade_with_yourself') {
         this.tradeErrorMessage = 'You cannot send this item to yourself.';
         destination.value = '';

@@ -16,7 +16,7 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
 
   @ViewChild('fileInput', { static: true }) fileInput: ElementRef;
 
-  delegate: EditorWindowDelegate;
+  override delegate: EditorWindowDelegate;
 
   error: string;
   fileContent: string;
@@ -43,7 +43,7 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
       this.fileService.getAbsolutePath(this.delegate.device.uuid, this.delegate.openFile.uuid).subscribe(path => {
         this.fileInput.nativeElement.value = '/' + path.join('/');
         this.filePath = Path.fromString('/' + path.join('/'));
-        this.fileUUID = this.delegate.openFile.uuid;
+        this.fileUUID = this.delegate.openFile?.uuid!;
       });
 
       this.fileInput.nativeElement.disabled = true;
@@ -83,7 +83,7 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
   enter(inputPath: string) {
     let path: Path;
     try {
-      path = Path.fromString(inputPath, Path.ROOT);
+      path = Path.fromString(inputPath, Path.ROOT!);
       this.filePath = path;
     } catch {
       this.error = 'Path not valid';
@@ -138,7 +138,7 @@ export class EditorWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/editor.svg';
   type: Type<any> = EditorComponent;
 
-  constraints = new WindowConstraints({ minWidth: 300, minHeight: 200 });
+  override constraints = new WindowConstraints({ minWidth: 300, minHeight: 200 });
 
   constructor(public openFile?: File) {
     super();

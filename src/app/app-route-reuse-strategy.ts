@@ -38,15 +38,15 @@ export class AppRouteReuseStrategy implements RouteReuseStrategy {
    * @param route The currently activated route which is about to be left
    */
   shouldDetach(route: ActivatedRouteSnapshot): boolean {
-    return this.pathReuse.includes(route.routeConfig?.path);
+    return this.pathReuse.includes(route.routeConfig?.path!);
   }
 
   store(route: ActivatedRouteSnapshot, handle: DetachedRouteHandle | null): void {
-    this.storedPaths[route.routeConfig.path] = { snapshot: route, handle: handle };
+    this.storedPaths[route.routeConfig?.path!] = { snapshot: route, handle: handle! };
   }
 
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
-    return this.shouldAttach(route) ? this.storedPaths[route.routeConfig.path]?.handle : null;
+    return this.shouldAttach(route) ? this.storedPaths[route.routeConfig?.path!]?.handle : null;
   }
 
   /**
@@ -57,7 +57,7 @@ export class AppRouteReuseStrategy implements RouteReuseStrategy {
     if (route.routeConfig == null) {
       return false;
     }
-    const storedRoute = this.storedPaths[route.routeConfig.path];
+    const storedRoute = this.storedPaths[route.routeConfig.path!];
     return this.childrenMatch(storedRoute?.snapshot, route);
   }
 

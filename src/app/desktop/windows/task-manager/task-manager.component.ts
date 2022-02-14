@@ -22,7 +22,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
   diskName = '';
   utilization: ResourceUsage = new ResourceUsage();
 
-  constructor(public delegate: WindowDelegate,
+  constructor(public override delegate: WindowDelegate,
               private webSocket: WebsocketService,
               private hardwareService: HardwareService) {
     super();
@@ -57,7 +57,7 @@ export class TaskManagerComponent extends WindowComponent implements OnInit, OnD
         this.gpu = data.mainboard.graphicUnitOnBoard;
       }
 
-      this.diskName = data.disk.length >= 1 ? data.disk[0].name : 'Disk';
+      this.diskName = data.disk.length >= 1 ? data.disk[0].name! : 'Disk';
 
       this.webSocket.ms('device', ['hardware', 'resources'], { device_uuid: this.delegate.device.uuid })
         .subscribe(resourceData => this.updateUtilization(resourceData, false));
@@ -77,7 +77,7 @@ export class TaskManagerWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/task-manager.svg';
   type = TaskManagerComponent;
 
-  constraints = new WindowConstraints({ minWidth: 400, minHeight: 350 });
+  override constraints = new WindowConstraints({ minWidth: 400, minHeight: 350 });
 
   constructor() {
     super();

@@ -45,7 +45,7 @@ export class ProgramService {
     let savedProgram: any;
 
     try {
-      savedProgram = JSON.parse(localStorage.getItem(`program_${definition.id}`));
+      savedProgram = JSON.parse(localStorage.getItem(`program_${definition.id}`)!);
     } catch (e) {
     }
 
@@ -61,7 +61,7 @@ export class ProgramService {
     // Doesn't work because of missing tags of server responses:
     // this.programs = await Promise.all(desktopDefinition.programs.map(def => this.loadProgram(def)));
 
-    const programs = [];
+    const programs: Program[] = [];
     for (const def of desktopDefinition.programs) {
       const program = await this.loadProgram(def);
       programs.push(program);
@@ -75,8 +75,9 @@ export class ProgramService {
     let savedProgram: any;
 
     try {
-      savedProgram = JSON.parse(await this.settingService.get(`program_${definition.id}`).toPromise());
+      savedProgram = JSON.parse((await this.settingService.get(`program_${definition.id}`).toPromise())!);
     } catch (e) {
+      // @ts-ignore
       if (e.message !== 'unknown setting') {
         console.warn(e);
       }

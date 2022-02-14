@@ -30,7 +30,7 @@ export class HardwareShopCartComponent implements OnDestroy {
       })
     );
     this.subscriptions.add(
-      this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet?.amount)
+      this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet?.amount!)
     );
     this.walletAppService.updateWallet().then();
     this.hardwareShopService.loadCartItems().then();

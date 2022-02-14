@@ -36,7 +36,7 @@ export class WindowManager {
 
   sortWindows() {
     if (this.windows.length === 0) {
-      this.activeWindow = null;
+      this.activeWindow = null!;
       return;
     }
 
@@ -61,7 +61,7 @@ export class WindowManager {
   closeAllWindows() {
     this.windows = [];
     this.taskList = [];
-    this.activeWindow = null;
+    this.activeWindow = null!;
   }
 
   focusWindow(window: WindowDelegate) {
@@ -82,7 +82,7 @@ export class WindowManager {
 
       this.activeWindow.component.events.next('unfocus');
 
-      this.activeWindow = null;
+      this.activeWindow = null!;
     }
   }
 

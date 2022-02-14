@@ -59,5 +59,5 @@ export class HardwareShopWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/hardware-shop.svg';
   type: Type<any> = HardwareShopComponent;
 
-  constraints = new WindowConstraints({ minWidth: 485, minHeight: 325 });
+  override constraints = new WindowConstraints({ minWidth: 485, minHeight: 325 });
 }

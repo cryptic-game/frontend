@@ -25,7 +25,7 @@ export class WalletAppTransactionComponent implements OnInit {
       this.transaction.destination_uuid = 'Hardware Shop';
     }
 
-    this.moneyToCurrent = this.transaction.destination_uuid === this.walletAppService.wallet.source_uuid;
+    this.moneyToCurrent = this.transaction.destination_uuid === this.walletAppService.wallet!.source_uuid;
     this.time = new Date(new Date(this.transaction.time_stamp).getTime() - new Date().getTimezoneOffset() * 60000).toLocaleString();
   }
 }

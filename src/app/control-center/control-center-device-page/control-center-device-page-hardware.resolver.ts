@@ -16,7 +16,7 @@ export class ControlCenterDevicePageHardwareResolver implements Resolve<DeviceHa
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DeviceHardware> | Observable<never> {
     const deviceUUID = route.queryParamMap.get('device');
 
-    return this.hardwareService.getDeviceParts(deviceUUID).pipe(catchError(() => {
+    return this.hardwareService.getDeviceParts(deviceUUID!).pipe(catchError(() => {
       this.router.navigateByUrl('/').then();
       return EMPTY;
     }));

@@ -45,7 +45,7 @@ export class InventoryService {
           return { ...item, properties: hardware.getByName(item.element_name) };
         }),
         toArray(),
-        map(items => items.sort((a, b) => a.properties.category - b.properties.category))
+        map(items => items.sort((a, b) => a.properties.category! - b.properties.category!))
       );
     }));
   }

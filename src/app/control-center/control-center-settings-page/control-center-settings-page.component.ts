@@ -8,7 +8,7 @@ import { AccountService } from '../../account/account.service';
   templateUrl: './control-center-settings-page.component.html',
   styleUrls: ['./control-center-settings-page.component.scss']
 })
-export class ControlCenterSettingsPageComponent implements OnInit {
+export class ControlCenterSettingsPageComponent {
 
   passwordForm: FormGroup;
   passwordError: string;

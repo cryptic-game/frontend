@@ -74,8 +74,8 @@ export class WindowFrameComponent implements OnInit {
       return 0;
     }
 
-    if (!(target.id === 'desktop-surface' || (target.closest('app-window-frame') && window.document.defaultView
-      .getComputedStyle(target.closest('app-window-frame')).zIndex === this.delegate.position.zIndex.toString()))) {
+    if (!(target.id === 'desktop-surface' || (target.closest('app-window-frame') && window.document.defaultView!
+      .getComputedStyle(target.closest('app-window-frame')!).zIndex === this.delegate.position.zIndex.toString()))) {
       return 0;
     }
 
@@ -238,4 +238,8 @@ export class WindowFrameComponent implements OnInit {
     }
   }
 
+  asElement(target: EventTarget) :Element{
+    // @ts-ignore
+    return target
+  }
 }

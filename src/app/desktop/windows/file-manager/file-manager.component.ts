@@ -3,7 +3,6 @@ import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window
 import { File } from '../../../api/files/file';
 import { Path } from '../../../api/files/path';
 import { FileService } from '../../../api/files/file.service';
-import { ContextMenuComponent, ContextMenuService } from 'ngx-contextmenu';
 import { WebsocketService } from '../../../websocket.service';
 import { Subscription } from 'rxjs';
 import { WindowManager } from '../../window-manager/window-manager';
@@ -15,9 +14,9 @@ import { EditorWindowDelegate } from '../editor/editor.component';
   styleUrls: ['./file-manager.component.scss']
 })
 export class FileManagerComponent extends WindowComponent implements OnInit, OnDestroy {
-  @ViewChild('dragDropMenu') dragDropMenu: ContextMenuComponent;
+  // @ViewChild('dragDropMenu') dragDropMenu: ContextMenuComponent;
 
-  delegate: FileManagerWindowDelegate;
+  override delegate: FileManagerWindowDelegate;
 
   addressBarURL = '/';
   status = '';
@@ -30,14 +29,14 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
 
   constructor(public fileService: FileService,
               private apiService: WebsocketService,
-              private contextMenuService: ContextMenuService,
+              // private contextMenuService: ContextMenuService,
               private windowManager: WindowManager) {
     super();
   }
 
   ngOnInit() {
     this.currentFolder = this.fileService.getRootFile(this.delegate.device.uuid);
-    this.goToFolderUUID(this.delegate.openDirectory?.is_directory ? this.delegate.openDirectory.uuid : Path.ROOT).then();
+    this.goToFolderUUID(this.delegate.openDirectory?.is_directory ? this.delegate.openDirectory.uuid : Path.ROOT!).then();
 
     this.fileUpdateSubscription = this.apiService
       .subscribeNotification<{ created: string[]; changed: string[]; deleted: string[] }>('file-update')
@@ -57,7 +56,7 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
   displayError(error: string) {
     if (this.confirmResolve) {
       this.confirmResolve(false);
-      this.confirmResolve = undefined;
+      this.confirmResolve = undefined!;
     }
     clearTimeout(this.errorTimeoutID);
     this.status = error;
@@ -78,29 +77,32 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
       this.confirmResolve(response);
     }
     this.status = '';
-    this.confirmResolve = undefined;
+    this.confirmResolve = undefined!;
   }
 
   async updateFiles() {
-    this.currentFolderFiles = await this.fileService.getFiles(this.delegate.device.uuid, this.currentFolder.uuid).toPromise();
+    this.currentFolderFiles = (await this.fileService.getFiles(this.delegate.device.uuid, this.currentFolder.uuid).toPromise())!;
   }
 
   async navigateByAddress() {
     try {
-      const file = await this.fileService.getFromPath(
+      const file = (await this.fileService.getFromPath(
         this.delegate.device.uuid,
-        Path.fromString(this.addressBarURL, Path.ROOT)
-      ).toPromise();
+        Path.fromString(this.addressBarURL, Path.ROOT!)
+      ).toPromise())!;
       if (file.is_directory) {
         this.currentFolder = file;
         await this.updateFiles();
       }
     } catch (e) {
+      // @ts-ignore
       if (e.message === 'file_not_found') {
         this.displayError('The specified folder was not found.');
+        // @ts-ignore
       } else if (e.message === 'invalid_path') {
         this.displayError('The specified path is not valid.');
       } else {
+        // @ts-ignore
         this.displayError(e.message);
         console.warn(e);
       }
@@ -108,19 +110,21 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
   }
 
   async updateAddressBar() {
-    const url = await this.fileService.getAbsolutePath(this.delegate.device.uuid, this.currentFolder.uuid).toPromise();
+    const url = (await this.fileService.getAbsolutePath(this.delegate.device.uuid, this.currentFolder.uuid).toPromise())!;
     this.addressBarURL = new Path(url).toString();
   }
 
   async goToFolderUUID(uuid: string) {
     try {
-      this.currentFolder = await this.fileService.getFile(this.delegate.device.uuid, uuid).toPromise();
+      this.currentFolder = (await this.fileService.getFile(this.delegate.device.uuid, uuid).toPromise())!;
       await this.updateFiles();
       await this.updateAddressBar();
     } catch (e) {
+      // @ts-ignore
       if (e.message === 'file_not_found') {
         this.displayError('The specified folder was not found.');
       } else {
+        // @ts-ignore
         this.displayError(e.message);
         console.warn(e);
       }
@@ -132,17 +136,17 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
   }
 
   dragStart(event: DragEvent, source: File) {
-    event.dataTransfer.setData('cryptic/file', source.uuid);
+    event.dataTransfer?.setData('cryptic/file', source.uuid);
   }
 
   dragOver(event: DragEvent, destination: File) {
-    if (destination.is_directory && event.dataTransfer.types.length === 1 && event.dataTransfer.types[0] === 'cryptic/file') {
+    if (destination.is_directory && event.dataTransfer?.types.length === 1 && event.dataTransfer.types[0] === 'cryptic/file') {
       event.preventDefault();
     }
   }
 
   dragOverParentFolder(event: DragEvent) {
-    if (event.dataTransfer.types.length === 1 && event.dataTransfer.types[0] === 'cryptic/file') {
+    if (event.dataTransfer?.types.length === 1 && event.dataTransfer.types[0] === 'cryptic/file') {
       event.preventDefault();
     }
   }
@@ -154,11 +158,14 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     try {
       await this.fileService.move(this.delegate.device.uuid, file.uuid, destinationUUID, file.filename).toPromise();
     } catch (e) {
+      // @ts-ignore
       if (e.message === 'file_already_exists') {
         this.displayError('A file with the same name already exists.');
+        // @ts-ignore
       } else if (e.message === 'file_not_found') {
         this.displayError('The dragged file was not found.');
       } else {
+        // @ts-ignore
         this.displayError(e.message);
         console.warn(e);
       }
@@ -172,11 +179,14 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     try {
       await this.fileService.createFile(this.delegate.device.uuid, file.filename, file.content, destinationUUID).toPromise();
     } catch (e) {
+      // @ts-ignore
       if (e.message === 'file_already_exists') {
         this.displayError('A file with the same name already exists.');
+        // @ts-ignore
       } else if (e.message === 'file_not_found') {
         this.displayError('The dragged file was not found.');
       } else {
+        // @ts-ignore
         this.displayError(e.message);
         console.warn(e);
       }
@@ -184,21 +194,21 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
   }
 
   async dragDrop(event: DragEvent, destinationUUID: string) {
-    const sourceUUID = event.dataTransfer.getData('cryptic/file');
+    const sourceUUID = event.dataTransfer?.getData('cryptic/file')!;
 
     event.stopPropagation();
 
     try {
-      const sourceFile = await this.fileService.getFile(this.delegate.device.uuid, sourceUUID).toPromise();
+      const sourceFile = (await this.fileService.getFile(this.delegate.device.uuid, sourceUUID).toPromise())!;
       if (sourceFile.parent_dir_uuid === destinationUUID) {
         return;
       }
 
-      this.contextMenuService.show.next({
-        contextMenu: this.dragDropMenu,
-        item: { file: sourceFile, destinationUUID: destinationUUID },
-        event: event
-      });
+      // this.contextMenuService.show.next({
+      //   contextMenu: this.dragDropMenu,
+      //   item: { file: sourceFile, destinationUUID: destinationUUID },
+      //   event: event
+      // });
     } catch (e) {
       return;
     }
@@ -212,11 +222,14 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     try {
       Object.assign(file, await this.fileService.rename(file, newName).toPromise());
     } catch (e) {
+      // @ts-ignore
       if (e.message === 'file_already_exists') {
         this.displayError('A file with the same name already exists.');
+        // @ts-ignore
       } else if (e.message === 'invalid_input_data') {
         this.displayError('The specified name is not valid.');
       } else {
+        // @ts-ignore
         this.displayError(e.message);
         console.warn(e);
       }
@@ -227,11 +240,14 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     try {
       await this.fileService.createFile(this.delegate.device.uuid, name, '', this.currentFolder.uuid).toPromise();
     } catch (e) {
+      // @ts-ignore
       if (e.message === 'file_already_exists') {
         this.displayError('A file with the same name already exists.');
+        // @ts-ignore
       } else if (e.message === 'invalid_input_data') {
         this.displayError('The specified name is not valid.');
       } else {
+        // @ts-ignore
         this.displayError(e.message);
         console.warn(e);
       }
@@ -242,11 +258,14 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     try {
       await this.fileService.createDirectory(this.delegate.device.uuid, name, this.currentFolder.uuid).toPromise();
     } catch (e) {
+      // @ts-ignore
       if (e.message === 'file_already_exists') {
         this.displayError('A file with the same name already exists.');
+        // @ts-ignore
       } else if (e.message === 'invalid_input_data') {
         this.displayError('The specified folder name is not valid.');
       } else {
+        // @ts-ignore
         this.displayError(e.message);
         console.warn(e);
       }
@@ -271,9 +290,11 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
             await this.apiService.ms('currency', ['delete'], { source_uuid: uuid, key: key }).toPromise();
           }
         } catch (e) {
+          // @ts-ignore
           if (e.message === 'unknown_source_or_destination' || e.message === 'permission_denied') {
             confirmed = true;
           } else {
+            // @ts-ignore
             this.displayError(e.message);
             confirmed = false;
           }
@@ -300,7 +321,7 @@ export class FileManagerWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/filemanager.svg';
   type: Type<any> = FileManagerComponent;
 
-  constraints = new WindowConstraints({ minWidth: 330, minHeight: 280 });
+  override constraints = new WindowConstraints({ minWidth: 330, minHeight: 280 });
 
   constructor(public openDirectory?: File) {
     super();
