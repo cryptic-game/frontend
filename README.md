@@ -2,14 +2,14 @@
 
 [![Build Status](https://travis-ci.org/cryptic-game/frontend.svg?branch=master)](https://travis-ci.org/cryptic-game/frontend)
 
-This is the official [Cryptic](https://play.cryptic-game.net/) frontend ([available at docker-hub](https://hub.docker.com/r/crypticcp/frontend/)). It has been created with the **Angular** framework using _TypeScript_, _HTML_ and [SASS](http://sass-lang.com/guide).  
+This is the official [Cryptic frontend](https://play.cryptic-game.net/) (available on [Docker Hub](https://hub.docker.com/r/crypticcp/frontend/)). It has been created with the **Angular** framework using _TypeScript_, _HTML_ and [SASS](http://sass-lang.com/guide).  
 
 ## Set up a development environment
 
 NodeJS and NPM are required to compile and start the application. Refer to [https://nodejs.org/de/](https://nodejs.org/de/) for download/installation instructions. To get help, run `ng --help` or check the [Angular documentation](https://angular.io/docs) / [Angular CLI documentation](https://github.com/angular/angular-cli/wiki).
 
-- [Microsoft Visual Studio Code](https://code.visualstudio.com) is the recommended editor. It provides a build-in debugger (see [debugging](#debugging)) and integrates a _git_ client.  
-- IntelliJ Ultimate/Webstorm (paid or student license) 
+- [Microsoft Visual Studio Code](https://code.visualstudio.com) is the recommended editor. It provides a built-in debugger (see [debugging](#debugging)) and integrates a _git_ client.  
+- [WebStorm](https://www.jetbrains.com/webstorm/) (paid or student license) 
 
 If you use **VSCode**:  
 
@@ -21,10 +21,10 @@ If you use **VSCode**:
 If you use the **CLI**: 
 
 1. Open the repository in the terminal. 
-2. Run `npm install`. Brew a fresh coffee, because this process can take a bit time.
+2. Run `npm install`. Brew a fresh coffee, because this process can take some time.
 3. Run `ng serve` or `npm start` to start a development server listening on [http://localhost:4200](http://localhost:4200). 
 
-If you use **IntelliJ/Webstorm**:
+If you use **WebStorm**:
 
 1. Click File -> New -> Project from Version Control (Welcome Screen: `Get from VSC`)
 2. Paste the [GitHub repository url](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/GitHub-URL-find-use-example).
@@ -56,4 +56,4 @@ Note: [CSS tricks](https://css-tricks.com) delivers tips for CSS/SCSS (e.g. cent
 
 ## Debugging
 
-VSCode comes with a build-in, ready-to-use [debugger](https://code.visualstudio.com/Docs/editor/debugging)  that requires the  _Debugger for Chrome_ browser extension. To use it, run  the task `run`, switch to the debug section, and start `Run`.
+VSCode comes with a built-in, ready-to-use [debugger](https://code.visualstudio.com/Docs/editor/debugging)  that requires the  _Debugger for Chrome_ browser extension. To use it, run  the task `run`, switch to the debug section, and start `Run`.
