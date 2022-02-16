@@ -1,97 +1,59 @@
-# official frontend
+# Official Cryptic Frontend
 
 [![Build Status](https://travis-ci.org/cryptic-game/frontend.svg?branch=master)](https://travis-ci.org/cryptic-game/frontend)
 
-This is the official frontend of Cryptic.  
-https://play.cryptic-game.net/
+This is the official [Cryptic frontend](https://play.cryptic-game.net/) (available on [Docker Hub](https://hub.docker.com/r/crypticcp/frontend/)). It has been created with the **Angular** framework using _TypeScript_, _HTML_ and [SASS](http://sass-lang.com/guide).  
 
-# Advice for Developers
+## Set up a development environment
 
-This web application is created with the **Angular** framework. The Framework uses the languages _TypeScript_ (JavaScript with typing), _HTML_ and _SCSS_. A fundamental understanding of these languages is important to understand the code. _SCSS_ or [_Sass_](http://sass-lang.com/guide) is a CSS preprocessor. You can find a tutorial [here](https://www.toptal.com/sass/theming-scss-tutorial).
+NodeJS and NPM are required to compile and start the application. Refer to [https://nodejs.org/de/](https://nodejs.org/de/) for download/installation instructions. To get help, run `ng --help` or check the [Angular documentation](https://angular.io/docs) / [Angular CLI documentation](https://github.com/angular/angular-cli/wiki).
 
-The framework also uses a **CLI** (_Comand Line Interface_). It helps creating and managing Angular projects fast.
+- [Microsoft Visual Studio Code](https://code.visualstudio.com) is the recommended editor. It provides a built-in debugger (see [debugging](#debugging)) and integrates a _git_ client.  
+- [WebStorm](https://www.jetbrains.com/webstorm/) (paid or student license) 
 
-## Editor
+If you use **VSCode**:  
 
-The project of course works with any editor, but we recommend the editor [VSCode](https://code.visualstudio.com) by Microsoft. Visual Studio Code also has a build-in debugger and a helpful _git_ support.
+1. Press _Ctrl+Shift+P / CMD+Shift+P_.
+2. Type `Task: Run Task` to enter task mode. 
+3. Run `install` to install all required dependencies. On Linux/Mac OSX you must type in your password.
+4. Execute the task `run`, which starts an development server listening on [http://localhost:4200](http://localhost:4200).
 
-## Setting up an Development Environment
+If you use the **CLI**: 
 
-For compiling and starting of the application **NodeJS** and **NPM** are needed. Downloads and installation advice can be found on [https://nodejs.org/de/](https://nodejs.org/de/).
+1. Open the repository in the terminal. 
+2. Run `npm install`. Brew a fresh coffee, because this process can take some time.
+3. Run `ng serve` or `npm start` to start a development server listening on [http://localhost:4200](http://localhost:4200). 
 
-### With VSCode
+If you use **WebStorm**:
 
-After the installation of _Node_ an _NPM_ open the repository in VSCode. Press _Ctrl+Shift+P / CMD+Shift+P_ to open the command palette. Type `Task: Run Task` to enter task mode. The task `install` installs all dependencies needed.
+1. Click File -> New -> Project from Version Control (Welcome Screen: `Get from VSC`)
+2. Paste the [GitHub repository url](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/GitHub-URL-find-use-example).
+3. Press Shift twice. Run `npm install`. 
+4. Click the green play button in the top right to start the Angular CLI Server. 
 
-**!** On Unix-based systems such as Linux or OS X you have to type in your password.
-
-After this you can execute the task `run`. It starts an development server listening on [http://localhost:4200](http://localhost:4200).
-
-### With the CLI
-
-After the installation process open the repository in the terminal and run `npm install`. Make yourself a coffee, because this process can take a bit time.
-
-To start a development server on [http://localhost:4200](http://localhost:4200) run `ng serve`. This is also possible with `npm start`.
-
-## VSCode
+Note: Create a new component with the command `ng generate component component-name` (short: `ng g c component-name`).
 
 ### Tasks
 
-Visual Studio Code offers the possibility to create tasks. Tasks can be very helpful to manage big projects without a _CLI_. Tasks can be executed via the command palette (open with _Ctrl+Shift+P / CMD+Shift+P_).
+VSCode allows to create tasks, which can be very helpful to manage big projects without a _CLI_. Tasks can be executed via the command palette (open with _Ctrl+Shift+P / CMD+Shift+P_). Learn more in this [task tutorial](https://code.visualstudio.com/Docs/editor/tasks).
 
-**!** [A task tutorial](https://code.visualstudio.com/Docs/editor/tasks)
+Tasks:  
 
-#### Build
+- `build`: compiles and builds the whole project. The result will be stored in `dist/`.
+- `test`: test your code with [Karma](https://karma-runner.github.io).
 
-The task `build` compiles and builds the whole project. The result will be stored in `dist/`.
+## Build & Test
 
-#### Testing
+- `ng build`: compiles and builds the whole project. The result will be stored in `dist/`. For production mode use the `--prod` argument.
+- `ng test`: tests your code with [Karma](https://karma-runner.github.io).
+- `ng e2e`: runs end-to-end tests with [Protractor](http://www.protractortest.org/).
 
-Via the task `test` code can be tested with [Karma](https://karma-runner.github.io).
+## Check browser compatibility
 
-#### End-to-End Testing
+To check browser-compatibility, use [Can I use](https://caniuse.com/). You should test your code at minimum with one WebKit browser (Chrome, Chromium, Safari, or Opera) and one non-WebKit browser (Firefox or Microsoft Edge). 
 
-End-to-end tests can be made with `e2e` and [Protractor](http://www.protractortest.org/).
+Note: [CSS tricks](https://css-tricks.com) delivers tips for CSS/SCSS (e.g. centering, flex-box, grid etc.).
 
-### Debugging
+## Debugging
 
-VSCode comes with a build-in [debugger](https://code.visualstudio.com/Docs/editor/debugging). It's already configured. The only thing you have to do is running the taks `run`, switching to the debug section and starting `Run`.
-
-**!** For the debugger the extension _Debugger for Chrome_ must be installed.
-
-## The Angular CLI
-
-The Angualar CLI helps you managing Angular projects.
-
-### Generating Components
-
-The command `ng generate component component-name` (short: `ng g c component-name`) creates a new Component. Details can be found in the Angular documentation.
-
-### Build
-
-`ng build` compiles and builds the whole project. The result will be stored in `dist/`. For production mode use the `--prod` argument.
-
-### Testing
-
-Via `ng test` code can be tested with [Karma](https://karma-runner.github.io).
-
-### End-to-End Testing
-
-End-to-end tests can be made with `ng e2e` and [Protractor](http://www.protractortest.org/).
-
-## Appendix
-
-### Advice for browser compatibility
-
-Every contributor should test his code minimum with one WebKit browser, such as Chrome, Chromium, Safari and Opera, and a non-WebKit browser, such as Firefox, Internet Explorer or Edge.
-
-Before you use very new or old things in your code it's recommendet to use "[Can I use](https://caniuse.com/)". With this tool you can test the compatibility of your code.
-
-[CSS tricks](https://css-tricks.com) delivers tipps for CSS/SCSS (e.g. centering, flex-box, grid etc.).
-
-### Further help
-
-The [Angular documentation](https://angular.io/docs) is very helpful. `ng --help` or the [Angular CLI documentation](https://github.com/angular/angular-cli/wiki) can help with the _CLI_
-
-### Docker-Hub
-This frontend is online on docker-hub (https://hub.docker.com/r/crypticcp/frontend/).
+VSCode comes with a built-in, ready-to-use [debugger](https://code.visualstudio.com/Docs/editor/debugging)  that requires the  _Debugger for Chrome_ browser extension. To use it, run  the task `run`, switch to the debug section, and start `Run`.
