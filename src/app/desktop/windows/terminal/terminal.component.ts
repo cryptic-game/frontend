@@ -1,12 +1,15 @@
-import { SettingsService } from '../settings/settings.service';
-import { Component, ElementRef, OnInit, SecurityContext, Type, ViewChild } from '@angular/core';
-import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
-import { TerminalAPI, TerminalState } from './terminal-api';
-import { DefaultTerminalState } from './terminal-states';
-import { WebsocketService } from '../../../websocket.service';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { FileService } from '../../../api/files/file.service';
-import { WindowManager } from '../../window-manager/window-manager';
+import {SettingsService} from '../settings/settings.service';
+import {Component, ElementRef, OnInit, SecurityContext, Type, ViewChild} from '@angular/core';
+import {WindowComponent, WindowDelegate} from '../../window/window-delegate';
+import {TerminalAPI, TerminalState} from './terminal-api';
+import {DefaultTerminalState} from './terminal-states';
+import {WebsocketService} from '../../../websocket.service';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {DeviceService} from '../../../api/devices/device.service';
+import {FileService} from '../../../api/files/file.service';
+import {WindowManager} from '../../window-manager/window-manager';
+import {Router} from '@angular/router';
+import {Device} from 'src/app/api/devices/device';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -15,9 +18,9 @@ import { WindowManager } from '../../window-manager/window-manager';
   styleUrls: ['./terminal.component.scss']
 })
 export class TerminalComponent extends WindowComponent implements OnInit, TerminalAPI {
-  @ViewChild('history', { static: true }) history: ElementRef;
-  @ViewChild('prompt', { static: true }) prompt: ElementRef;
-  @ViewChild('cmdLine', { static: true }) cmdLine: ElementRef;
+  @ViewChild('history', {static: true}) history: ElementRef;
+  @ViewChild('prompt', {static: true}) prompt: ElementRef;
+  @ViewChild('cmdLine', {static: true}) cmdLine: ElementRef;
 
   currentState: TerminalState[] = [];
   promptHtml: SafeHtml;
@@ -28,8 +31,10 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
     private websocket: WebsocketService,
     private settings: SettingsService,
     private fileService: FileService,
+    private deviceService: DeviceService,
     private windowManager: WindowManager,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private router: Router,
   ) {
     super();
   }
@@ -40,6 +45,7 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
         this.websocket,
         this.settings,
         this.fileService,
+        this.deviceService,
         this.domSanitizer,
         this.delegate,
         this.delegate.device,
@@ -107,10 +113,11 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
   }
 
   autocomplete(content: string) {
-    const completed = this.getState().autocomplete(content);
-    if (completed) {
-      this.cmdLine.nativeElement.value = completed;
-    }
+    this.getState().autocomplete(content).then((completed) => {
+      if (completed) {
+        this.cmdLine.nativeElement.value = completed;
+      }
+    });
   }
 
   previousFromHistory() {
@@ -166,6 +173,20 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
 
   clear() {
     this.history.nativeElement.value = '';
+  }
+
+  async shutdown(): Promise<boolean> {
+    const uuid = this.delegate.device['uuid'];
+    try {
+      await this.deviceService.togglePower(uuid).toPromise();
+    } catch {
+      return false;
+    }
+    return await this.router.navigate(['device'], {queryParams: {device: uuid}});
+  }
+
+  getOwnerDevice(): Device {
+    return this.delegate.device;
   }
 }
 

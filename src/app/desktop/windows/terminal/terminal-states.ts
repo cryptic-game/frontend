@@ -5,11 +5,14 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { SecurityContext } from '@angular/core';
 import { SettingsService } from '../settings/settings.service';
 import { FileService } from '../../../api/files/file.service';
+import { DeviceService } from '../../../api/devices/device.service';
 import { Path } from '../../../api/files/path';
 import { of } from 'rxjs';
 import { Device } from '../../../api/devices/device';
 import { WindowDelegate } from '../../window/window-delegate';
 import { File } from '../../../api/files/file';
+import { Shell } from '../../../shell/shell';
+import { ShellApi } from '../../../shell/shellapi';
 
 
 function escapeHtml(html) {
@@ -59,7 +62,7 @@ export abstract class CommandTerminalState implements TerminalState {
 
   abstract commandNotFound(command: string);
 
-  autocomplete(content: string): string {
+  async autocomplete(content: string): Promise<string> {
     return content
       ? Object.entries(this.commands)
         .filter(command => !command[1].hideFromHelp)
@@ -186,6 +189,10 @@ export class DefaultTerminalState extends CommandTerminalState {
       executor: this.info.bind(this),
       description: 'shows info of the current device'
     },
+    'msh': {
+      executor: this.msh.bind(this),
+      description: 'creates a new shell'
+    },
 
     // easter egg
     'chaozz': {
@@ -199,8 +206,8 @@ export class DefaultTerminalState extends CommandTerminalState {
   working_dir: string = Path.ROOT;  // UUID of the working directory
 
   constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
-              private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
-              protected terminal: TerminalAPI, public promptColor: string = null) {
+              private deviceService: DeviceService, private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate,
+              protected activeDevice: Device, protected terminal: TerminalAPI, public promptColor: string = null) {
     super();
     this.settings.terminalPromptColor.getFresh().then(() => this.refreshPrompt());
   }
@@ -1202,8 +1209,8 @@ export class DefaultTerminalState extends CommandTerminalState {
     this.websocket.ms('device', ['device', 'info'], { device_uuid: args[0] }).subscribe(infoData => {
       this.websocket.ms('service', ['part_owner'], { device_uuid: args[0] }).subscribe(partOwnerData => {
         if (infoData['owner'] === this.websocket.account.uuid || partOwnerData['ok'] === true) {
-          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.fileService, this.domSanitizer,
-            this.windowDelegate, infoData, this.terminal, '#DD2C00'));
+          this.terminal.pushState(new DefaultTerminalState(this.websocket, this.settings, this.fileService, this.deviceService,
+            this.domSanitizer, this.windowDelegate, infoData, this.terminal, '#DD2C00'));
         } else {
           this.terminal.outputText('Access denied');
         }
@@ -1575,6 +1582,15 @@ export class DefaultTerminalState extends CommandTerminalState {
 
     DefaultTerminalState.registerPromptAppenders(element);
   }
+
+  msh() {
+    this.terminal.pushState(
+      new ShellTerminal(
+        this.websocket, this.settings, this.fileService, this.deviceService, this.domSanitizer, this.windowDelegate,
+        this.activeDevice, this.terminal, this.promptColor
+      )
+    )
+  }
 }
 
 
@@ -1600,7 +1616,7 @@ export abstract class ChoiceTerminalState implements TerminalState {
     this.terminal.outputText('\'' + choice + '\' is not one of the following: ' + Object.keys(this.choices).join(', '));
   }
 
-  autocomplete(content: string): string {
+  async autocomplete(content: string): Promise<string> {
     return content ? Object.keys(this.choices).sort().find(choice => choice.startsWith(content)) : '';
   }
 
@@ -1670,4 +1686,93 @@ export class BruteforceTerminalState extends ChoiceTerminalState {
     const prompt = `Bruteforcing ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} [stop/exit] `;
     this.terminal.changePrompt(`<span style="color: gold">${prompt}</span>`, true);
   }
+}
+
+
+class DefaultStdin implements TerminalState {
+  private callback: (stdin: string) => void;
+
+  constructor(private terminal: TerminalAPI) {}
+
+  read(callback: (stdin: string) => void) {
+    this.callback = callback;
+    this.terminal.pushState(this);
+  }
+
+  execute(command: string) {
+    const input = command ? command : '';
+    this.terminal.popState();
+    this.callback(input);
+  }
+
+  async autocomplete(i: string): Promise<string> {
+    return i;
+  }
+
+  getHistory(): string[] {
+    return [];
+  }
+
+  refreshPrompt() {
+    this.terminal.changePrompt('>');
+  }
+}
+
+
+class ShellTerminal implements TerminalState {
+  private shell: Shell;
+
+  constructor(private websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
+              private deviceService: DeviceService, private domSanitizer: DomSanitizer, windowDelegate: WindowDelegate,
+              private activeDevice: Device, private terminal: TerminalAPI, private promptColor: string = null
+  ) {
+    const shellApi = new ShellApi(
+      this.websocket, this.settings, this.fileService, this.deviceService,
+      this.domSanitizer, windowDelegate, this.activeDevice,
+      terminal, this.promptColor, this.refreshPrompt.bind(this),
+      Path.ROOT
+    );
+    this.shell = new Shell(
+      this.terminal.output.bind(this.terminal),
+      // TODO use this
+      // this.terminal.outputText.bind(this.terminal),
+      this.stdinHandler.bind(this),
+      this.terminal.outputText.bind(this.terminal),
+      shellApi,
+    );
+  }
+
+  /** default implementaion for stdin: reading from console */
+  stdinHandler(callback: (input: string) => void) {
+    return new DefaultStdin(this.terminal).read(callback);
+  }
+  execute(command: string) {
+    this.shell.execute(command);
+  }
+
+  async autocomplete(content: string): Promise<string> {
+    return await this.shell.autocomplete(content);
+  }
+
+  getHistory(): string[] {
+    return this.shell.getHistory();
+  }
+
+  refreshPrompt() {
+    this.fileService.getAbsolutePath(this.activeDevice['uuid'], this.shell.api.working_dir).subscribe(path => {
+      // const color = this.domSanitizer.sanitize(SecurityContext.STYLE, this.promptColor || this.settings.getTPC());
+      // TODO undo this
+      const color = 'yellow';
+      const prompt = this.domSanitizer.bypassSecurityTrustHtml(
+        `<span style="color: ${color}">` +
+        `${escapeHtml(this.websocket.account.name)}@${escapeHtml(this.activeDevice['name'])}` +
+        `<span style="color: white">:</span>` +
+        `<span style="color: #0089ff;">/${path.join('/')}</span>$` +
+       `</span>`
+      );
++      this.terminal.changePrompt(prompt);
+    });
+
+  }
+
 }
