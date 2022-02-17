@@ -26,7 +26,7 @@ export class AppRouteReuseStrategy implements RouteReuseStrategy {
   }
 
   destroyHandle(handle: DetachedRouteHandle) {
-    // TODO: @Marcel ts-ignore beseitigen
+    // TODO:
     // @ts-ignore
     handle['componentRef']?.destroy();
   }

@@ -333,7 +333,7 @@ describe('DesktopComponent', () => {
 
   it('#checkDropAllowed should use "msElementsFromPoint" if "elementsFromPoint" does not exist on document', () => {
     const elementsFromPoint = document.elementsFromPoint;
-    // TODO: @Marcel. Kann man diese spezifischen Checks ausstellen? Prüfung allgemein ist gut, aber nicht das hier
+    // TODO:
     // @ts-ignore
     const spy = document['msElementsFromPoint'] = jasmine.createSpy('msElementsFromPoint', document['msElementsFromPoint']);
     document.elementsFromPoint = undefined!;
@@ -346,18 +346,18 @@ describe('DesktopComponent', () => {
 
   it('#checkDropAllowed should return true if neither "elementsFromPoint" nor "msElementsFromPoint" exists', () => {
     const elementsFromPoint = document.elementsFromPoint;
-    // TODO: @Marcel. Kann man diese spezifischen Checks ausstellen? Prüfung allgemein ist gut, aber nicht das hier
+    // TODO:
     // @ts-ignore
     const msElementsFromPoint = document['msElementsFromPoint'];
     document.elementsFromPoint = undefined!;
-    // TODO: @Marcel. Kann man diese spezifischen Checks ausstellen? Prüfung allgemein ist gut, aber nicht das hier
+    // TODO:
     // @ts-ignore
     document['msElementsFromPoint'] = undefined;
 
     expect(component.checkDropAllowed(new MouseEvent('mousemove'))).toBeTruthy();
 
     document.elementsFromPoint = elementsFromPoint;
-    // TODO: @Marcel. Kann man diese spezifischen Checks ausstellen? Prüfung allgemein ist gut, aber nicht das hier
+    // TODO:
     // @ts-ignore
     document['msElementsFromPoint'] = msElementsFromPoint;
   });

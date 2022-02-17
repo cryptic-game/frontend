@@ -136,7 +136,7 @@ export class DesktopComponent implements OnInit {
   }
 
   checkDropAllowed(e: MouseEvent): boolean {
-    // TODO: @Marcel. Kann man diese spezifischen Checks ausstellen? Prüfung allgemein ist gut, aber nicht das hier
+    // TODO:
     // @ts-ignore
     const elementsFromPoint = document['elementsFromPoint'] || document['msElementsFromPoint'];
     if (!elementsFromPoint) {
@@ -150,11 +150,11 @@ export class DesktopComponent implements OnInit {
 
   getBackground(): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(
-      // @ts-ignore // TODO: @Marcel
+      // TODO:
+      // @ts-ignore
       `black url(${availableBackgrounds[this.settings.backgroundImage.getCacheOrDefault()]}) bottom/cover no-repeat`
     );
   }
-
 
   trackByUUID(index: number, device: Device) {
     return device.uuid;
