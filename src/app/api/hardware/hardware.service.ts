@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
-import { WebsocketService } from '../../websocket.service';
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { Part, PartCategory } from './hardware-parts';
-import { DeviceHardware } from './device-hardware';
-import { HardwareList } from './hardware-list';
+import {Injectable} from '@angular/core';
+import {WebsocketService} from '../../websocket.service';
+import {Observable, of} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
+import {Part, PartCategory} from './hardware-parts';
+import {DeviceHardware} from './device-hardware';
+import {HardwareList} from './hardware-list';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HardwareService {
 
-  hardwareAvailable: HardwareList;
+  hardwareAvailable: HardwareList | null;
 
   constructor(private webSocket: WebsocketService) {
   }
@@ -40,7 +40,7 @@ export class HardwareService {
     }));
   }
 
-  getAvailableParts(): Observable<HardwareList> {
+  getAvailableParts(): Observable<HardwareList | null> {
     if (this.hardwareAvailable) {
       return of(this.hardwareAvailable);
     } else {
@@ -49,36 +49,36 @@ export class HardwareService {
   }
 
   getDeviceParts(device: string): Observable<DeviceHardware> {
-    return this.webSocket.ms('device', ['device', 'info'], { device_uuid: device }).pipe(
+    return this.webSocket.ms('device', ['device', 'info'], {device_uuid: device}).pipe(
       switchMap(data => this.getAvailableParts().pipe(map(() => data))),  // retrieve available parts if not saved yet
       map(data => {
         const hardware = new DeviceHardware(data);
 
-        for (const { hardware_element, hardware_type } of data['hardware']) {
+        for (const {hardware_element, hardware_type} of data['hardware']) {
           switch (hardware_type) {
             case 'mainboard':
-              hardware.mainboard = this.hardwareAvailable.mainboard[hardware_element];
+              hardware.mainboard = this.hardwareAvailable!.mainboard[hardware_element];
               break;
             case 'cpu':
-              hardware.cpu.push(this.hardwareAvailable.cpu[hardware_element]);
+              hardware.cpu.push(this.hardwareAvailable!.cpu[hardware_element]);
               break;
             case 'gpu':
-              hardware.gpu.push(this.hardwareAvailable.gpu[hardware_element]);
+              hardware.gpu.push(this.hardwareAvailable!.gpu[hardware_element]);
               break;
             case 'ram':
-              hardware.ram.push(this.hardwareAvailable.ram[hardware_element]);
+              hardware.ram.push(this.hardwareAvailable!.ram[hardware_element]);
               break;
             case 'disk':
-              hardware.disk.push(this.hardwareAvailable.disk[hardware_element]);
+              hardware.disk.push(this.hardwareAvailable!.disk[hardware_element]);
               break;
             case 'processorCooler':
-              hardware.processorCooler.push(this.hardwareAvailable.processorCooler[hardware_element]);
+              hardware.processorCooler.push(this.hardwareAvailable!.processorCooler[hardware_element]);
               break;
             case 'powerPack':
-              hardware.powerPack = this.hardwareAvailable.powerPack[hardware_element];
+              hardware.powerPack = this.hardwareAvailable!.powerPack[hardware_element];
               break;
             case 'case':
-              hardware.case = this.hardwareAvailable.case[hardware_element];
+              hardware.case = this.hardwareAvailable!.case[hardware_element];
               break;
             default:
               console.warn('Unknown hardware part type: ' + hardware_type);

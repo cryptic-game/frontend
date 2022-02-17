@@ -1,5 +1,5 @@
 <div class="item">
-  <div class="body" (click)="specificationsVisible = !specificationsVisible">
+  <div (click)="specificationsVisible = !specificationsVisible" class="body">
     <div class="content">
       <span class="name">{{item.name}}</span>
       <svg [@arrowUpwardsDownwards]="specificationsVisible ? 'downwards' : 'upwards'" class="arrow"
@@ -11,13 +11,13 @@
     <div class="footer">
       <span>{{item.price / 1000}} MC</span>
 
-      <span *ngIf="inCart" (click)="removeFromCart(); $event.stopPropagation()" class="btn btn-error">Remove</span>
-      <span *ngIf="!inCart" (click)="addToCart(); $event.stopPropagation()" class="btn btn-success">Add</span>
+      <span (click)="removeFromCart(); $event.stopPropagation()" *ngIf="inCart" class="btn btn-error">Remove</span>
+      <span (click)="addToCart(); $event.stopPropagation()" *ngIf="!inCart" class="btn btn-success">Add</span>
     </div>
   </div>
 
-  <div *ngIf="specificationsVisible" [@expandCollapse] #specificationsDiv class="specifications"
-       [style.columns]="getSpecificationsColumnCount(specificationsDiv.clientWidth)">
+  <div #specificationsDiv *ngIf="specificationsVisible" [@expandCollapse] [style.columns]="getSpecificationsColumnCount(specificationsDiv.clientWidth)"
+       class="specifications">
     <h3>Technical specifications</h3>
     <div *ngFor="let category of specifications | keyvalue: originalOrder" class="category">
       <h4>{{category.key}}</h4>

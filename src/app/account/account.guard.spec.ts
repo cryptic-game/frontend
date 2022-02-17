@@ -1,8 +1,8 @@
-import { AccountGuard } from './account.guard';
-import { inject, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { WebsocketService } from '../websocket.service';
-import { Observable, of } from 'rxjs';
+import {AccountGuard} from './account.guard';
+import {inject, TestBed} from '@angular/core/testing';
+import {Router} from '@angular/router';
+import {WebsocketService} from '../websocket.service';
+import {Observable, of} from 'rxjs';
 
 describe('AccountGuard', () => {
 
@@ -14,8 +14,8 @@ describe('AccountGuard', () => {
     TestBed.configureTestingModule({
       providers: [
         AccountGuard,
-        { provide: Router, useValue: router },
-        { provide: WebsocketService, useValue: webSocketService }
+        {provide: Router, useValue: router},
+        {provide: WebsocketService, useValue: webSocketService}
       ]
     });
   });
@@ -30,7 +30,7 @@ describe('AccountGuard', () => {
       (router.navigate as jasmine.Spy).and.returnValue(new Promise(() => {
       }));
 
-      const observable = guard.canActivate(null, null) as Observable<boolean>;
+      const observable = guard.canActivate(null!, null!) as Observable<boolean>;
       observable.subscribe(canActivate => {
         expect(webSocket.trySession).toHaveBeenCalled();
         expect(canActivate).toBeFalsy();
@@ -45,7 +45,7 @@ describe('AccountGuard', () => {
       (router.navigate as jasmine.Spy).and.returnValue(new Promise(() => {
       }));
 
-      const observable = guard.canActivate(null, null) as Observable<boolean>;
+      const observable = guard.canActivate(null!, null!) as Observable<boolean>;
       observable.subscribe(canActivate => {
         expect(webSocket.trySession).toHaveBeenCalled();
         expect(canActivate).toBeTruthy();

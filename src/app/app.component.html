@@ -1,18 +1,18 @@
-<h1 id="version-info" [class.just-updated]="versionService.justUpdated">{{versionService.CURRENT_VERSION}}</h1>
+<!--<h1 id="version-info" [class.just-updated]="versionService.justUpdated">{{versionService.CURRENT_VERSION}}</h1>-->
 
-<div class="update-modal-container">
-  <div *ngIf="versionService.availableUpdate" class="update-modal">
-    <p>
-      There is a new version available: {{versionService.availableUpdate?.available.appData['version']}}
-      (current: {{versionService.availableUpdate?.current.appData['version']}})<br>
-      Would you like to refresh the page?
-    </p>
-    <div class="buttons">
-      <button (click)="activateUpdate()">Refresh</button>
-      <button (click)="cancelUpdate()">Cancel</button>
-    </div>
-  </div>
-</div>
+<!--<div class="update-modal-container">-->
+<!--  <div *ngIf="versionService.availableUpdate" class="update-modal">-->
+<!--    <p>-->
+<!--      There is a new version available: {{versionService.availableUpdate?.available.appData['version']}}-->
+<!--      (current: {{versionService.availableUpdate?.current.appData['version']}})<br>-->
+<!--      Would you like to refresh the page?-->
+<!--    </p>-->
+<!--    <div class="buttons">-->
+<!--      <button (click)="activateUpdate()">Refresh</button>-->
+<!--      <button (click)="cancelUpdate()">Cancel</button>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 
 <div [@routerSlide]="prepareRoute(outlet)" id="animation-container">
   <router-outlet #outlet="outlet"></router-outlet>

@@ -1,8 +1,8 @@
-import { NEVER, of, Subject } from 'rxjs';
-import { WindowDelegate } from './desktop/window/window-delegate';
-import { Device } from './api/devices/device';
-import { WebsocketService } from './websocket.service';
-import { WindowManager } from './desktop/window-manager/window-manager';
+import {NEVER, of, Subject} from 'rxjs';
+import {WindowDelegate} from './desktop/window/window-delegate';
+import {Device} from './api/devices/device';
+import {WebsocketService} from './websocket.service';
+import {WindowManager} from './desktop/window-manager/window-manager';
 
 export function webSocketMock(): WebsocketService {
   const mock = jasmine.createSpyObj(
@@ -29,15 +29,15 @@ export function webSocketMock(): WebsocketService {
 }
 
 export function emptyDevice(partial: Partial<Device> = {}): Device {
-  return { name: '', owner: '', powered_on: false, uuid: '', starter_device: false, ...partial };
+  return {name: '', owner: '', powered_on: false, uuid: '', starter_device: false, ...partial};
 }
 
 export function emptyWindowDelegate(): WindowDelegate {
   return new class extends WindowDelegate {
     icon = '';
     title = '';
-    type = null;
-    device = emptyDevice();
+    type: any = null; //TODO: Type me correct
+    override device = emptyDevice();
   };
 }
 
@@ -73,15 +73,4 @@ export class FakePromise {
   reject(reason: any) {
     this.rejectCallback?.(reason);
   }
-}
-
-export function swUpdateMock() {
-  const mock = jasmine.createSpyObj('SwUpdate', ['activateUpdate', 'checkForUpdate']);
-  mock.activateUpdate.and.callFake(() => Promise.resolve());
-  mock.checkForUpdate.and.callFake(() => Promise.resolve());
-  mock.$$availableSubj = new Subject<{ available: { hash: string } }>();
-  mock.$$activatedSubj = new Subject<{ current: { hash: string } }>();
-  mock.available = mock.$$availableSubj.asObservable();
-  mock.activated = mock.$$activatedSubj.asObservable();
-  return mock;
 }

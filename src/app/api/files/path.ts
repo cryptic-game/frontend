@@ -1,10 +1,10 @@
 export class Path {
-  static ROOT = null;
+  static ROOT: string|null = null;
 
   path: string[];
   parentUUID: string;
 
-  constructor(path: string[], parentUUID: string = Path.ROOT) {
+  constructor(path: string[], parentUUID: string = Path.ROOT!) {
     this.path = path;
     this.parentUUID = parentUUID;
   }

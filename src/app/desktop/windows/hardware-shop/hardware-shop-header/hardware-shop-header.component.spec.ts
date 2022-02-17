@@ -1,16 +1,16 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { HardwareShopHeaderComponent } from './hardware-shop-header.component';
-import { WebsocketService } from '../../../../websocket.service';
-import { webSocketMock } from '../../../../test-utils';
+import {HardwareShopHeaderComponent} from './hardware-shop-header.component';
+import {WebsocketService} from '../../../../websocket.service';
+import {webSocketMock} from '../../../../test-utils';
 
 describe('HardwareShopHeaderComponent', () => {
   let component: HardwareShopHeaderComponent;
   let fixture: ComponentFixture<HardwareShopHeaderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{ provide: WebsocketService, useValue: webSocketMock() }],
+      providers: [{provide: WebsocketService, useValue: webSocketMock()}],
       declarations: [HardwareShopHeaderComponent]
     })
       .compileComponents();

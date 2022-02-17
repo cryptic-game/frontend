@@ -1,4 +1,4 @@
-import { PXtoViewHeightPipe } from './pxto-view-height.pipe';
+import {PXtoViewHeightPipe} from './pxto-view-height.pipe';
 
 describe('PXtoViewHeightPipe', () => {
   it('create an instance', () => {

@@ -1,22 +1,23 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { TaskManagerComponent, TaskManagerWindowDelegate } from './task-manager.component';
-import { HardwareService } from '../../../api/hardware/hardware.service';
+import {TaskManagerComponent, TaskManagerWindowDelegate} from './task-manager.component';
+import {HardwareService} from '../../../api/hardware/hardware.service';
 import * as rxjs from 'rxjs';
-import { Subject } from 'rxjs';
-import { WebsocketService } from '../../../websocket.service';
-import { DeviceHardware } from '../../../api/hardware/device-hardware';
-import { emptyDevice, emptyWindowDelegate } from '../../../test-utils';
-import { WindowDelegate } from '../../window/window-delegate';
+import {Subject} from 'rxjs';
+import {WebsocketService} from '../../../websocket.service';
+import {DeviceHardware} from '../../../api/hardware/device-hardware';
+import {emptyDevice, emptyWindowDelegate} from '../../../test-utils';
+import {WindowDelegate} from '../../window/window-delegate';
 
 describe('TaskManagerComponent', () => {
-  let webSocket;
-  let notification_subject;
+  //TODO: Type me correct
+  let webSocket: any;
+  let notification_subject: any;
   let hardwareService;
   let component: TaskManagerComponent;
   let fixture: ComponentFixture<TaskManagerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     webSocket = jasmine.createSpyObj('WebsocketService', ['ms', 'subscribeNotification']);
     webSocket.ms.and.returnValue(rxjs.of({}));
     notification_subject = new Subject();
@@ -48,9 +49,9 @@ describe('TaskManagerComponent', () => {
     TestBed.configureTestingModule({
       declarations: [TaskManagerComponent],
       providers: [
-        { provide: WebsocketService, useValue: webSocket },
-        { provide: HardwareService, useValue: hardwareService },
-        { provide: WindowDelegate, useValue: emptyWindowDelegate() }
+        {provide: WebsocketService, useValue: webSocket},
+        {provide: HardwareService, useValue: hardwareService},
+        {provide: WindowDelegate, useValue: emptyWindowDelegate()}
       ]
     })
       .compileComponents();
@@ -67,33 +68,33 @@ describe('TaskManagerComponent', () => {
   });
 
   it('should register a notification handler for "resource-usage" and update the utilization if the device uuid matches',
-    async(() => {
+    waitForAsync(() => {
       const deviceUUID = 'test123-456';
       const cpuUtilization = 6226;
 
-      component.delegate.device = { uuid: deviceUUID, name: '', powered_on: true, owner: '', starter_device: false };
+      component.delegate.device = {uuid: deviceUUID, name: '', powered_on: true, owner: '', starter_device: false};
 
       fixture.whenStable().then(() => {
         expect(webSocket.subscribeNotification).toHaveBeenCalledWith('resource-usage');
 
-        notification_subject.next({ 'device_uuid': deviceUUID, 'data': { cpu: cpuUtilization } });
+        notification_subject.next({'device_uuid': deviceUUID, 'data': {cpu: cpuUtilization}});
         expect(component.utilization.cpu).toEqual(cpuUtilization);
       });
     }));
 
-  it('should not update the utilization if the device uuid does not match', async(() => {
-    component.delegate.device = { uuid: '123456', name: '', powered_on: true, owner: '', starter_device: false };
+  it('should not update the utilization if the device uuid does not match', waitForAsync(() => {
+    component.delegate.device = {uuid: '123456', name: '', powered_on: true, owner: '', starter_device: false};
     const cpuUtilBefore = 15;
     component.utilization.cpu = cpuUtilBefore;
 
     fixture.whenStable().then(() => {
-      notification_subject.next({ 'device_uuid': '32692145', 'data': { cpu: 236723 } });
+      notification_subject.next({'device_uuid': '32692145', 'data': {cpu: 236723}});
       expect(component.utilization.cpu).toEqual(cpuUtilBefore);
     });
   }));
 
   it('should unsubscribe the notification when it gets destroyed', () => {
-    component.resourceNotifySubscription = jasmine.createSpyObj('Subscription', ['unsubscribe']) as any;
+    component.resourceNotifySubscription = jasmine.createSpyObj('Subscription', ['unsubscribe']);
     fixture.destroy();
     expect(component.resourceNotifySubscription.unsubscribe).toHaveBeenCalled();
   });

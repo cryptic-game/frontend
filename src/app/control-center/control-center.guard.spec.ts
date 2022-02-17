@@ -1,9 +1,9 @@
-import { inject, TestBed } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
-import { ControlCenterGuard } from './control-center.guard';
-import { Router } from '@angular/router';
-import { WebsocketService } from '../websocket.service';
-import { Observable, of } from 'rxjs';
+import {ControlCenterGuard} from './control-center.guard';
+import {Router} from '@angular/router';
+import {WebsocketService} from '../websocket.service';
+import {Observable, of} from 'rxjs';
 
 describe('ControlCenterGuard', () => {
 
@@ -15,8 +15,8 @@ describe('ControlCenterGuard', () => {
     TestBed.configureTestingModule({
       providers: [
         ControlCenterGuard,
-        { provide: Router, useValue: router },
-        { provide: WebsocketService, useValue: webSocketService }
+        {provide: Router, useValue: router},
+        {provide: WebsocketService, useValue: webSocketService}
       ]
     });
   });
@@ -29,7 +29,7 @@ describe('ControlCenterGuard', () => {
     inject([ControlCenterGuard, WebsocketService, Router], (guard: ControlCenterGuard, webSocket: WebsocketService, router: Router) => {
       (webSocket.trySession as jasmine.Spy).and.returnValue(of(true));
 
-      const observable = guard.canActivate(null, null) as Observable<boolean>;
+      const observable = guard.canActivate(null!, null!) as Observable<boolean>;
       observable.subscribe(canActivate => {
         expect(webSocket.trySession).toHaveBeenCalled();
         expect(canActivate).toBeTruthy();
@@ -42,7 +42,7 @@ describe('ControlCenterGuard', () => {
     inject([ControlCenterGuard, WebsocketService, Router], (guard: ControlCenterGuard, webSocket: WebsocketService, router: Router) => {
       (webSocket.trySession as jasmine.Spy).and.returnValue(of(false));
 
-      const observable = guard.canActivate(null, null) as Observable<boolean>;
+      const observable = guard.canActivate(null!, null!) as Observable<boolean>;
       observable.subscribe(canActivate => {
         expect(webSocket.trySession).toHaveBeenCalled();
         expect(canActivate).toBeFalsy();

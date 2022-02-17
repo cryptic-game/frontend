@@ -1,4 +1,5 @@
-import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy } from '@angular/router';
+import {ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy} from '@angular/router';
+import {Injectable} from '@angular/core';
 
 
 interface StoredRoute {
@@ -12,6 +13,7 @@ interface StoredRoute {
  * when navigating between desktop and control center.
  * Additionally, this preserves the contents of the i.e. login and sign-up.
  */
+@Injectable()
 export class AppRouteReuseStrategy implements RouteReuseStrategy {
   pathReuse = ['', 'create-device', 'settings', 'sound', 'changelog', 'desktop'];
   storedPaths: { [path: string]: StoredRoute } = {};
@@ -24,6 +26,8 @@ export class AppRouteReuseStrategy implements RouteReuseStrategy {
   }
 
   destroyHandle(handle: DetachedRouteHandle) {
+    // TODO: @Marcel ts-ignore beseitigen
+    // @ts-ignore
     handle['componentRef']?.destroy();
   }
 
@@ -36,15 +40,15 @@ export class AppRouteReuseStrategy implements RouteReuseStrategy {
    * @param route The currently activated route which is about to be left
    */
   shouldDetach(route: ActivatedRouteSnapshot): boolean {
-    return this.pathReuse.includes(route.routeConfig?.path);
+    return this.pathReuse.includes(route.routeConfig?.path!);
   }
 
   store(route: ActivatedRouteSnapshot, handle: DetachedRouteHandle | null): void {
-    this.storedPaths[route.routeConfig.path] = { snapshot: route, handle: handle };
+    this.storedPaths[route.routeConfig?.path!] = {snapshot: route, handle: handle!};
   }
 
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
-    return this.shouldAttach(route) ? this.storedPaths[route.routeConfig.path]?.handle : null;
+    return this.shouldAttach(route) ? this.storedPaths[route.routeConfig?.path!]?.handle : null;
   }
 
   /**
@@ -55,7 +59,7 @@ export class AppRouteReuseStrategy implements RouteReuseStrategy {
     if (route.routeConfig == null) {
       return false;
     }
-    const storedRoute = this.storedPaths[route.routeConfig.path];
+    const storedRoute = this.storedPaths[route.routeConfig.path!];
     return this.childrenMatch(storedRoute?.snapshot, route);
   }
 

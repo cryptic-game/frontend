@@ -1,12 +1,12 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { HardwareShopItemListComponent } from './hardware-shop-item-list.component';
+import {HardwareShopItemListComponent} from './hardware-shop-item-list.component';
 
 describe('HardwareShopItemGridComponent', () => {
   let component: HardwareShopItemListComponent;
   let fixture: ComponentFixture<HardwareShopItemListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [HardwareShopItemListComponent]
     })

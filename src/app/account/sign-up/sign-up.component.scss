@@ -16,7 +16,7 @@ div.content {
     }
 
     span {
-      color: #fff;
+      color: white;
       font-size: 48px;
       font-weight: bold;
       line-height: 51px;
@@ -59,8 +59,9 @@ div.content {
         }
       }
 
-      span, input {
-        color: #fff;
+      span,
+      input {
+        color: white;
         font-size: 16px;
 
         outline: none;
@@ -88,7 +89,7 @@ div.content {
   }
 
   p {
-    color: #fff;
+    color: white;
     text-align: center;
     margin: 5px 0;
 

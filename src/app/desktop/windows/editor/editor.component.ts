@@ -1,11 +1,11 @@
-import { Component, ElementRef, OnInit, OnDestroy, Type, ViewChild } from '@angular/core';
-import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
-import { WebsocketService } from '../../../websocket.service';
-import { FileService } from '../../../api/files/file.service';
-import { Path } from '../../../api/files/path';
-import { File } from '../../../api/files/file';
-import { Subscription } from 'rxjs';
-import { WindowManager } from '../../window-manager/window-manager';
+import {Component, ElementRef, OnDestroy, OnInit, Type, ViewChild} from '@angular/core';
+import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/window-delegate';
+import {WebsocketService} from '../../../websocket.service';
+import {FileService} from '../../../api/files/file.service';
+import {Path} from '../../../api/files/path';
+import {File} from '../../../api/files/file';
+import {Subscription} from 'rxjs';
+import {WindowManager} from '../../window-manager/window-manager';
 
 @Component({
   selector: 'app-editor',
@@ -14,15 +14,14 @@ import { WindowManager } from '../../window-manager/window-manager';
 })
 export class EditorComponent extends WindowComponent implements OnInit, OnDestroy {
 
-  @ViewChild('fileInput', { static: true }) fileInput: ElementRef;
+  @ViewChild('fileInput', {static: true}) fileInput: ElementRef;
 
-  delegate: EditorWindowDelegate;
+  override delegate: EditorWindowDelegate;
 
   error: string;
   fileContent: string;
   fileOpened: boolean;
   filePath: Path;
-  chars_left: number;
   fileUUID: string;
   deleted_popup: boolean;
   changed_popup: boolean;
@@ -43,13 +42,13 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
       this.fileService.getAbsolutePath(this.delegate.device.uuid, this.delegate.openFile.uuid).subscribe(path => {
         this.fileInput.nativeElement.value = '/' + path.join('/');
         this.filePath = Path.fromString('/' + path.join('/'));
-        this.fileUUID = this.delegate.openFile.uuid;
+        this.fileUUID = this.delegate.openFile?.uuid!;
       });
 
       this.fileInput.nativeElement.disabled = true;
     }
     this.fileSubscription = this.websocket
-      .subscribeNotification<{ created: string[], changed: string[], deleted: string[] }>('file-update')
+      .subscribeNotification<{ created: string[]; changed: string[]; deleted: string[] }>('file-update')
       .subscribe((data) => {
         if (this.fileUUID === undefined) {
           return;
@@ -83,38 +82,44 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
   enter(inputPath: string) {
     let path: Path;
     try {
-      path = Path.fromString(inputPath, Path.ROOT);
+      path = Path.fromString(inputPath, Path.ROOT!);
       this.filePath = path;
     } catch {
       this.error = 'Path not valid';
       return;
     }
 
-    this.fileService.getFromPath(this.delegate.device.uuid, path).subscribe(file => {
-      if (file.is_directory) {
-        this.error = 'Not a file';
-      } else {
-        this.error = '';
-        this.fileOpened = true;
-        this.fileContent = file.content;
-        this.fileUUID = file.uuid;
-      }
-    }, error => {
-      if (error.message === 'file_not_found') {
-        this.error = 'File was not found';
-      } else {
-        this.error = error.toString();
+    this.fileService.getFromPath(this.delegate.device.uuid, path).subscribe({
+      next: (file: File) => {
+        if (file.is_directory) {
+          this.error = 'Not a file';
+        } else {
+          this.error = '';
+          this.fileOpened = true;
+          this.fileContent = file.content;
+          this.fileUUID = file.uuid;
+        }
+      },
+      error: (err: Error) => {
+        if (err.message === 'file_not_found') {
+          this.error = 'File was not found';
+        } else {
+          this.error = err.toString();
+        }
       }
     });
   }
 
   save() {
     this.fileService.getFromPath(this.delegate.device.uuid, this.filePath).subscribe((file) => {
-      this.fileService.changeFileContent(this.delegate.device.uuid, file.uuid, this.fileContent).subscribe((resp) => {
-      }, (err) => {
-        console.error(err);
-        if (err === 'invalid_input_data') {
-          this.error = '';
+      this.fileService.changeFileContent(this.delegate.device.uuid, file.uuid, this.fileContent).subscribe({
+        next: () => {
+        },
+        error: (err: string) => {
+          console.error(err);
+          if (err === 'invalid_input_data') {
+            this.error = '';
+          }
         }
       });
     });
@@ -133,12 +138,13 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
     this.changed_popup = false;
   }
 }
+
 export class EditorWindowDelegate extends WindowDelegate {
   title = 'Editor';
   icon = 'assets/desktop/img/editor.svg';
   type: Type<any> = EditorComponent;
 
-  constraints = new WindowConstraints({ minWidth: 300, minHeight: 200 });
+  override constraints = new WindowConstraints({minWidth: 300, minHeight: 200});
 
   constructor(public openFile?: File) {
     super();

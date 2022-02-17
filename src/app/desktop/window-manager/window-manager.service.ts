@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Device } from '../../api/devices/device';
-import { WindowManager } from './window-manager';
+import {Injectable} from '@angular/core';
+import {Device} from '../../api/devices/device';
+import {WindowManager} from './window-manager';
 
 /**
  * This service holds the window managers for all devices

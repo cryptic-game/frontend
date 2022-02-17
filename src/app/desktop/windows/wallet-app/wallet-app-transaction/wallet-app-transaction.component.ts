@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Transaction } from '../transaction';
-import { WalletAppService } from '../wallet-app.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {Transaction} from '../transaction';
+import {WalletAppService} from '../wallet-app.service';
 
 @Component({
   selector: 'app-wallet-app-transaction',
@@ -25,7 +25,7 @@ export class WalletAppTransactionComponent implements OnInit {
       this.transaction.destination_uuid = 'Hardware Shop';
     }
 
-    this.moneyToCurrent = this.transaction.destination_uuid === this.walletAppService.wallet.source_uuid;
+    this.moneyToCurrent = this.transaction.destination_uuid === this.walletAppService.wallet!.source_uuid;
     this.time = new Date(new Date(this.transaction.time_stamp).getTime() - new Date().getTimezoneOffset() * 60000).toLocaleString();
   }
 }

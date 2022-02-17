@@ -1,4 +1,4 @@
-import { AppRouteReuseStrategy } from './app-route-reuse-strategy';
+import {AppRouteReuseStrategy} from './app-route-reuse-strategy';
 
 describe('AppRouteReuseStrategy', () => {
   it('should create an instance', () => {

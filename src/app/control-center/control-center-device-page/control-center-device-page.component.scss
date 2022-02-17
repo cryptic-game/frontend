@@ -86,7 +86,7 @@
   .separator {
     width: 50%;
     margin-top: 1em;
-    border-top: 1px solid $button-border-color
+    border-top: 1px solid $button-border-color;
   }
 }
 
@@ -100,11 +100,11 @@ button {
 
   &.disassemble-button {
     margin-top: 2rem;
-    border-color: #ff0000;
+    border-color: red;
     background-color: #be0000;
 
     &:hover {
-      background-color: #ff0000;
+      background-color: red;
     }
   }
 }
@@ -121,7 +121,7 @@ button {
   .modal {
     position: relative;
     background-color: $page-background;
-    margin: 15% auto auto auto;
+    margin: 15% auto auto;
     padding: 20px;
     min-width: 20rem;
     width: 30%;
@@ -181,11 +181,11 @@ button {
 
   &.disassemble-button {
     margin-top: 2rem;
-    border-color: #ff0000;
+    border-color: red;
     background-color: #be0000;
 
     &:hover {
-      background-color: #ff0000;
+      background-color: red;
     }
   }
 }
@@ -202,7 +202,7 @@ button {
   .modal {
     position: relative;
     background-color: $page-background;
-    margin: 15% auto auto auto;
+    margin: 15% auto auto;
     padding: 20px;
     min-width: 20rem;
     width: 30%;

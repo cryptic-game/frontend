@@ -1,4 +1,4 @@
-import { Part } from '../../../api/hardware/hardware-parts';
+import {Part} from '../../../api/hardware/hardware-parts';
 
 export interface HardwareShopItem {
   name: string;

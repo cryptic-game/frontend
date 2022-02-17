@@ -3,30 +3,30 @@
 
     <label>
       Path: <input #fileInput (keydown.enter)="enter(fileInput.value); $event.preventDefault()"
-                   [style.border-color]="error ? 'red' : 'black'" type="text" class="file-input"
-                   placeholder="/path/to/file">
+                   [style.border-color]="error ? 'red' : 'black'" class="file-input" placeholder="/path/to/file"
+                   type="text">
     </label>
     <span class="error">{{error}}</span>
-    <button class="save-btn" (click)="save()" [disabled]=!fileOpened>Save</button>
+    <button (click)="save()" [disabled]=!fileOpened class="save-btn">Save</button>
 
   </div>
 
-  <textarea maxlength="255" class="editor-text-field" [(ngModel)]="fileContent" [disabled]="!fileOpened">
+  <textarea [(ngModel)]="fileContent" [disabled]="!fileOpened" class="editor-text-field" maxlength="255">
     {{(fileOpened) ? fileContent : 'No file open'}}
   </textarea>
   <div *ngIf="deleted_popup" class="popup">
-    <div class="popup_content">
+    <div class="popup-content">
       The File "{{filePath}}" was deleted.
       <br>
-      <button class="btn" (click)="force_close()">Close this Editor</button>
+      <button (click)="force_close()" class="btn">Close this Editor</button>
     </div>
   </div>
 
   <div *ngIf="changed_popup" class="popup">
-    <div class="popup_content">
+    <div class="popup-content">
       The File "{{filePath}}" was changed.
       <br>
-      <button class="btn" (click)="reload()">Reload File</button>
+      <button (click)="reload()" class="btn">Reload File</button>
     </div>
   </div>
 

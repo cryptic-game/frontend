@@ -1,31 +1,29 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { FileManagerComponent } from './file-manager.component';
-import { ContextMenuModule } from 'ngx-contextmenu';
-import { FormsModule } from '@angular/forms';
-import { WebsocketService } from '../../../websocket.service';
-import { emptyWindowDelegate, webSocketMock, windowManagerMock } from '../../../test-utils';
-import { WindowManager } from '../../window-manager/window-manager';
+import {FileManagerComponent} from './file-manager.component';
+import {FormsModule} from '@angular/forms';
+import {WebsocketService} from '../../../websocket.service';
+import {emptyWindowDelegate, webSocketMock, windowManagerMock} from '../../../test-utils';
+import {WindowManager} from '../../window-manager/window-manager';
 
 describe('FileManagerComponent', () => {
   let component: FileManagerComponent;
   let fixture: ComponentFixture<FileManagerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [
-        { provide: WebsocketService, useValue: webSocketMock() },
-        { provide: WindowManager, useValue: windowManagerMock() }
+        {provide: WebsocketService, useValue: webSocketMock()},
+        {provide: WindowManager, useValue: windowManagerMock()}
       ],
       declarations: [
         FileManagerComponent
       ],
       imports: [
-        ContextMenuModule.forRoot(),
         FormsModule
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

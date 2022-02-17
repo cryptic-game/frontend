@@ -1,24 +1,24 @@
-import { SignUpComponent } from './sign-up.component';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
-import { AccountPageBaseComponent } from '../account-page-base/account-page-base.component';
-import { AccountService } from '../account.service';
+import {SignUpComponent} from './sign-up.component';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ReactiveFormsModule} from '@angular/forms';
+import {RouterTestingModule} from '@angular/router/testing';
+import {AccountPageBaseComponent} from '../account-page-base/account-page-base.component';
+import {AccountService} from '../account.service';
 import * as rxjs from 'rxjs';
-import { throwError } from 'rxjs';
+import {throwError} from 'rxjs';
 
 describe('SignUpComponent', () => {
-  let accountService;
+  let accountService: any;  //TODO: Type me correct
   let component: SignUpComponent;
   let fixture: ComponentFixture<SignUpComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     accountService = jasmine.createSpyObj('AccountService', ['checkPassword', 'signUp', 'finalLogin']);
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, RouterTestingModule],
       declarations: [SignUpComponent, AccountPageBaseComponent],
       providers: [
-        { provide: AccountService, useValue: accountService }
+        {provide: AccountService, useValue: accountService}
       ]
     })
       .compileComponents();
@@ -60,13 +60,13 @@ describe('SignUpComponent', () => {
   });
 
   it('should call accountService.checkPassword() when a form value gets changed', () => {
-    component.form.setValue({ username: 'testUsername', password: 'testPassword', passwordConfirm: 'testPassword' });
+    component.form.setValue({username: 'testUsername', password: 'testPassword', passwordConfirm: 'testPassword'});
 
     expect(accountService.checkPassword).toHaveBeenCalledWith('testPassword');
   });
 
   it('#signUp() should do nothing if the form is not valid', () => {
-    component.form = { valid: false } as any;
+    component.form = {valid: false} as any;
 
     component.signUp();
     expect(accountService.signUp).not.toHaveBeenCalled();
@@ -76,7 +76,7 @@ describe('SignUpComponent', () => {
   it('#signUp() should set an error and cancel if the password do not match', () => {
     component.form = {
       valid: true,
-      value: { username: 'testUsername', password: 'testPassword', passwordConfirm: 'notMatching' }
+      value: {username: 'testUsername', password: 'testPassword', passwordConfirm: 'notMatching'}
     } as any;
 
     component.signUp();
@@ -89,7 +89,7 @@ describe('SignUpComponent', () => {
   it('#singUp() should call signUp from the account service if the form is valid', () => {
     component.form = {
       valid: true,
-      value: { username: 'testUsername', password: 'testPassword', passwordConfirm: 'testPassword' }
+      value: {username: 'testUsername', password: 'testPassword', passwordConfirm: 'testPassword'}
     } as any;
 
     accountService.signUp.and.returnValue(rxjs.of({}));
@@ -104,11 +104,11 @@ describe('SignUpComponent', () => {
   it('#singUp() should call finalLogin from the account service if the server responds with no error', () => {
     component.form = {
       valid: true,
-      value: { username: 'testUsername', password: 'testPassword', passwordConfirm: 'testPassword' }
+      value: {username: 'testUsername', password: 'testPassword', passwordConfirm: 'testPassword'}
     } as any;
 
     const testToken = '654321123456';
-    accountService.signUp.and.returnValue(rxjs.of({ token: testToken }));
+    accountService.signUp.and.returnValue(rxjs.of({token: testToken}));
 
     component.signUp();
     expect(accountService.signUp).toHaveBeenCalled();
@@ -118,11 +118,11 @@ describe('SignUpComponent', () => {
   it('#singUp() should set an error message and cancel if the server responds with an error', () => {
     component.form = {
       valid: true,
-      value: { username: 'testUsername', password: 'testPassword', passwordConfirm: 'testPassword' }
+      value: {username: 'testUsername', password: 'testPassword', passwordConfirm: 'testPassword'}
     } as any;
 
     const testError = 'This is a non-standard test error.';
-    accountService.signUp.and.callFake(() => throwError(new Error(testError)));
+    accountService.signUp.and.callFake(() => throwError(() => new Error(testError)));
     spyOn(component, 'decayError');
 
     component.signUp();
@@ -136,7 +136,7 @@ describe('SignUpComponent', () => {
     };
 
     for (const [errorName, translation] of Object.entries(knownErrors)) {
-      accountService.signUp.and.callFake(() => throwError(new Error(errorName)));
+      accountService.signUp.and.callFake(() => throwError(() => new Error(errorName)));
       component.errorLife = 0;
 
       component.signUp();

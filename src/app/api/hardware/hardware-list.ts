@@ -1,26 +1,7 @@
 import * as Parts from './hardware-parts';
-import { Part } from './hardware-parts';
+import {Part} from './hardware-parts';
 
 export class HardwareList {
-  'start_pc': {
-    'mainboard': string,
-    'cpu': string[],
-    'processorCooler': string[],
-    'gpu': string[],
-    'ram': string[],
-    'disk': string[]
-    'powerPack': string,
-    'case': string
-  } = {
-    'mainboard': '',
-    'cpu': [],
-    'processorCooler': [],
-    'gpu': [],
-    'ram': [],
-    'disk': [],
-    'powerPack': '',
-    'case': '',
-  };
 
   'mainboard': { [name: string]: Parts.Mainboard } = {};
 
@@ -55,7 +36,7 @@ export class HardwareList {
   }
 
   getByID(id: number): Part {
-    return Object.values(this.getAllParts()).find(part => part.id === id);
+    return Object.values(this.getAllParts()).find(part => part.id === id)!;
   }
 
 }

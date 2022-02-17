@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { WalletAppService } from '../../wallet-app/wallet-app.service';
-import { HardwareShopService } from '../hardware-shop.service';
-import { Subscription } from 'rxjs';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
+import {WalletAppService} from '../../wallet-app/wallet-app.service';
+import {HardwareShopService} from '../hardware-shop.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop-header',
@@ -26,7 +26,7 @@ export class HardwareShopHeaderComponent implements OnDestroy {
     private hardwareShopService: HardwareShopService
   ) {
     this.subscriptions.add(
-      this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet?.amount)
+      this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet?.amount!)
     );
     this.subscriptions.add(
       this.hardwareShopService.updateCartItems.subscribe(() => this.updateCartSize())

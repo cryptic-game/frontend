@@ -13,8 +13,8 @@
     <div class="body">
       <div *ngIf="!cartVisibility; else elseCartVisibility" class="hardware-shop-items">
         <div class="sidebar">
-          <app-hardware-shop-sidebar [delegate]="this"
-                                     (selectCategory)="selectCategory($event)"></app-hardware-shop-sidebar>
+          <app-hardware-shop-sidebar (selectCategory)="selectCategory($event)"
+                                     [delegate]="this"></app-hardware-shop-sidebar>
         </div>
         <div class="main">
           <app-hardware-shop-item-list [category]="selectedCategory"></app-hardware-shop-item-list>

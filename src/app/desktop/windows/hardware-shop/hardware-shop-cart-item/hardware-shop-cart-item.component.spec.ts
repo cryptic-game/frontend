@@ -1,17 +1,17 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { HardwareShopCartItemComponent } from './hardware-shop-cart-item.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HardwareShopService } from '../hardware-shop.service';
-import { PartCategory } from '../../../../api/hardware/hardware-parts';
+import {HardwareShopCartItemComponent} from './hardware-shop-cart-item.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {HardwareShopService} from '../hardware-shop.service';
+import {PartCategory} from '../../../../api/hardware/hardware-parts';
 
 describe('HardwareShopCartItemComponent', () => {
   let component: HardwareShopCartItemComponent;
   let fixture: ComponentFixture<HardwareShopCartItemComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{ provide: HardwareShopService, useValue: {} }],
+      providers: [{provide: HardwareShopService, useValue: {}}],
       declarations: [HardwareShopCartItemComponent],
       imports: [ReactiveFormsModule]
     })
@@ -21,7 +21,7 @@ describe('HardwareShopCartItemComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HardwareShopCartItemComponent);
     component = fixture.componentInstance;
-    const testPart = { name: '', id: 0, category: PartCategory.CASE, size: 'small' };
+    const testPart = {name: '', id: 0, category: PartCategory.CASE, size: 'small'};
     component.item = {
       id: 0,
       quantity: 0,

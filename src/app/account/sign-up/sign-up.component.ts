@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AccountService } from '../account.service';
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AccountService} from '../account.service';
+import {SignUpResponse} from "../interfaces/sign-up-response";
 
 @Component({
   selector: 'app-sign-up',
@@ -42,23 +43,25 @@ export class SignUpComponent {
 
   signUp(): void {
     if (this.form.valid) {
-      const value: { username: string, password: string, passwordConfirm: string } = this.form.value;
+      const value: { username: string; password: string; passwordConfirm: string } = this.form.value;
       if (value.password !== value.passwordConfirm) {
         this.error = 'The passwords do not match.';
         this.decayError(10);
         return;
       }
 
-      this.accountService.signUp(value.username, value.password).subscribe(data => {
-        this.accountService.finalLogin(data.token, '/create-device');
-      }, error => {
-        if (error.message === 'username already exists') {
-          this.error = 'This username is already taken.';
-        } else {
-          this.error = error.message;
+      this.accountService.signUp(value.username, value.password).subscribe({
+        next: (data: SignUpResponse) => {
+          this.accountService.finalLogin(data.token!, '/create-device');
+        },
+        error: (error: Error) => {
+          if (error.message === 'username already exists') {
+            this.error = 'This username is already taken.';
+          } else {
+            this.error = error.message;
+          }
+          this.decayError(10);
         }
-
-        this.decayError(10);
       });
     }
   }
@@ -72,7 +75,7 @@ export class SignUpComponent {
       }
 
       if (this.errorLife <= 0) {
-        this.error = undefined;
+        this.error = undefined!;
       }
     }, 1000);
   }

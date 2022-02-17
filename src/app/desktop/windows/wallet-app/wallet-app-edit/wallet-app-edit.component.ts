@@ -1,6 +1,6 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { WalletAppService } from '../wallet-app.service';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {WalletAppService} from '../wallet-app.service';
 
 @Component({
   selector: 'app-wallet-app-edit',

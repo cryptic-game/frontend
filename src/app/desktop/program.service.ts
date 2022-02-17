@@ -1,8 +1,8 @@
-import { Position } from '../../dataclasses/position';
-import { Program } from '../../dataclasses/program';
-import { Injectable } from '@angular/core';
-import { desktopDefinition } from '../../assets/desktop/definition';
-import { SettingService } from '../api/setting/setting.service';
+import {Position} from '../../dataclasses/position';
+import {Program} from '../../dataclasses/program';
+import {Injectable} from '@angular/core';
+import {desktopDefinition} from '../../assets/desktop/definition';
+import {SettingService} from '../api/setting/setting.service';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +45,7 @@ export class ProgramService {
     let savedProgram: any;
 
     try {
-      savedProgram = JSON.parse(localStorage.getItem(`program_${definition.id}`));
+      savedProgram = JSON.parse(localStorage.getItem(`program_${definition.id}`)!);
     } catch (e) {
     }
 
@@ -61,7 +61,7 @@ export class ProgramService {
     // Doesn't work because of missing tags of server responses:
     // this.programs = await Promise.all(desktopDefinition.programs.map(def => this.loadProgram(def)));
 
-    const programs = [];
+    const programs: Program[] = [];
     for (const def of desktopDefinition.programs) {
       const program = await this.loadProgram(def);
       programs.push(program);
@@ -75,8 +75,9 @@ export class ProgramService {
     let savedProgram: any;
 
     try {
-      savedProgram = JSON.parse(await this.settingService.get(`program_${definition.id}`).toPromise());
+      savedProgram = JSON.parse((await this.settingService.get(`program_${definition.id}`).toPromise())!);
     } catch (e) {
+      // @ts-ignore
       if (e.message !== 'unknown setting') {
         console.warn(e);
       }
@@ -85,12 +86,12 @@ export class ProgramService {
     return ProgramService.deserializeProgram(definition, savedProgram);
   }
 
-  async save(program: Program) {
+  save(program: Program) {
     ProgramService.saveToCache(program);
-    await this.settingService.set(`program_${program.id}`, JSON.stringify({
+    this.settingService.set(`program_${program.id}`, JSON.stringify({
       onDesktop: program.onDesktop,
       position: program.position
-    })).toPromise();
+    })).subscribe();
   }
 
 }

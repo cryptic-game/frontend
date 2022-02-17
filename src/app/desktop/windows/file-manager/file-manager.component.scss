@@ -12,7 +12,7 @@
 
   .header {
     padding: 0.5em 0;
-    border-bottom: 2px solid #dcdcdc;
+    border-bottom: 2px solid gainsboro;
 
     button {
       margin-right: 5px;
@@ -54,7 +54,7 @@
       }
 
       &:active {
-        background-color: #dcdcdc;
+        background-color: gainsboro;
       }
 
       .icon {
@@ -67,6 +67,6 @@
     width: 100%;
     color: #d20000;
     background-color: #ebebeb;
-    border-top: 2px solid #dcdcdc;
+    border-top: 2px solid gainsboro;
   }
 }

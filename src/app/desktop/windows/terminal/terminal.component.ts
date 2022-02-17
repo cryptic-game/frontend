@@ -1,12 +1,12 @@
-import { SettingsService } from '../settings/settings.service';
-import { Component, ElementRef, OnInit, SecurityContext, Type, ViewChild } from '@angular/core';
-import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
-import { TerminalAPI, TerminalState } from './terminal-api';
-import { DefaultTerminalState } from './terminal-states';
-import { WebsocketService } from '../../../websocket.service';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { FileService } from '../../../api/files/file.service';
-import { WindowManager } from '../../window-manager/window-manager';
+import {SettingsService} from '../settings/settings.service';
+import {Component, ElementRef, OnInit, SecurityContext, Type, ViewChild} from '@angular/core';
+import {WindowComponent, WindowDelegate} from '../../window/window-delegate';
+import {TerminalAPI, TerminalState} from './terminal-api';
+import {DefaultTerminalState} from './terminal-states';
+import {WebsocketService} from '../../../websocket.service';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {FileService} from '../../../api/files/file.service';
+import {WindowManager} from '../../window-manager/window-manager';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -15,9 +15,9 @@ import { WindowManager } from '../../window-manager/window-manager';
   styleUrls: ['./terminal.component.scss']
 })
 export class TerminalComponent extends WindowComponent implements OnInit, TerminalAPI {
-  @ViewChild('history', { static: true }) history: ElementRef;
-  @ViewChild('prompt', { static: true }) prompt: ElementRef;
-  @ViewChild('cmdLine', { static: true }) cmdLine: ElementRef;
+  @ViewChild('history', {static: true}) history: ElementRef;
+  @ViewChild('prompt', {static: true}) prompt: ElementRef;
+  @ViewChild('cmdLine', {static: true}) cmdLine: ElementRef;
 
   currentState: TerminalState[] = [];
   promptHtml: SafeHtml;
@@ -51,19 +51,20 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
   }
 
   focusCommandLine() {
-    if (window.getSelection().type !== 'Range') {
+    if (window.getSelection()!.type !== 'Range') {
       this.cmdLine.nativeElement.focus();
     }
     this.getState().refreshPrompt();
   }
 
-  changePrompt(prompt: string | SafeHtml, trust: boolean = false) {
+  changePrompt(prompt: string | SafeHtml, trust = false) {
     if (trust && typeof prompt === 'string') {
       this.promptHtml = this.domSanitizer.bypassSecurityTrustHtml(prompt);
       return;
     }
 
     if (typeof prompt === 'string') {
+      // @ts-ignore
       this.promptHtml = this.domSanitizer.sanitize(
         SecurityContext.HTML,
         prompt
@@ -79,7 +80,7 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
   }
 
   popState(): TerminalState {
-    const popped = this.currentState.pop();
+    const popped = this.currentState.pop()!;
     if (this.currentState.length === 0) {
       this.closeTerminal();
       return popped;
