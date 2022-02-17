@@ -9,6 +9,7 @@ export function webSocketMock(): WebsocketService {
     'WebsocketService',
     ['init', 'close', 'subscribeNotification', 'request', 'requestMany', 'ms', 'msPromise', 'logout', 'refreshAccountInfo', 'trySession']
   );
+  mock.init.and.returnValue(of().toPromise())
   mock.subscribeNotification.and.returnValue(new Subject());
   mock.request.and.returnValue(of());
   mock.requestMany.and.returnValue(NEVER);

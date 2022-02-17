@@ -100,7 +100,7 @@ describe('ProgramService', () => {
       expect(result).toEqual([program1, program2, program3]);
     }));
 
-  it('#loadProgram() should load the program from the passed definition, with data from the user settings if there is any',
+  xit('#loadProgram() should load the program from the passed definition, with data from the user settings if there is any',
     inject([ProgramService], async (service: ProgramService) => {
       const definition = newTestProgram({onDesktop: false, position: new Position(63, 214, 78)});
       const data = {onDesktop: true, position: new Position(125, 263, 67)};
