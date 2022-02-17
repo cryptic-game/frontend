@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {Container, Main} from "tsparticles";
 import {IParticlesProps} from "ng-particles/lib/ng-particles.module";
 
 @Component({
@@ -8,10 +7,8 @@ import {IParticlesProps} from "ng-particles/lib/ng-particles.module";
   styleUrls: ['./account-page-base.component.scss']
 })
 export class AccountPageBaseComponent {
-  id = "tsparticles";
 
-  /* or the classic JavaScript object */
-  particlesOptions: IParticlesProps = {
+  public readonly particlesOptions: IParticlesProps = {
     particles: {
       color: {
         value: "#007f00"
@@ -45,19 +42,9 @@ export class AccountPageBaseComponent {
         type: "circle"
       },
       size: {
-        value: { min: 1, max: 5 }
+        value: {min: 1, max: 5}
       }
     },
     detectRetina: true
   };
-
-  particlesLoaded(container: Container): void {
-    console.log(container);
-  }
-
-  particlesInit(main: Main): void {
-    console.log(main);
-
-    // Starting from 1.19.0 you can add custom presets or shape here, using the current tsParticles instance (main)
-  }
 }
