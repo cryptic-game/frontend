@@ -1,7 +1,9 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WebsocketService} from './websocket.service';
 import {animate, animateChild, group, query, style, transition, trigger} from '@angular/animations';
 import {RouterOutlet} from '@angular/router';
+import {HttpClient} from "@angular/common/http";
+import {Changelog} from "./control-center/control-center-changelog-page/Changelog";
 
 @Component({
   selector: 'app-root',
@@ -67,10 +69,18 @@ import {RouterOutlet} from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnInit, OnDestroy {
 
-  constructor(private websocket: WebsocketService) {
+  public latestVersion?: string;
+
+  constructor(private websocket: WebsocketService,
+              private readonly http: HttpClient) {
     websocket.init().then();
+  }
+
+  ngOnInit() {
+    this.http.get<Changelog>('/assets/changelog.json')
+      .subscribe(changelog => this.latestVersion = changelog.latest);
   }
 
   ngOnDestroy() {
