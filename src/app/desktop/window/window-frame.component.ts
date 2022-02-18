@@ -161,10 +161,21 @@ export class WindowFrameComponent implements OnInit {
           this.delegate.position.maximized = false;
         }
 
-        this.delegate.position.x = Math.min(Math.max(0, this.dragStartWindowPos[0] + event.clientX - this.dragStartPos[0]),
-          window.innerWidth - this.delegate.position.width / 2);
-        this.delegate.position.y = Math.min(Math.max(0, this.dragStartWindowPos[1] + event.clientY - this.dragStartPos[1]),
-          window.innerHeight - this.delegate.position.height / 2);
+        this.delegate.position.x =
+          Math.min(
+            Math.min(
+              Math.max(0, this.dragStartWindowPos[0] + event.clientX - this.dragStartPos[0]), // Don't drag out of left side.
+              window.innerWidth - this.delegate.position.width / 2),  // Don't drag further than size of window.
+            window.innerWidth - this.windowManager.activeWindow.position.width); // Don't drag further than right side
+
+        this.delegate.position.y =
+          Math.min(
+            Math.min(
+              Math.max(
+                0, this.dragStartWindowPos[1] + event.clientY - this.dragStartPos[1]), // Don't drag out of top side.
+              window.innerHeight - this.delegate.position.height / 2), // Don't drag further than size of window.
+            window.innerHeight - this.windowManager.activeWindow.position.height - 55); // Don't drag further than bottom side + taskbar.
+
       } else if (this.resizing) {
         /**
          * 7  4  8
