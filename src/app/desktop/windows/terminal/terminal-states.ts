@@ -37,13 +37,10 @@ export abstract class CommandTerminalState implements TerminalState {
 
   executeCommand(command: string, args: string[]) {
     command = command.toLowerCase();
+    // Add command to protocol
+    this.protocol.unshift(command);
     if (this.commands.hasOwnProperty(command)) {
       this.commands[command].executor(args);
-
-      // Only successful and not-flagged commands will be shown in the protocol.
-      if (!this.commands[command].hideFromProtocol) {
-        this.protocol.unshift(command);
-      }
     } else if (command !== '') {
       this.commandNotFound(command);
     }

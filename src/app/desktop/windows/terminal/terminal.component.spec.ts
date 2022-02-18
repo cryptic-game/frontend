@@ -36,9 +36,9 @@ describe('TerminalComponent', () => {
     component.execute('test');
     component.execute('help');
     component.execute('help');
-    expect(component.getHistory().length).toBe(2);
+    expect(component.getHistory().length).toBe(3);
     // History is printed in reverse
-    expect(component.getHistory()).toEqual(['help', 'help']);
+    expect(component.getHistory()).toEqual(['help', 'help', 'test']);
   });
 
   it('should clear the protocol with clearHistory', () => {
