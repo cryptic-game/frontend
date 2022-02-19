@@ -174,8 +174,8 @@ export class WindowFrameComponent implements OnInit {
               Math.max(
                 0, this.dragStartWindowPos[1] + event.clientY - this.dragStartPos[1]), // Don't drag out of top side.
               window.innerHeight - this.delegate.position.height / 2), // Don't drag further than size of window.
-            window.innerHeight - this.windowManager.activeWindow.position.height - 55); // Don't drag further than bottom side + taskbar.
-
+            window.innerHeight * 0.945 - this.windowManager.activeWindow.position.height); // Don't drag further than bottom side + taskbar.
+            // The taskbar takes 0.55% of the screen.
       } else if (this.resizing) {
         /**
          * 7  4  8
