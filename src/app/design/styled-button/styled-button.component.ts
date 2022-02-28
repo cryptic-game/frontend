@@ -7,7 +7,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class StyledButtonComponent {
 
   @Input() disabled = false;
-  @Input() styleClass: 'primary' | 'success' | 'warning' | 'danger' | 'info' = 'primary';
+
+
+  @Input() flavor: 'primary' | 'success' | 'warning' | 'danger' | 'info' = 'primary';
   // tslint:disable-next-line: no-output-on-prefix
   @Output() onClick: EventEmitter<any> = new EventEmitter();
 
