@@ -18,40 +18,30 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version-file: '.nvmrc'
+          cache: 'npm'
 
-      - uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - run: npm ci
-
+      - run: npm install --no-audit
       - run: npm run lint:ci
 
   test:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node: [ 16, 17 ]
+
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
 
-      - uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - run: npm ci
-
+      - run: npm install --no-audit
       - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
 
   build:
@@ -61,19 +51,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version-file: '.nvmrc'
+          cache: 'npm'
 
-      - uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - run: npm ci
-
+      - run: npm install --no-audit
       - run: npm run build:ci -- --output-path=./dist
 
       - uses: actions/upload-artifact@v2
