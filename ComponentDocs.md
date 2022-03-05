@@ -15,7 +15,7 @@ Style classes :
 ### Example
 
 ```html
- <app-styled-button (click)="login()" styleClass="primary" [disabled]="!form.valid">Log in</app-styled-button>
+ <app-styled-button (click)="login()" flavor="primary" [disabled]="!form.valid">Log in</app-styled-button>
  ```
 
 ---
