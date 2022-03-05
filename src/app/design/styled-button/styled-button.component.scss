@@ -1,79 +1,47 @@
+@use "sass:list";
 @import "theme-colors";
+
+$flavors: (
+  primary: ($primary-default, $primary-hover,$primary-disabled),
+  success: ($success-default, $success-hover,$success-disabled),
+  warning: ($warning-default, $warning-hover,$warning-disabled),
+  danger: ($danger-default, $danger-hover,$danger-disabled),
+  info: ($info-default, $info-hover,$info-disabled),
+);
+
 button {
   padding: 10px;
   border-radius: 10px;
-  margin-top: 8px;
   width: 100%;
   color: white;
   border: none;
   font-size: 16px;
-}
-button.primary {
-  color: #2f2f36;
-  background: $primary-default;
-
-  &:disabled {
-    background-color: $primary-disabled;
+  margin-right: 10px;
+  &:last-child {
+        margin-right: 0;
   }
 
-  &:hover {
-    background-color: $primary-hover;
-    color: white;
-  }
-}
 
-button.success {
-  color: #2f2f36;
-  background: $success-default;
+  @each $name,$colorsa in $flavors{
 
-  &:disabled {
-    background-color: $success-disabled;
-  }
+    &.#{$name} {
+      color: #2f2f36;
+      background: list.nth($colorsa, 1);
 
-  &:hover {
-    background-color: $success-hover;
-    color: white;
-  }
+      &:disabled {
+        background-color: list.nth($colorsa, 3);
+      }
+
+      &:hover {
+        background-color: list.nth($colorsa, 2);
+        color: white;
+      }
+    }
+
+
 }
 
-button.warning {
-  color: #2f2f36;
-  background: $warning-default;
 
-  &:disabled {
-    background-color: $warning-disabled;
-  }
-
-  &:hover {
-    background-color: $warning-hover;
-    color: white;
-  }
 }
 
-button.danger {
-  color: #2f2f36;
-  background: $danger-default;
 
-  &:disabled {
-    background-color: $danger-disabled;
-  }
-
-  &:hover {
-    background-color: $danger-hover;
-    color: white;
-  }
-}
-
-button.info {
-  color: #2f2f36;
-  background: $info-default;
-
-  &:disabled {
-    background-color: $info-disabled;
-  }
-
-  &:hover {
-    background-color: $info-hover;
-    color: white;
-  }
-}
