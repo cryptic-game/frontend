@@ -59,6 +59,7 @@ import {DesktopDeviceResolver} from './desktop/desktop-device.resolver';
 import {EditorComponent} from './desktop/windows/editor/editor.component';
 import {FileManagerComponent} from './desktop/windows/file-manager/file-manager.component';
 import {NgParticlesModule} from "ng-particles";
+import {ContextMenuModule} from "./design/context-menu/context-menu.module";
 /* eslint-enable max-len */
 
 const routes: Routes = [
@@ -112,16 +113,17 @@ const routes: Routes = [
     EditorComponent,
     FileManagerComponent
   ],
-    imports: [
-        RouterModule.forRoot(routes, {relativeLinkResolution: 'legacy'}),
-        BrowserModule,
-        ControlCenterModule,
-        HttpClientModule,
-        FormsModule,
-        ReactiveFormsModule,
-        DesignModule,
-        NgParticlesModule,
-    ],
+  imports: [
+    RouterModule.forRoot(routes, {relativeLinkResolution: 'legacy'}),
+    BrowserModule,
+    ControlCenterModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DesignModule,
+    NgParticlesModule,
+    ContextMenuModule.forRoot()
+  ],
   providers: [
     {provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy}
   ],

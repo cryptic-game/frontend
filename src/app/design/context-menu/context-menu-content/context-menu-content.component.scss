@@ -1,0 +1,12 @@
+.passive {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+.hasSubMenu:before {
+  content: '\u25B6';
+  float: right;
+}

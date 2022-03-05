@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, Type} from '@angular/core';
+import {Component, OnDestroy, OnInit, Type, ViewChild} from '@angular/core';
 import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/window-delegate';
 import {File} from '../../../api/files/file';
 import {Path} from '../../../api/files/path';
@@ -7,6 +7,8 @@ import {WebsocketService} from '../../../websocket.service';
 import {Subscription} from 'rxjs';
 import {WindowManager} from '../../window-manager/window-manager';
 import {EditorWindowDelegate} from '../editor/editor.component';
+import {ContextMenuService} from "../../../design/context-menu/context-menu.service";
+import {ContextMenuComponent} from "../../../design/context-menu/context-menu/context-menu.component";
 
 @Component({
   selector: 'app-file-manager',
@@ -14,7 +16,7 @@ import {EditorWindowDelegate} from '../editor/editor.component';
   styleUrls: ['./file-manager.component.scss']
 })
 export class FileManagerComponent extends WindowComponent implements OnInit, OnDestroy {
-  // @ViewChild('dragDropMenu') dragDropMenu: ContextMenuComponent;
+  @ViewChild('dragDropMenu') dragDropMenu: ContextMenuComponent;
 
   override delegate: FileManagerWindowDelegate | WindowDelegate;
 
@@ -27,10 +29,10 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
 
   fileUpdateSubscription: Subscription;
 
-  constructor(public fileService: FileService,
-              private apiService: WebsocketService,
-              // private contextMenuService: ContextMenuService,
-              private windowManager: WindowManager) {
+  constructor(public readonly fileService: FileService,
+              private readonly apiService: WebsocketService,
+              private readonly contextMenuService: ContextMenuService,
+              private readonly windowManager: WindowManager) {
     super();
   }
 
@@ -206,9 +208,7 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
             console.warn(e);
           }
         }
-      })
-
-
+      });
   }
 
   dragDrop(event: DragEvent, destinationUUID: string) {
@@ -221,12 +221,11 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
           if (result.parent_dir_uuid === destinationUUID) {
             return;
           }
-          //TODO Implement context menu
-          // this.contextMenuService.show.next({
-          //   contextMenu: this.dragDropMenu,
-          //   item: { file: sourceFile, destinationUUID: destinationUUID },
-          //   event: event
-          // });
+          this.contextMenuService.show.next({
+            contextMenu: this.dragDropMenu,
+            item: {file: result, destinationUUID: destinationUUID},
+            event: event
+          });
         },
         error: () => {
           return;
@@ -337,6 +336,9 @@ export class FileManagerComponent extends WindowComponent implements OnInit, OnD
     this.windowManager.openWindow(new EditorWindowDelegate(file));
   }
 
+  openInNewWindow(folder: File) {
+    this.windowManager.openWindow(new FileManagerWindowDelegate(folder));
+  }
 }
 
 export class FileManagerWindowDelegate extends WindowDelegate {

@@ -4,18 +4,19 @@
             (drop)="dragDrop($event, currentFolder.parent_dir_uuid)">↑
     </button>
     <form (submit)="navigateByAddress(); $event.preventDefault()">
-      <input (dragover)="$event.preventDefault()" [(ngModel)]="addressBarURL" aria-label="Address bar" class="address-bar" name="address"
+      <input (dragover)="$event.preventDefault()" [(ngModel)]="addressBarURL" aria-label="Address bar"
+             class="address-bar" name="address"
              type="text">
     </form>
   </div>
-  <!--[contextMenu]="generalContextMenu"-->
-  <div (dragover)="dragOver($event, currentFolder)"
+  <div (dragover)="dragOver($event, currentFolder)"  [contextMenu]="generalContextMenu"
        (drop)="dragDrop($event, currentFolder.uuid)" class="files-container">
-    <div (click)="file.is_directory ? goToFolderUUID(file.uuid) : open(file)" (dragover)="dragOver($event, file)" (dragstart)="dragStart($event, file)"
+    <div (click)="file.is_directory ? goToFolderUUID(file.uuid) : open(file)" (dragover)="dragOver($event, file)"
+         (dragstart)="dragStart($event, file)"
          (drop)="dragDrop($event, file.uuid)" *ngFor="let file of currentFolderFiles"
          [class.folder]="file.is_directory" [draggable]="!file.is_directory" class="file"
+         [contextMenu]="file.is_directory ? folderContextMenu : fileContextMenu" [contextMenuSubject]="file"
     >
-      <!--       [contextMenu]="file.is_directory ? folderContextMenu : fileContextMenu" [contextMenuSubject]="file"-->
       <img *ngIf="file.is_directory" alt="Directory" class="icon" draggable="false"
            src="./assets/desktop/img/folder.svg">
       <img *ngIf="!file.is_directory" alt="File" class="icon" draggable="false"
@@ -29,49 +30,49 @@
     <button (click)="respondConfirm(false)" *ngIf="confirmResolve">No</button>
   </div>
 
-  <!--  <context-menu #generalContextMenu>-->
-  <!--    <ng-template contextMenuItem passive="true">-->
-  <!--      <label>-->
-  <!--        New file-->
-  <!--        <input #newFileInput type="text" value="new-file" maxlength="64"-->
-  <!--               (keydown.enter)="newFile(newFileInput.value)">-->
-  <!--      </label>-->
-  <!--    </ng-template>-->
-  <!--    <ng-template contextMenuItem passive="true">-->
-  <!--      <label>-->
-  <!--        New folder-->
-  <!--        <input #newFileInput type="text" value="new-folder" maxlength="64"-->
-  <!--               (keydown.enter)="newFolder(newFileInput.value)">-->
-  <!--      </label>-->
-  <!--    </ng-template>-->
-  <!--  </context-menu>-->
+  <app-context-menu #generalContextMenu>
+    <ng-template contextMenuItem [passive]="true">
+      <label>
+        New file
+        <input #newFileInput type="text" value="new-file" maxlength="64"
+               (keydown.enter)="newFile(newFileInput.value)">
+      </label>
+    </ng-template>
+    <ng-template contextMenuItem [passive]="true">
+      <label>
+        New folder
+        <input #newFileInput type="text" value="new-folder" maxlength="64"
+               (keydown.enter)="newFolder(newFileInput.value)">
+      </label>
+    </ng-template>
+  </app-context-menu>
 
-  <!--  <context-menu #fileContextMenu>-->
-  <!--    <ng-template contextMenuItem (execute)="open($event.item)">Open</ng-template>-->
-  <!--    <ng-template contextMenuItem let-item passive="true">-->
-  <!--      <label>-->
-  <!--        Rename-->
-  <!--        <input #fileRenameInput type="text" [value]="item.filename" maxlength="64"-->
-  <!--               (keydown.enter)="rename(item, fileRenameInput.value)">-->
-  <!--      </label>-->
-  <!--    </ng-template>-->
-  <!--    <ng-template contextMenuItem (execute)="delete($event.item)">Delete</ng-template>-->
-  <!--  </context-menu>-->
+  <app-context-menu #fileContextMenu>
+    <ng-template contextMenuItem (execute)="open($event.item)">Open</ng-template>
+    <ng-template contextMenuItem let-item [passive]="true">
+      <label>
+        Rename
+        <input #fileRenameInput type="text" [value]="item.filename" maxlength="64"
+               (keydown.enter)="rename(item, fileRenameInput.value)">
+      </label>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="delete($event.item)">Delete</ng-template>
+  </app-context-menu>
 
-  <!--  <context-menu #folderContextMenu>-->
-  <!--    <ng-template contextMenuItem (execute)="openInNewWindow($event.item)">Open in new window</ng-template>-->
-  <!--    <ng-template contextMenuItem let-item passive="true">-->
-  <!--      <label>-->
-  <!--        Rename-->
-  <!--        <input #folderRenameInput type="text" [value]="item.filename" maxlength="64"-->
-  <!--               (keydown.enter)="rename(item, folderRenameInput.value)">-->
-  <!--      </label>-->
-  <!--    </ng-template>-->
-  <!--    <ng-template contextMenuItem (execute)="delete($event.item)">Delete</ng-template>-->
-  <!--  </context-menu>-->
+  <app-context-menu #folderContextMenu>
+    <ng-template contextMenuItem (execute)="openInNewWindow($event.item)">Open in new window</ng-template>
+    <ng-template contextMenuItem let-item [passive]="true">
+      <label>
+        Rename
+        <input #folderRenameInput type="text" [value]="item.filename" maxlength="64"
+               (keydown.enter)="rename(item, folderRenameInput.value)">
+      </label>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="delete($event.item)">Delete</ng-template>
+  </app-context-menu>
 
-  <!--  <context-menu #dragDropMenu>-->
-  <!--    <ng-template contextMenuItem (execute)="dropMove($event)">Move</ng-template>-->
-  <!--    <ng-template contextMenuItem (execute)="dropCopy($event)">Copy</ng-template>-->
-  <!--  </context-menu>-->
+  <app-context-menu #dragDropMenu>
+    <ng-template contextMenuItem (execute)="dropMove($event)">Move</ng-template>
+    <ng-template contextMenuItem (execute)="dropCopy($event)">Copy</ng-template>
+  </app-context-menu>
 </div>

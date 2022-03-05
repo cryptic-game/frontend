@@ -5,6 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {WebsocketService} from '../../../websocket.service';
 import {emptyWindowDelegate, webSocketMock, windowManagerMock} from '../../../test-utils';
 import {WindowManager} from '../../window-manager/window-manager';
+import {ContextMenuModule} from "../../../design/context-menu/context-menu.module";
 
 describe('FileManagerComponent', () => {
   let component: FileManagerComponent;
@@ -20,6 +21,7 @@ describe('FileManagerComponent', () => {
         FileManagerComponent
       ],
       imports: [
+        ContextMenuModule.forRoot(),
         FormsModule
       ]
     })
