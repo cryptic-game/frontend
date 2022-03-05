@@ -1,5 +1,5 @@
-@import 'theme-colors';
-button{
+@import "theme-colors";
+button {
   padding: 10px;
   border-radius: 10px;
   margin-top: 8px;
@@ -9,7 +9,7 @@ button{
   font-size: 16px;
 }
 button.primary {
-  color: #2F2F36;
+  color: #2f2f36;
   background: $primary-default;
 
   &:disabled {
@@ -23,7 +23,7 @@ button.primary {
 }
 
 button.success {
-  color: #2F2F36;
+  color: #2f2f36;
   background: $success-default;
 
   &:disabled {
@@ -37,7 +37,7 @@ button.success {
 }
 
 button.warning {
-  color: #2F2F36;
+  color: #2f2f36;
   background: $warning-default;
 
   &:disabled {
@@ -51,7 +51,7 @@ button.warning {
 }
 
 button.danger {
-  color: #2F2F36;
+  color: #2f2f36;
   background: $danger-default;
 
   &:disabled {
@@ -65,7 +65,7 @@ button.danger {
 }
 
 button.info {
-  color: #2F2F36;
+  color: #2f2f36;
   background: $info-default;
 
   &:disabled {
