@@ -45,7 +45,6 @@ import { DesktopDeviceResolver } from './desktop/desktop-device.resolver';
 import { EditorComponent } from './desktop/windows/editor/editor.component';
 import { FileManagerComponent } from './desktop/windows/file-manager/file-manager.component';
 import { ContextMenuModule } from 'ngx-contextmenu';
-import { StyledButtonComponent } from './design/styled-button/styled-button.component';
 // tslint:enable:max-line-length
 
 const routes: Routes = [
@@ -97,8 +96,7 @@ const routes: Routes = [
     WalletAppTransactionComponent,
     HardwareShopSidebarComponent,
     EditorComponent,
-    FileManagerComponent,
-    StyledButtonComponent
+    FileManagerComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
