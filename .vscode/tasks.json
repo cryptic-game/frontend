@@ -1,37 +1,42 @@
 {
+  // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
   "version": "2.0.0",
-  "tasks": [{
-      "label": "install",
-      "type": "shell",
-      "command": "sudo npm install && sudo npm audit fix",
-      "windows": {
-        "command": "npm install && npm audit fix"
-      },
-      "problemMatcher": []
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation complete"
+          }
+        }
+      }
     },
     {
-      "label": "run",
-      "type": "shell",
-      "command": "ng serve --open",
-      "problemMatcher": []
-    },
-    {
-      "label": "build",
-      "type": "shell",
-      "command": "ng build",
-      "problemMatcher": []
-    },
-    {
-      "label": "test",
-      "type": "shell",
-      "command": "ng test",
-      "problemMatcher": []
-    },
-    {
-      "label": "e2e",
-      "type": "shell",
-      "command": "ng e2e",
-      "problemMatcher": []
+      "type": "npm",
+      "script": "test",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation complete"
+          }
+        }
+      }
     }
   ]
 }

@@ -51,7 +51,8 @@
       column-gap: 1px;
       column-rule: 1px solid $gray;
 
-      h3, h4 {
+      h3,
+      h4 {
         margin: 0;
         padding: 0.1em 1rem;
       }
@@ -67,7 +68,6 @@
 
       .category {
         break-inside: avoid;
-        -webkit-column-break-inside: avoid;
         padding-bottom: 0.5em;
 
         h4 {

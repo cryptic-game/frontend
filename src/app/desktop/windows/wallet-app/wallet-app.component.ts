@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit, Type } from '@angular/core';
-import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
-import { WalletAppService } from './wallet-app.service';
-import { Wallet } from './wallet';
-import { Transaction } from './transaction';
-import { Subscription } from 'rxjs';
+import {Component, OnDestroy, OnInit, Type} from '@angular/core';
+import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/window-delegate';
+import {WalletAppService} from './wallet-app.service';
+import {Wallet} from './wallet';
+import {Transaction} from './transaction';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-wallet-app',
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 export class WalletAppComponent extends WindowComponent implements OnInit, OnDestroy {
 
   walletEdit = false;
-  wallet: Wallet;
+  wallet: Wallet | null;
   transactions: Transaction[] = [];
   lastTransactionCount = 0;
   currentPage = 0;
@@ -37,7 +37,7 @@ export class WalletAppComponent extends WindowComponent implements OnInit, OnDes
       }
       this.wallet = wallet;
       if (wallet) {
-        this.pages = Math.ceil(this.wallet.transactions / this.itemsPerPage);
+        this.pages = Math.ceil(this.wallet!.transactions / this.itemsPerPage);
         if (this.pages === 0) {
           this.currentPage = 0;
           this.lastTransactionCount = 0;
@@ -46,9 +46,9 @@ export class WalletAppComponent extends WindowComponent implements OnInit, OnDes
           if (this.currentPage === 0 || this.currentPage > this.pages) {
             this.currentPage = 1;
           }
-          if (this.wallet.transactions !== this.lastTransactionCount) {
+          if (this.wallet!.transactions !== this.lastTransactionCount) {
             this.loadTransactions().then();
-            this.lastTransactionCount = this.wallet.transactions;
+            this.lastTransactionCount = this.wallet!.transactions;
           }
         }
       }
@@ -91,5 +91,5 @@ export class WalletAppWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/wallet_app.svg';
   type: Type<any> = WalletAppComponent;
 
-  constraints = new WindowConstraints({ minWidth: 485, minHeight: 325 });
+  override constraints = new WindowConstraints({minWidth: 485, minHeight: 325});
 }

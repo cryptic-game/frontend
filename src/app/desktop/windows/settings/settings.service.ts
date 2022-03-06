@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { availableBackgrounds } from '../../../../assets/desktop/backgrounds/backgrounds';
-import { BooleanSetting, ColorSetting, EnumSetting } from './settings-entry';
-import { SettingService } from '../../../api/setting/setting.service';
+import {Injectable} from '@angular/core';
+import {availableBackgrounds} from '../../../../assets/desktop/backgrounds/backgrounds';
+import {BooleanSetting, ColorSetting, EnumSetting} from './settings-entry';
+import {SettingService} from '../../../api/setting/setting.service';
 
 @Injectable({
   providedIn: 'root'

@@ -22,11 +22,11 @@ export interface Mainboard extends Part {
   'cpuSlots': number;
   'coreTemperatureControl': boolean;
   'usbPorts': number;
-  'ram': { 'ramSlots': number, 'maxRamSize': number, 'ramTyp': [string, number][], 'frequency': number[] };
-  'graphicUnitOnBoard'?: { 'name': string, 'ramSize': number, 'frequency': number };
-  'expansionSlots': { 'interface': [string, number], 'interfaceSlots': number }[];
-  'diskStorage': { 'diskSlots': number, 'interface': [string, number][] };
-  'networkPort': { 'name': string, 'interface': string, 'speed': number };
+  'ram': { 'ramSlots': number; 'maxRamSize': number; 'ramTyp': [string, number][]; 'frequency': number[] };
+  'graphicUnitOnBoard'?: { 'name': string; 'ramSize': number; 'frequency': number };
+  'expansionSlots': { 'interface': [string, number]; 'interfaceSlots': number }[];
+  'diskStorage': { 'diskSlots': number; 'interface': [string, number][] };
+  'networkPort': { 'name': string; 'interface': string; 'speed': number };
   'power': number;
 }
 

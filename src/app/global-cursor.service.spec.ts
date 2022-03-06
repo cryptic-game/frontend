@@ -1,6 +1,6 @@
-import { inject, TestBed } from '@angular/core/testing';
+import {inject, TestBed} from '@angular/core/testing';
 
-import { GlobalCursorService } from './global-cursor.service';
+import {GlobalCursorService} from './global-cursor.service';
 
 describe('GlobalCursorService', () => {
   beforeEach(() => {

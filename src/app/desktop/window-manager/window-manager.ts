@@ -1,5 +1,5 @@
-import { WindowDelegate } from '../window/window-delegate';
-import { Device } from '../../api/devices/device';
+import {WindowDelegate} from '../window/window-delegate';
+import {Device} from '../../api/devices/device';
 
 /**
  * The window manager maintains the open windows of a specific device.
@@ -36,7 +36,7 @@ export class WindowManager {
 
   sortWindows() {
     if (this.windows.length === 0) {
-      this.activeWindow = null;
+      this.activeWindow = null!;
       return;
     }
 
@@ -61,7 +61,7 @@ export class WindowManager {
   closeAllWindows() {
     this.windows = [];
     this.taskList = [];
-    this.activeWindow = null;
+    this.activeWindow = null!;
   }
 
   focusWindow(window: WindowDelegate) {
@@ -82,7 +82,7 @@ export class WindowManager {
 
       this.activeWindow.component.events.next('unfocus');
 
-      this.activeWindow = null;
+      this.activeWindow = null!;
     }
   }
 

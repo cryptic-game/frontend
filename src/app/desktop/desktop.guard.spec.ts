@@ -1,14 +1,15 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { DesktopGuard } from './desktop.guard';
-import { WebsocketService } from '../websocket.service';
-import { Observable, of } from 'rxjs';
-import { webSocketMock } from '../test-utils';
-import { Router } from '@angular/router';
+import {DesktopGuard} from './desktop.guard';
+import {WebsocketService} from '../websocket.service';
+import {Observable, of} from 'rxjs';
+import {webSocketMock} from '../test-utils';
+import {Router} from '@angular/router';
 
 describe('DesktopGuard', () => {
-  let webSocketService;
-  let router;
+  //TODO: Type me correct
+  let webSocketService: any;
+  let router: any;
   let guard: DesktopGuard;
 
   beforeEach(() => {
@@ -18,8 +19,8 @@ describe('DesktopGuard', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        { provide: WebsocketService, useValue: webSocketService },
-        { provide: Router, useValue: router }
+        {provide: WebsocketService, useValue: webSocketService},
+        {provide: Router, useValue: router}
       ]
     });
 
@@ -36,11 +37,14 @@ describe('DesktopGuard', () => {
     const observable = guard.canActivate(null, null) as Observable<boolean>;
     expect(observable).toBeInstanceOf(Observable);
 
-    observable.subscribe(canActivate => {
-      expect(webSocketService.trySession).toHaveBeenCalled();
-      expect(canActivate).toBeTrue();
-      expect(router.navigateByUrl).not.toHaveBeenCalled();
-    }, fail);
+    observable.subscribe({
+      next: (canActivate: boolean) => {
+        expect(webSocketService.trySession).toHaveBeenCalled();
+        expect(canActivate).toBeTrue();
+        expect(router.navigateByUrl).not.toHaveBeenCalled();
+      },
+      error: () => fail
+    });
   });
 
   it('should try to login and navigate back to login if it failed', () => {
@@ -49,11 +53,14 @@ describe('DesktopGuard', () => {
     const observable = guard.canActivate(null, null) as Observable<boolean>;
     expect(observable).toBeInstanceOf(Observable);
 
-    observable.subscribe(canActivate => {
-      expect(webSocketService.trySession).toHaveBeenCalled();
-      expect(canActivate).toBeFalsy();
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
-    }, fail);
+    observable.subscribe({
+      next: (canActivate: boolean) => {
+        expect(webSocketService.trySession).toHaveBeenCalled();
+        expect(canActivate).toBeFalsy();
+        expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
+      },
+      error: () => fail
+    });
   });
 
 });

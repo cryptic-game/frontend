@@ -3,7 +3,7 @@
 #desktop-surface {
   width: 100%;
   height: 100%;
-  background: $black url("../../assets/desktop/backgrounds/cry_crack.png") bottom/cover no-repeat;
+  background: $black url("../../assets/desktop/backgrounds/cry_crack.jpg") bottom/cover no-repeat;
   box-sizing: content-box;
   position: relative;
   overflow: hidden;
@@ -12,7 +12,7 @@
   #version-info {
     text-align: right;
     margin-right: 1em;
-    color: #696969;
+    color: dimgrey;
     user-select: none;
     pointer-events: none;
 
@@ -35,7 +35,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-shadow: 1px 1px 2px rgb(0, 0, 0);
+    text-shadow: 1px 1px 2px black;
 
     &.not-allowed {
       background-color: rgba(50, 0, 0, 100) !important;

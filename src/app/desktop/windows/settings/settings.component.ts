@@ -1,8 +1,8 @@
-import { Component, OnInit, Type } from '@angular/core';
-import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
-import { SettingsService } from './settings.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { SettingsEntry } from './settings-entry';
+import {Component, OnInit, Type} from '@angular/core';
+import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/window-delegate';
+import {SettingsService} from './settings.service';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {SettingsEntry} from './settings-entry';
 
 @Component({
   selector: 'app-settings',
@@ -29,7 +29,7 @@ export class SettingsComponent extends WindowComponent implements OnInit {
   }
 
   initForm() {
-    const controlsConfig = {};
+    const controlsConfig: { [name: string]: unknown[] } = {};
     for (const [name, setting] of this.settingEntries) {
       controlsConfig[name] = [setting.getCacheOrDefault()];
     }
@@ -37,7 +37,7 @@ export class SettingsComponent extends WindowComponent implements OnInit {
   }
 
   async loadForm() {
-    const value = {};
+    const value: { [name: string]: unknown } = {};
     for (const [name, setting] of this.settingEntries) {
       value[name] = await setting.getFresh();
     }
@@ -47,7 +47,7 @@ export class SettingsComponent extends WindowComponent implements OnInit {
   async resetSettings() {
     await Promise.all(this.settingEntries.map(async ([name, setting]) => {
       await setting.reset();
-      this.form.patchValue({ [name]: setting.getCacheOrDefault() });
+      this.form.patchValue({[name]: setting.getCacheOrDefault()});
     }));
   }
 
@@ -64,5 +64,5 @@ export class SettingsWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/gear.svg';
   type: Type<any> = SettingsComponent;
 
-  constraints = new WindowConstraints({ minWidth: 300, minHeight: 200 });
+  override constraints = new WindowConstraints({minWidth: 300, minHeight: 200});
 }

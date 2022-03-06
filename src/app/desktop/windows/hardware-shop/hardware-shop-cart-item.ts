@@ -1,4 +1,4 @@
-import { HardwareShopItem } from './hardware-shop-item';
+import {HardwareShopItem} from './hardware-shop-item';
 
 export interface HardwareShopCartItem {
   id: number;

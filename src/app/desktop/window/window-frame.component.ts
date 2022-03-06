@@ -1,8 +1,8 @@
-import { Component, ComponentFactoryResolver, HostListener, Injector, Input, OnInit, ViewChild } from '@angular/core';
-import { WindowDelegate } from './window-delegate';
-import { WindowPlaceDirective } from './window-place.directive';
-import { GlobalCursorService } from '../../global-cursor.service';
-import { WindowManager } from '../window-manager/window-manager';
+import {Component, ComponentFactoryResolver, HostListener, Injector, Input, OnInit, ViewChild} from '@angular/core';
+import {WindowDelegate} from './window-delegate';
+import {WindowPlaceDirective} from './window-place.directive';
+import {GlobalCursorService} from '../../global-cursor.service';
+import {WindowManager} from '../window-manager/window-manager';
 
 @Component({
   selector: 'app-window-frame',
@@ -12,7 +12,7 @@ import { WindowManager } from '../window-manager/window-manager';
 export class WindowFrameComponent implements OnInit {
   cursorLock: number;
 
-  @ViewChild(WindowPlaceDirective, { static: true }) windowPlace: WindowPlaceDirective;
+  @ViewChild(WindowPlaceDirective, {static: true}) windowPlace: WindowPlaceDirective;
 
   @Input() delegate: WindowDelegate;
   @Input() windowManager: WindowManager;
@@ -36,13 +36,13 @@ export class WindowFrameComponent implements OnInit {
   loadWindowContent() {
     const inj = Injector.create({
       providers: [
-        { provide: WindowManager, useValue: this.windowManager },
-        { provide: WindowDelegate, useValue: this.delegate }
+        {provide: WindowManager, useValue: this.windowManager},
+        {provide: WindowDelegate, useValue: this.delegate}
       ],
       parent: this.injector
     });
 
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.delegate.type);
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.delegate.type!);
     const componentRef = this.windowPlace.viewContainerRef.createComponent(componentFactory, undefined, inj);
     componentRef.instance.delegate = this.delegate;
     this.delegate.component = componentRef.instance;
@@ -60,7 +60,7 @@ export class WindowFrameComponent implements OnInit {
     }
   }
 
-  checkResizeDirection(clientX, clientY, target: Element) {
+  checkResizeDirection(clientX: number, clientY: number, target: Element) {
     if (target === undefined) {
       return 0;
     }
@@ -74,8 +74,8 @@ export class WindowFrameComponent implements OnInit {
       return 0;
     }
 
-    if (!(target.id === 'desktop-surface' || (target.closest('app-window-frame') && window.document.defaultView
-      .getComputedStyle(target.closest('app-window-frame')).zIndex === this.delegate.position.zIndex.toString()))) {
+    if (!(target.id === 'desktop-surface' || (target.closest('app-window-frame') && window.document.defaultView!
+      .getComputedStyle(target.closest('app-window-frame')!).zIndex === this.delegate.position.zIndex.toString()))) {
       return 0;
     }
 
@@ -146,7 +146,7 @@ export class WindowFrameComponent implements OnInit {
     }
   }
 
-  setCursor(cursor) {
+  setCursor(cursor: string) {
     this.cursorLock = this.cursorService.requestCursor(cursor, this.cursorLock);
   }
 
@@ -249,4 +249,8 @@ export class WindowFrameComponent implements OnInit {
     }
   }
 
+  asElement(target: EventTarget): Element {
+    // @ts-ignore
+    return target
+  }
 }

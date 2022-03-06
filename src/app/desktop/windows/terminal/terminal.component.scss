@@ -1,6 +1,6 @@
 @import "variables";
 
-$warningColor: #ff3333;
+$warning-color: #f33;
 
 :host {
   flex-basis: 100%;
@@ -74,11 +74,11 @@ $warningColor: #ff3333;
   font-family: Consolas, monospace;
 }
 
-#terminal-history ::ng-deep .errorText {
-  color: $warningColor;
+#terminal-history ::ng-deep .error-text {
+  color: $warning-color;
 }
 
-#prompt ::ng-deep .errorText {
-  color: $warningColor;
+#prompt ::ng-deep .error-text {
+  color: $warning-color;
   font-family: Consolas, monospace;
 }

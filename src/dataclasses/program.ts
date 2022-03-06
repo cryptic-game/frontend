@@ -1,6 +1,6 @@
-import { Position } from './position';
-import { WindowDelegate } from '../app/desktop/window/window-delegate';
-import { Type } from '@angular/core';
+import {Position} from './position';
+import {WindowDelegate} from '../app/desktop/window/window-delegate';
+import {Type} from '@angular/core';
 
 export class Program {
   constructor(

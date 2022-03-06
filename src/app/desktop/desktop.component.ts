@@ -1,17 +1,16 @@
-import { Position } from '../../dataclasses/position';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { Program } from '../../dataclasses/program';
-import { ProgramService } from './program.service';
-import { ActivatedRoute } from '@angular/router';
-import { WindowManagerService } from './window-manager/window-manager.service';
-import { GlobalCursorService } from '../global-cursor.service';
-import { SettingsService } from './windows/settings/settings.service';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { DeviceService } from '../api/devices/device.service';
-import { Device } from '../api/devices/device';
-import { WindowManager } from './window-manager/window-manager';
-import { VersionService } from '../version.service';
-import { availableBackgrounds } from '../../assets/desktop/backgrounds/backgrounds';
+import {Position} from '../../dataclasses/position';
+import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Program} from '../../dataclasses/program';
+import {ProgramService} from './program.service';
+import {ActivatedRoute} from '@angular/router';
+import {WindowManagerService} from './window-manager/window-manager.service';
+import {GlobalCursorService} from '../global-cursor.service';
+import {SettingsService} from './windows/settings/settings.service';
+import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
+import {DeviceService} from '../api/devices/device.service';
+import {Device} from '../api/devices/device';
+import {WindowManager} from './window-manager/window-manager';
+import {availableBackgrounds} from '../../assets/desktop/backgrounds/backgrounds';
 
 @Component({
   selector: 'app-desktop',
@@ -23,7 +22,7 @@ export class DesktopComponent implements OnInit {
   devices: Device[] = [];
   windowManager: WindowManager;
   startMenu = false;
-  @ViewChild('surface', { static: true }) surface: ElementRef;
+  @ViewChild('surface', {static: true}) surface: ElementRef;
   linkages: Program[] = []; // array for all linkages on the desktop
   dragLinkageIndex: number; // index of current dragged element
   dragOffset: Position; // mouse offset position of the dragged element
@@ -37,8 +36,7 @@ export class DesktopComponent implements OnInit {
     private cursorService: GlobalCursorService,
     private settings: SettingsService,
     private sanitizer: DomSanitizer,
-    private windowManagerService: WindowManagerService,
-    public versionService: VersionService
+    private windowManagerService: WindowManagerService
   ) {
     this.activatedRoute.data.subscribe(data => {
       this.activeDevice = data['device'];
@@ -102,13 +100,13 @@ export class DesktopComponent implements OnInit {
         if (this.checkDropAllowed(e)) {
           this.linkages[this.dragLinkageIndex].position.x = this.dragElement.offsetLeft;
           this.linkages[this.dragLinkageIndex].position.y = this.dragElement.offsetTop;
-          this.programService.save(this.linkages[this.dragLinkageIndex]).then();
+          this.programService.save(this.linkages[this.dragLinkageIndex]);
         }
         this.dragElement.remove();
-        this.dragElement = undefined;
+        this.dragElement = undefined!;
       }
-      this.dragLinkageIndex = undefined;
-      this.dragOffset = undefined;
+      this.dragLinkageIndex = undefined!;
+      this.dragOffset = undefined!;
       this.cursorService.releaseCursor(this.dragCursorLock);
     }
   }
@@ -138,6 +136,8 @@ export class DesktopComponent implements OnInit {
   }
 
   checkDropAllowed(e: MouseEvent): boolean {
+    // TODO:
+    // @ts-ignore
     const elementsFromPoint = document['elementsFromPoint'] || document['msElementsFromPoint'];
     if (!elementsFromPoint) {
       return true;
@@ -150,6 +150,8 @@ export class DesktopComponent implements OnInit {
 
   getBackground(): SafeStyle {
     return this.sanitizer.bypassSecurityTrustStyle(
+      // TODO:
+      // @ts-ignore
       `black url(${availableBackgrounds[this.settings.backgroundImage.getCacheOrDefault()]}) bottom/cover no-repeat`
     );
   }

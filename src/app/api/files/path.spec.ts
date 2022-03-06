@@ -1,4 +1,4 @@
-import { Path } from './path';
+import {Path} from './path';
 
 describe('Path', () => {
   beforeAll(() => {
@@ -19,7 +19,7 @@ describe('Path', () => {
       try {
         const path = Path.fromString(char);
         expect(path).toBeUndefined();
-      } catch (err) {
+      } catch (err: any) {
         expect(err.message).toEqual('invalid_path');
       }
     }
@@ -29,14 +29,14 @@ describe('Path', () => {
     const path = Path.fromString('/abc/def/ghi', 'xyz');
     expect(path).toBeTruthy();
     expect(path.path).toEqual(['abc', 'def', 'ghi']);
-    expect(path.parentUUID).toEqual(Path.ROOT);
+    expect(path.parentUUID).toEqual(Path.ROOT!);
   });
 
   it('#fromString() should return ["."] if the path is just "/"', () => {
     const path = Path.fromString('/', 'xyz');
     expect(path).toBeTruthy();
     expect(path.path).toEqual(['.']);
-    expect(path.parentUUID).toEqual(Path.ROOT);
+    expect(path.parentUUID).toEqual(Path.ROOT!);
   });
 
   it('#fromString() should return a relative path with a parent if one is given', () => {
@@ -51,7 +51,7 @@ describe('Path', () => {
       const path = Path.fromString('xyz/321/abc/.giu');
       expect(path).toBeUndefined();
     } catch (err) {
-      expect(err.message).toBeTruthy();
+      expect(err).toBeTruthy();
     }
   });
 
@@ -70,7 +70,7 @@ describe('Path', () => {
   });
 
   it('should use Path.ROOT as the default parent in the constructor', () => {
-    expect(new Path([]).parentUUID).toEqual(Path.ROOT);
+    expect(new Path([]).parentUUID).toEqual(Path.ROOT!);
   });
 
 });

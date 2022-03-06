@@ -18,7 +18,7 @@
     <label class="item">
       <select formControlName="mainboard">
         <option [ngValue]="null">Choose a mainboard</option>
-        <option *ngFor="let mainboard of mainBoards" [disabled]="mainboard.case !== form.get('case').value?.name"
+        <option *ngFor="let mainboard of mainBoards" [disabled]="mainboard.case !== form.get('case')?.value?.name"
                 [ngValue]="mainboard">{{mainboard.name}}</option>
       </select>
     </label>

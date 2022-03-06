@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { HardwareShopCategory } from '../hardware-shop-category';
-import { HardwareShopDelegate } from '../hardware-shop.delegate';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {HardwareShopCategory} from '../hardware-shop-category';
+import {HardwareShopDelegate} from '../hardware-shop.delegate';
 
 @Component({
   selector: 'app-hardware-shop-sidebar-item',

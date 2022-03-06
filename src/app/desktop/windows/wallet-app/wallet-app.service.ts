@@ -1,9 +1,10 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Wallet } from './wallet';
-import { WebsocketService } from '../../../websocket.service';
-import { forkJoin } from 'rxjs';
-import { Transaction } from './transaction';
-import { SettingService } from '../../../api/setting/setting.service';
+import {EventEmitter, Injectable} from '@angular/core';
+import {Wallet} from './wallet';
+import {WebsocketService} from '../../../websocket.service';
+import {forkJoin, Observable} from 'rxjs';
+import {Transaction} from './transaction';
+import {SettingService} from '../../../api/setting/setting.service';
+import {map, take} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class WalletAppService {
   static WALLET_UUID_REGEX = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/;
   static WALLET_KEY_REGEX = /^[0-9a-f]{10}$/;
 
-  wallet: Wallet;
+  wallet: Wallet | null;
   readonly update: EventEmitter<Wallet | null> = new EventEmitter<Wallet | null>();
 
   private updateIntervalHandle: any = null;
@@ -23,19 +24,12 @@ export class WalletAppService {
     this.initUpdates();
   }
 
-  private initUpdates(): void {
-    this.updateIntervalHandle = setInterval(() => {
-      if (this.update.observers.length > 0) {
-        this.updateWallet().then();
-      }
-    }, 1000 * 15);
-  }
-
   async updateWallet(): Promise<boolean> {
     try {
-      const { id, key } = await this.getCredentials();
+      const {id, key} = await this.getCredentials().toPromise() || {key: '', id: ''};
       return await this.loadWallet(id, key);
-    } catch (e) {
+    } catch (e: unknown) {
+      // @ts-ignore
       if (e.message === 'unknown setting') {
         this.wallet = null;
         this.update.emit(null);
@@ -66,8 +60,16 @@ export class WalletAppService {
 
   async getTransactions(offset: number, count: number): Promise<Transaction[]> {
     const response = await this.websocketService.msPromise('currency', ['transactions'],
-      { source_uuid: this.wallet.source_uuid, key: this.wallet.key, offset, count });
+      {source_uuid: this.wallet!.source_uuid, key: this.wallet!.key, offset: offset, count: count});
     return response.transactions;
+  }
+
+  private initUpdates(): void {
+    this.updateIntervalHandle = setInterval(() => {
+      if (this.update.observers.length > 0) {
+        this.updateWallet().then();
+      }
+    }, 1000 * 15);
   }
 
   private async getWallet(uuid: string, key: string): Promise<any> {
@@ -77,17 +79,21 @@ export class WalletAppService {
 
     try {
       return await this.websocketService
-        .msPromise('currency', ['get'], { source_uuid: uuid, key: key });
+        .msPromise('currency', ['get'], {source_uuid: uuid, key: key});
     } catch (e) {
       return null;
     }
   }
 
-  private getCredentials(): Promise<{ id: string, key: string }> {
-    return forkJoin({
-      id: this.settingService.get('wallet_id'),
-      key: this.settingService.get('wallet_key')
-    }).toPromise();
+  private getCredentials(): Observable<{ id: string; key: string }> {
+    return forkJoin([
+      this.settingService.get('wallet_id'),
+      this.settingService.get('wallet_key')
+    ])
+      .pipe(
+        map(([id, key]) => ({id, key})),
+        take(1)
+      );
   }
 
   private saveCredentials(wallet: Wallet): void {

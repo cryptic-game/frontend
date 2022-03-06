@@ -1,17 +1,15 @@
 <div #surface (contextmenu)="$event.preventDefault()" (mousedown)="checkWindowUnfocus($event); hideStartMenu()"
      [style.background]="getBackground()" id="desktop-surface">
-  <h1 id="version-info" [class.just-updated]="versionService.justUpdated">{{versionService.CURRENT_VERSION}}</h1>
-
   <div
-    *ngFor="let linkage of onDesktop(); index as i"
-    (dblclick)="openProgramWindow(linkage)" (mousedown)="linkageMouseDown($event, i)"
+    (dblclick)="openProgramWindow(linkage)"
+    (mousedown)="linkageMouseDown($event, i)" *ngFor="let linkage of onDesktop(); index as i"
     [ngStyle]="{'left.vw': linkage.position.x | px2vw, 'top.vh': linkage.position.y | px2vh, zIndex: linkage.position.z }"
     class="linkage"
   ><img [src]="linkage.icon" alt="">{{linkage.displayName}}</div>
 
   <app-window-manager
-    *ngFor="let device of devices; trackBy: trackByUUID" [device]="device"
-    [active]="device.uuid === activeDevice.uuid" [hidden]="device.uuid !== activeDevice.uuid"
+    *ngFor="let device of devices; trackBy: trackByUUID" [active]="device.uuid === activeDevice.uuid"
+    [device]="device" [hidden]="device.uuid !== activeDevice.uuid"
   ></app-window-manager>
 </div>
 <app-desktop-startmenu *ngIf="startMenu" [parent]="this"></app-desktop-startmenu>

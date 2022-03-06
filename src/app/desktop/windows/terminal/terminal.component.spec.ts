@@ -1,21 +1,21 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { TerminalComponent } from './terminal.component';
-import { HttpClientModule } from '@angular/common/http';
-import { emptyWindowDelegate, webSocketMock, windowManagerMock } from '../../../test-utils';
-import { WindowManager } from '../../window-manager/window-manager';
-import { WebsocketService } from '../../../websocket.service';
+import {TerminalComponent} from './terminal.component';
+import {HttpClientModule} from '@angular/common/http';
+import {emptyWindowDelegate, webSocketMock, windowManagerMock} from '../../../test-utils';
+import {WindowManager} from '../../window-manager/window-manager';
+import {WebsocketService} from '../../../websocket.service';
 
 describe('TerminalComponent', () => {
   let component: TerminalComponent;
   let fixture: ComponentFixture<TerminalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [TerminalComponent],
       providers: [
-        { provide: WindowManager, useValue: windowManagerMock() },
-        { provide: WebsocketService, useValue: webSocketMock() }
+        {provide: WindowManager, useValue: windowManagerMock()},
+        {provide: WebsocketService, useValue: webSocketMock()}
       ],
       imports: [HttpClientModule]
     }).compileComponents();

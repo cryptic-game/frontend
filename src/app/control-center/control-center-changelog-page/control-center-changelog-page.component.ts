@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Changelog} from "./Changelog";
 
 @Component({
   selector: 'app-control-center-changelog-page',
@@ -11,25 +12,22 @@ export class ControlCenterChangelogPageComponent implements OnInit {
   changelog: Changelog;
 
   constructor(private httpClient: HttpClient) {
+    this.changelog = {
+      latest: "",
+      versions: [{
+        name: "",
+        date: "",
+        additions: [],
+        changes: [],
+        enhancements: [],
+        fixes: [],
+      }],
+      start_date: "",
+    };
   }
 
   ngOnInit(): void {
-    this.httpClient.get('/assets/changelog.json').subscribe(changelog => {
-      this.changelog = changelog as Changelog;
-    });
+    this.httpClient.get<Changelog>('/assets/changelog.json')
+      .subscribe(changelog => this.changelog = changelog);
   }
-
-}
-
-interface Changelog {
-  latest: string;
-  versions: {
-    name: string;
-    date: string;
-    additions: string[];
-    changes: string[];
-    enhancements: string[];
-    fixes: string[];
-  }[];
-  start_date: string;
 }

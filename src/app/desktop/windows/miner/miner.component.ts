@@ -1,16 +1,16 @@
-import { Component, OnDestroy, OnInit, Type } from '@angular/core';
-import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
-import { WebsocketService } from '../../../websocket.service';
-import { FormControl, Validators } from '@angular/forms';
-import { Observable, of, timer } from 'rxjs';
-import { catchError, debounce, map } from 'rxjs/operators';
+import {Component, OnInit, Type} from '@angular/core';
+import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/window-delegate';
+import {WebsocketService} from '../../../websocket.service';
+import {FormControl, Validators} from '@angular/forms';
+import {Observable, of, timer} from 'rxjs';
+import {catchError, debounce, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-miner',
   templateUrl: './miner.component.html',
   styleUrls: ['./miner.component.scss']
 })
-export class MinerComponent extends WindowComponent implements OnInit, OnDestroy {
+export class MinerComponent extends WindowComponent implements OnInit {
 
   active = false;
   power = 0.0;
@@ -20,14 +20,14 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
   walletControl: FormControl = new FormControl('', [
     Validators.required, Validators.pattern(/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/)
   ]);
-  wallet: string;
+  wallet: string | undefined;
   errorMessage: string;
 
   minerPower: FormControl = new FormControl(0, [
     Validators.required, Validators.min(0), Validators.max(100)
   ]);
 
-  miner;
+  miner: any;   //TODO: Type me correct
 
   constructor(private websocketService: WebsocketService) {
     super();
@@ -57,7 +57,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
     this.websocketService.ms('service', ['list'], {
       'device_uuid': this.delegate.device.uuid,
     }).subscribe((listData) => {
-      listData.services.forEach((service) => {
+      listData.services.forEach((service: any) => {   //TODO: Type me correct
         if (service.name === 'miner') {
           this.miner = service;
           this.miningRate = service.speed;
@@ -65,9 +65,6 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
         }
       });
     });
-  }
-
-  ngOnDestroy() {
   }
 
   get() {
@@ -90,7 +87,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
         'wallet_uuid': wallet,
       }).pipe(
         map(createData => {
-          this.errorMessage = null;
+          this.errorMessage = null!;
 
           this.miner = createData;
           this.miningRate = createData.speed;
@@ -102,7 +99,7 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
           return of<void>();
         }));
     }
-    return undefined;
+    return undefined!;
   }
 
   private updateMinerWallet(wallet: string): void {
@@ -112,13 +109,16 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
       this.websocketService.ms('service', ['miner', 'wallet'], {
         'service_uuid': this.miner.uuid,
         'wallet_uuid': wallet,
-      }).subscribe((walletData) => {
-        this.errorMessage = undefined;
-        this.setWallet(wallet);
-        this.setPower(walletData.power);
-        this.get();
-      }, () => {
-        this.setError('Invalid wallet');
+      }).subscribe({
+        next: (walletData) => {
+          this.errorMessage = undefined!;
+          this.setWallet(wallet);
+          this.setPower(walletData.power);
+          this.get();
+        },
+        error: () => {
+          this.setError('Invalid wallet');
+        }
       });
     }
   }
@@ -144,21 +144,23 @@ export class MinerComponent extends WindowComponent implements OnInit, OnDestroy
   private setError(error: string): void {
     this.errorMessage = error;
     this.wallet = undefined;
-    setTimeout(() => this.errorMessage = undefined, 5000);
+    setTimeout(() => {
+      this.errorMessage = undefined!
+    }, 5000);
   }
 
-  private setWallet(uuid: string): void {
+  private setWallet(uuid: string | undefined): void {
     this.wallet = uuid;
     if (uuid) {
-      this.walletControl.setValue(uuid, { emitEvent: false });
+      this.walletControl.setValue(uuid, {emitEvent: false});
     }
   }
 
-  private setPower(power: number, syncSlider: boolean = true): void {
+  private setPower(power: number, syncSlider = true): void {
     this.power = power;
     this.active = power > 0;
     if (syncSlider) {
-      this.minerPower.setValue(power, { emitEvent: false });
+      this.minerPower.setValue(power, {emitEvent: false});
     }
   }
 }
@@ -168,7 +170,7 @@ export class MinerWindowDelegate extends WindowDelegate {
   public icon = 'assets/desktop/img/morphcoin_dark.svg';
   public type: Type<any> = MinerComponent;
 
-  public constraints = new WindowConstraints({ singleInstance: true, resizable: false, maximizable: false });
+  public override constraints = new WindowConstraints({singleInstance: true, resizable: false, maximizable: false});
 
   constructor() {
     super();

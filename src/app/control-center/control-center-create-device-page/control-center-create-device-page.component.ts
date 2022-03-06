@@ -1,10 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DeviceHardwareSpec, DeviceService } from '../../api/devices/device.service';
-import { Case, CPU, Disk, GPU, Mainboard, Part, PartCategory, PowerPack, ProcessorCooler, RAM } from '../../api/hardware/hardware-parts';
-import { ActivatedRoute, Router } from '@angular/router';
-import { InventoryItemWithHardware } from '../../api/inventory/inventory-item';
-import { ControlCenterService } from '../control-center.service';
+import {Component} from '@angular/core';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {DeviceHardwareSpec, DeviceService} from '../../api/devices/device.service';
+import {
+  Case,
+  CPU,
+  Disk,
+  GPU,
+  Mainboard,
+  Part,
+  PartCategory,
+  PowerPack,
+  ProcessorCooler,
+  RAM
+} from '../../api/hardware/hardware-parts';
+import {ActivatedRoute, Data, Router} from '@angular/router';
+import {InventoryItemWithHardware} from '../../api/inventory/inventory-item';
+import {ControlCenterService} from '../control-center.service';
+import {Device} from "../../api/devices/device";
 
 
 @Component({
@@ -12,7 +24,7 @@ import { ControlCenterService } from '../control-center.service';
   templateUrl: './control-center-create-device-page.component.html',
   styleUrls: ['./control-center-create-device-page.component.scss']
 })
-export class ControlCenterCreateDevicePageComponent implements OnInit {
+export class ControlCenterCreateDevicePageComponent {
 
   form: FormGroup;
   info: string;
@@ -49,20 +61,18 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
       powerSupply: [null, Validators.required],
     });
 
-    this.form.get('mainboard').valueChanges.subscribe(data => this.updateFields(data));
+    this.form.get('mainboard')!.valueChanges.subscribe(data => this.updateFields(data));
 
-    this.form.get('case').valueChanges.subscribe(data => {
+    this.form.get('case')!.valueChanges.subscribe(data => {
       // reset the mainboard when the case changes and is not compatible with the mainboard
-      if (data == null || this.form.get('mainboard').value?.case !== data.name) {
-        this.form.get('mainboard').setValue(null);
+      if (data == null || this.form.get('mainboard')!.value?.case !== data.name) {
+        this.form.get('mainboard')!.setValue(null);
       }
     });
 
-    this.activatedRoute.data.subscribe((items: { inventoryItems: InventoryItemWithHardware[] }) =>
+    this.activatedRoute.data.subscribe((items: Data) =>
+      // @ts-ignore
       this.updateAvailableParts(items.inventoryItems));
-  }
-
-  ngOnInit() {
   }
 
   updateAvailableParts(items: InventoryItemWithHardware[]): any {
@@ -111,19 +121,20 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
       }
     });
 
-    this.updateFields(this.form.get('mainboard').value);
+    this.updateFields(this.form.get('mainboard')!.value);
   }
 
   getFormArray(name: string): FormArray {
     return this.form.get(name) as FormArray;
   }
 
-  getFormArrayControls(name: string): { control: FormControl, props: ControlProperties }[] {
+  getFormArrayControls(name: string): { control: FormControl; props: ControlProperties }[] {
+    // @ts-ignore
     return (this.getFormArray(name).controls as FormControl[])
-      .map(control => ({ control: control, props: this.controlProperties.get(control) }));
+      .map(control => ({control: control, props: this.controlProperties.get(control)}));
   }
 
-  findControl(properties: ControlProperties): FormControl {
+  findControl(properties: ControlProperties): FormControl | null {
     for (const [key, value] of this.controlProperties.entries()) {
       if (controlPropertiesEqual(value, properties)) {
         return key;
@@ -149,7 +160,7 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
     }
 
     const newControl = (options: Part[], category: string, index: number, required: boolean, description?: string) => {
-      const properties = { options, category, index, description };
+      const properties = {options, category, index, description};
       const control = this.findControl(properties) ??
         this.formBuilder.control(null, required ? Validators.required : null);
       this.controlProperties.set(control, properties);
@@ -209,14 +220,19 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
       throw new Error('missing_power_supply');
     }
 
+    // @ts-ignore
     const disks: string[] = nonNullNames(data.disks).concat(nonNullNames(data.expansions.filter(x => x?.category === PartCategory.DISK)));
+    // @ts-ignore
     const gpus: string[] = nonNullNames(data.expansions.filter(x => x?.category === PartCategory.GPU));
 
     return {
       'case': data.case?.name,
       'mainboard': data.mainboard?.name,
+      // @ts-ignore
       'cpu': nonNullNames(data.cpus),
+      // @ts-ignore
       'processorCooler': nonNullNames(data.processorCoolers),
+      // @ts-ignore
       'ram': nonNullNames(data.ramSticks),
       'gpu': gpus,
       'disk': disks,
@@ -227,7 +243,7 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
   buildStarterDevice() {
     this.deviceService.createStarterDevice().subscribe(device => {
       this.controlCenterService.refreshDevices().subscribe(() => {
-        this.router.navigate(['/device'], { queryParams: { device: device.uuid } }).then();
+        this.router.navigate(['/device'], {queryParams: {device: device.uuid}}).then();
       });
     });
   }
@@ -267,12 +283,17 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
     try {
       const selectedHardware = this.getSelectedHardware();
 
-      this.deviceService.checkHardwareCompatibility(selectedHardware).subscribe(result => {
-        console.log('Performance: ' + result.performance);
-        this.error = '';
-        this.info = 'The configuration is compatible';
-      }, error => this.displayError(error));
-    } catch (error) {
+      this.deviceService.checkHardwareCompatibility(selectedHardware).subscribe({
+        next: (result) => {
+          console.log('Performance: ' + result.performance);
+          this.error = '';
+          this.info = 'The configuration is compatible';
+        },
+        error: (err: Error) => {
+          this.displayError(err)
+        }
+      });
+    } catch (error) {// @ts-ignore
       this.displayError(error);
     }
   }
@@ -281,20 +302,23 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
     try {
       const selectedHardware = this.getSelectedHardware();
 
-      this.deviceService.createDevice(selectedHardware).subscribe(device => {
-        this.controlCenterService.refreshDevices().subscribe(() => {
-          this.router.navigate(['/device'], { queryParams: { device: device.uuid } }).then();
-        });
-        this.error = '';
-        this.info = 'You successfully built a new device';
-      }, error => this.displayError(error));
-    } catch (error) {
+      this.deviceService.createDevice(selectedHardware).subscribe({
+        next: (device: Device) => {
+          this.controlCenterService.refreshDevices().subscribe(() => {
+            this.router.navigate(['/device'], {queryParams: {device: device.uuid}}).then();
+          });
+          this.error = '';
+          this.info = 'You successfully built a new device';
+        },
+        error: (err: Error) => this.displayError(err)
+      });
+    } catch (error) {// @ts-ignore
       this.displayError(error);
     }
   }
 
-  trackByControl(index, { control }): FormControl {
-    return control;
+  trackByControl(index: number, obj: { control: FormControl; props: ControlProperties }): FormControl {
+    return obj.control;
   }
 }
 
@@ -304,7 +328,7 @@ export class ControlCenterCreateDevicePageComponent implements OnInit {
  * @param a First array
  * @param b Second array
  */
-function arraysEqual(a, b) {
+function arraysEqual(a: any[], b: any[]) {
   if (a === b) {
     return true;
   }

@@ -1,13 +1,13 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { WebsocketService } from '../../../websocket.service';
-import { WalletAppService } from '../wallet-app/wallet-app.service';
-import { HardwareShopCategory } from './hardware-shop-category';
-import { HardwareShopItem } from './hardware-shop-item';
-import { HardwareService } from '../../../api/hardware/hardware.service';
-import { HardwareShopCartItem } from './hardware-shop-cart-item';
-import { EMPTY, Observable } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { SettingService } from '../../../api/setting/setting.service';
+import {EventEmitter, Injectable} from '@angular/core';
+import {WebsocketService} from '../../../websocket.service';
+import {WalletAppService} from '../wallet-app/wallet-app.service';
+import {HardwareShopCategory} from './hardware-shop-category';
+import {HardwareShopItem} from './hardware-shop-item';
+import {HardwareService} from '../../../api/hardware/hardware.service';
+import {HardwareShopCartItem} from './hardware-shop-cart-item';
+import {EMPTY, Observable} from 'rxjs';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {SettingService} from '../../../api/setting/setting.service';
 
 @Injectable({
   providedIn: 'root'
@@ -40,8 +40,9 @@ export class HardwareShopService {
     const items = this.getItems(this.categories);
     let storedCart: { [id: number]: number } = {};
     try {
-      storedCart = JSON.parse(await this.settingService.get('shop_cart').toPromise()) ?? {};
+      storedCart = JSON.parse((await this.settingService.get('shop_cart').toPromise())!) ?? {};
     } catch (e) {
+      // @ts-ignore
       if (e.message !== 'unknown setting') {
         console.warn(e);
       }
@@ -59,11 +60,11 @@ export class HardwareShopService {
     return this.cartItems;
   }
 
-  setCartItems(items: HardwareShopCartItem[], save: boolean = true): void {
+  setCartItems(items: HardwareShopCartItem[], save = true): void {
     this.cartItems = items;
     if (save) {
       this.settingService.set('shop_cart', JSON.stringify(
-        items.reduce((acc, item) => ({ ...acc, [item.id]: item.quantity }), {}))
+        items.reduce((acc, item) => ({...acc, [item.id]: item.quantity}), {}))
       );
     }
 
@@ -77,7 +78,7 @@ export class HardwareShopService {
   addCartItem(item: HardwareShopItem): void {
     const items = this.getCartItems();
     if (!this.cartContains(item)) {
-      items.push({ id: item.part.id, quantity: 1, shopItem: item });
+      items.push({id: item.part.id, quantity: 1, shopItem: item});
     }
     this.setCartItems(items);
   }
@@ -98,13 +99,16 @@ export class HardwareShopService {
 
   buyCart(): void {
     this.websocketService.ms('inventory', ['shop', 'buy'], {
-      products: this.getCartItems().reduce((acc, item) => ({ ...acc, [item.shopItem.name]: item.quantity }), {}),
-      wallet_uuid: this.walletAppService.wallet.source_uuid,
-      key: this.walletAppService.wallet.key
-    }).subscribe(() => {
-      this.cartItems.forEach(item => item.quantity = undefined);
-      this.setCartItems([]);
-    }, error => console.error('[HardwareShopService] Error while buying items: ' + error.message));
+      products: this.getCartItems().reduce((acc, item) => ({...acc, [item.shopItem.name]: item.quantity}), {}),
+      wallet_uuid: this.walletAppService.wallet!.source_uuid,
+      key: this.walletAppService.wallet!.key
+    }).subscribe({
+      next: () => {
+        this.cartItems.forEach(item => item.quantity = undefined!);
+        this.setCartItems([]);
+      },
+      error: (error: Error) => console.error('[HardwareShopService] Error while buying items: ' + error.message)
+    });
   }
 
   getItems(categories: HardwareShopCategory[], items?: HardwareShopItem[]): HardwareShopItem[] {
@@ -126,7 +130,7 @@ export class HardwareShopService {
       parents = this.categories;
     }
 
-    const children = [];
+    const children: HardwareShopCategory[] = [];
     for (const parent of parents) {
       const result = parent.categories.find(category => category.name === name);
       if (result) {
@@ -140,13 +144,13 @@ export class HardwareShopService {
       return this.getCategory(name, children);
     }
 
-    return null;
+    return null!;
   }
 
   private loadItems(data: any): HardwareShopItem[] {
     return Object.entries(data).map(([key, value]: [string, any]) => ({
       name: key,
-      part: this.hardwareService.hardwareAvailable.getByName(key),
+      part: this.hardwareService.hardwareAvailable!.getByName(key),
       price: value.price
     }));
   }

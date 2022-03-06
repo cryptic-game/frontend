@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AccountService } from '../account.service';
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AccountService} from '../account.service';
+import {LoginResponse} from "../interfaces/login-response";
 
 @Component({
   selector: 'app-login',
@@ -26,18 +27,20 @@ export class LoginComponent {
 
   login(): void {
     if (this.form.valid) {
-      const value: { username: string, password: string } = this.form.value;
+      const value: { username: string; password: string } = this.form.value;
 
-      this.accountService.login(value.username, value.password).subscribe(data => {
-        this.accountService.finalLogin(data.token, '/');
-      }, error => {
-        if (error.message === 'permissions denied') {
-          this.error = 'This username and password could not be found.';
-        } else {
-          this.error = error.message;
+      this.accountService.login(value.username, value.password).subscribe({
+        next: (data: LoginResponse) => {
+          this.accountService.finalLogin(data.token!, '/');
+        },
+        error: (error: Error) => {
+          if (error.message === 'permissions denied') {
+            this.error = 'This username and password could not be found.';
+          } else {
+            this.error = error.message;
+          }
+          this.decayError(10);
         }
-
-        this.decayError(10);
       });
     }
   }
@@ -51,7 +54,7 @@ export class LoginComponent {
       }
 
       if (this.errorLife <= 0) {
-        this.error = undefined;
+        this.error = undefined!;
       }
     }, 1000);
   }

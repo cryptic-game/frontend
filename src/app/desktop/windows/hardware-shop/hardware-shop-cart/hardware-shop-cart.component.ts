@@ -1,8 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
-import { HardwareShopService } from '../hardware-shop.service';
-import { WalletAppService } from '../../wallet-app/wallet-app.service';
-import { HardwareShopCartItem } from '../hardware-shop-cart-item';
-import { Subscription } from 'rxjs';
+import {Component, OnDestroy} from '@angular/core';
+import {HardwareShopService} from '../hardware-shop.service';
+import {WalletAppService} from '../../wallet-app/wallet-app.service';
+import {HardwareShopCartItem} from '../hardware-shop-cart-item';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop-cart',
@@ -30,7 +30,7 @@ export class HardwareShopCartComponent implements OnDestroy {
       })
     );
     this.subscriptions.add(
-      this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet?.amount)
+      this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet?.amount!)
     );
     this.walletAppService.updateWallet().then();
     this.hardwareShopService.loadCartItems().then();
@@ -40,7 +40,7 @@ export class HardwareShopCartComponent implements OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  updateNumber(save): void {
+  updateNumber(save: boolean): void {
     this.hardwareShopService.setCartItems(this.items, save);
   }
 

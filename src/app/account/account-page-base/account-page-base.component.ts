@@ -1,25 +1,58 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import * as Particles from 'particlesjs/src/particles.js';
+import {Component, OnInit} from '@angular/core';
+import {IParticlesProps} from "ng-particles/lib/ng-particles.module";
 
 @Component({
   selector: 'app-account-page-base',
   templateUrl: './account-page-base.component.html',
   styleUrls: ['./account-page-base.component.scss']
 })
-export class AccountPageBaseComponent implements OnInit, OnDestroy {
+export class AccountPageBaseComponent implements OnInit {
 
-  private particles: Particles;
+  public cool = 'anc';
 
-  ngOnInit(): void {
-    this.particles = Particles.init({
-      selector: 'canvas',
-      maxParticles: 450,
-      color: '#007f00',
-      speed: 0.5
-    });
-  }
+  public readonly particlesOptions: IParticlesProps = {
+    particles: {
+      color: {
+        value: "#007f00"
+      },
+      links: {
+        color: "#007f00",
+        distance: 250,
+        enable: true,
+        opacity: 0.5,
+        width: 1
+      },
+      move: {
+        direction: "none",
+        enable: true,
+        outModes: "bounce",
+        random: false,
+        speed: 2,
+        straight: false
+      },
+      number: {
+        density: {
+          enable: true,
+          area: 2000
+        },
+        value: 80
+      },
+      opacity: {
+        value: 0.5
+      },
+      shape: {
+        type: "circle"
+      },
+      size: {
+        value: {min: 1, max: 5}
+      }
+    },
+    detectRetina: true
+  };
 
-  ngOnDestroy(): void {
-    this.particles.destroy();
+  ngOnInit() {
+    // the particles need an id -> every should be unique -> on navigation particles are recreated
+    // -> this ensures that the id is different
+    this.cool = String(Math.round(Math.random() * 1000));
   }
 }

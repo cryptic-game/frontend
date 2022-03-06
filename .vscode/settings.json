@@ -13,7 +13,11 @@
   "editor.tabSize": 2,
   "npm.autoDetect": "off",
   "typescript.tsc.autoDetect": "off",
-  "tslint.enable": false,
   "editor.detectIndentation": false,
-  "explorer.compactFolders": false
+  "explorer.compactFolders": false,
+  "eslint.format.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
+
 }

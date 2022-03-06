@@ -1,15 +1,16 @@
-import { Component, OnDestroy } from '@angular/core';
-import { WebsocketService } from './websocket.service';
-import { animate, animateChild, group, query, style, transition, trigger } from '@angular/animations';
-import { RouterOutlet } from '@angular/router';
-import { VersionService } from './version.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {WebsocketService} from './websocket.service';
+import {animate, animateChild, group, query, style, transition, trigger} from '@angular/animations';
+import {RouterOutlet} from '@angular/router';
+import {HttpClient} from "@angular/common/http";
+import {Changelog} from "./control-center/control-center-changelog-page/Changelog";
 
 @Component({
   selector: 'app-root',
   animations: [
     trigger('routerSlide', [
       transition('control-center => desktop', [
-        style({ position: 'relative' }),
+        style({position: 'relative'}),
         query(':enter, :leave', [
           style({
             position: 'absolute',
@@ -21,21 +22,21 @@ import { VersionService } from './version.service';
           })
         ]),
         query(':enter', [
-          style({ 'left': '100%', 'z-index': -1 })
+          style({'left': '100%', 'z-index': -1})
         ]),
         query(':leave', animateChild()),
         group([
           query(':leave', [
-            animate('500ms ease-in-out', style({ left: '-100%' }))
+            animate('500ms ease-in-out', style({left: '-100%'}))
           ]),
           query(':enter', [
-            animate('500ms ease-in-out', style({ left: '0%' }))
+            animate('500ms ease-in-out', style({left: '0%'}))
           ])
         ]),
         query(':enter', animateChild())
       ]),
       transition('desktop => control-center', [
-        style({ position: 'relative' }),
+        style({position: 'relative'}),
         query(':enter, :leave', [
           style({
             position: 'absolute',
@@ -47,18 +48,18 @@ import { VersionService } from './version.service';
           })
         ]),
         query(':enter', [
-          style({ left: '-100%' })
+          style({left: '-100%'})
         ]),
         query(':leave', [
-          style({ 'z-index': -1 }),
+          style({'z-index': -1}),
           animateChild()
         ]),
         group([
           query(':leave', [
-            animate('500ms ease-in-out', style({ left: '100%' }))
+            animate('500ms ease-in-out', style({left: '100%'}))
           ]),
           query(':enter', [
-            animate('500ms ease-in-out', style({ left: '0%' }))
+            animate('500ms ease-in-out', style({left: '0%'}))
           ])
         ]),
         query(':enter', animateChild())
@@ -68,10 +69,18 @@ import { VersionService } from './version.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnInit, OnDestroy {
 
-  constructor(private websocket: WebsocketService, public versionService: VersionService) {
-    websocket.init();
+  public latestVersion?: string;
+
+  constructor(private websocket: WebsocketService,
+              private readonly http: HttpClient) {
+    websocket.init().then();
+  }
+
+  ngOnInit() {
+    this.http.get<Changelog>('/assets/changelog.json')
+      .subscribe(changelog => this.latestVersion = changelog.latest);
   }
 
   ngOnDestroy() {
@@ -83,10 +92,10 @@ export class AppComponent implements OnDestroy {
   }
 
   activateUpdate() {
-    this.versionService.updateAndReload();
+    // this.versionService.updateAndReload();
   }
 
   cancelUpdate() {
-    this.versionService.cancelUpdate();
+    // this.versionService.cancelUpdate();
   }
 }

@@ -1,19 +1,20 @@
-import { AccountService } from './account.service';
-import { inject, TestBed } from '@angular/core/testing';
-import { WebsocketService } from '../websocket.service';
+import {AccountService} from './account.service';
+import {inject, TestBed} from '@angular/core/testing';
+import {WebsocketService} from '../websocket.service';
 import * as rxjs from 'rxjs';
-import { Subject } from 'rxjs';
-import { Router, RouteReuseStrategy } from '@angular/router';
-import { FakePromise, webSocketMock } from '../test-utils';
-import { Account } from '../../dataclasses/account';
-import { WindowManagerService } from '../desktop/window-manager/window-manager.service';
+import {Subject} from 'rxjs';
+import {Router, RouteReuseStrategy} from '@angular/router';
+import {FakePromise, webSocketMock} from '../test-utils';
+import {Account} from '../../dataclasses/account';
+import {WindowManagerService} from '../desktop/window-manager/window-manager.service';
 
 describe('AccountService', () => {
-  const testCredentials = { username: 'testUsername', password: 'testPassword', token: '1234567654321' };
-  let webSocket;
-  let windowManagerService;
-  let router;
-  let routeReuseStrategy;
+  const testCredentials = {username: 'testUsername', password: 'testPassword', token: '1234567654321'};
+  //TODO: Type me correct
+  let webSocket: any;
+  let windowManagerService: any;
+  let router: any;
+  let routeReuseStrategy: any;
 
   beforeEach(() => {
     webSocket = webSocketMock();
@@ -24,10 +25,10 @@ describe('AccountService', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        { provide: WebsocketService, useValue: webSocket },
-        { provide: WindowManagerService, useValue: windowManagerService },
-        { provide: Router, useValue: router },
-        { provide: RouteReuseStrategy, useValue: routeReuseStrategy }
+        {provide: WebsocketService, useValue: webSocket},
+        {provide: WindowManagerService, useValue: windowManagerService},
+        {provide: Router, useValue: router},
+        {provide: RouteReuseStrategy, useValue: routeReuseStrategy}
       ]
     });
   });
@@ -71,7 +72,7 @@ describe('AccountService', () => {
       expect(localStorage.setItem).toHaveBeenCalledWith('token', testCredentials.token);
       expect(router.navigateByUrl).not.toHaveBeenCalled();
 
-      refreshAccountInfoSubject.next({ uuid: '', name: '', created: 0, last: 0 });
+      refreshAccountInfoSubject.next({uuid: '', name: '', created: 0, last: 0});
       expect(router.navigateByUrl).toHaveBeenCalledWith(redirectURL);
     })
   );
@@ -130,7 +131,7 @@ describe('AccountService', () => {
       expect(localStorage.clear).toHaveBeenCalled();
       expect(windowManagerService.reset).toHaveBeenCalled();
 
-      expect(webSocket.request).toHaveBeenCalledWith({ action: 'logout' });
+      expect(webSocket.request).toHaveBeenCalledWith({action: 'logout'});
       expect(webSocket.loggedIn).toBeFalse();
 
       expect(routeReuseStrategy.reset).not.toHaveBeenCalled();

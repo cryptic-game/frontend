@@ -37,9 +37,7 @@
         width: 100%;
         height: 6em;
         background-color: $task-manager-chart-back;
-        border: solid;
-        border-color: $task-manager-chart-border;
-        border-width: 1.5px;
+        border: 1.5px solid $task-manager-chart-border;
 
         &#temp-chart {
           background-image: linear-gradient(
