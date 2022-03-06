@@ -39,27 +39,25 @@ export abstract class CommandTerminalState implements TerminalState {
 
   protocol: string[] = [];
 
-  executeCommand(command: string, args: string[]) {
-    command = command.toLowerCase();
+  executeCommand(commandToExecute: string, args: string[]) {
+    let command: string = commandToExecute.toLowerCase();
+
     if (this.commands.hasOwnProperty(command)) {
       this.commands[command].executor(args);
 
-      // Only successful and not-flagged commands will be shown in the protocol.
-      if (!this.commands[command].hideFromProtocol) {
-        if (args.length>0) {
-          this.protocol.unshift(command + ' ' + args.join(' '));
-        } else {
-          this.protocol.unshift(command);
-        }
+      // Flagged commands won't be logged.
+      if (this.commands[command].hideFromProtocol) {
+        return;
       }
-    } else if (command !== '') {
+    } else {
       this.commandNotFound(command);
     }
+    this.protocol.unshift((command + ' ' + args.join(' ')).trim());
   }
 
   execute(command: string) {
-    const command_ = command.trim().split(' ');
-    if (command_.length === 0) {
+    const command_ = command.trim().split(' ').filter(e => e.length);
+    if (!command_.length) {
       return;
     }
     this.executeCommand(command_[0], command_.slice(1));
