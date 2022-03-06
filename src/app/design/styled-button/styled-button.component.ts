@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 export type ButtonFlavor = 'primary' | 'success' | 'warning' | 'danger' | 'info';
 
@@ -12,6 +12,6 @@ export class StyledButtonComponent {
   @Input() public disabled = false;
   @Input() public flavor: ButtonFlavor = 'primary';
 
-  // tslint:disable-next-line: no-output-on-prefix
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() public onClick = new EventEmitter<MouseEvent>();
 }
