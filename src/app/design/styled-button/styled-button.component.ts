@@ -1,4 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+export type ButtonFlavor = 'primary' | 'success' | 'warning' | 'danger' | 'info';
+
 @Component({
   selector: 'app-styled-button',
   templateUrl: './styled-button.component.html',
@@ -6,12 +9,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class StyledButtonComponent {
 
-  @Input() disabled = false;
+  @Input() public disabled = false;
+  @Input() public flavor: ButtonFlavor = 'primary';
 
-
-  @Input() flavor: 'primary' | 'success' | 'warning' | 'danger' | 'info' = 'primary';
   // tslint:disable-next-line: no-output-on-prefix
-  @Output() onClick: EventEmitter<any> = new EventEmitter();
-
-
+  @Output() public onClick = new EventEmitter<MouseEvent>();
 }

@@ -41,17 +41,17 @@ button {
     margin-right: 0;
   }
 
-  @each $name, $colorsa in $flavors {
+  @each $name, $colors in $flavors {
     &.#{$name} {
       color: #2f2f36;
-      background: list.nth($colorsa, 1);
+      background: list.nth($colors, 1);
 
       &:disabled {
-        background-color: list.nth($colorsa, 3);
+        background-color: list.nth($colors, 3);
       }
 
       &:hover {
-        background-color: list.nth($colorsa, 2);
+        background-color: list.nth($colors, 2);
         color: white;
       }
     }
