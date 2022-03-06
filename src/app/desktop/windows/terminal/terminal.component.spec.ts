@@ -36,9 +36,12 @@ describe('TerminalComponent', () => {
     component.execute('test');
     component.execute('help');
     component.execute('help help');
-    expect(component.getHistory().length).toBe(2);
+    component.execute('chaozz');
+    component.execute('history'); //Hidden-flag
+    component.execute('');
+    expect(component.getHistory().length).toBe(4);
     // History is printed in reverse
-    expect(component.getHistory()).toEqual(['help help', 'help']);
+    expect(component.getHistory()).toEqual(['chaozz', 'help help', 'help', 'test']);
   });
 
   it('should clear the protocol with clearHistory', () => {
