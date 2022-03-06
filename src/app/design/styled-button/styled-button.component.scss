@@ -2,11 +2,31 @@
 @import "theme-colors";
 
 $flavors: (
-  primary: ($primary-default, $primary-hover,$primary-disabled),
-  success: ($success-default, $success-hover,$success-disabled),
-  warning: ($warning-default, $warning-hover,$warning-disabled),
-  danger: ($danger-default, $danger-hover,$danger-disabled),
-  info: ($info-default, $info-hover,$info-disabled),
+  primary: (
+    $primary-default,
+    $primary-hover,
+    $primary-disabled,
+  ),
+  success: (
+    $success-default,
+    $success-hover,
+    $success-disabled,
+  ),
+  warning: (
+    $warning-default,
+    $warning-hover,
+    $warning-disabled,
+  ),
+  danger: (
+    $danger-default,
+    $danger-hover,
+    $danger-disabled,
+  ),
+  info: (
+    $info-default,
+    $info-hover,
+    $info-disabled,
+  ),
 );
 
 button {
@@ -18,12 +38,10 @@ button {
   font-size: 16px;
   margin-right: 10px;
   &:last-child {
-        margin-right: 0;
+    margin-right: 0;
   }
 
-
-  @each $name,$colorsa in $flavors{
-
+  @each $name, $colorsa in $flavors {
     &.#{$name} {
       color: #2f2f36;
       background: list.nth($colorsa, 1);
@@ -37,11 +55,5 @@ button {
         color: white;
       }
     }
-
-
+  }
 }
-
-
-}
-
-
