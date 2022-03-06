@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {IParticlesProps} from "ng-particles/lib/ng-particles.module";
 
 @Component({
@@ -6,7 +6,9 @@ import {IParticlesProps} from "ng-particles/lib/ng-particles.module";
   templateUrl: './account-page-base.component.html',
   styleUrls: ['./account-page-base.component.scss']
 })
-export class AccountPageBaseComponent {
+export class AccountPageBaseComponent implements OnInit {
+
+  public cool = 'anc';
 
   public readonly particlesOptions: IParticlesProps = {
     particles: {
@@ -47,4 +49,10 @@ export class AccountPageBaseComponent {
     },
     detectRetina: true
   };
+
+  ngOnInit() {
+    // the particles need an id -> every should be unique -> on navigation particles are recreated
+    // -> this ensures that the id is different
+    this.cool = String(Math.round(Math.random() * 1000));
+  }
 }
