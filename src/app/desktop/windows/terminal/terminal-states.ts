@@ -46,7 +46,11 @@ export abstract class CommandTerminalState implements TerminalState {
 
       // Only successful and not-flagged commands will be shown in the protocol.
       if (!this.commands[command].hideFromProtocol) {
-        this.protocol.unshift(command);
+        if (args.length>0) {
+          this.protocol.unshift(command + " " + args.join(" "));
+        } else {
+          this.protocol.unshift(command);
+        }
       }
     } else if (command !== '') {
       this.commandNotFound(command);
