@@ -35,10 +35,10 @@ describe('TerminalComponent', () => {
   it('should add commands to the protocol', () => {
     component.execute('test');
     component.execute('help');
-    component.execute('help');
+    component.execute('help help');
     expect(component.getHistory().length).toBe(2);
     // History is printed in reverse
-    expect(component.getHistory()).toEqual(['help', 'help']);
+    expect(component.getHistory()).toEqual(['help help', 'help']);
   });
 
   it('should clear the protocol with clearHistory', () => {
