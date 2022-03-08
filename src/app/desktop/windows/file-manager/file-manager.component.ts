@@ -7,8 +7,8 @@ import {WebsocketService} from '../../../websocket.service';
 import {Subscription} from 'rxjs';
 import {WindowManager} from '../../window-manager/window-manager';
 import {EditorWindowDelegate} from '../editor/editor.component';
-import {ContextMenuService} from "../../../design/context-menu/context-menu.service";
-import {ContextMenuComponent} from "../../../design/context-menu/context-menu/context-menu.component";
+import {ContextMenuService} from "../../../../core/components/context-menu/context-menu.service";
+import {ContextMenuComponent} from "../../../../core/components/context-menu/context-menu/context-menu.component";
 
 @Component({
   selector: 'app-file-manager',
