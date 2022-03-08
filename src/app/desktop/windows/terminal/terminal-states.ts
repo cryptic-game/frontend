@@ -827,6 +827,8 @@ export class DefaultTerminalState extends CommandTerminalState {
     } else if (args.length === 0) {
       const history: string[] = this.getHistory();
 
+      // The history is stored in reverse. history[0] is the last command entered, history[history.length-1] is the oldest command entered.
+      // Because of that this loop has to run in reverse.
       for (let i = history.length-1; i >= 0; i--) {
         this.terminal.outputText(history[i]);
       }
