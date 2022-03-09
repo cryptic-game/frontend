@@ -1,33 +1,33 @@
 <h1>Build a new device</h1>
 
 <span (click)="buildStarterDevice()" *ngIf="controlCenterService.deviceSidebarMenuItems.length === 1"
-      class="button starter-device">Build your first device</span>
+      class="button starter-device" i18n>Build your first device</span>
 
 <form [formGroup]="form">
   <div class="group">
-    <h3>Case:</h3>
+    <h3 i18n>Case:</h3>
     <label class="item">
       <select formControlName="case">
-        <option [ngValue]="null">Choose a case</option>
+        <option [ngValue]="null" i18n>Choose a case</option>
         <option *ngFor="let case_ of cases" [ngValue]="case_">{{case_.name}}</option>
       </select>
     </label>
   </div>
   <div class="group">
-    <h3>Mainboard:</h3>
+    <h3 i18n>Mainboard:</h3>
     <label class="item">
       <select formControlName="mainboard">
-        <option [ngValue]="null">Choose a mainboard</option>
+        <option [ngValue]="null" i18n>Choose a mainboard</option>
         <option *ngFor="let mainboard of mainBoards" [disabled]="mainboard.case !== form.get('case')?.value?.name"
                 [ngValue]="mainboard">{{mainboard.name}}</option>
       </select>
     </label>
   </div>
   <div class="group">
-    <h3>Processor:</h3>
+    <h3 i18n>Processor:</h3>
     <div *ngFor="let control of getFormArrayControls('cpus'); trackBy: trackByControl" formArrayName="cpus">
       <label class="item">
-        <ng-container *ngIf="getFormArray('cpus').length > 1">
+        <ng-container *ngIf="getFormArray('cpus').length > 1" i18n>
           CPU #{{control.props.index + 1}}:
         </ng-container>
         <select [formControl]="control.control">
@@ -39,11 +39,11 @@
     </div>
   </div>
   <div class="group">
-    <h3>Cooler:</h3>
+    <h3 i18n>Cooler:</h3>
     <div *ngFor="let control of getFormArrayControls('processorCoolers'); trackBy: trackByControl"
          formArrayName="processorCoolers">
       <label class="item">
-        <ng-container *ngIf="getFormArray('processorCoolers').length > 1">
+        <ng-container *ngIf="getFormArray('processorCoolers').length > 1" i18n>
           Cooler #{{control.props.index + 1}}:
         </ng-container>
         <select [formControl]="control.control">
@@ -55,9 +55,9 @@
     </div>
   </div>
   <div class="group">
-    <h3>Memory:</h3>
+    <h3 i18n>Memory:</h3>
     <div *ngFor="let control of getFormArrayControls('ramSticks'); trackBy: trackByControl" formArrayName="ramSticks">
-      <label class="item">
+      <label class="item" i18n>
         RAM stick #{{control.props.index + 1}}:
         <select [formControl]="control.control">
           <option [ngValue]="null">{{control.props.index === 0 ? 'Select a RAM module' : ''}}</option>
@@ -68,9 +68,9 @@
     </div>
   </div>
   <div class="group">
-    <h3>Expansions:</h3>
+    <h3 i18n>Expansions:</h3>
     <div *ngFor="let control of getFormArrayControls('expansions'); trackBy: trackByControl" formArrayName="expansions">
-      <label class="item">
+      <label class="item" i18n>
         Select {{control.props.description}} expansion #{{control.props.index + 1}}:
         <select [formControl]="control.control">
           <option [ngValue]="null"></option>
@@ -81,10 +81,10 @@
     </div>
   </div>
   <div class="group">
-    <h3>Storage:</h3>
+    <h3 i18n>Storage:</h3>
     <div *ngFor="let control of getFormArrayControls('disks'); trackBy: trackByControl" formArrayName="disks">
       <label class="item">
-        <ng-container *ngIf="getFormArray('disks').length > 1">
+        <ng-container *ngIf="getFormArray('disks').length > 1" i18n>
           Disk #{{control.props.index + 1}}:
         </ng-container>
         <select [formControl]="control.control">
@@ -96,10 +96,10 @@
     </div>
   </div>
   <div class="group">
-    <h3>Power Supply:</h3>
+    <h3 i18n>Power Supply:</h3>
     <label class="item">
       <select formControlName="powerSupply">
-        <option [ngValue]="null">Choose a power supply</option>
+        <option [ngValue]="null" i18n>Choose a power supply</option>
         <option *ngFor="let supply of powerSupplies" [ngValue]="supply">{{supply.name}}</option>
       </select>
     </label>
@@ -108,6 +108,6 @@
   <p *ngIf="info" class="info">{{info}}</p>
   <p *ngIf="error" class="error">{{error}}</p>
 
-  <span (click)="form.valid && checkCompatibility()" [class.disabled]="!form.valid" class="button compatibility">Check compatibility</span>
-  <span (click)="form.valid && build()" [class.disabled]="!form.valid" class="button">Build</span>
+  <span (click)="form.valid && checkCompatibility()" [class.disabled]="!form.valid" class="button compatibility" i18n>Check compatibility</span>
+  <span (click)="form.valid && build()" [class.disabled]="!form.valid" class="button" i18n>Build</span>
 </form>

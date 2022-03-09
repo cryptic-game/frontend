@@ -1,18 +1,20 @@
 <div class="header">
   <img [class.disabled]="powerButton.animating" [hidden]="!device.powered_on"
        [queryParams]="{'device': device.uuid}" [routerLink]="'/desktop'"
-       alt="Online-Computer" class="computer-logo online" draggable="false"
+       alt="Online-Computer" class="computer-logo online" draggable="false" i18n-alt
        src="assets/device/desktop_computer_online.svg">
-  <img [hidden]="device.powered_on" alt="Offline-Computer" class="computer-logo"
-       draggable="false" src="assets/device/desktop_computer_offline.svg">
+  <img [hidden]="device.powered_on" alt="Offline-Computer" class="computer-logo" draggable="false"
+       i18n-alt src="assets/device/desktop_computer_offline.svg">
   <div>
     <h1 [hidden]="renamingActive">{{device.name}}</h1>
     <h1 #deviceRename (blur)="finishRenaming()" (drop)="$event.preventDefault()" (input)="deviceNameInput()"
         (keypress)="deviceNameKeyPress($event)" (keyup.escape)="stopRenaming()" (paste)="$event.preventDefault()"
         [class.changed]="nameChanged" hidden="hidden"></h1>
 
-    <button (click)="startRenaming()" [disabled]="!device.powered_on" [title]="device.powered_on ? '' : 'The device is offline'"
-            class="rename-button">Rename this PC
+    <button (click)="startRenaming()" [disabled]="!device.powered_on"
+            [title]="device.powered_on ? '' : 'The device is offline'"
+            class="rename-button"
+            i18n>Rename this PC
     </button>
   </div>
   <svg (@powerButton.done)="powerAnimationDone()" (click)="powerButtonClicked()" [@powerButton]="powerButton.state"
@@ -47,39 +49,39 @@
 <div class="table-container">
   <table>
     <tr>
-      <th colspan="2">Device specifications</th>
+      <th colspan="2" i18n>Device specifications</th>
     </tr>
     <tr>
-      <td>Device name</td>
+      <td i18n>Device name</td>
       <td>{{device.name}}</td>
     </tr>
     <tr>
-      <td>Processor</td>
+      <td i18n>Processor</td>
       <td>{{hardware.cpu[0]?.name}}</td>
     </tr>
     <tr>
-      <td>Installed RAM</td>
+      <td i18n>Installed RAM</td>
       <td>{{hardware.getTotalMemory()}} MB</td>
     </tr>
     <tr>
-      <td>Device-UUID</td>
+      <td i18n>Device-UUID</td>
       <td>{{device.uuid}}</td>
     </tr>
 
     <tr>
-      <th colspan="2">Specific factors</th>
+      <th colspan="2" i18n>Specific factors</th>
     </tr>
     <tr>
-      <td>Speed</td>
-      <td>not available</td>
+      <td i18n>Speed</td>
+      <td i18n>not available</td>
     </tr>
     <tr>
-      <td>Security</td>
-      <td>not available</td>
+      <td i18n>Security</td>
+      <td i18n>not available</td>
     </tr>
     <tr>
-      <td>Efficiency</td>
-      <td>not available</td>
+      <td i18n>Efficiency</td>
+      <td i18n>not available</td>
     </tr>
   </table>
 
@@ -87,15 +89,15 @@
 
   <table>
     <tr>
-      <th colspan="2">Running processes</th>
+      <th colspan="2" i18n>Running processes</th>
     </tr>
     <tr>
-      <td><b>Service</b></td>
-      <td><b>CPU</b></td>
-      <td><b>GPU</b></td>
-      <td><b>RAM</b></td>
-      <td><b>Disk</b></td>
-      <td><b>Network</b></td>
+      <td i18n><b>Service</b></td>
+      <td i18n><b>CPU</b></td>
+      <td i18n><b>GPU</b></td>
+      <td i18n><b>RAM</b></td>
+      <td i18n><b>Disk</b></td>
+      <td i18n><b>Network</b></td>
     </tr>
     <tr *ngFor="let service of services">
       <td>{{service.service.name}}</td>
@@ -108,7 +110,7 @@
   </table>
 </div>
 
-<button (click)="disassembleModal = true" *ngIf="!device.starter_device" class="disassemble-button">Disassemble
+<button (click)="disassembleModal = true" *ngIf="!device.starter_device" class="disassemble-button" i18n>Disassemble
   computer
 </button>
 
@@ -118,20 +120,20 @@
       <line stroke-width="2" x1="2" x2="18" y1="2" y2="18"></line>
       <line stroke-width="2" x1="18" x2="2" y1="2" y2="18"></line>
     </svg>
-    <h3>Are you sure you want to disassemble this computer?</h3>
-    <p>
+    <h3 i18n>Are you sure you want to disassemble this computer?</h3>
+    <p i18n>
       This will <strong>delete</strong> all your saved wallet
       credentials and files and <strong>cannot be undone</strong>.<br>
       The hardware parts will go back into your inventory.
     </p>
-    <label>
+    <label i18n>
       Type in the name of your device to confirm:
       <input #disassembleConfirm (keyup)="checkDisassembleConfirm(disassembleConfirm)"
              autocomplete="off" name="disassemble-confirm" type="text">
     </label>
     <br>
     <button (click)="disassembleDevice()" [disabled]="!disassembleConfirmed"
-            class="disassemble-button">Disassemble
+            class="disassemble-button" i18n>Disassemble
     </button>
   </form>
 </div>

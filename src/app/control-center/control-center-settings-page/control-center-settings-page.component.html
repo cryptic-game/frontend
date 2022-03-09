@@ -1,15 +1,17 @@
-<h1>Account Settings</h1>
-<p>Name: <span>{{apiService.account.name}}</span></p>
-<p>UUID: <span>{{apiService.account.uuid}}</span></p>
-<h2>Change password</h2>
+<h1 i18n>Account Settings</h1>
+<p i18n>Name: <span>{{apiService.account.name}}</span></p>
+<p i18n>UUID: <span>{{apiService.account.uuid}}</span></p>
+<h2 i18n>Change password</h2>
 <form (ngSubmit)="changePassword()" [formGroup]="passwordForm" class="password-form">
-  <label>
+  <label i18n>
     Old password:
-    <input autocomplete="password" formControlName="oldPassword" placeholder="Password" type="password">
+    <input autocomplete="password" formControlName="oldPassword" i18n-placeholder placeholder="Password"
+           type="password">
   </label>
-  <label>
+  <label i18n>
     New password:
-    <input autocomplete="new-password" formControlName="newPassword" placeholder="Password" type="password">
+    <input autocomplete="new-password" formControlName="newPassword" i18n-placeholder placeholder="Password"
+           type="password">
   </label>
   <div class="strength">
     <div [class.red-box]="passwordStrength >= 1"></div>
@@ -18,13 +20,15 @@
     <div [class.green-box]="passwordStrength >= 4"></div>
     <div [class.green-box]="passwordStrength >= 5"></div>
   </div>
-  <label>
+  <label i18n>
     Confirm password:
-    <input autocomplete="new-password" formControlName="passwordConfirm" placeholder="Password" type="password">
+    <input autocomplete="new-password" formControlName="passwordConfirm" i18n-placeholder placeholder="Password"
+           type="password">
   </label>
-  <input [disabled]="passwordForm.invalid" type="submit" value="Submit">
-  <p>Your password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter
+  <input [disabled]="passwordForm.invalid" i18n-value type="submit" value="Submit">
+  <p i18n>Your password must be at least 8 characters long and contain at least one uppercase letter, one lowercase
+    letter
     and one number.</p>
   <p [hidden]="!passwordError" class="error">{{passwordError}}</p>
-  <p [hidden]="!passwordChanged">Password successfully changed.</p>
+  <p [hidden]="!passwordChanged" i18n>Password successfully changed.</p>
 </form>

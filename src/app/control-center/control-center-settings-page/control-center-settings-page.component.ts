@@ -36,7 +36,7 @@ export class ControlCenterSettingsPageComponent {
     if (this.passwordForm.valid) {
       const {newPassword, passwordConfirm} = this.passwordForm.value;
       if (newPassword !== passwordConfirm) {
-        this.passwordError = 'The passwords do not match.';
+        this.passwordError = $localize`The passwords do not match.`;
         this.passwordChanged = false;
         return;
       }
@@ -53,7 +53,7 @@ export class ControlCenterSettingsPageComponent {
         error: (err: Error) => {
           this.passwordChanged = false;
           if (err.message === 'permissions denied') {
-            this.passwordError = 'The old password is not correct.';
+            this.passwordError = $localize`The old password is not correct.`;
           } else {
             this.passwordError = err.message;
             console.warn(err);

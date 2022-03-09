@@ -64,13 +64,13 @@ export class ControlCenterInventoryPageComponent {
       },
       error: (err: Error) => {
         if (err.message === 'item_not_found') {
-          this.tradeErrorMessage = 'You do not own this item.';
+          this.tradeErrorMessage = $localize`You do not own this item.`;
           this.tradeItem = undefined;
         } else if (err.message === 'cannot_trade_with_yourself') {
-          this.tradeErrorMessage = 'You cannot send this item to yourself.';
+          this.tradeErrorMessage = $localize`You cannot send this item to yourself.`;
           destination.value = '';
         } else if (err.message === 'user_uuid_does_not_exist') {
-          this.tradeErrorMessage = 'The specified UUID was not found.';
+          this.tradeErrorMessage = $localize`The specified UUID was not found.`;
           destination.value = '';
         } else {
           this.tradeErrorMessage = err.message;
