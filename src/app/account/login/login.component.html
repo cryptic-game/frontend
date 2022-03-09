@@ -3,25 +3,26 @@
 
     <div class="title">
       <img alt="Cryptic" src="assets/desktop/img/logo.svg">
-      <span>Log In</span>
+      <span i18n>Log In</span>
     </div>
 
     <form [formGroup]="form">
       <label>
-        <input autocomplete="username" formControlName="username" placeholder="Username" type="text">
+        <input autocomplete="username" formControlName="username" i18n-placeholder placeholder="Username" type="text">
       </label>
 
       <label>
-        <input autocomplete="current-password" formControlName="password" placeholder="Password" type="password">
+        <input autocomplete="current-password" formControlName="password" i18n-placeholder placeholder="Password"
+               type="password">
       </label>
 
       <label>
-        <input (click)="login()" [disabled]="!form.valid" disabled type="submit" value="Log In">
+        <input (click)="login()" [disabled]="!form.valid" disabled i18n-value type="submit" value="Log In">
       </label>
     </form>
 
     <p *ngIf="error" class="error">{{error}}</p>
-    <p>If you do not have an account yet, click
+    <p i18n>If you do not have an account yet, click
       <a [routerLink]="['/signup']"
          [state]="{ username: form.value.username, password: form.value.password }">here</a>.
     </p>

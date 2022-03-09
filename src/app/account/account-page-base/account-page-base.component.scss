@@ -35,9 +35,12 @@ div.base {
     }
   }
 
-  div.imprint {
+  div.footer {
     position: absolute;
     bottom: 20px;
+
+    display: flex;
+    column-gap: 0.5rem;
 
     a {
       color: white;
