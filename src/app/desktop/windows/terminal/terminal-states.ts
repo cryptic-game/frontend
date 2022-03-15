@@ -11,7 +11,7 @@ import {Device} from '../../../api/devices/device';
 import {WindowDelegate} from '../../window/window-delegate';
 import {File} from '../../../api/files/file';
 import {BruteforceTerminalState, YesNoTerminalState} from "./TerminalStateImpls";
-import {MinerComponent} from "../miner/miner.component";
+import {formatNumber} from "@angular/common";
 
 
 function escapeHtml(html: string) {
@@ -46,7 +46,7 @@ export abstract class CommandTerminalState implements TerminalState {
 
       // Only successful and not-flagged commands will be shown in the protocol.
       if (!this.commands[command].hideFromProtocol) {
-        if (args.length>0) {
+        if (args.length > 0) {
           this.protocol.unshift(command + ' ' + args.join(' '));
         } else {
           this.protocol.unshift(command);
@@ -206,7 +206,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
   working_dir: string | null = Path.ROOT;  // UUID of the working directory
 
-  constructor(protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
+  constructor(private locale: string, protected websocket: WebsocketService, private settings: SettingsService, private fileService: FileService,
               private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
               protected terminal: TerminalAPI, public promptColor: string | null = null) {
     super();
@@ -300,7 +300,7 @@ export class DefaultTerminalState extends CommandTerminalState {
               power = Math.round(data['power'] * 100);
               text =
                 'Wallet: ' + wallet + '<br>' +
-                'Mining Speed: ' + String(Number(miner.speed) * 60 * 60) + ' MC/h<br>' +
+                'Mining Speed: ' + String(formatNumber(Number(miner.speed) * 60 * 60, this.locale)) + ' MC/h<br>' +
                 'Power: ' + power + '%';
               this.terminal.output(text);
             });
@@ -829,7 +829,7 @@ export class DefaultTerminalState extends CommandTerminalState {
 
       // The history is stored in reverse.
       // Because of that this loop has to run in reverse.
-      for (let i = history.length-1; i >= 0; i--) {
+      for (let i = history.length - 1; i >= 0; i--) {
         this.terminal.outputText(history[i]);
       }
     } else {
@@ -878,7 +878,7 @@ export class DefaultTerminalState extends CommandTerminalState {
               if (uuid.match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/) && key.match(/^[a-f0-9]{10}$/)) {
                 this.websocket.ms('currency', ['get'], {source_uuid: uuid, key: key}).subscribe({
                   next: (wallet) => {
-                    this.terminal.outputText(new Intl.NumberFormat().format(wallet.amount / 1000) + ' morphcoin');
+                    this.terminal.outputText(formatNumber(wallet.amount / 1000, this.locale) + ' morphcoin');
                   },
                   error: () => {
                     this.terminal.outputText('That file is not connected with a wallet');
@@ -1291,6 +1291,7 @@ export class DefaultTerminalState extends CommandTerminalState {
             if (infoData['owner'] === this.websocket.account.uuid || partOwnerData['ok'] === true) {
               this.terminal.pushState(
                 new DefaultTerminalState(
+                  this.locale,
                   this.websocket,
                   this.settings,
                   this.fileService,

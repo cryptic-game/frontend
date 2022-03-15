@@ -9,14 +9,14 @@
     </div>
 
     <div class="footer">
-      <span>{{item.price / 1000}} MC</span>
+      <span>{{(item.price / 1000) | number}} MC</span>
 
       <span (click)="removeFromCart(); $event.stopPropagation()" *ngIf="inCart" class="btn btn-error">Remove</span>
       <span (click)="addToCart(); $event.stopPropagation()" *ngIf="!inCart" class="btn btn-success">Add</span>
     </div>
   </div>
 
-  <div #specificationsDiv *ngIf="specificationsVisible" [@expandCollapse] [style.columns]="getSpecificationsColumnCount(specificationsDiv.clientWidth)"
+  <div #specificationsDiv *ngIf="specificationsVisible" @expandCollapse [style.columns]="getSpecificationsColumnCount(specificationsDiv.clientWidth)"
        class="specifications">
     <h3>Technical specifications</h3>
     <div *ngFor="let category of specifications | keyvalue: originalOrder" class="category">

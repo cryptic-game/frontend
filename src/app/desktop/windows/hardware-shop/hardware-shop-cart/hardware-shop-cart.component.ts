@@ -21,7 +21,7 @@ export class HardwareShopCartComponent implements OnDestroy {
   constructor(private hardwareShopService: HardwareShopService,
               private walletAppService: WalletAppService) {
     this.items = this.hardwareShopService.getCartItems();
-    this.cartMorphCoins = 'Loading...';
+    this.cartMorphCoins = 0;
     setTimeout(() => this.cartMorphCoins = this.getTotalPrice(), 250);
     this.subscriptions.add(
       this.hardwareShopService.updateCartItems.subscribe(() => {
