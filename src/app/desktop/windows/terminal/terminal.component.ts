@@ -1,5 +1,5 @@
 import {SettingsService} from '../settings/settings.service';
-import {Component, ElementRef, OnInit, SecurityContext, Type, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, LOCALE_ID, OnInit, SecurityContext, Type, ViewChild} from '@angular/core';
 import {WindowComponent, WindowDelegate} from '../../window/window-delegate';
 import {TerminalAPI, TerminalState} from './terminal-api';
 import {DefaultTerminalState} from './terminal-states';
@@ -29,7 +29,8 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
     private settings: SettingsService,
     private fileService: FileService,
     private windowManager: WindowManager,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    @Inject(LOCALE_ID) private locale: string
   ) {
     super();
   }
@@ -37,6 +38,7 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
   ngOnInit() {
     this.pushState(
       new DefaultTerminalState(
+        this.locale,
         this.websocket,
         this.settings,
         this.fileService,
