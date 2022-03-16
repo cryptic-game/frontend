@@ -56,7 +56,7 @@ export abstract class CommandTerminalState implements TerminalState {
   }
 
   execute(command: string) {
-    const command_ = command.trim().split(' ').filter(e => e.length);
+    const command_ = command.split(' ').filter(e => e.length);
     if (!command_.length) {
       return;
     }
