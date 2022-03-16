@@ -7,7 +7,7 @@
 
   <div class="right">
     <span *ngIf="!(morphCoins >= 0)">No wallet found.</span>
-    <span *ngIf="morphCoins >= 0">{{morphCoins / 1000}} MC</span>
+    <span *ngIf="morphCoins >= 0">{{(morphCoins / 1000) | number}} MC</span>
   </div>
 
 </div>
