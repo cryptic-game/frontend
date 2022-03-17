@@ -16,17 +16,22 @@ if (environment.production) {
   providers.push({
     provide: ErrorHandler,
     useValue: Sentry.createErrorHandler({
-      showDialog: true, dialogOptions: {
-        onLoad() {
-          setTimeout(() => {
-            const emailInput = document.getElementById('id_email') as HTMLInputElement;
-            emailInput.value = 'user@cryptic-game.net';
-            emailInput.parentElement!.style.display = 'none';
-          }, 1000);
-        }
-      }
+      showDialog: true,
+      dialogOptions: {onLoad: tryRemoveEmail}
     })
   });
+}
+
+function tryRemoveEmail() {
+  const emailInput = document.getElementById('id_email') as HTMLInputElement | null;
+
+  if (!emailInput) {
+    setTimeout(() => tryRemoveEmail(), 100);
+    return;
+  }
+
+  emailInput.value = 'user@cryptic-game.net';
+  emailInput.parentElement!.style.display = 'none';
 }
 
 @NgModule({
