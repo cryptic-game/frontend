@@ -15,7 +15,17 @@ const providers: Provider[] = [{provide: RouteReuseStrategy, useClass: AppRouteR
 if (environment.production) {
   providers.push({
     provide: ErrorHandler,
-    useValue: Sentry.createErrorHandler({showDialog: true})
+    useValue: Sentry.createErrorHandler({
+      showDialog: true, dialogOptions: {
+        onLoad() {
+          setTimeout(() => {
+            const emailInput = document.getElementById('id_email') as HTMLInputElement;
+            emailInput.value = 'user@cryptic-game.net';
+            emailInput.parentElement!.style.display = 'none';
+          }, 1000);
+        }
+      }
+    })
   });
 }
 
