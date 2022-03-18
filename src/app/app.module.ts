@@ -17,20 +17,25 @@ if (environment.production) {
     provide: ErrorHandler,
     useValue: Sentry.createErrorHandler({
       showDialog: true,
-      dialogOptions: {onLoad: tryRemoveEmail}
+      dialogOptions: {
+        onLoad: () => {
+          tryRemove('id_name', 'User');
+          tryRemove('id_email', 'user@cryptic-game.net');
+        }
+      }
     })
   });
 }
 
-function tryRemoveEmail() {
-  const emailInput = document.getElementById('id_email') as HTMLInputElement | null;
+function tryRemove(id: string, value: string) {
+  const emailInput = document.getElementById(id) as HTMLInputElement | null;
 
   if (!emailInput) {
-    setTimeout(() => tryRemoveEmail(), 100);
+    setTimeout(() => tryRemove(id, value), 100);
     return;
   }
 
-  emailInput.value = 'user@cryptic-game.net';
+  emailInput.value = value;
   emailInput.parentElement!.style.display = 'none';
 }
 
