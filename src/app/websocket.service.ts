@@ -196,6 +196,11 @@ export class WebsocketService {
 
         if (message['error']) {
           this.open[tag].error(new Error(message['error']));
+
+        // Workaround: (e.g.) bruteforce endpoint sends the error inside of data and not at the root
+        } else if (message["data"] && message["data"]["error"]) {
+          this.open[tag].error(new Error(message["data"]["error"]));
+
         } else {
           this.open[tag].next(message['data']);
         }
