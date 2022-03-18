@@ -5,8 +5,8 @@
     <div id="input-line">
       <div #prompt [innerHTML]="promptHtml" id="prompt"></div>
       <input #cmdLine
-             (keydown.arrowdown)="$event.preventDefault(); nextFromHistory()"
-             (keydown.arrowup)="$event.preventDefault(); previousFromHistory()"
+             (keydown.arrowDown)="$event.preventDefault(); nextFromHistory()"
+             (keydown.arrowUp)="$event.preventDefault(); previousFromHistory()"
              (keydown.enter)="$event.preventDefault(); enter(cmdLine.value)"
              (keydown.tab)="$event.preventDefault(); autocomplete(cmdLine.value)"
              autocomplete="off" autofocus id="cmdline"
