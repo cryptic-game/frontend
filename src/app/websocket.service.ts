@@ -31,9 +31,6 @@ export class WebsocketService {
   }
 
   private static async getUrl(): Promise<string> {
-    // @ts-ignore
-    myUndefinedFunction();
-
     const response = await fetch('./assets/api.json');
 
     if (response.status === 200) {
