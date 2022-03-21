@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --output-path=./dist",
     "build:ci": "ng build --output-path=./dist",
     "postbuild:ci": "node fix-output.mjs",
     "watch": "ng build --watch --configuration development",
@@ -24,6 +24,7 @@
     "@angular/platform-browser": "~13.2.5",
     "@angular/platform-browser-dynamic": "~13.2.5",
     "@angular/router": "~13.2.5",
+    "@sentry/angular": "^6.18.2",
     "ng-particles": "^2.40.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
