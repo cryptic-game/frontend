@@ -1,9 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnDestroy, OnInit} from '@angular/core';
 import {WebsocketService} from './websocket.service';
 import {animate, animateChild, group, query, style, transition, trigger} from '@angular/animations';
 import {RouterOutlet} from '@angular/router';
 import {HttpClient} from "@angular/common/http";
 import {Changelog} from "./control-center/control-center-changelog-page/Changelog";
+import {setTag} from '@sentry/angular';
 
 @Component({
   selector: 'app-root',
@@ -74,7 +75,9 @@ export class AppComponent implements OnInit, OnDestroy {
   public latestVersion?: string;
 
   constructor(private websocket: WebsocketService,
-              private readonly http: HttpClient) {
+              private readonly http: HttpClient,
+              @Inject(LOCALE_ID) locale: string) {
+    setTag("locale", locale);
     websocket.init().then();
   }
 
