@@ -3,7 +3,8 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 export type ButtonFlavor = 'primary' | 'success' | 'warning' | 'danger' | 'info';
 
 @Component({
-  selector: 'app-button',
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'design-button',
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.scss']
 })
