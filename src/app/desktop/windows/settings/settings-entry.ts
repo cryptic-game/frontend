@@ -1,4 +1,6 @@
 import {SettingService} from '../../../api/setting/setting.service';
+import {Observable, of} from "rxjs";
+import {catchError, map} from "rxjs/operators";
 
 export abstract class SettingsEntry<T> {
   protected cached: T;
@@ -18,28 +20,28 @@ export abstract class SettingsEntry<T> {
     }
   }
 
-  async get(): Promise<T> {
+  get(): Observable<T> {
     if (this.cached == null) {
       return this.getFresh();
     } else {
-      return this.cached;
+      return of(this.cached);
     }
   }
 
-  async getFresh(): Promise<T> {
-    this.settingService.get(this.key).subscribe({
-      next: (data: string) => {
-        this.cached = this.deserialize(data);
-      },
-      error: (e: Error) => {
+  getFresh(): Observable<T> {
+    return this.settingService.get(this.key).pipe(
+      map((data: string) => {
+        return this.cached = this.deserialize(data);
+      }),
+      catchError((e) => {
         // @ts-ignore
         if (e.message !== 'unknown setting') {
           console.warn(e);
         }
         this.cached = this.defaultValue;
-      }
-    })
-    return this.cached;
+        return of(this.cached);
+      })
+    );
   }
 
   set(value: T) {

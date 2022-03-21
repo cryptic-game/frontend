@@ -50,7 +50,7 @@ export class DesktopComponent implements OnInit {
   ngOnInit(): void {
     this.linkages = this.programService.loadCached();
     this.programService.loadFresh().then(programs => this.linkages = programs);
-    this.settings.backgroundImage.getFresh().then();
+    this.settings.backgroundImage.getFresh().subscribe();
   }
 
   onDesktop(): Program[] {

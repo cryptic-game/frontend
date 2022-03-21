@@ -23,7 +23,7 @@ export class SettingService {
     // requestMany and key check because non-ms requests don't have tags yet
     return this.websocketService.requestMany({action: 'setting', key: key}).pipe(
       first(setting => setting.key === key && typeof setting.value === 'string'),
-      map(setting => setting.value)
+      map(setting => setting.value),
     );
   }
 

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {webSocket, WebSocketSubject} from 'rxjs/webSocket';
-import {catchError, filter, first, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {catchError, first, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {firstValueFrom, interval, Observable, of, Subject, throwError} from 'rxjs';
 import {environment} from '../environments/environment';
 import {v4 as randomUUID} from 'uuid';
@@ -111,14 +111,8 @@ export class WebsocketService {
   requestMany(data: any): Observable<any> {
     return interval(50)
       .pipe(
-        filter(() => Boolean(this.socketSubject)),
-        tap(() => {
-          if (this.socketSubject) {
-            this.socketSubject.next(data);
-          } else {
-            this.queue.push(data);
-          }
-        }),
+        first(() => Boolean(this.socketSubject)),
+        tap(() => this.socketSubject.next(data)),
         switchMap(() => this.socketSubject),
         map(checkResponseError),
       );

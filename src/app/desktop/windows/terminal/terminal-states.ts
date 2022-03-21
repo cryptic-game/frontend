@@ -6,7 +6,7 @@ import {SecurityContext} from '@angular/core';
 import {SettingsService} from '../settings/settings.service';
 import {FileService} from '../../../api/files/file.service';
 import {Path} from '../../../api/files/path';
-import {EMPTY, of} from 'rxjs';
+import {EMPTY, forkJoin, of} from 'rxjs';
 import {Device} from '../../../api/devices/device';
 import {WindowDelegate} from '../../window/window-delegate';
 import {File} from '../../../api/files/file';
@@ -208,7 +208,7 @@ export class DefaultTerminalState extends CommandTerminalState {
               private domSanitizer: DomSanitizer, protected windowDelegate: WindowDelegate, protected activeDevice: Device,
               protected terminal: TerminalAPI, public promptColor: string | null = null) {
     super();
-    this.settings.terminalPromptColor.getFresh().then(() => this.refreshPrompt());
+    this.settings.terminalPromptColor.getFresh().subscribe(() => this.refreshPrompt());
   }
 
   static registerPromptAppenders(element: HTMLElement) {
@@ -461,8 +461,8 @@ export class DefaultTerminalState extends CommandTerminalState {
     files.filter((file) => {
       return file.is_directory;
     }).sort().forEach(folder => {
-      Promise.all([this.settings.terminalLsFolderColor.get(), this.settings.terminalLsPrefix.get()])
-        .then(([folderColor, lsPrefix]) => {
+      forkJoin([this.settings.terminalLsFolderColor.get(), this.settings.terminalLsPrefix.get()])
+        .subscribe(([folderColor, lsPrefix]) => {
           this.terminal.output(`<span style="color: ${folderColor};">${lsPrefix ? '[Folder] ' : ''}${folder.filename}</span>`);
         });
     });
@@ -470,7 +470,7 @@ export class DefaultTerminalState extends CommandTerminalState {
     files.filter((file) => {
       return !file.is_directory;
     }).sort().forEach(file => {
-      this.settings.terminalLsPrefix.get().then(lsPrefix =>
+      this.settings.terminalLsPrefix.get().subscribe(lsPrefix =>
         this.terminal.outputText(`${(lsPrefix ? '[File] ' : '')}${file.filename}`)
       );
     });
