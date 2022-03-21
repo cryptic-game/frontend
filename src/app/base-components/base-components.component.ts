@@ -9,4 +9,7 @@ export class BaseComponentsComponent {
 
   constructor() { }
 
+  pressedAlert(name: string) {
+    alert(name + " was pressed!");
+  }
 }

@@ -1,1 +1,33 @@
-<p>base-components works!</p>
+<div class="componentContainer">
+  <h2>Buttons</h2>
+  <design-button (click)="pressedAlert('Info')" [disabled]="false" flavor="info" class="component">
+    Info
+  </design-button>
+  <design-button [disabled]="true" flavor="info" class="component">
+    Info disabled
+  </design-button>
+  <design-button (click)="pressedAlert('Primary')" [disabled]="false" flavor="primary" class="component">
+    Primary
+  </design-button>
+  <design-button [disabled]="true" flavor="primary" class="component">
+    Primary disabled
+  </design-button>
+  <design-button (click)="pressedAlert('Danger')" [disabled]="false" flavor="danger" class="component">
+    Danger
+  </design-button>
+  <design-button [disabled]="true" flavor="danger" class="component">
+    Danger disabled
+  </design-button>
+  <design-button (click)="pressedAlert('Success')" [disabled]="false" flavor="success" class="component">
+    Success
+  </design-button>
+  <design-button [disabled]="true" flavor="success" class="component">
+    Success disabled
+  </design-button>
+  <design-button (click)="pressedAlert('Warning')" [disabled]="false" flavor="warning" class="component">
+    Warning
+  </design-button>
+  <design-button [disabled]="true" flavor="warning" class="component">
+    Warning disabled
+  </design-button>
+</div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { BaseComponentsRoutingModule } from './base-components-routing.module';
 import { BaseComponentsComponent } from './base-components.component';
+import {ButtonModule} from "../../core/components/button/button.module";
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { BaseComponentsComponent } from './base-components.component';
   ],
   imports: [
     CommonModule,
-    BaseComponentsRoutingModule
+    BaseComponentsRoutingModule,
+    ButtonModule
   ]
 })
 export class BaseComponentsModule { }
