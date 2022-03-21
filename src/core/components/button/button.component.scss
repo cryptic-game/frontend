@@ -51,7 +51,7 @@ button {
         background-color: list.nth($colors, 3);
       }
 
-      &:hover {
+      &:hover:not([disabled]) {
         background-color: list.nth($colors, 2);
         color: white;
       }
