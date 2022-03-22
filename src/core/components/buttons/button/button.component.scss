@@ -1,5 +1,6 @@
 @use "sass:list";
-@import "theme-colors";
+@import "src/global-styles/theme-colors";
+@import "../buttons";
 
 $flavors: (
   primary: (
@@ -30,14 +31,14 @@ $flavors: (
 );
 
 button {
-  padding: 10px;
-  border-radius: 8px;
-  width: 100%;
-  color: white;
-  border: none;
-  font-size: 20px;
-  margin-right: 10px;
-  cursor: pointer;
+  padding: $b-padding;
+  border-radius: $b-border-radius;
+  width: $b-width;
+  color: $b-color;
+  border: $b-border;
+  font-size: $b-font-size;
+  margin-right: $b-margin-right;
+  cursor: $b-cursor;
 
   &:last-child {
     margin-right: 0;
