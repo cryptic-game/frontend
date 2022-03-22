@@ -19,6 +19,25 @@ $info-default: #3281F6;
 $info-hover: #245EB5;
 $info-disabled: #2D456C;
 /*etc*/
-$logo-crypt: #27A036
+$logo-crypt: #27A036;
+$labeled-disabled-font: #748781;
+$checkbox-disabled-font: $labeled-disabled-font;
+$radio-disabled-font: $labeled-disabled-font;
+$switch-disabled-font: $labeled-disabled-font;
+$light-disabled-font: $labeled-disabled-font;
+$button-dark-disabled-font: #222D2D;
+$input-disabled-background: #25252B;
+$sidebar-submenu-background: #2B2B31;
+$background: #2F2F36;
+$dark-font: #1A1C23;
+$input-background: #1D1D24;
+$popup-dark-background: #1D1D24;
+$sidebar-background: #1E1E24;
+$disabled-placeholder-font: #434349;
+$placeholder-font: #888888;
+$button-disabled-font: #888888;
+$grey-font: #BEBEBE;
+$light-font: #FFFFFF;
+$popup-light-background: #FFFFFF;
 /* ISSUE : #260 */
 
