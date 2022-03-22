@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'design-text-input',
@@ -7,6 +7,10 @@ import {Component, EventEmitter, Output} from '@angular/core';
 })
 export class TextInputComponent {
 
+  @Input() placeholder: string = "Placeholder";
+  @Input() hintText: string = "This is a small hint.";
+  @Input() label: string = "Label";
+
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
-  @Output() public onChange = new EventEmitter<InputEvent>();
+  @Output() public onEnter = new EventEmitter<InputEvent>();
 }

@@ -1,1 +1,8 @@
-<input type="text" placeholder="test" (change)="onChange.emit()">
+<span>
+<label for="inputElement">{{label}}</label>
+<input id="inputElement" type="text"
+       [placeholder]="placeholder"
+       (keydown.enter)="onEnter.emit()">
+  <small class="hint">{{hintText}}</small>
+</span>
+

@@ -1,5 +1,44 @@
 @import "src/global-styles/_theme-colors.scss";
 
 input {
-  border: $primary-default
+  width: auto; //TODO @Marcel. Richte das bitte mal anständig aus. Dankee :)
+  min-width: 95%;
+  // Die beiden margins sind iwie kacke. Sollten nicht nötig sein.
+  margin-top: 2px;
+  margin-bottom: 1px;
+
+  font-size: 20px;
+
+  background-color: $input-background;
+  color: $light-font;
+  padding: 8px 16px 8px 16px;
+  border: 0;
+  border-radius: 8px;
+
+  &:focus {
+    accent-color: $primary-default;
+  }
+
+  &::placeholder {
+    color: $placeholder-font
+  }
 }
+
+.hint {
+  font-size: 16px;
+  display: block;
+  color: $grey-font;
+}
+
+label {
+  font-size: 20px;
+  font-weight: bold; //Durch Jost medium ersetzen.
+  color: $light-font;
+}
+
+span {
+  vertical-align: top;
+  display: inline-block;
+}
+
+

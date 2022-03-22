@@ -99,7 +99,12 @@
   </design-button-text>
 </div>
 <div class="componentContainer">
-  <design-text-input>
+  <h2>Input fields</h2>
+  <design-text-input
+    [label]="'Label'"
+    [placeholder]="'Platzhalter'"
+    [hintText]="'Das ist der Tipp.'"
+    (keydown.enter)="changedText($event)">
   </design-text-input>
 </div>
 </div>
