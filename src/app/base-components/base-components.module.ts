@@ -6,6 +6,7 @@ import { BaseComponentsComponent } from './base-components.component';
 import {ButtonModule} from "../../core/components/buttons/button/button.module";
 import {ButtonOutlineModule} from "../../core/components/buttons/button-outline/button-outline.module";
 import {ButtonTextModule} from "../../core/components/buttons/button-text/button-text.module";
+import {TextInputModule} from "../../core/components/inputs/text-input/text-input.module";
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {ButtonTextModule} from "../../core/components/buttons/button-text/button
     BaseComponentsRoutingModule,
     ButtonModule,
     ButtonOutlineModule,
-    ButtonTextModule
+    ButtonTextModule,
+    TextInputModule
   ]
 })
 export class BaseComponentsModule { }
