@@ -1,3 +1,4 @@
+<div class="page">
 <div class="componentContainer">
   <h2>Buttons - Primary</h2>
   <design-button (click)="pressedAlert('Primary')" [disabled]="false" flavor="primary" class="component">
@@ -63,4 +64,38 @@
   <design-button-outline [disabled]="true" flavor="info" class="component">
     Info disabled
   </design-button-outline>
+</div>
+<div class="componentContainer">
+  <h2>Buttons - Text only</h2>
+  <design-button-text (click)="pressedAlert('Primary')" [disabled]="false" flavor="primary" class="component">
+    Primary
+  </design-button-text>
+  <design-button-text [disabled]="true" flavor="primary" class="component">
+    Primary disabled
+  </design-button-text>
+  <design-button-text (click)="pressedAlert('Success')" [disabled]="false" flavor="success" class="component">
+    Success
+  </design-button-text>
+  <design-button-text [disabled]="true" flavor="success" class="component">
+    Success disabled
+  </design-button-text>
+  <design-button-text (click)="pressedAlert('Warning')" [disabled]="false" flavor="warning" class="component">
+    Warning
+  </design-button-text>
+  <design-button-text [disabled]="true" flavor="warning" class="component">
+    Warning disabled
+  </design-button-text>
+  <design-button-text (click)="pressedAlert('Danger')" [disabled]="false" flavor="danger" class="component">
+    Danger
+  </design-button-text>
+  <design-button-text [disabled]="true" flavor="danger" class="component">
+    Danger disabled
+  </design-button-text>
+  <design-button-text (click)="pressedAlert('Info')" [disabled]="false" flavor="info" class="component">
+    Info
+  </design-button-text>
+  <design-button-text [disabled]="true" flavor="info" class="component">
+    Info disabled
+  </design-button-text>
+</div>
 </div>
