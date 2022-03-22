@@ -37,6 +37,7 @@ button {
   border: none;
   font-size: 20px;
   margin-right: 10px;
+  cursor: pointer;
 
   &:last-child {
     margin-right: 0;
@@ -49,6 +50,7 @@ button {
 
       &:disabled {
         background-color: list.nth($colors, 3);
+        cursor: default;
       }
 
       &:hover:not([disabled]) {
