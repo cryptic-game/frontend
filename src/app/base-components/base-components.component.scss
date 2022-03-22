@@ -1,16 +1,17 @@
 .componentContainer {
   display: inline-grid;
   width: 300px;
-  height: fit-content;
   margin: 30px;
   padding: 1em;
   border: 3px solid #ffffff;
 }
 
-.component{
+.component {
   padding-bottom: 10px;
 }
 
 .page {
+  height: 100%;
+  overflow: auto;
   background: #2F2F36;
 }
