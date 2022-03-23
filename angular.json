@@ -44,6 +44,14 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/@fontsource/jost/400.css",
+              "node_modules/@fontsource/jost/400-italic.css",
+              "node_modules/@fontsource/jost/500.css",
+              "node_modules/@fontsource/jost/500-italic.css",
+              "node_modules/@fontsource/ubuntu-mono/400.css",
+              "node_modules/@fontsource/ubuntu-mono/400-italic.css",
+              "node_modules/@fontsource/ubuntu-mono/500.css",
+              "node_modules/@fontsource/ubuntu-mono/500-italic.css",
               "src/styles.scss"
             ],
             "stylePreprocessorOptions": {
@@ -118,6 +126,14 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/@fontsource/jost/400.css",
+              "node_modules/@fontsource/jost/400-italic.css",
+              "node_modules/@fontsource/jost/500.css",
+              "node_modules/@fontsource/jost/500-italic.css",
+              "node_modules/@fontsource/ubuntu-mono/400.css",
+              "node_modules/@fontsource/ubuntu-mono/400-italic.css",
+              "node_modules/@fontsource/ubuntu-mono/500.css",
+              "node_modules/@fontsource/ubuntu-mono/500-italic.css",
               "src/styles.scss"
             ],
             "stylePreprocessorOptions": {

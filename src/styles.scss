@@ -1,13 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
-@import url("https://fonts.googleapis.com/css?family=Ubuntu+Mono");
 @import "variables";
 @import "controls";
 @import "context-menu";
-@import "@fontsource/jost";
 
 app-root {
   width: 100%;
   height: 100%;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body,
@@ -15,9 +17,12 @@ html {
   width: 100%;
   height: 100%;
   margin: 0;
-  overflow: hidden;
   font-size: 20px;
-  font-family: "Jost", Roboto, "Open Sans", sans-serif;
+  overflow: hidden;
   background-color: #000;
   color: #fff;
+}
+
+button, input, select, textarea, span, div, a, p, small {
+  font-family: $default-font;
 }
