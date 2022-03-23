@@ -1,10 +1,8 @@
-<span>
-  <label for="inputElement">{{label}}</label>
-  <input id="inputElement" type="text"
-       [placeholder]="placeholder"
-       (keydown.enter)="onEnter.emit()"
-       [class]="flavor"
-       [disabled]="disabled">
-  <small [className]="getLabelColor()">{{hintText}}</small>
-</span>
+<label for="inputElement">{{label}}</label>
+<input id="inputElement" type="text"
+     [placeholder]="placeholder"
+     (keydown.enter)="onEnter.emit()"
+     [class]="flavor"
+     [disabled]="disabled">
+<small [className]="getLabelColor()">{{hintText}}</small>
 

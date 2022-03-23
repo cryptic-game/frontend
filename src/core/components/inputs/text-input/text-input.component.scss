@@ -8,6 +8,16 @@ $flavors: (
   info: $info-default,
 );
 
+:host {
+  vertical-align: top;
+  display: inline-block;
+}
+
+label {
+  font-weight: 500;
+  color: $light-font;
+}
+
 input {
   width: 100%;
   margin-top: 2px;
@@ -57,14 +67,4 @@ small {
       color: $color;
     }
   }
-}
-
-label {
-  font-weight: 500;
-  color: $light-font;
-}
-
-span {
-  vertical-align: top;
-  display: inline-block;
 }
