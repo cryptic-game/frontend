@@ -2,7 +2,9 @@
 <label for="inputElement">{{label}}</label>
 <input id="inputElement" type="text"
        [placeholder]="placeholder"
-       (keydown.enter)="onEnter.emit()">
-  <small class="hint">{{hintText}}</small>
+       (keydown.enter)="onEnter.emit()"
+       [class]="flavor"
+       [disabled]="disabled">
+  <small [class]="flavor" >{{hintText}}</small>
 </span>
 

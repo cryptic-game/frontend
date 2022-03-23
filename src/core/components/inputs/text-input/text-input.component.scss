@@ -1,37 +1,68 @@
+@use "sass:list";
 @import "src/global-styles/_theme-colors.scss";
 
+$flavors: (
+  primary: (
+    $primary-default
+  ),
+  success: (
+    $success-default
+  ),
+  warning: (
+    $warning-default
+  ),
+  danger: (
+    $danger-default
+  ),
+  info: (
+    $info-default
+  ),
+);
+
 input {
-  width: auto; //TODO @Marcel. Richte das bitte mal anständig aus. Dankee :)
-  min-width: 95%;
-  // Die beiden margins sind iwie kacke. Sollten nicht nötig sein.
+  // TODO Clean up..
+  width: fit-content;
+  min-width: 90%;
   margin-top: 2px;
   margin-bottom: 1px;
 
-  font-size: 20px;
-
   background-color: $input-background;
   color: $light-font;
+  font-family: inherit;
+  font-size: inherit;
+
   padding: 8px 16px 8px 16px;
   border: 0;
   border-radius: 8px;
 
-  &:focus {
-    accent-color: $primary-default;
-  }
-
   &::placeholder {
     color: $placeholder-font
   }
+  &:disabled::placeholder {
+    color: $disabled-placeholder-font
+  }
+
+  @each $name, $colors in $flavors {
+    &.#{$name} {
+      &:focus {
+        accent-color: list.nth($colors, 1);
+      }
+    }
+  }
 }
 
-.hint {
+small {
   font-size: 16px;
   display: block;
   color: $grey-font;
+  @each $name, $colors in $flavors {
+    &.#{$name} { //TODO if(hintColored && !disabled)
+      color: list.nth($colors, 1);
+    }
+  }
 }
 
 label {
-  font-size: 20px;
   font-weight: 500;
   color: $light-font;
 }
@@ -40,5 +71,3 @@ span {
   vertical-align: top;
   display: inline-block;
 }
-
-

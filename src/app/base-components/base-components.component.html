@@ -99,11 +99,57 @@
   </design-button-text>
 </div>
 <div class="componentContainer">
-  <h2>Input fields</h2>
+  <h2>Textinput</h2>
   <design-text-input
+    class="component"
+    flavor="primary"
+    [hintColored]="true"
     [label]="'Label'"
-    [placeholder]="'Platzhalter'"
-    [hintText]="'Das ist der Tipp.'"
+    [placeholder]="'Primary field'"
+    [hintText]="'Das ist der bunte Tipp.'"
+    (keydown.enter)="changedText($event)">
+  </design-text-input>
+  <design-text-input
+    class="component"
+    [label]="'Label'"
+    [placeholder]="'Deaktiviert'"
+    [hintText]="'Das ist ein Tipp.'"
+    [disabled]="true">
+  </design-text-input>
+  <design-text-input
+    class="component"
+    flavor="success"
+    [hintColored]="true"
+    [label]="'Label'"
+    [placeholder]="'Success field'"
+    [hintText]="'Das ist der bunte Tipp.'"
+    (keydown.enter)="changedText($event)">
+  </design-text-input>
+  <design-text-input
+    class="component"
+    flavor="warning"
+    [hintColored]="false"
+    [label]="'Label'"
+    [placeholder]="'Warning field'"
+    [hintText]="'Das ist der graue Tipp.'"
+    (keydown.enter)="changedText($event)">
+  </design-text-input>
+  <design-text-input
+    class="component"
+    flavor="danger"
+    [hintColored]="true"
+    [label]="'Label'"
+    [placeholder]="'Danger field'"
+    [hintText]="'Das ist der bunte Tipp.'"
+    (keydown.enter)="changedText($event)">
+  </design-text-input>
+  <design-text-input
+    class="component"
+    flavor="info"
+    [hintColored]="false"
+    [label]="'Label'"
+    [placeholder]="'Info field'"
+    [hintText]="'Das ist der graue Tipp.'"
     (keydown.enter)="changedText($event)">
   </design-text-input>
 </div>
