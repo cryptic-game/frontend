@@ -20,8 +20,8 @@ export class TextInputComponent {
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() public onEnter = new EventEmitter<InputEvent>();
 
-  coloredLabel(): string {
-    if(this.hintColored && !this.disabled){
+  getLabelColor() {
+    if(this.hintColored && !this.disabled && this.flavor != "primary"){
       return "colored";
     } else {
       return "";

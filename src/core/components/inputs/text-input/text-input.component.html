@@ -5,6 +5,6 @@
        (keydown.enter)="onEnter.emit()"
        [class]="flavor"
        [disabled]="disabled">
-  <small [className]="coloredLabel() ? flavor : ''">{{hintText}}</small>
+  <small [className]="getLabelColor()">{{hintText}}</small>
 </span>
 
