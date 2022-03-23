@@ -34,6 +34,7 @@ input {
   padding: 8px 16px 8px 16px;
   border: 0;
   border-radius: 8px;
+  outline: none;
 
   &::placeholder {
     color: $placeholder-font
@@ -53,11 +54,11 @@ input {
         border: 2px solid;
         border-color: list.nth($colors, 1);
         &:focus {
-          outline: none;
         }
       } @else {
         &:focus {
-          accent-color: list.nth($colors, 1);
+          border: 2px solid;
+          border-color: list.nth($colors, 1);
         }
       }
     }
