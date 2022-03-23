@@ -51,14 +51,10 @@ input {
       or $name == "warning"
       or $name == "success"
       or $name == "info" {
-        border: 2px solid;
-        border-color: list.nth($colors, 1);
-        &:focus {
-        }
+        border: 2px solid list.nth($colors, 1);
       } @else {
         &:focus {
-          border: 2px solid;
-          border-color: list.nth($colors, 1);
+          border: 2px solid list.nth($colors, 1);
         }
       }
     }
