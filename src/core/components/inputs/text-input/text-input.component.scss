@@ -38,14 +38,27 @@ input {
   &::placeholder {
     color: $placeholder-font
   }
+
   &:disabled::placeholder {
     color: $disabled-placeholder-font
   }
 
   @each $name, $colors in $flavors {
     &.#{$name} {
-      &:focus {
-        accent-color: list.nth($colors, 1);
+
+      @if $name == "danger"
+      or $name == "warning"
+      or $name == "success"
+      or $name == "info" {
+        border: 2px solid;
+        border-color: list.nth($colors, 1);
+        &:focus {
+          outline: none;
+        }
+      } @else {
+        &:focus {
+          accent-color: list.nth($colors, 1);
+        }
       }
     }
   }
