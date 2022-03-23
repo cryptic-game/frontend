@@ -11,9 +11,9 @@ export type Flavor = 'primary' | 'success' | 'warning' | 'danger' | 'info';
 export class TextInputComponent {
 
   @Input() public disabled = false;
-  @Input() placeholder: string = "Placeholder";
-  @Input() hintText: string = "This is a small hint.";
-  @Input() label: string = "Label";
+  @Input() placeholder: string = "";
+  @Input() hintText: string = "";
+  @Input() label: string = "";
   @Input() hintColored: boolean = false;
   @Input() public flavor: Flavor = 'primary';
 
