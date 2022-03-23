@@ -46,12 +46,23 @@ button {
 
   @each $name, $colors in $flavors {
     &.#{$name} {
-      color: #2f2f36;
+      color: $dark-font;
       background: list.nth($colors, 1);
+
+      @if $name == "danger" or $name == "info" {
+        color: $light-font;
+      } @else {
+        color: $dark-font;
+      }
 
       &:disabled {
         background-color: list.nth($colors, 3);
         cursor: default;
+        @if $name == "danger" or $name == "info" {
+          color: $button-disabled-font;
+        } @else {
+          color: $button-dark-disabled-font;
+        }
       }
 
       &:hover:not([disabled]) {
