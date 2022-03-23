@@ -20,4 +20,8 @@ export class TextInputComponent {
 
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() public onEnter = new EventEmitter<InputEvent>();
+
+  hintHaveColor() {
+    return this.hintColored && !this.disabled;
+  }
 }

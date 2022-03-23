@@ -56,7 +56,7 @@ small {
   display: block;
   color: $grey-font;
   @each $name, $colors in $flavors {
-    &.#{$name} { //TODO if(hintColored && !disabled)
+    &.#{$name}true {
       color: list.nth($colors, 1);
     }
   }

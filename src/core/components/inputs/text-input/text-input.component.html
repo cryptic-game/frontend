@@ -1,10 +1,10 @@
 <span>
-<label for="inputElement">{{label}}</label>
-<input id="inputElement" type="text"
+  <label for="inputElement">{{label}}</label>
+  <input id="inputElement" type="text"
        [placeholder]="placeholder"
        (keydown.enter)="onEnter.emit()"
        [class]="flavor"
        [disabled]="disabled">
-  <small [class]="flavor" >{{hintText}}</small>
+  <small [class]="flavor+hintHaveColor()">{{hintText}}</small>
 </span>
 
