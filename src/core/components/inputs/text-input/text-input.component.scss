@@ -56,7 +56,7 @@ small {
   display: block;
   color: $grey-font;
   @each $name, $colors in $flavors {
-    &.#{$name}true {
+    &.#{$name} {
       color: list.nth($colors, 1);
     }
   }

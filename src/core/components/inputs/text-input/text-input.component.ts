@@ -17,11 +17,14 @@ export class TextInputComponent {
   @Input() hintColored: boolean = false;
   @Input() public flavor: Flavor = 'primary';
 
-
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() public onEnter = new EventEmitter<InputEvent>();
 
-  hintHaveColor() {
-    return this.hintColored && !this.disabled;
+  coloredLabel(): string {
+    if(this.hintColored && !this.disabled){
+      return "colored";
+    } else {
+      return "";
+    }
   }
 }
