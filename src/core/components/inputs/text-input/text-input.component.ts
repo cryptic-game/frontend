@@ -22,7 +22,7 @@ export class TextInputComponent {
 
   getLabelColor() {
     if(this.hintColored && !this.disabled && this.flavor != "primary"){
-      return "colored";
+      return this.flavor;
     } else {
       return "";
     }
