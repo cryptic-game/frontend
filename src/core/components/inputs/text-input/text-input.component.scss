@@ -1,0 +1,70 @@
+@import "src/global-styles/_theme-colors.scss";
+
+$flavors: (
+  primary: $primary-default,
+  success: $success-default,
+  warning: $warning-default,
+  danger: $danger-default,
+  info: $info-default,
+);
+
+:host {
+  vertical-align: top;
+  display: inline-block;
+}
+
+label {
+  font-weight: 500;
+  color: $light-font;
+}
+
+input {
+  width: 100%;
+  margin-top: 2px;
+  margin-bottom: 1px;
+
+  background-color: $input-background;
+  color: $light-font;
+  font-family: inherit;
+  font-size: inherit;
+
+  padding: 8px 16px 8px 16px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  outline: none;
+
+  &::placeholder {
+    color: $placeholder-font
+  }
+
+  &:disabled::placeholder {
+    color: $disabled-placeholder-font
+  }
+
+  @each $name, $color in $flavors {
+    &.#{$name} {
+
+      @if $name == "danger"
+      or $name == "warning"
+      or $name == "success"
+      or $name == "info" {
+        border: 2px solid $color;
+      } @else {
+        &:focus {
+          border: 2px solid $color;
+        }
+      }
+    }
+  }
+}
+
+small {
+  font-size: 16px;
+  display: block;
+  color: $grey-font;
+  @each $name, $color in $flavors {
+    &.#{$name} {
+      color: $color;
+    }
+  }
+}

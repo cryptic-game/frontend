@@ -98,5 +98,60 @@
     Info disabled
   </design-button-text>
 </div>
+<div class="componentContainer">
+  <h2>Textinput</h2>
+  <design-text-input
+    [formControl]="controlWithValidator"
+    class="component"
+    flavor="primary"
+    [hintColored]="true"
+    [label]="'Label'"
+    [placeholder]="'Primary field'"
+    [hintText]="getValidatorHintText()"
+    (keydown.enter)="changedText($event)">
+  </design-text-input>
+  <design-text-input
+    [formControl]="control"
+    class="component"
+    [label]="'Label'"
+    [placeholder]="'Disabled'"
+    [hintText]="'A hint.'">
+  </design-text-input>
+  <design-text-input
+    class="component"
+    flavor="success"
+    [hintColored]="true"
+    [label]="'Label'"
+    [placeholder]="'Success field'"
+    [hintText]="'A colored hint.'"
+    (keydown.enter)="changedText($event)">
+  </design-text-input>
+  <design-text-input
+    class="component"
+    flavor="warning"
+    [hintColored]="false"
+    [label]="'Label'"
+    [placeholder]="'Warning field'"
+    [hintText]="'A grey hint.'"
+    (keydown.enter)="changedText($event)">
+  </design-text-input>
+  <design-text-input
+    class="component"
+    flavor="danger"
+    [hintColored]="true"
+    [label]="'Label'"
+    [placeholder]="'Danger field'"
+    [hintText]="'A colored hint.'"
+    (keydown.enter)="changedText($event)">
+  </design-text-input>
+  <design-text-input
+    class="component"
+    flavor="info"
+    [hintColored]="false"
+    [label]="'Label'"
+    [placeholder]="'Info field'"
+    [hintText]="'A grey hint.'"
+    (keydown.enter)="changedText($event)">
+  </design-text-input>
 </div>
-<!-- Cloudflare trigger -->
+</div>
