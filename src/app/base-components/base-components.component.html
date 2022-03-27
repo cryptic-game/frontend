@@ -101,20 +101,21 @@
 <div class="componentContainer">
   <h2>Textinput</h2>
   <design-text-input
+    [formControl]="controlWithValidator"
     class="component"
     flavor="primary"
     [hintColored]="true"
     [label]="'Label'"
     [placeholder]="'Primary field'"
-    [hintText]="'A colored hint.'"
+    [hintText]="getValidatorHintText()"
     (keydown.enter)="changedText($event)">
   </design-text-input>
   <design-text-input
+    [formControl]="control"
     class="component"
     [label]="'Label'"
     [placeholder]="'Disabled'"
-    [hintText]="'A hint.'"
-    [disabled]="true">
+    [hintText]="'A hint.'">
   </design-text-input>
   <design-text-input
     class="component"

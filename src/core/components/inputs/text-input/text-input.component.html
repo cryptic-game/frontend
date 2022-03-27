@@ -1,8 +1,12 @@
 <label for="inputElement">{{label}}</label>
 <input id="inputElement" type="text"
-     [placeholder]="placeholder"
-     (keydown.enter)="onEnter.emit()"
-     [class]="flavor"
-     [disabled]="disabled">
+       [placeholder]="placeholder"
+       (keydown.enter)="onEnter.emit()"
+       [class]="flavor"
+       [disabled]="disabled"
+       (input)="onInput($event.target)"
+       (blur)="onTouched?.()"
+       (compositionstart)="compositionStart()"
+       (compositionend)="compositionEnd($event.target)">
 <small [className]="getLabelColor()">{{hintText}}</small>
-
+<ng-content></ng-content>
