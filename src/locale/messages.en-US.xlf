@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="3347316568808233081" datatype="html">
+        <source><x id="START_HEADING_LEVEL1" ctype="x-h1" equiv-text="&lt;h1&gt;"/>NOTE<x id="CLOSE_HEADING_LEVEL1" ctype="x-h1" equiv-text="&lt;/h1&gt;"/><x id="START_HEADING_LEVEL3" ctype="x-h3" equiv-text="&lt;h3&gt;"/>Bots are not allowed!<x id="CLOSE_HEADING_LEVEL3" ctype="x-h3" equiv-text="&lt;/h3&gt;"/><x id="START_PARAGRAPH" ctype="x-p" equiv-text="&lt;p&gt;"/> The use of bots in the game is prohibited. It should not be the purpose of the game to automate processes. Such behaviour would make the game experience neither interesting nor exciting. Please abide by this rule and join us in creating a fair game for all. <x id="CLOSE_PARAGRAPH" ctype="x-p" equiv-text="&lt;/p&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/account-page-base/account-page-base.component.html</context>
+          <context context-type="linenumber">7,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5891707175321515013" datatype="html">
+        <source>Imprint</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/account-page-base/account-page-base.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-sidebar/control-center-sidebar.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8520023152129279437" datatype="html">
+        <source>Log In</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/login/login.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/login/login.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5248717555542428023" datatype="html">
+        <source>Username</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/login/login.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/sign-up/sign-up.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1431416938026210429" datatype="html">
+        <source>Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/login/login.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/sign-up/sign-up.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8307718333567176097" datatype="html">
+        <source>If you do not have an account yet, click <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/signup&apos;]&quot;
+         [state]=&quot;{ username: form.value.username, password: form.value.password }&quot;&gt;"/>here<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/login/login.component.html</context>
+          <context context-type="linenumber">25,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1466012768716286509" datatype="html">
+        <source>Sign Up</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/sign-up/sign-up.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/sign-up/sign-up.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3241357959735682038" datatype="html">
+        <source>Confirm Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/sign-up/sign-up.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8301186653245526153" datatype="html">
+        <source>The username must have between 2 and 32 characters.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/sign-up/sign-up.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7038009102383592773" datatype="html">
+        <source>Your password has to be at least 8 characters long, it must contain at least one uppercase letter, one lowercase letter and one number.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/sign-up/sign-up.component.html</context>
+          <context context-type="linenumber">40,41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2578059105563284875" datatype="html">
+        <source>If you have already created an account, then click <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/login&apos;]&quot;
+         [state]=&quot;{ username: form.value.username, password: form.value.password }&quot;&gt;"/>here<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/account/sign-up/sign-up.component.html</context>
+          <context context-type="linenumber">42,45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5457938796893098392" datatype="html">
+        <source>Release notes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-changelog-page/control-center-changelog-page.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1147828071904789728" datatype="html">
+        <source>NEW</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-changelog-page/control-center-changelog-page.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4063530162080581432" datatype="html">
+        <source>ENHANCED</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-changelog-page/control-center-changelog-page.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8320327511800164704" datatype="html">
+        <source>CHANGED</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-changelog-page/control-center-changelog-page.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8228697599908320143" datatype="html">
+        <source>FIXED</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-changelog-page/control-center-changelog-page.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5162686434580248853" datatype="html">
+        <source>Start</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-changelog-page/control-center-changelog-page.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8056956553965222068" datatype="html">
+        <source>Build your first device</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2835214058894253278" datatype="html">
+        <source>Case:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1125739998728340282" datatype="html">
+        <source>Choose a case</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5139058457640527666" datatype="html">
+        <source>Mainboard:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8484889747739840090" datatype="html">
+        <source>Choose a mainboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4563873836363331434" datatype="html">
+        <source>Processor:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3842738924315734548" datatype="html">
+        <source> CPU #<x id="INTERPOLATION" equiv-text="{{control.props.index + 1}}"/>: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">30,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6461162475151403472" datatype="html">
+        <source>Cooler:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6712023397550883908" datatype="html">
+        <source> Cooler #<x id="INTERPOLATION" equiv-text="{{control.props.index + 1}}"/>: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">46,48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="99051426803748836" datatype="html">
+        <source>Memory:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3826351383000206479" datatype="html">
+        <source> RAM stick #<x id="INTERPOLATION" equiv-text="{{control.props.index + 1}}"/>: <x id="START_TAG_SELECT" ctype="x-select" equiv-text="&lt;select [formControl]=&quot;control.control&quot;&gt;"/><x id="START_TAG_OPTION" ctype="x-option" equiv-text="&lt;option [ngValue]=&quot;null&quot;&gt;"/><x id="INTERPOLATION_1" equiv-text="{{control.props.index === 0 ? &apos;Select a RAM module&apos; : &apos;&apos;}}"/><x id="CLOSE_TAG_OPTION" ctype="x-option" equiv-text="&lt;/option&gt;"/><x id="START_TAG_OPTION_1" ctype="x-option_1" equiv-text="&lt;option *ngFor=&quot;let ram of ramSticks&quot; [disabled]=&quot;!control.props.options.includes(ram)&quot;
+                  [ngValue]=&quot;ram&quot;&gt;"/><x id="INTERPOLATION_2" equiv-text="{{ram.name}}"/><x id="CLOSE_TAG_OPTION" ctype="x-option" equiv-text="&lt;/option&gt;"/><x id="CLOSE_TAG_SELECT" ctype="x-select" equiv-text="&lt;/select&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">60,66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="827126712289568500" datatype="html">
+        <source>Expansions:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6036877720442225891" datatype="html">
+        <source> Select <x id="INTERPOLATION" equiv-text="{{control.props.description}}"/> expansion #<x id="INTERPOLATION_1" equiv-text="{{control.props.index + 1}}"/>: <x id="START_TAG_SELECT" ctype="x-select" equiv-text="&lt;select [formControl]=&quot;control.control&quot;&gt;"/><x id="START_TAG_OPTION" ctype="x-option" equiv-text="&lt;option [ngValue]=&quot;null&quot;&gt;"/><x id="CLOSE_TAG_OPTION" ctype="x-option" equiv-text="&lt;/option&gt;"/><x id="START_TAG_OPTION_1" ctype="x-option_1" equiv-text="&lt;option *ngFor=&quot;let expansion of expansions&quot; [disabled]=&quot;!control.props.options.includes(expansion)&quot;
+                  [ngValue]=&quot;expansion&quot;&gt;"/><x id="INTERPOLATION_2" equiv-text="{{expansion.name}}"/><x id="CLOSE_TAG_OPTION" ctype="x-option" equiv-text="&lt;/option&gt;"/><x id="CLOSE_TAG_SELECT" ctype="x-select" equiv-text="&lt;/select&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">73,79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9136752928013288532" datatype="html">
+        <source>Storage:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4615870936878400977" datatype="html">
+        <source> Disk #<x id="INTERPOLATION" equiv-text="{{control.props.index + 1}}"/>: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">87,89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="434403241420277776" datatype="html">
+        <source>Power Supply:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1659104738415163172" datatype="html">
+        <source>Choose a power supply</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7808450869644574303" datatype="html">
+        <source>Check compatibility</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6924245241744002654" datatype="html">
+        <source>Build</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.html</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="576309772155521316" datatype="html">
+        <source>Missing case</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">255</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7781856523713302659" datatype="html">
+        <source>Missing mainboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">256</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1846896873102731017" datatype="html">
+        <source>Missing power supply</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">257</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6368932182792791404" datatype="html">
+        <source>Missing CPU</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">259</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6172503231967452144" datatype="html">
+        <source>Missing RAM</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">260</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="55820871480711501" datatype="html">
+        <source>Missing disk</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">261</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3233388528026399804" datatype="html">
+        <source>A CPU is missing a cooler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">262</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2969595118590902103" datatype="html">
+        <source>The specified power supply is too weak for your configuration</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">263</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2766995041984432674" datatype="html">
+        <source>You specified a CPU item multiple times</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">265</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9175354522499674506" datatype="html">
+        <source>You specified a cooler item multiple times</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">266</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4045910349061274113" datatype="html">
+        <source>You specified a GPU item multiple times</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">267</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="727624542302491572" datatype="html">
+        <source>You specified a RAM item multiple times</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">268</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4728725744788893917" datatype="html">
+        <source>You specified a disk item multiple times</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">269</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6979228484058054886" datatype="html">
+        <source>Your configuration requires an external GPU</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">271</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1770180946369694246" datatype="html">
+        <source>You already own the maximum number of devices</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">272</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1359116178137340172" datatype="html">
+        <source>Unknown error: <x id="PH" equiv-text="error.message"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">276</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3432097772912274749" datatype="html">
+        <source>Performance: <x id="PH" equiv-text="result.performance"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">288</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5846434826601306090" datatype="html">
+        <source>The configuration is compatible</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">290</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5615183622222785543" datatype="html">
+        <source>You successfully built a new device</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-create-device-page/control-center-create-device-page.component.ts</context>
+          <context context-type="linenumber">311</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5468936827472943491" datatype="html">
+        <source>Online-Computer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2421813265756012509" datatype="html">
+        <source>Offline-Computer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6970111858903995526" datatype="html">
+        <source>Rename this PC </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">17,18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7000205369869420585" datatype="html">
+        <source>Device specifications</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1037046564399991133" datatype="html">
+        <source>Device name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4101293580168054630" datatype="html">
+        <source>Processor</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5761520739219313875" datatype="html">
+        <source>Installed RAM</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="675913871292120325" datatype="html">
+        <source>Device-UUID</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2382782872218343082" datatype="html">
+        <source>Specific factors</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3128293408739574" datatype="html">
+        <source>Speed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="474960172154372074" datatype="html">
+        <source>not available</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8878700331247603166" datatype="html">
+        <source>Security</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6083104052607420006" datatype="html">
+        <source>Efficiency</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4239624606556200720" datatype="html">
+        <source>Running processes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="311627355661426460" datatype="html">
+        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Service<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="347379885812084836" datatype="html">
+        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>CPU<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7161207749625742215" datatype="html">
+        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>GPU<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1548708864412736755" datatype="html">
+        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>RAM<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2368883778968438656" datatype="html">
+        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Disk<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3185621744024721327" datatype="html">
+        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Network<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2963464326510408389" datatype="html">
+        <source>Disassemble computer
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">113,115</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1422281973010663849" datatype="html">
+        <source>Are you sure you want to disassemble this computer?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1228004548544851812" datatype="html">
+        <source> This will <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>delete<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> all your saved wallet credentials and files and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>cannot be undone<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br&gt;"/> The hardware parts will go back into your inventory. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">124,128</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5144002795782342259" datatype="html">
+        <source> Type in the name of your device to confirm: <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input #disassembleConfirm (keyup)=&quot;checkDisassembleConfirm(disassembleConfirm)&quot;
+             autocomplete=&quot;off&quot; name=&quot;disassemble-confirm&quot; type=&quot;text&quot;&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">129,132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6026568416100915054" datatype="html">
+        <source>Disassemble </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-device-page/control-center-device-page.component.html</context>
+          <context context-type="linenumber">136,137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3010057485486897763" datatype="html">
+        <source>Inventory</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-inventory-page/control-center-inventory-page.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6540891779361411683" datatype="html">
+        <source> Send <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input (dragover)=&quot;dragOver($event)&quot; (drop)=&quot;dragDrop($event)&quot; [value]=&quot;tradeItem?.properties?.name&quot;
+             i18n-placeholder id=&quot;item-input&quot; name=&quot;item&quot;
+             placeholder=&quot;Drag item here&quot; readonly type=&quot;text&quot;&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-inventory-page/control-center-inventory-page.component.html</context>
+          <context context-type="linenumber">13,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6960683801142278207" datatype="html">
+        <source>Drag item here</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-inventory-page/control-center-inventory-page.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6503732082972033785" datatype="html">
+        <source> to <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input #tradeDestination (dragover)=&quot;$event.preventDefault()&quot; i18n-placeholder id=&quot;destination-input&quot;
+             maxlength=&quot;36&quot;
+             name=&quot;destination&quot;
+             pattern=&quot;^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89AB][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$&quot;
+             placeholder=&quot;Player UUID&quot; required
+             type=&quot;text&quot;&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-inventory-page/control-center-inventory-page.component.html</context>
+          <context context-type="linenumber">20,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5976603574921096150" datatype="html">
+        <source>Player UUID</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-inventory-page/control-center-inventory-page.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7000189587552307818" datatype="html">
+        <source>Your own UUID: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;uuid&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{apiService.account.uuid}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-inventory-page/control-center-inventory-page.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="860870551561767369" datatype="html">
+        <source>You do not own this item.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-inventory-page/control-center-inventory-page.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1401829507593868894" datatype="html">
+        <source>You cannot send this item to yourself.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-inventory-page/control-center-inventory-page.component.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8531774547812797016" datatype="html">
+        <source>The specified UUID was not found.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-inventory-page/control-center-inventory-page.component.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6169807947926994256" datatype="html">
+        <source>Account Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6384556084121323046" datatype="html">
+        <source>Name: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/><x id="INTERPOLATION" equiv-text="{{apiService.account.name}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2860703235806324748" datatype="html">
+        <source>UUID: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/><x id="INTERPOLATION" equiv-text="{{apiService.account.uuid}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6309828574111583895" datatype="html">
+        <source>Change password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5239575013444823214" datatype="html">
+        <source> Old password: <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input autocomplete=&quot;password&quot; formControlName=&quot;oldPassword&quot; i18n-placeholder placeholder=&quot;Password&quot;
+           type=&quot;password&quot;&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">6,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5951307729855166971" datatype="html">
+        <source> New password: <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input autocomplete=&quot;new-password&quot; formControlName=&quot;newPassword&quot; i18n-placeholder placeholder=&quot;Password&quot;
+           type=&quot;password&quot;&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">11,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4724099584933227637" datatype="html">
+        <source> Confirm password: <x id="TAG_INPUT" ctype="x-input" equiv-text="&lt;input autocomplete=&quot;new-password&quot; formControlName=&quot;passwordConfirm&quot; i18n-placeholder placeholder=&quot;Password&quot;
+           type=&quot;password&quot;&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">23,26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="935187492052582731" datatype="html">
+        <source>Submit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3119341302321850801" datatype="html">
+        <source>Your password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter and one number.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">29,31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1334070630394242854" datatype="html">
+        <source>Password successfully changed.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6729136776649548048" datatype="html">
+        <source>The passwords do not match.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5991373369620163476" datatype="html">
+        <source>The old password is not correct.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-settings-page/control-center-settings-page.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3797778920049399855" datatype="html">
+        <source>Logout</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-sidebar/control-center-sidebar.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2448391510242468907" datatype="html">
+        <source>Logged in as <x id="INTERPOLATION" equiv-text="{{apiService.account.name}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-sidebar/control-center-sidebar.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2219042615049529474" datatype="html">
+        <source>Sound page coming soon!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center-sound-page/control-center-sound-page.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="476576194191506151" datatype="html">
+        <source>Control-Center</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8618868666624269972" datatype="html">
+        <source>Computers</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center.component.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4930506384627295710" datatype="html">
+        <source>Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center.component.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6230180786088475979" datatype="html">
+        <source>Sound</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center.component.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7136888919962092730" datatype="html">
+        <source>Changelog</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/control-center/control-center.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

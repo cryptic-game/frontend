@@ -1,132 +1,56 @@
-/* eslint-disable max-len */
-import {HttpClientModule} from '@angular/common/http';
+import {ErrorHandler, NgModule, Provider} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-
+import {HttpClientModule} from '@angular/common/http';
 import {AppComponent} from './app.component';
-import {LoginComponent} from './account/login/login.component';
-import {DesktopComponent} from './desktop/desktop.component';
-import {DesktopMenuComponent} from './desktop/desktop-menu/desktop-menu.component';
-import {DesktopStartmenuComponent} from './desktop/desktop-startmenu/desktop-startmenu.component';
-import {SignUpComponent} from './account/sign-up/sign-up.component';
-import {RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
-import {DesktopGuard} from './desktop/desktop.guard';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {PXtoViewWidthPipe} from './pxto-view-width.pipe';
-import {PXtoViewHeightPipe} from './pxto-view-height.pipe';
-import {WindowFrameComponent} from './desktop/window/window-frame.component';
-import {WindowManagerComponent} from './desktop/window-manager/window-manager.component';
-import {TestWindowComponent} from './desktop/windows/test-window/test-window.component';
-import {TerminalComponent} from './desktop/windows/terminal/terminal.component';
-import {WindowPlaceDirective} from './desktop/window/window-place.directive';
-import {MinerComponent} from './desktop/windows/miner/miner.component';
-import {SettingsComponent} from './desktop/windows/settings/settings.component';
-import {TaskManagerComponent} from './desktop/windows/task-manager/task-manager.component';
-import {AccountPageBaseComponent} from './account/account-page-base/account-page-base.component';
-import {AccountGuard} from './account/account.guard';
-import {DesignModule} from './design/design.module';
-import {HardwareShopComponent} from './desktop/windows/hardware-shop/hardware-shop.component';
-import {
-  HardwareShopItemComponent
-} from './desktop/windows/hardware-shop/hardware-shop-item/hardware-shop-item.component';
-import {
-  HardwareShopItemListComponent
-} from './desktop/windows/hardware-shop/hardware-shop-item-list/hardware-shop-item-list.component';
-import {
-  HardwareShopHeaderComponent
-} from './desktop/windows/hardware-shop/hardware-shop-header/hardware-shop-header.component';
-import {
-  HardwareShopCartComponent
-} from './desktop/windows/hardware-shop/hardware-shop-cart/hardware-shop-cart.component';
-import {
-  HardwareShopCartItemComponent
-} from './desktop/windows/hardware-shop/hardware-shop-cart-item/hardware-shop-cart-item.component';
-import {
-  HardwareShopSidebarItemComponent
-} from './desktop/windows/hardware-shop/hardware-shop-sidebar-item/hardware-shop-sidebar-item.component';
-import {WalletAppComponent} from './desktop/windows/wallet-app/wallet-app.component';
-import {WalletAppHeaderComponent} from './desktop/windows/wallet-app/wallet-app-header/wallet-app-header.component';
-import {WalletAppEditComponent} from './desktop/windows/wallet-app/wallet-app-edit/wallet-app-edit.component';
-import {
-  WalletAppTransactionComponent
-} from './desktop/windows/wallet-app/wallet-app-transaction/wallet-app-transaction.component';
-import {
-  HardwareShopSidebarComponent
-} from './desktop/windows/hardware-shop/hardware-shop-sidebar/hardware-shop-sidebar.component';
-import {ControlCenterModule} from './control-center/control-center.module';
+import {RouteReuseStrategy} from '@angular/router';
 import {AppRouteReuseStrategy} from './app-route-reuse-strategy';
-import {DesktopDeviceResolver} from './desktop/desktop-device.resolver';
-import {EditorComponent} from './desktop/windows/editor/editor.component';
-import {FileManagerComponent} from './desktop/windows/file-manager/file-manager.component';
-import {NgParticlesModule} from "ng-particles";
-import {ContextMenuModule} from "./design/context-menu/context-menu.module";
-/* eslint-enable max-len */
+import {ContextMenuModule} from "../core/components/context-menu/context-menu.module";
+import {AppRoutingModule} from "./app-routing.module";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import * as Sentry from "@sentry/angular";
+import {environment} from 'src/environments/environment';
 
-const routes: Routes = [
-  {
-    path: 'desktop',
-    component: DesktopComponent,
-    canActivate: [DesktopGuard],
-    runGuardsAndResolvers: 'paramsOrQueryParamsChange',
-    resolve: {device: DesktopDeviceResolver},
-    data: {animation: 'desktop'}
-  },
-  {path: 'login', component: LoginComponent, canActivate: [AccountGuard]},
-  {path: 'signup', component: SignUpComponent, canActivate: [AccountGuard]},
-  {path: '**', redirectTo: '/'}
-];
+const providers: Provider[] = [{provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy}];
+
+if (environment.production) {
+  providers.push({
+    provide: ErrorHandler,
+    useValue: Sentry.createErrorHandler({
+      showDialog: true,
+      dialogOptions: {
+        onLoad: () => {
+          tryRemove('id_name', 'User');
+          tryRemove('id_email', 'user@cryptic-game.net');
+        }
+      }
+    })
+  });
+}
+
+function tryRemove(id: string, value: string) {
+  const emailInput = document.getElementById(id) as HTMLInputElement | null;
+
+  if (!emailInput) {
+    setTimeout(() => tryRemove(id, value), 100);
+    return;
+  }
+
+  emailInput.value = value;
+  emailInput.parentElement!.style.display = 'none';
+}
 
 @NgModule({
   declarations: [
-    AppComponent,
-    LoginComponent,
-    DesktopComponent,
-    DesktopMenuComponent,
-    DesktopStartmenuComponent,
-    SignUpComponent,
-    PXtoViewWidthPipe,
-    PXtoViewHeightPipe,
-    WindowFrameComponent,
-    WindowManagerComponent,
-    WindowPlaceDirective,
-    TestWindowComponent,
-    TerminalComponent,
-    MinerComponent,
-    SettingsComponent,
-    TaskManagerComponent,
-    AccountPageBaseComponent,
-    HardwareShopComponent,
-    HardwareShopItemComponent,
-    HardwareShopItemListComponent,
-    HardwareShopHeaderComponent,
-    HardwareShopCartComponent,
-    HardwareShopCartItemComponent,
-    HardwareShopHeaderComponent,
-    HardwareShopItemComponent,
-    HardwareShopItemListComponent,
-    HardwareShopSidebarItemComponent,
-    WalletAppComponent,
-    WalletAppHeaderComponent,
-    WalletAppEditComponent,
-    WalletAppTransactionComponent,
-    HardwareShopSidebarComponent,
-    EditorComponent,
-    FileManagerComponent
+    AppComponent
   ],
   imports: [
-    RouterModule.forRoot(routes, {relativeLinkResolution: 'legacy'}),
     BrowserModule,
-    ControlCenterModule,
     HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    DesignModule,
-    NgParticlesModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
     ContextMenuModule.forRoot()
   ],
-  providers: [
-    {provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy}
-  ],
+  providers,
   bootstrap: [AppComponent]
 })
 export class AppModule {

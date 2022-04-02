@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {webSocket, WebSocketSubject} from 'rxjs/webSocket';
-import {catchError, filter, first, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {catchError, first, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {firstValueFrom, interval, Observable, of, Subject, throwError} from 'rxjs';
 import {environment} from '../environments/environment';
 import {v4 as randomUUID} from 'uuid';
 import {Account} from '../dataclasses/account';
+import {setTag} from '@sentry/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -36,11 +37,13 @@ export class WebsocketService {
     if (response.status === 200) {
       try {
         const {url}: { url: string } = await response.json();
+        setTag("api", url);
         return url;
       } catch (e) {
       }
     }
 
+    setTag("api", environment.api);
     return environment.api;
   }
 
@@ -108,14 +111,8 @@ export class WebsocketService {
   requestMany(data: any): Observable<any> {
     return interval(50)
       .pipe(
-        filter(() => Boolean(this.socketSubject)),
-        tap(() => {
-          if (this.socketSubject) {
-            this.socketSubject.next(data);
-          } else {
-            this.queue.push(data);
-          }
-        }),
+        first(() => Boolean(this.socketSubject)),
+        tap(() => this.socketSubject.next(data)),
         switchMap(() => this.socketSubject),
         map(checkResponseError),
       );
@@ -196,6 +193,11 @@ export class WebsocketService {
 
         if (message['error']) {
           this.open[tag].error(new Error(message['error']));
+
+        // Workaround: (e.g.) bruteforce endpoint sends the error inside of data and not at the root
+        } else if (message["data"] && message["data"]["error"]) {
+          this.open[tag].error(new Error(message["data"]["error"]));
+
         } else {
           this.open[tag].next(message['data']);
         }

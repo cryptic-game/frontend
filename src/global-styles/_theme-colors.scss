@@ -2,23 +2,51 @@
 $primary-default: #2ECC70;
 $primary-hover: #1F8C4C;
 $primary-disabled: #2E473E;
+
 /*success*/
 $success-default: #3ABB18;
 $success-hover: #277A10;
 $success-disabled: #2F5629;
+
 /*warning*/
 $warning-default: #F1C30E;
 $warning-hover: #B3910B;
 $warning-disabled: #675926;
+
 /*danger*/
 $danger-default: #F00040;
 $danger-hover: #B0002F;
 $danger-disabled: #671E35;
+
 /*info*/
 $info-default: #3281F6;
 $info-hover: #245EB5;
 $info-disabled: #2D456C;
+
+/*fonts*/
+$labeled-disabled-font: #748781;
+$checkbox-disabled-font: $labeled-disabled-font;
+$radio-disabled-font: $labeled-disabled-font;
+$switch-disabled-font: $labeled-disabled-font;
+$light-disabled-font: $labeled-disabled-font;
+$button-dark-disabled-font: #222D2D;
+$dark-font: #1A1C23;
+$disabled-placeholder-font: #434349;
+$placeholder-font: #888888;
+$button-disabled-font: #888888;
+$grey-font: #BEBEBE;
+$light-font: #FFFFFF;
+
+/*backgrounds*/
+$input-disabled-background: #25252B;
+$sidebar-submenu-background: #2B2B31;
+$background: #2F2F36;
+$input-background: #1D1D24;
+$popup-dark-background: #1D1D24;
+$sidebar-background: #1E1E24;
+$popup-light-background: #FFFFFF;
+
 /*etc*/
-$logo-crypt: #27A036
+$logo-crypt: #27A036;
 /* ISSUE : #260 */
 

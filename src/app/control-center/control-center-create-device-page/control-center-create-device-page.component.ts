@@ -252,28 +252,28 @@ export class ControlCenterCreateDevicePageComponent {
     this.info = '';
 
     const message = {
-      'missing_case': 'Missing case',
-      'missing_mainboard': 'Missing mainboard',
-      'missing_power_supply': 'Missing power supply',
+      'missing_case': $localize`Missing case`,
+      'missing_mainboard': $localize`Missing mainboard`,
+      'missing_power_supply': $localize`Missing power supply`,
 
-      'missing_cpu': 'Missing CPU',
-      'missing_ram': 'Missing RAM',
-      'missing_disk': 'Missing disk',
-      'invalid_amount_of_cpu_coolers': 'A CPU is missing a cooler',
-      'insufficient_power_pack': 'The specified power supply is too weak for your configuration',
+      'missing_cpu': $localize`Missing CPU`,
+      'missing_ram': $localize`Missing RAM`,
+      'missing_disk': $localize`Missing disk`,
+      'invalid_amount_of_cpu_coolers': $localize`A CPU is missing a cooler`,
+      'insufficient_power_pack': $localize`The specified power supply is too weak for your configuration`,
 
-      'cpu_not_in_inventory': 'You specified a CPU item multiple times',
-      'processorCooler_not_in_inventory': 'You specified a cooler item multiple times',
-      'gpu_not_in_inventory': 'You specified a GPU item multiple times',
-      'ram_not_in_inventory': 'You specified a RAM item multiple times',
-      'disk_not_in_inventory': 'You specified a disk item multiple times',
+      'cpu_not_in_inventory': $localize`You specified a CPU item multiple times`,
+      'processorCooler_not_in_inventory': $localize`You specified a cooler item multiple times`,
+      'gpu_not_in_inventory': $localize`You specified a GPU item multiple times`,
+      'ram_not_in_inventory': $localize`You specified a RAM item multiple times`,
+      'disk_not_in_inventory': $localize`You specified a disk item multiple times`,
 
-      'missing_external_gpu': 'Your configuration requires an external GPU',
-      'maximum_devices_reached': 'You already own the maximum number of devices'
+      'missing_external_gpu': $localize`Your configuration requires an external GPU`,
+      'maximum_devices_reached': $localize`You already own the maximum number of devices`,
     }[error.message];
 
     if (message == null) {
-      this.error = 'Unknown error: ' + error.message;
+      this.error = $localize`Unknown error: ${error.message}`;
     } else {
       this.error = message;
     }
@@ -285,9 +285,9 @@ export class ControlCenterCreateDevicePageComponent {
 
       this.deviceService.checkHardwareCompatibility(selectedHardware).subscribe({
         next: (result) => {
-          console.log('Performance: ' + result.performance);
+          console.log($localize`Performance: ${result.performance}`);
           this.error = '';
-          this.info = 'The configuration is compatible';
+          this.info = $localize`The configuration is compatible`;
         },
         error: (err: Error) => {
           this.displayError(err)
@@ -308,7 +308,7 @@ export class ControlCenterCreateDevicePageComponent {
             this.router.navigate(['/device'], {queryParams: {device: device.uuid}}).then();
           });
           this.error = '';
-          this.info = 'You successfully built a new device';
+          this.info = $localize`You successfully built a new device`;
         },
         error: (err: Error) => this.displayError(err)
       });

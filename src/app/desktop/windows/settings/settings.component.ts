@@ -3,6 +3,8 @@ import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/w
 import {SettingsService} from './settings.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {SettingsEntry} from './settings-entry';
+import {forkJoin} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-settings',
@@ -37,11 +39,15 @@ export class SettingsComponent extends WindowComponent implements OnInit {
   }
 
   async loadForm() {
-    const value: { [name: string]: unknown } = {};
-    for (const [name, setting] of this.settingEntries) {
-      value[name] = await setting.getFresh();
-    }
-    this.form.setValue(value);
+    forkJoin(this.settingEntries.map(
+      ([name, setting]) => setting.getFresh().pipe(
+        map(value => ({name, value: value ?? setting.defaultValue}))
+      )
+    )).subscribe(values => {
+      const result: { [name: string]: unknown } = {};
+      values.forEach(x => result[x.name] = x.value)
+      this.form.setValue(result);
+    })
   }
 
   async resetSettings() {
@@ -52,6 +58,8 @@ export class SettingsComponent extends WindowComponent implements OnInit {
   }
 
   async saveSettings() {
+    console.log(this.form.value)
+    console.log(this.settingEntries)
     await Promise.all(
       this.settingEntries.map(([name, setting]) => setting.set(this.form.value[name]))
     );

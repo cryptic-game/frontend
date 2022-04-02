@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnInit} from '@angular/core';
 import {IParticlesProps} from "ng-particles/lib/ng-particles.module";
 
 @Component({
@@ -49,6 +49,12 @@ export class AccountPageBaseComponent implements OnInit {
     },
     detectRetina: true
   };
+
+  constructor(
+    @Inject(LOCALE_ID) public locale: string
+  ) {
+    console.log(this.locale)
+  }
 
   ngOnInit() {
     // the particles need an id -> every should be unique -> on navigation particles are recreated

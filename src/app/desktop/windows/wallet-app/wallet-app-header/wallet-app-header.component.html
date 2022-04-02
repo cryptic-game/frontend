@@ -6,7 +6,7 @@
   </div>
 
   <div class="right">
-    <span *ngIf="wallet">{{wallet.amount / 1000}} MC</span>
+    <span *ngIf="wallet">{{(wallet.amount / 1000) | number}} MC</span>
   </div>
 
 </div>

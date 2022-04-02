@@ -11,14 +11,14 @@ export class ControlCenterComponent {
 
   menus: SidebarMenu[] = [
     new SidebarMenu(
-      'Computers',
+      $localize`Computers`,
       'menu_computers.svg',
       {items: this.controlCenterService.deviceSidebarMenuItems, displayCount: true, specialItems: 1}
     ),
-    new SidebarMenu('Inventory', 'menu_inventory.svg', {routerLink: '/inventory'}),
-    new SidebarMenu('Settings', 'menu_settings.svg', {routerLink: '/settings'}),
-    new SidebarMenu('Sound', 'menu_sound.svg', {routerLink: '/sound'}),
-    new SidebarMenu('Changelog', 'menu_changelog.svg', {routerLink: '/changelog'})
+    new SidebarMenu($localize`Inventory`, 'menu_inventory.svg', {routerLink: '/inventory'}),
+    new SidebarMenu($localize`Settings`, 'menu_settings.svg', {routerLink: '/settings'}),
+    new SidebarMenu($localize`Sound`, 'menu_sound.svg', {routerLink: '/sound'}),
+    new SidebarMenu($localize`Changelog`, 'menu_changelog.svg', {routerLink: '/changelog'})
   ];
 
   constructor(private controlCenterService: ControlCenterService) {

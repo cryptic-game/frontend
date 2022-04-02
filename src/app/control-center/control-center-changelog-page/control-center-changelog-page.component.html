@@ -1,4 +1,4 @@
-<h1>Release notes</h1>
+<h1 i18n>Release notes</h1>
 <div class="changelog-container">
   <div class="changelog">
     <table *ngIf="changelog">
@@ -12,34 +12,34 @@
           </th>
         </tr>
         <tr *ngFor="let addition of version.additions">
-          <td class="change-indicator"><span class="addition">NEW</span></td>
+          <td class="change-indicator"><span class="addition" i18n>NEW</span></td>
           <td><p>{{addition}}</p></td>
         </tr>
         <tr *ngIf="version.additions?.length &&
          (version.enhancements?.length || version.changes?.length || version.fixes?.length)" class="spacer"></tr>
 
         <tr *ngFor="let enhancement of version.enhancements">
-          <td class="change-indicator"><span class="enhancement">ENHANCED</span></td>
+          <td class="change-indicator"><span class="enhancement" i18n>ENHANCED</span></td>
           <td><p>{{enhancement}}</p></td>
         </tr>
         <tr *ngIf="version.enhancements?.length && (version.changes?.length || version.fixes?.length)"
             class="spacer"></tr>
 
         <tr *ngFor="let change of version.changes">
-          <td class="change-indicator"><span class="change">CHANGED</span></td>
+          <td class="change-indicator"><span class="change" i18n>CHANGED</span></td>
           <td><p>{{change}}</p></td>
         </tr>
         <tr *ngIf="version.changes?.length && version.fixes?.length" class="spacer"></tr>
 
         <tr *ngFor="let fix of version.fixes">
-          <td class="change-indicator"><span class="fix">FIXED</span></td>
+          <td class="change-indicator"><span class="fix" i18n>FIXED</span></td>
           <td><p>{{fix}}</p></td>
         </tr>
       </ng-container>
       <tr>
         <th colspan="2">
           <div class="version-header start">
-            <div class="version">Start</div>
+            <div class="version" i18n>Start</div>
             <div class="date">{{changelog?.start_date | date:'longDate'}}</div>
           </div>
         </th>

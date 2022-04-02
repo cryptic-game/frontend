@@ -3,16 +3,8 @@
   <div class="content">
     <ng-content></ng-content>
   </div>
-  <div class="bots">
+  <div class="bots" i18n>
     <h1>NOTE</h1>
-    <h3>Bots verboten!</h3>
-    <p>
-      Der Einsatz von Bots ist im Spiel verboten.
-      Es soll nicht Sinn und Zweck des Spiels sein, Abläufe zu automatisieren.
-      Ein solches Verhalten würde das Spielerlebnis weder interessant, noch spannend machen.
-      Bitte halte dich an diese Regelung und schaffe mit uns ein faires Spiel für alle.
-    </p>
-    <br>
     <h3>Bots are not allowed!</h3>
     <p>
       The use of bots in the game is prohibited.
@@ -38,7 +30,9 @@
       <img alt="Youtube" class="icon" height="30px" src="assets/icons/youtube_icon.svg" width="30px">
     </a>
   </div>
-  <div class="imprint">
-    <a href="https://the-morpheus.de/#contact" rel="noopener" target="_blank">Imprint</a>
+  <div class="footer">
+    <a href="https://the-morpheus.de/#contact" i18n rel="noopener" target="_blank">Imprint</a>
+    <a href="/" *ngIf="locale !== 'en-US'">English</a>
+    <a href="/de/" *ngIf="locale !== 'de-DE'">Deutsch</a>
   </div>
 </div>

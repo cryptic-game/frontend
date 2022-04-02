@@ -1,0 +1,74 @@
+@use "sass:list";
+@import "src/global-styles/theme-colors";
+@import "../buttons";
+
+$flavors: (
+  primary: (
+    $primary-default,
+    $primary-hover,
+    $primary-disabled,
+  ),
+  success: (
+    $success-default,
+    $success-hover,
+    $success-disabled,
+  ),
+  warning: (
+    $warning-default,
+    $warning-hover,
+    $warning-disabled,
+  ),
+  danger: (
+    $danger-default,
+    $danger-hover,
+    $danger-disabled,
+  ),
+  info: (
+    $info-default,
+    $info-hover,
+    $info-disabled,
+  ),
+);
+
+button {
+  padding: $b-padding;
+  border-radius: $b-border-radius;
+  width: $b-width;
+  color: $b-color;
+  border: $b-border;
+  font-size: $b-font-size;
+  margin-right: $b-margin-right;
+  cursor: $b-cursor;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  @each $name, $colors in $flavors {
+    &.#{$name} {
+      color: $dark-font;
+      background: list.nth($colors, 1);
+
+      @if $name == "danger" or $name == "info" {
+        color: $light-font;
+      } @else {
+        color: $dark-font;
+      }
+
+      &:disabled {
+        background-color: list.nth($colors, 3);
+        cursor: default;
+        @if $name == "danger" or $name == "info" {
+          color: $button-disabled-font;
+        } @else {
+          color: $button-dark-disabled-font;
+        }
+      }
+
+      &:hover:not([disabled]) {
+        background-color: list.nth($colors, 2);
+        color: white;
+      }
+    }
+  }
+}

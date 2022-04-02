@@ -3,6 +3,7 @@
 @import "variables";
 @import "controls";
 @import "context-menu";
+@import "@fontsource/jost";
 
 app-root {
   width: 100%;
@@ -15,5 +16,8 @@ html {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  font-family: $default-font;
+  font-size: 20px;
+  font-family: "Jost", Roboto, "Open Sans", sans-serif;
+  background-color: #000;
+  color: #fff;
 }

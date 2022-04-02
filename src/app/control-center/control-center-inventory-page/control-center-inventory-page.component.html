@@ -1,4 +1,4 @@
-<h1>Inventory</h1>
+<h1 i18n>Inventory</h1>
 <div id="inventory">
   <div (dragstart)="dragStart($event, item)" *ngFor="let item of items" class="item" draggable="true">
     <img [alt]="getCategoryIconName(item.properties.category!)"
@@ -10,16 +10,17 @@
 
 <div id="trade">
   <form (submit)="sendTradeItem(tradeDestination); $event.preventDefault()">
-    <label for="inventory">
+    <label for="inventory" i18n>
       Send
       <input (dragover)="dragOver($event)" (drop)="dragDrop($event)" [value]="tradeItem?.properties?.name"
-             id="item-input" name="item"
+             i18n-placeholder id="item-input" name="item"
              placeholder="Drag item here" readonly type="text">
     </label>
     <input [value]="tradeItem?.element_uuid" name="item-uuid" type="hidden">
-    <label>
+    <label i18n>
       to
-      <input #tradeDestination (dragover)="$event.preventDefault()" id="destination-input" maxlength="36"
+      <input #tradeDestination (dragover)="$event.preventDefault()" i18n-placeholder id="destination-input"
+             maxlength="36"
              name="destination"
              pattern="^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89AB][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
              placeholder="Player UUID" required
@@ -28,5 +29,5 @@
     <input [disabled]="!tradeItem" type="submit" value="!">
     <span *ngIf="tradeErrorMessage" class="error-message">{{tradeErrorMessage}}</span>
   </form>
-  <p>Your own UUID: <span class="uuid">{{apiService.account.uuid}}</span></p>
+  <p i18n>Your own UUID: <span class="uuid">{{apiService.account.uuid}}</span></p>
 </div>

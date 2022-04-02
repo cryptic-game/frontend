@@ -3,7 +3,7 @@
     <span>
       Amount:
       <span [ngClass]="{'green': moneyToCurrent, 'red': !moneyToCurrent}">
-        <span *ngIf="moneyToCurrent">+</span><span *ngIf="!moneyToCurrent">-</span>{{transaction.send_amount / 1000}} MC
+        <span *ngIf="moneyToCurrent">+</span><span *ngIf="!moneyToCurrent">-</span>{{(transaction.send_amount / 1000 | number)}} MC
       </span>
     </span>
     <span>{{time}}</span>

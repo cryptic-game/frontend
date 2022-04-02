@@ -1,0 +1,59 @@
+@use "sass:list";
+@import "src/global-styles/theme-colors";
+@import "../buttons";
+
+$flavors: (
+  primary: (
+    $primary-default,
+    $primary-disabled,
+  ),
+  success: (
+    $success-default,
+    $success-disabled,
+  ),
+  warning: (
+    $warning-default,
+    $warning-disabled,
+  ),
+  danger: (
+    $danger-default,
+    $danger-disabled,
+  ),
+  info: (
+    $info-default,
+    $info-disabled,
+  ),
+);
+
+button {
+  padding: $b-padding;
+  width: $b-width;
+  color: $b-color;
+  border: $b-border;
+  font-size: $b-font-size;
+  margin-right: $b-margin-right;
+  background: none;
+  cursor: $b-cursor;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  @each $name, $colors in $flavors {
+    &.#{$name} {
+      color: list.nth($colors, 1);
+
+      &:disabled {
+        color: list.nth($colors, 2);
+        cursor: default;
+      }
+
+      &:hover:not([disabled]) {
+        color: list.nth($colors, 1);
+        text-decoration: underline;
+        text-underline: list.nth($colors, 1);;
+      }
+    }
+  }
+}
+
