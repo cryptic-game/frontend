@@ -6,11 +6,12 @@ import { BaseComponentsComponent } from './base-components.component';
 import {ButtonModule} from "../../core/components/buttons/button/button.module";
 import {ButtonOutlineModule} from "../../core/components/buttons/button-outline/button-outline.module";
 import {ButtonTextModule} from "../../core/components/buttons/button-text/button-text.module";
-
+import { ProgressbarComponent } from 'src/core/components/progressbar/progressbar.component';
 
 @NgModule({
   declarations: [
-    BaseComponentsComponent
+    BaseComponentsComponent,
+    ProgressbarComponent
   ],
   imports: [
     CommonModule,

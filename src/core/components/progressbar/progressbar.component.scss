@@ -1,0 +1,35 @@
+@import 'theme-colors';
+
+
+p{
+  text-align: center;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  font-size: 1.2rem;
+  color: white;
+}
+.bar{
+  margin: 4px;
+  padding: 8px;
+}
+.desc{
+  font-size: 1rem;
+  color: grey;
+  margin-top: 0px;
+  margin-bottom: 4px;
+}
+
+.styled-p-bar{
+  height: 1.8vh;
+  width: 100%;
+  border-radius: 100vw;
+  background-color: white;
+  margin-top: 5px;
+  overflow: hidden;
+}
+.styled-p-bar-value{
+  height: 100%;
+  background-color: $primary-default;
+  width: 100%;
+  border-radius: 100px 0px 0px 100px;
+}
