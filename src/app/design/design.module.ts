@@ -4,13 +4,14 @@ import {ButtonComponent} from './button/button.component';
 import {TextFieldComponent} from './text-field/text-field.component';
 import {FormGroupComponent} from './form-group/form-group.component';
 import {StyledButtonComponent} from './styled-button/styled-button.component';
-
+import {ProgressbarComponent} from './design/progressbar/progressbar.component';
 @NgModule({
   declarations: [
     ButtonComponent,
     TextFieldComponent,
     FormGroupComponent,
-    StyledButtonComponent
+    StyledButtonComponent,
+    ProgressbarComponent
   ],
   imports: [
     CommonModule
