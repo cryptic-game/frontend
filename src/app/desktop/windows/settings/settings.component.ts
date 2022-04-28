@@ -64,15 +64,6 @@ export class SettingsComponent extends WindowComponent implements OnInit {
       this.settingEntries.map(([name, setting]) => setting.set(this.form.value[name]))
     );
   }
-
-  // async saveOneSettings(setter: String) {
-  //   console.log(this.form.value)
-  //   console.log(this.settingEntries)
-  //   await Promise.all(
-  //     this.settingEntries.map(([name, setter]) => setter.set(this.form.value[name]))
-  //   );
-  // }
-
 }
 
 export class SettingsWindowDelegate extends WindowDelegate {
