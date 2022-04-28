@@ -43,6 +43,11 @@
       <img alt="" class="icon" src="assets/desktop/img/logoutbutton.svg" />
       Logout
     </div>
+    <div (click)="parent.hideStartMenu()" [queryParams]="{ device: parent.activeDevice.uuid }" class="button"
+      routerLink="/device">
+      <img alt="" class="icon" src="assets/control-center/menu_settings.svg" />
+      Control Center
+    </div>
     <div (click)="shutdown()" [queryParams]="{ device: parent.activeDevice.uuid }" class="button" id="shutdown"
       routerLink="/device">
       <img alt="" class="icon" src="assets/desktop/img/computer_on_off.svg" />
