@@ -3,7 +3,7 @@
     <div class="row">
       <span>Background Image</span>
       <label>
-        <select formControlName="backgroundImage" size="1">
+        <select (change)="saveSettings()" formControlName="backgroundImage" size="1">
           <option *ngFor="let bg of settings.backgroundImage.acceptedValues">{{bg}}</option>
         </select>
       </label>
@@ -11,19 +11,19 @@
     <div class="row">
       <span>Terminal-prompt color</span>
       <label>
-        <input formControlName="terminalPromptColor" type="color">
+        <input (change)="saveSettings()" formControlName="terminalPromptColor" type="color">
       </label>
     </div>
     <div class="row">
       <span>'ls' folder color</span>
       <label>
-        <input formControlName="terminalLsFolderColor" type="color">
+        <input (change)="saveSettings()" formControlName="terminalLsFolderColor" type="color">
       </label>
     </div>
     <div class="row">
       <span>'ls' command file/folder prefix</span>
       <label>
-        <input formControlName="terminalLsPrefix" type="checkbox">
+        <input (change)="saveSettings()" formControlName="terminalLsPrefix" type="checkbox">
       </label>
     </div>
     <div class="buttons-container">
