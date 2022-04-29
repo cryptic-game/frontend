@@ -57,6 +57,7 @@ export class WindowFrameComponent implements OnInit {
       this.dragging = true;
       this.dragStartPos = [event.clientX, event.clientY];
       this.dragStartWindowPos = [this.delegate.position.x, this.delegate.position.y];
+      document.getElementsByClassName("window-header")[0].classList.add("dragging");
     }
   }
 
@@ -236,6 +237,7 @@ export class WindowFrameComponent implements OnInit {
   mouseUp() {
     this.dragging = false;
     this.resizing = false;
+    document.getElementsByClassName("window-header")[0].classList.remove("dragging");
   }
 
   minimize() {
