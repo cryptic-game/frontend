@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {WindowFrameComponent} from './window-frame.component';
 import {WindowDelegate} from './window-delegate';
-import {TestWindowComponent} from '../windows/test-window/test-window.component';
+import {TestWindowComponent} from '../windows/youtube/youtube.component';
 import {WindowPlaceDirective} from './window-place.directive';
 
 describe('WindowFrameComponent', () => {

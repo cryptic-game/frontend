@@ -8,6 +8,8 @@ import { WalletAppWindowDelegate } from '../../app/desktop/windows/wallet-app/wa
 import { HardwareShopWindowDelegate } from '../../app/desktop/windows/hardware-shop/hardware-shop.component';
 import { EditorWindowDelegate } from '../../app/desktop/windows/editor/editor.component';
 import { FileManagerWindowDelegate } from '../../app/desktop/windows/file-manager/file-manager.component';
+import { YoutubeDelegate } from '../../app/desktop/windows/youtube/youtube.component';
+
 
 export const desktopDefinition = {
   programs: [
@@ -74,6 +76,14 @@ export const desktopDefinition = {
       'assets/desktop/img/editor.svg',
       true,
       new Position(110, 30)
+    ),
+    new Program(
+      'youtube-app',
+      YoutubeDelegate,
+      'Youtube',
+      'assets/desktop/img/gear.svg',
+      true,
+      new Position(110, 130)
     )
   ]
 };
