@@ -32,7 +32,7 @@
         </div>
       </div>
       <div (click)="parent.openProgramWindow(linkage); parent.hideStartMenu()"
-        *ngFor="let linkage of search(searchTerm)" class="button">
+           *ngFor="let linkage of search(searchTerm)" class="button">
         <img [src]="linkage.icon" alt="" class="icon" />
         {{linkage.displayName}}
       </div>
@@ -49,7 +49,7 @@
       Control Center
     </div>
     <div (click)="shutdown()" [queryParams]="{ device: parent.activeDevice.uuid }" class="button" id="shutdown"
-      routerLink="/device">
+         routerLink="/device">
       <img alt="" class="icon" src="assets/desktop/img/computer_on_off.svg" />
       Shutdown
     </div>
