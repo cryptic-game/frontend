@@ -8,7 +8,7 @@ import {DesktopStartmenuComponent} from './desktop-startmenu/desktop-startmenu.c
 import {WindowFrameComponent} from './window/window-frame.component';
 import {WindowManagerComponent} from './window-manager/window-manager.component';
 import {WindowPlaceDirective} from './window/window-place.directive';
-import {TestWindowComponent} from './windows/youtube/youtube.component';
+import {TestWindowComponent} from './windows/test-window/test-window.component';
 import {TerminalComponent} from './windows/terminal/terminal.component';
 import {MinerComponent} from './windows/miner/miner.component';
 import {SettingsComponent} from './windows/settings/settings.component';
