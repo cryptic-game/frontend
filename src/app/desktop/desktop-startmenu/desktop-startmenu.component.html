@@ -26,7 +26,7 @@
             <span [class.online]="device.powered_on" class="power">{{device.powered_on ? 'Online' : 'Offline'}}</span>
           </div>
           <div [queryParams]="{ device: parent.activeDevice.uuid }" class="device"
-              routerLink="/device">
+               routerLink="/device">
             Control Center
           </div>
         </div>
