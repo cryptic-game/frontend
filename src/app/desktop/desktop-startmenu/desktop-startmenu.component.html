@@ -1,6 +1,6 @@
 <div id="startmenu">
   <div id="info">
-    <img alt="" id="profile-icon" src="assets/desktop/img/user_1.svg" />
+    <img alt="" id="profile-icon" src="assets/desktop/img/user_1.svg"/>
     <div>
       <p id="user">{{ websocket.account.name }}</p>
       <p id="online">online: {{ websocket.onlinePlayers }}</p>
@@ -10,7 +10,7 @@
     Report a bug through
     <a href="https://github.com/cryptic-game/cryptic/issues/new/choose" rel="noopener" target="_blank">GitHub</a> or
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSey6IZg-zJliAO4zNRmEdplqPkyqw-qmfKp4hARaBZHgNZSgQ/viewform"
-      rel="noopener" target="_blank">Form</a>.
+     rel="noopener" target="_blank">Form</a>.
     <a href="https://the-morpheus.de/#contact" rel="noopener" target="_blank">Imprint</a>
   </span>
   <div id="programs">
@@ -25,32 +25,32 @@
             <span [class.online]="device.powered_on" class="power">{{device.powered_on ? 'Online' : 'Offline'}}</span>
           </div>
           <div [queryParams]="{ device: parent.activeDevice.uuid }" class="device"
-            routerLink="/device">
+          routerLink="/device">
             Control Center
           </div>
         </div>
       </div>
       <div (click)="parent.openProgramWindow(linkage); parent.hideStartMenu()"
-        *ngFor="let linkage of search(searchTerm)" class="button">
+      *ngFor="let linkage of search(searchTerm)" class="button">
         <img [src]="linkage.icon" alt="" class="icon" />
         {{linkage.displayName}}
       </div>
     </div>
-    <input [(ngModel)]="searchTerm" aria-label="Search" class="search" placeholder="Search" />
+    <input [(ngModel)]="searchTerm" aria-label="Search" class="search" placeholder="Search"/>
   </div>
   <div class="buttons">
     <div (click)="logout()" class="button" id="logout">
-      <img alt="" class="icon" src="assets/desktop/img/logoutbutton.svg" />
+      <img alt="" class="icon" src="assets/desktop/img/logoutbutton.svg"/>
       Logout
     </div>
     <div [queryParams]="{ device: parent.activeDevice.uuid }" class="button"
       routerLink="/device">
-      <img alt="" class="icon" src="assets/control-center/menu_settings.svg" />
+      <img alt="" class="icon" src="assets/control-center/menu_settings.svg"/>
       Control Center
     </div>
     <div (click)="shutdown()" [queryParams]="{ device: parent.activeDevice.uuid }" class="button" id="shutdown"
       routerLink="/device">
-      <img alt="" class="icon" src="assets/desktop/img/computer_on_off.svg" />
+      <img alt="" class="icon" src="assets/desktop/img/computer_on_off.svg"/>
       Shutdown
     </div>
   </div>
