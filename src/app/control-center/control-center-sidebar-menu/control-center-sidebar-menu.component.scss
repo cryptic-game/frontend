@@ -1,5 +1,4 @@
 @import "../control-center-style";
-@import "variables";
 
 .sub-menu {
   width: 100%;
@@ -8,18 +7,23 @@
     display: flex;
     align-items: center;
 
+    width: 250px;
+    height: 40px;
+
+    margin: 0 50px 2px;
+    border-radius: 8px;
+
     padding-left: 20px;
     font-size: 16pt;
     line-height: 3em;
     vertical-align: middle;
-    border-bottom: 1px solid $button-border-color;
 
     cursor: pointer;
     user-select: none;
     outline: none;
 
     &:hover {
-      background-color: $button-hover-color;
+      background-color: $primary-default;
     }
 
     .icon {
@@ -62,3 +66,4 @@
     }
   }
 }
+// why?
