@@ -26,6 +26,7 @@
     "@angular/router": "~13.2.5",
     "@fontsource/jost": "^4.5.4",
     "@sentry/angular": "^6.18.2",
+    "angular-tabler-icons": "^1.68.0",
     "ng-particles": "^2.40.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
