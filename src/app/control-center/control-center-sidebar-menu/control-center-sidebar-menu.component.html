@@ -1,5 +1,5 @@
 <div class="sub-menu">
-  <div (click)="menuClicked()" class="title">
+  <div (click)="menuClicked()"  [class.active]="isItemActive(menu)" class="title">
     <img *ngIf="menu.icon" [src]="'assets/control-center/' + menu.icon" alt="" class="icon">
     <span>{{menu.title}}{{menu.displayCount ? ' (' + menu.getDisplayCount() + ')' : ''}}</span>
     <svg *ngIf="menu.items.length !== 0" [@arrowUpwardsDownwards]="expanded ? 'downwards' : 'upwards'" class="arrow"

@@ -10,7 +10,8 @@
     width: 250px;
     height: 40px;
 
-    margin: 0 50px 2px;
+    margin: 0 auto;
+
     border-radius: 8px;
 
     padding-left: 20px;
@@ -22,7 +23,7 @@
     user-select: none;
     outline: none;
 
-    &:hover {
+    &:hover, &.active {
       background-color: $primary-default;
     }
 
