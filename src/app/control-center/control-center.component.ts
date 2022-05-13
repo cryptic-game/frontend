@@ -16,7 +16,7 @@ export class ControlCenterComponent {
       {items: this.controlCenterService.deviceSidebarMenuItems, displayCount: true, specialItems: 1}
     ),
     new SidebarMenu($localize`Inventory`, 'briefcase', {routerLink: '/inventory'}),
-    new SidebarMenu($localize`Settings`, 'user', {routerLink: '/settings'}),
+    new SidebarMenu($localize`Account`, 'user', {routerLink: '/settings'}),
     new SidebarMenu($localize`Sound`, 'volume', {routerLink: '/sound'}),
     new SidebarMenu($localize`Changelog`, 'code', {routerLink: '/changelog'})
   ];
