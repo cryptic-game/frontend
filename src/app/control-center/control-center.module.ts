@@ -19,6 +19,7 @@ import {
 } from './control-center-inventory-page/control-center-inventory-page.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ControlCenterRoutingModule} from "./control-center-routing.module";
+import {IconsModule} from 'src/app/icons/icons.module'
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import {ControlCenterRoutingModule} from "./control-center-routing.module";
     CommonModule,
     ControlCenterRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    IconsModule
   ]
 })
 export class ControlCenterModule {
