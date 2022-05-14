@@ -17,7 +17,7 @@ export class ControlCenterComponent {
     ),
     new SidebarMenu($localize`Inventory`, 'briefcase', {routerLink: '/inventory'}),
     new SidebarMenu($localize`Account`, 'user', {routerLink: '/settings'}),
-    new SidebarMenu($localize`Sound`, 'volume', {routerLink: '/sound'}),
+    // new SidebarMenu($localize`Sound`, 'volume', {routerLink: '/sound'}),
     new SidebarMenu($localize`Changelog`, 'code', {routerLink: '/changelog'})
   ];
 

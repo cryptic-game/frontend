@@ -14,7 +14,6 @@
 
     border-radius: 8px;
 
-    padding-left: 20px;
     font-size: 20px;
     vertical-align: middle;
 
@@ -25,17 +24,19 @@
     &:hover, &.active {
       background-color: $primary-default;
       color: $input-background;
+      font-weight: 500;
     }
 
     .icon {
       flex: 0 0 auto;
       width: 24px;
       height: 24px;
+      margin-left: 20px;
     }
 
     span {
       flex: 1 1 auto;
-      margin-left: 1em;
+      margin-left: 15px;
     }
 
     .arrow {
