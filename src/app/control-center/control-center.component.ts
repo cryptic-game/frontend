@@ -13,12 +13,13 @@ export class ControlCenterComponent {
     new SidebarMenu(
       $localize`Computer`,
       'device-desktop',
+      $localize`Game`,
       {items: this.controlCenterService.deviceSidebarMenuItems, displayCount: true, specialItems: 1}
     ),
-    new SidebarMenu($localize`Inventory`, 'briefcase', {routerLink: '/inventory'}),
-    new SidebarMenu($localize`Account`, 'user', {routerLink: '/settings'}),
-    // new SidebarMenu($localize`Sound`, 'volume', {routerLink: '/sound'}),
-    new SidebarMenu($localize`Changelog`, 'code', {routerLink: '/changelog'})
+    new SidebarMenu($localize`Inventory`, 'briefcase', $localize`Game`, {routerLink: '/inventory'}),
+    new SidebarMenu($localize`Account`, 'user', $localize`Other`, {routerLink: '/settings'}),
+    // new SidebarMenu($localize`Sound`, 'volume', $localize`other`, {routerLink: '/sound'}),
+    new SidebarMenu($localize`Changelog`, 'code', $localize`Other`, {routerLink: '/changelog'})
   ];
 
   constructor(private controlCenterService: ControlCenterService) {

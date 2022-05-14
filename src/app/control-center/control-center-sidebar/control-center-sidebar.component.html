@@ -1,6 +1,8 @@
 <div id="sidebar-container">
   <div class="lettering">Control<br>Center</div>
-  <app-control-center-sidebar-menu *ngFor="let menu of menus" [menu]="menu"></app-control-center-sidebar-menu>
+  <div class="menu">
+    <app-control-center-sidebar-menu *ngFor="let menu of menus" [menu]="menu"></app-control-center-sidebar-menu>
+  </div>
   <div class="footer">
     <button (click)="logout()" class="logout-button" i18n>Logout</button>
     <p class="username" i18n>Logged in as {{apiService.account.name}}</p>
