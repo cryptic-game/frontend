@@ -4,7 +4,13 @@ on:
   push:
     branches: [ master ]
     tags: [ 'v*' ]
+    paths-ignore:
+      - ".vscode/**"
+      - "*.md"
   pull_request:
+    paths-ignore:
+        - ".vscode/**"
+        - "*.md"
 
 env:
   GHCR_SLUG: ghcr.io/cryptic-game/frontend
