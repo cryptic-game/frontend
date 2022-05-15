@@ -4,7 +4,17 @@ on:
   push:
     branches: [ master ]
     tags: [ 'v*' ]
+    paths-ignore:
+      - ".vscode/**"
+      - "*.md"
   pull_request:
+    paths-ignore:
+        - ".vscode/**"
+        - "*.md"
+
+concurrency:
+  group: ${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 env:
   GHCR_SLUG: ghcr.io/cryptic-game/frontend
