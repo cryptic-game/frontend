@@ -68,7 +68,7 @@ export class ControlCenterSidebarMenuComponent {
 export class SidebarMenu {
   title: string;
   icon: string;
-  header: string;
+  header?: string;
   items: SidebarMenuItem[];
   displayCount: boolean;
   specialItems: number;
@@ -77,14 +77,13 @@ export class SidebarMenu {
 
   constructor(title: string,
               icon: string,
-              header: string,
               options: {
                 items?: SidebarMenuItem[]; displayCount?: boolean; specialItems?: number;
-                routerLink?: string; queryParams?: Params;
+                routerLink?: string; queryParams?: Params; header?: string;
               } = {}) {
     this.title = title;
     this.icon = icon;
-    this.header = header;
+    this.header = options.header;
     this.items = options.items ?? [];
     this.displayCount = options.displayCount ?? false;
     this.specialItems = options.specialItems ?? 0;
