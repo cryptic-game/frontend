@@ -16,8 +16,26 @@
     line-height: 38px;
   }
 
-  app-control-center-sidebar-menu + app-control-center-sidebar-menu {
-    margin-top: 2px;
+  .sidebar-items {
+    .sidebar-item {
+      &:first-child {
+        margin-top: 0 !important;
+      }
+
+      &:not(.has-header) {
+        margin-top: 2px;
+      }
+
+      &.has-header {
+        margin-top: 40px;
+      }
+
+      .menu-header {
+        margin-left: 70px;
+        margin-bottom: 10px;
+      }
+    }
+
   }
 
   .footer {
