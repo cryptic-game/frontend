@@ -48,6 +48,8 @@ export class ControlCenterSidebarMenuComponent {
 
     if (this.menu.routerLink) {
       this.router.navigate([this.menu.routerLink], {queryParams: this.menu.queryParams}).then();
+    } else if (this.menu.link) {
+      window.open(this.menu.link, '_blank');
     }
   }
 
@@ -69,6 +71,7 @@ export class SidebarMenu {
   title: string;
   icon: string;
   header?: string;
+  link?: string;
   items: SidebarMenuItem[];
   displayCount: boolean;
   specialItems: number;
@@ -79,11 +82,12 @@ export class SidebarMenu {
               icon: string,
               options: {
                 items?: SidebarMenuItem[]; displayCount?: boolean; specialItems?: number;
-                routerLink?: string; queryParams?: Params; header?: string;
+                routerLink?: string; queryParams?: Params; header?: string; link?: string;
               } = {}) {
     this.title = title;
     this.icon = icon;
     this.header = options.header;
+    this.link = options.link;
     this.items = options.items ?? [];
     this.displayCount = options.displayCount ?? false;
     this.specialItems = options.specialItems ?? 0;
