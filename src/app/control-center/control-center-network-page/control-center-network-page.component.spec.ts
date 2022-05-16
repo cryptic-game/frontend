@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import {ControlCenterSoundPageComponent} from './control-center-network-page.component';
+import {ControlCenterNetworkPageComponent} from './control-center-network-page.component';
 
 describe('ControlCenterNetworkPageComponent', () => {
-  let component: ControlCenterSoundPageComponent;
-  let fixture: ComponentFixture<ControlCenterSoundPageComponent>;
+  let component: ControlCenterNetworkPageComponent;
+  let fixture: ComponentFixture<ControlCenterNetworkPageComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ControlCenterSoundPageComponent]
+      declarations: [ControlCenterNetworkPageComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ControlCenterSoundPageComponent);
+    fixture = TestBed.createComponent(ControlCenterNetworkPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

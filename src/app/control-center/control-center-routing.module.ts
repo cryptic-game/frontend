@@ -20,6 +20,7 @@ import {
   ControlCenterSettingsPageComponent
 } from "./control-center-settings-page/control-center-settings-page.component";
 import {ControlCenterSoundPageComponent} from "./control-center-sound-page/control-center-sound-page.component";
+import {ControlCenterNetworkPageComponent} from "./control-center-network-page/control-center-network-page.component";
 import {
   ControlCenterChangelogPageComponent
 } from "./control-center-changelog-page/control-center-changelog-page.component";
@@ -52,6 +53,7 @@ const routes: Routes = [
       },
       {path: 'settings', component: ControlCenterSettingsPageComponent},
       {path: 'sound', component: ControlCenterSoundPageComponent},
+      {path: 'network', component: ControlCenterNetworkPageComponent},
       {path: 'changelog', component: ControlCenterChangelogPageComponent}
     ]
   }
