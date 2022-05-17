@@ -39,29 +39,46 @@
   }
 
   .footer {
-    margin: auto 25px 15px;
+    margin: auto 0 0;
 
     .logout-button {
-      margin-bottom: 25px;
-      padding: 0.75em;
-      color: white;
-      background-color: $sidebar-background;
-      font-size: 12pt;
-      cursor: pointer;
-      outline: none;
-
-      border: 2px solid $button-border-color;
-      border-radius: 10px;
-
-      &:hover {
-        background-color: $button-hover-color;
-      }
+      margin-bottom: 30px;
+      @include sidebar-menu-item;
     }
 
-    .username {
-      font-size: 12pt;
-      margin: 0 0 5px;
-      overflow-wrap: break-word;
+    .pic-name {
+      display: flex;
+      margin-left: 50px;
+      margin-right: 50px;
+      margin-bottom: 30px;
+
+      .username {
+        font-size: 16px;
+        margin: auto 0;
+
+        font-weight: 700;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        .logged-in-as {
+          font-weight: 300;
+          color: $grey-font;
+        }
+
+        .name {
+          font-size: 20px;
+          color: white;
+        }
+      }
+
+      .profile-pic {
+        margin-right: 30px;
+        width: 75px;
+        height: 75px;
+        border-radius: 15px;
+      }
     }
   }
 

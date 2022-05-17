@@ -7,7 +7,18 @@
     </div>
   </div>
   <div class="footer">
-    <p class="username" i18n>Logged in as {{apiService.account.name}}</p>
-    <button (click)="logout()" class="logout-button" i18n>Logout</button>
+    <div class="pic-name">
+      <img src="assets/control-center/ph-profile-picture.jpg" alt="" class="profile-pic">
+      <div class="username"><span class="logged-in-as" i18n>Logged in as </span><br><span class="name">{{apiService.account.name}}</span></div>
+    </div>
+    
+
+    <div class="logout-button">
+      <div (click)="logout()" class="title">
+        <i-tabler name="logout" alt="" class="icon"></i-tabler>
+        <span i18n>Logout</span>
+      </div>
+    </div>
+
   </div>
 </div>
