@@ -42,21 +42,14 @@
 
   .footer {
     margin: auto 0 0;
-
-    margin-top: 10px;
-
     background: $input-background;
-
-    .logout-button {
-      margin-bottom: 30px;
-      @include sidebar-menu-item;
-    }
 
     .pic-name {
       display: flex;
       margin-left: 50px;
       margin-right: 50px;
       margin-bottom: 30px;
+      margin-top: 10px;
 
       .username {
         font-size: 16px;
@@ -86,6 +79,11 @@
         border-radius: 15px;
       }
     }
+  }
+
+  .logout-button {
+    margin-bottom: 30px;
+    @include sidebar-menu-item;
   }
 
 }
