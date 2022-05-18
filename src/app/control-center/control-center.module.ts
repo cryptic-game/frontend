@@ -20,6 +20,7 @@ import {
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ControlCenterRoutingModule} from "./control-center-routing.module";
 import {IconsModule} from 'src/app/icons/icons.module';
+import { ComputerMenuComponent } from './computer-menu/computer-menu.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import {IconsModule} from 'src/app/icons/icons.module';
     ControlCenterSettingsPageComponent,
     ControlCenterSoundPageComponent,
     ControlCenterChangelogPageComponent,
-    ControlCenterInventoryPageComponent
+    ControlCenterInventoryPageComponent,
+    ComputerMenuComponent
   ],
   imports: [
     CommonModule,
