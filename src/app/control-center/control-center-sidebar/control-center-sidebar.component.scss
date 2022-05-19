@@ -3,6 +3,7 @@
 #sidebar-container {
   display: flex;
   flex-direction: column;
+
   width: 100%;
   height: 100%;
 
@@ -19,6 +20,7 @@
 
   .sidebar-items {
     overflow: scroll;
+
     .sidebar-item {
       &:first-child {
         margin-top: 0 !important;
@@ -37,7 +39,10 @@
         margin-bottom: 10px;
       }
     }
+  }
 
+  app-control-center-computer-menu {
+    // width: 500px;
   }
 
   .footer {

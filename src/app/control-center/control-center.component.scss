@@ -30,7 +30,8 @@
     .sidebar {
       flex: 0 0 auto;
 
-      width: 350px;
+      min-width: 350px;
+      max-width: 850px;
       height: 100%;
 
       overflow-y: auto;

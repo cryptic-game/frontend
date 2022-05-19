@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 
 import {TablerIconsModule} from 'angular-tabler-icons';
-import {IconBriefcase, IconDeviceDesktop, IconAffiliate, IconUser, IconLifebuoy, IconBug, IconActivity, IconCode, IconLicense, IconLogout} from 'angular-tabler-icons/icons';
+import {IconBriefcase, IconDeviceDesktop, IconAffiliate, IconUser, IconLifebuoy, IconBug, IconActivity, IconCode, IconLicense, IconLogout, IconPower} from 'angular-tabler-icons/icons';
 
 
 const icons = {
@@ -14,7 +14,8 @@ const icons = {
   IconActivity,
   IconCode,
   IconLicense,
-  IconLogout
+  IconLogout,
+  IconPower
 };
 
 
