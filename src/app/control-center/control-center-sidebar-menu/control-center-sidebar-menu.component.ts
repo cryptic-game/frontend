@@ -9,24 +9,15 @@ import {Params, Router} from '@angular/router';
       transition('void => *', [
         style({
           opacity: '0',
-          transform: 'scaleY(0.5) translateY(-10%)'
+          transform: 'translateX(-10%)'
         }),
         animate('200ms')
       ]),
       transition('* => void', [
         animate('200ms', style({
           opacity: '0',
-          transform: 'scaleY(0.5) translateY(-10%)'
+          transform: 'translateX(-10%)'
         }))
-      ])
-    ]),
-    trigger('arrowUpwardsDownwards', [
-      state('upwards', style({})),
-      state('downwards', style({
-        transform: 'rotateX(-180deg)'
-      })),
-      transition('upwards <=> downwards', [
-        animate('200ms')
       ])
     ])
   ],
