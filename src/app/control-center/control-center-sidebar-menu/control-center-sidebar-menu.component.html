@@ -4,8 +4,5 @@
     <i-tabler *ngIf="menu.icon" [name]="menu.icon" alt="" class="icon"></i-tabler>
     <span>{{menu.title}}</span>
   </div>
-  <div *ngIf="expanded" [@expandCollapse] class="children">
-    <div (click)="itemClicked(item)" *ngFor="let item of menu.items" [class.active]="isItemActive(item)"
-         class="child">{{item.title}}</div>
-  </div>
+  <app-control-center-computer-menu *ngIf="expanded" [@expandCollapse] class="computer-menu"></app-control-center-computer-menu>
 </div>

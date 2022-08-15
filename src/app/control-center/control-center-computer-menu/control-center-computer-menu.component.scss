@@ -1,20 +1,13 @@
 @import "../control-center-style";
 
 .computer-menu {
-  background-color: #2a2a31;
+  background-color: red;//#2a2a31;
 
-  width: 100%;
+  width: 500px;
   height: 100%;
 
-  .name {
+  position: absolute;
+  left: 350px;
+  top: 0;
 
-  }
-
-  .state {
-
-  }
-
-  .icon {
-    
-  }
 }
