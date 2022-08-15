@@ -37,15 +37,12 @@ export class ControlCenterSidebarMenuComponent {
       this.expanded = !this.expanded;
     }
 
+
     if (this.menu.routerLink) {
       this.router.navigate([this.menu.routerLink], {queryParams: this.menu.queryParams}).then();
     } else if (this.menu.link) {
       window.open(this.menu.link, '_blank');
     }
-  }
-
-  itemClicked(item: SidebarMenuItem) {
-    this.router.navigate([item.routerLink], {queryParams: item.queryParams}).then();
   }
 
   isItemActive(item: SidebarMenuItem) {

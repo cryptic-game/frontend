@@ -1,5 +1,24 @@
 <div class="computer-menu">
-  <div class="name">devpc</div>
-  <div class="state">Online</div>
-  <i-tabler name="power" alt="" class="icon"></i-tabler>
+  <div class="title-bar">
+    <div class="title">Computer</div>
+    <div class="add-computer" (click)="newPcClicked()">
+      <i-tabler name="plus" alt="" class="add-computer-icon"></i-tabler>
+    </div>
+  </div>
+
+
+  <div *ngIf="menu.items.length !== 0; then itemsThere else noItems"></div>
+
+  <ng-template #noItems>
+    test
+  </ng-template>
+  
+  <ng-template #itemsThere>
+    <div (click)="itemClicked(item)" *ngFor="let item of menu.items" [class.active]="isItemActive(item)" class="item">
+    <div class="name">{{item.title}}</div>
+    <i-tabler name="power" alt="" class="power-icon"></i-tabler>
+    <div class="state">Online</div>
+  </div>
+  </ng-template>
+  
 </div>
