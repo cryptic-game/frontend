@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, ElementRef, Input, Renderer2, ViewChild} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Params, Router} from '@angular/router';
 
@@ -29,11 +29,26 @@ export class ControlCenterSidebarMenuComponent {
 
   @Input() menu: SidebarMenu;
 
-  constructor(private router: Router) {
+  @ViewChild('computerMenu') computerMenu: ElementRef;
+  @ViewChild('button') button: ElementRef;
+
+  constructor(private router: Router, private renderer: Renderer2) {
+    this.renderer.listen('window', 'click',(e:Event) => {
+      /**
+       * Only run when toggleButton is not clicked
+       * If we don't check this, all clicks (even on the toggle button) gets into this
+       * section which in the result we might never see the menu open!
+       * And the menu itself is checked here, and it's where we check just outside of
+       * the menu and button the condition abbove must close the menu
+       */
+      if(e.target !== this.button.nativeElement && e.target !== this.computerMenu.nativeElement){
+        this.expanded = false;
+      }
+    });
   }
 
   menuClicked() {
-    if (this.menu.items.length !== 0) {
+    if (this.menu.items.length !== 0 || this.menu.specialItems === 1) {
       this.expanded = !this.expanded;
     }
 

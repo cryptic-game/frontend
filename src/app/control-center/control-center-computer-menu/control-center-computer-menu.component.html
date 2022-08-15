@@ -10,7 +10,21 @@
   <div *ngIf="menu.items.length !== 0; then itemsThere else noItems"></div>
 
   <ng-template #noItems>
-    test
+    <div class="no-items">
+      <div class="new-pc-indicator">
+        <div class="arrow">
+
+          <svg width="115" height="126" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 126 C50 117, 96 60, 105 0" stroke="white" fill="transparent"/>
+            <path d="M105 0 L115 30" stroke="white" fill="transparent"/>
+            <path d="M105 0 L82 27" stroke="white" fill="transparent"/>
+          </svg>
+
+        </div>
+        <div class="text">Create new<br>Computer</div>
+      </div>
+      <div class="no-pcs">You own no Computer</div>
+    </div>
   </ng-template>
   
   <ng-template #itemsThere>

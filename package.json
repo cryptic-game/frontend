@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "~13.2.5",
     "@angular/router": "~13.2.5",
     "@fontsource/jost": "^4.5.4",
+    "@fontsource/nothing-you-could-do": "^4.5.8",
     "@sentry/angular": "^6.18.2",
     "angular-tabler-icons": "^1.68.0",
     "ng-particles": "^2.40.2",

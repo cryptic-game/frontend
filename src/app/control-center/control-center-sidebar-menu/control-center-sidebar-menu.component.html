@@ -1,10 +1,10 @@
 <div class="sub-menu">
   <!-- <div class="sub-menu-header" *ngIf="menu.header">{{menu.header}}</div> -->
-  <div (click)="menuClicked()" [class.active]="isItemActive(menu)" class="title">
+  <div (click)="menuClicked()" [class.active]="isItemActive(menu)" class="title" #button>
     <i-tabler *ngIf="menu.icon" [name]="menu.icon" alt="" class="icon"></i-tabler>
     <span>{{menu.title}}</span>
   </div>
-  <div *ngIf="expanded" [@expandCollapse] class="children">
+  <div *ngIf="expanded" [@expandCollapse] class="children" #computerMenu>
     <app-control-center-computer-menu [menu]="menu" class="computer-menu"></app-control-center-computer-menu>
   </div>
 

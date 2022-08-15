@@ -39,6 +39,26 @@
     }
   }
 
+  .no-items {
+    .new-pc-indicator {
+      .arrow {
+        text-align: right;
+        position: relative;
+        right: 15px;
+      }
+      .text {
+        font-family: "Nothing You Could Do";
+        text-align: center;
+        position: relative;
+        left: 50px;
+      }
+    }
+    .no-pcs {
+      text-align: center;
+      margin: 233px 0 0;
+    }
+  }
+
   .item {
     cursor: pointer;
     padding: 13px 20px;
@@ -77,5 +97,4 @@
       justify-self: end;
     }
   }
-  
 }
