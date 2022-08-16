@@ -26,6 +26,7 @@ import {Params, Router} from '@angular/router';
 })
 export class ControlCenterSidebarMenuComponent {
   expanded = false;
+  computerActive = false;
 
   @Input() menu: SidebarMenu;
 
@@ -33,18 +34,21 @@ export class ControlCenterSidebarMenuComponent {
   @ViewChild('button') button: ElementRef;
 
   constructor(private router: Router, private renderer: Renderer2) {
-    // this.renderer.listen('window', 'click',(e:Event) => {
-    //   /**
-    //    * Only run when toggleButton is not clicked
-    //    * If we don't check this, all clicks (even on the toggle button) gets into this
-    //    * section which in the result we might never see the menu open!
-    //    * And the menu itself is checked here, and it's where we check just outside of
-    //    * the menu and button the condition abbove must close the menu
-    //    */
-    //   if(e.target !== this.button.nativeElement && e.target !== this.computerMenu.nativeElement){
-    //     this.expanded = false;
-    //   }
-    // });
+    this.renderer.listen('window', 'click',(e:Event) => {
+      /**
+       * Only run when toggleButton is not clicked
+       * If we don't check this, all clicks (even on the toggle button) gets into this
+       * section which in the result we might never see the menu open!
+       * And the menu itself is checked here, and it's where we check just outside of
+       * the menu and button the condition abbove must close the menu
+       */
+      if(this.expanded) {
+        if(!this.computerMenu.nativeElement.contains(e.target) && !this.button.nativeElement.contains(e.target)) {
+          this.expanded = false;
+        }
+      }
+      
+    });
   }
 
   menuClicked() {
@@ -61,11 +65,16 @@ export class ControlCenterSidebarMenuComponent {
   }
 
   isItemActive(item: SidebarMenuItem) {
-    // had to do this without routerLinkActive because of the lack of https://github.com/angular/angular/issues/31154
+    if (!this.computerActive) {
+      // had to do this without routerLinkActive because of the lack of https://github.com/angular/angular/issues/31154
     if (!item.routerLink) {
       return false;
     }
     return this.router.isActive(this.router.createUrlTree([item.routerLink], {queryParams: item.queryParams}), false);
+    } else {
+      return true;
+    }
+    
   }
 
 }

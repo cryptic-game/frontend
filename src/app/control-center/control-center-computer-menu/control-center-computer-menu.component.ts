@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SidebarMenu, SidebarMenuItem } from '../control-center-sidebar-menu/control-center-sidebar-menu.component';
 import {Params, Router} from '@angular/router';
 
@@ -10,6 +10,11 @@ import {Params, Router} from '@angular/router';
 export class ControlCenterComputerMenuComponent implements OnInit {
 
   @Input() menu: SidebarMenu;
+  @Input() expanded!: boolean;
+  @Output() expandChange = new EventEmitter<boolean>();
+
+  @Input() computerActive!: boolean;
+  @Output() computerActiveChange = new EventEmitter<boolean>();
 
   constructor(private router: Router) { }
 
@@ -19,10 +24,14 @@ export class ControlCenterComputerMenuComponent implements OnInit {
   itemClicked(item: SidebarMenuItem) {
     this.router.navigate([item.routerLink], {queryParams: item.queryParams}).then();
     console.log('item clicked: ' + item.routerLink);
+    this.expanded = false;
+    this.expandChange.emit(this.expanded);
   }
 
   newPcClicked() {
     this.router.navigate(['/create-device']).then();
+    this.expanded = false;
+    this.expandChange.emit(this.expanded);
   }
 
   isItemActive(item: SidebarMenuItem) {
@@ -30,7 +39,12 @@ export class ControlCenterComputerMenuComponent implements OnInit {
     if (!item.routerLink) {
       return false;
     }
-    return this.router.isActive(this.router.createUrlTree([item.routerLink], {queryParams: item.queryParams}), false);
+    if (this.router.isActive(this.router.createUrlTree([item.routerLink], {queryParams: item.queryParams}), false)) {
+      this.computerActive = true;
+      this.computerActiveChange.emit(this.computerActive);
+      return true;
+    }
+     return false;
   }
 
 }
