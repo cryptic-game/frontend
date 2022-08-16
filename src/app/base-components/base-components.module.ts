@@ -1,3 +1,4 @@
+import { ProgressbarModule } from './../../core/components/progressbar/progressbar.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -7,17 +8,17 @@ import {ButtonModule} from "../../core/components/buttons/button/button.module";
 import {ButtonOutlineModule} from "../../core/components/buttons/button-outline/button-outline.module";
 import {ButtonTextModule} from "../../core/components/buttons/button-text/button-text.module";
 
-
 @NgModule({
   declarations: [
-    BaseComponentsComponent
+    BaseComponentsComponent,
   ],
   imports: [
     CommonModule,
     BaseComponentsRoutingModule,
     ButtonModule,
     ButtonOutlineModule,
-    ButtonTextModule
+    ButtonTextModule,
+    ProgressbarModule
   ]
 })
 export class BaseComponentsModule { }
