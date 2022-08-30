@@ -7,7 +7,7 @@ import {Params, Router} from '@angular/router';
   templateUrl: './control-center-computer-menu.component.html',
   styleUrls: ['./control-center-computer-menu.component.scss']
 })
-export class ControlCenterComputerMenuComponent implements OnInit {
+export class ControlCenterComputerMenuComponent {
 
   @Input() menu: SidebarMenu;
   @Input() expanded!: boolean;
