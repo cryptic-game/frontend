@@ -8,7 +8,7 @@
   },
   "files.autoSave": "onWindowChange",
   "files.encoding": "utf8",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.suggestOnTriggerCharacters": true,
   "editor.tabSize": 2,
   "npm.autoDetect": "off",
@@ -19,4 +19,5 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   }
-}
+
+} 
