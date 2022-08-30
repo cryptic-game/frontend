@@ -18,9 +18,6 @@ export class ControlCenterComputerMenuComponent implements OnInit {
 
   constructor(private router: Router) { }
 
-  ngOnInit(): void {
-  }
-
   itemClicked(item: SidebarMenuItem) {
     this.router.navigate([item.routerLink], {queryParams: item.queryParams}).then();
     console.log('item clicked: ' + item.routerLink);
