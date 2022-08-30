@@ -28,7 +28,7 @@
   </ng-template>
   
   <ng-template #itemsThere>
-    <div (click)="itemClicked(item)" *ngFor="let item of menu.items" [class.active]="isItemActive(item)" class="item">
+    <div *ngFor="let item of menu.items" (click)="itemClicked(item)" [class.active]="isItemActive(item)" class="item">
     <div class="name">{{item.title}}</div>
     <i-tabler name="power" alt="" class="power-icon"></i-tabler>
     <div class="state">Online</div>
