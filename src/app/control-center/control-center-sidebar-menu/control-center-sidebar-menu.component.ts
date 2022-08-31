@@ -65,7 +65,7 @@ export class ControlCenterSidebarMenuComponent {
 
   isItemActive(item: SidebarMenuItem) {
     if (!item.routerLink) {
-      if (!item.link && this.router.isActive(this.router.createUrlTree(['/device'], {queryParams: item.queryParams}), false)) {
+      if (item.title == "Computer" && this.router.isActive(this.router.createUrlTree(['/device'], {queryParams: item.queryParams}), false)) {
         return true;
       }
       return false;
