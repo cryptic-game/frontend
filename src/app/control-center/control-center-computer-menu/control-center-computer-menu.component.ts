@@ -17,7 +17,6 @@ export class ControlCenterComputerMenuComponent {
 
   itemClicked(item: SidebarMenuItem) {
     this.router.navigate([item.routerLink], {queryParams: item.queryParams}).then();
-    console.log('item clicked: ' + item.routerLink);
     this.expanded = false;
     this.expandChange.emit(this.expanded);
   }
