@@ -13,9 +13,6 @@ export class ControlCenterComputerMenuComponent {
   @Input() expanded!: boolean;
   @Output() expandChange = new EventEmitter<boolean>();
 
-  @Input() computerActive!: boolean;
-  @Output() computerActiveChange = new EventEmitter<boolean>();
-
   constructor(private router: Router) { }
 
   itemClicked(item: SidebarMenuItem) {
@@ -37,8 +34,6 @@ export class ControlCenterComputerMenuComponent {
       return false;
     }
     if (this.router.isActive(this.router.createUrlTree([item.routerLink], {queryParams: item.queryParams}), false)) {
-      this.computerActive = true;
-      this.computerActiveChange.emit(this.computerActive);
       return true;
     }
      return false;

@@ -26,7 +26,6 @@ import {Params, Router} from '@angular/router';
 })
 export class ControlCenterSidebarMenuComponent {
   expanded = false;
-  computerActive = false;
 
   @Input() menu: SidebarMenu;
 
@@ -65,15 +64,13 @@ export class ControlCenterSidebarMenuComponent {
   }
 
   isItemActive(item: SidebarMenuItem) {
-    if (!this.computerActive) {
-      // had to do this without routerLinkActive because of the lack of https://github.com/angular/angular/issues/31154
     if (!item.routerLink) {
+      if (!item.link && this.router.isActive(this.router.createUrlTree(['/device'], {queryParams: item.queryParams}), false)) {
+        return true;
+      }
       return false;
     }
     return this.router.isActive(this.router.createUrlTree([item.routerLink], {queryParams: item.queryParams}), false);
-    } else {
-      return true;
-    }
     
   }
 
@@ -115,5 +112,6 @@ export class SidebarMenu {
 export interface SidebarMenuItem {
   title: string;
   routerLink?: string;
+  link?: string;
   queryParams?: Params;
 }
