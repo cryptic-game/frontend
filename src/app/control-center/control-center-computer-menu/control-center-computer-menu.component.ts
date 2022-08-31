@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SidebarMenu, SidebarMenuItem } from '../control-center-sidebar-menu/control-center-sidebar-menu.component';
 import {Params, Router} from '@angular/router';
+import { DeviceService } from 'src/app/api/devices/device.service';
+import { WebsocketService } from 'src/app/websocket.service';
+import {Device} from 'src/app/api/devices/device';
 
 @Component({
   selector: 'app-control-center-computer-menu',
@@ -13,7 +16,20 @@ export class ControlCenterComputerMenuComponent {
   @Input() expanded!: boolean;
   @Output() expandChange = new EventEmitter<boolean>();
 
-  constructor(private router: Router) { }
+  devices: Device[];
+
+  constructor(private router: Router,
+              private webSocket: WebsocketService,
+              private deviceService: DeviceService) {
+    this.updatePowerState();
+  }
+
+  async updatePowerState() {
+    this.deviceService.getDevices().subscribe(devices => {
+      this.devices = devices.devices;
+      console.log(this.devices);
+    });
+  }
 
   itemClicked(item: SidebarMenuItem) {
     this.router.navigate([item.routerLink], {queryParams: item.queryParams}).then();

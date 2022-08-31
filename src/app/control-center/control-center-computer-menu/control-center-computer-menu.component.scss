@@ -75,7 +75,9 @@
       color: $input-background;
 
       .state {
-        color: $input-background;
+        .online, .offline {
+          color: $input-background;
+        }
       }
     }
 
@@ -89,7 +91,15 @@
       grid-area: state;
       justify-self: start;
       font-weight: 500;
-      color: $primary-default;
+
+      .online {
+        color: $primary-default;
+      }
+
+      .offline {
+        color: $danger-default;
+      }
+      
     }
 
     .power-icon {

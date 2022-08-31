@@ -28,10 +28,13 @@
   </ng-template>
   
   <ng-template #itemsThere>
-    <div *ngFor="let item of menu.items" (click)="itemClicked(item)" [class.active]="isItemActive(item)" class="item">
+    <div *ngFor="let item of menu.items; let i = index" (click)="itemClicked(item)" [class.active]="isItemActive(item)" class="item">
     <div class="name">{{item.title}}</div>
     <i-tabler name="power" alt="" class="power-icon"></i-tabler>
-    <div class="state">Online</div>
+    <div class="state">
+      <span *ngIf="devices[i].powered_on" class="online">Online</span>
+      <span *ngIf="!devices[i].powered_on" class="offline">Offline</span>
+    </div>
   </div>
   </ng-template>
   
