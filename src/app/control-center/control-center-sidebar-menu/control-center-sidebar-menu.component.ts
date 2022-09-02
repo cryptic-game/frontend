@@ -1,6 +1,8 @@
-import {Component, ElementRef, Input, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Params, Router} from '@angular/router';
+import { DeviceService } from 'src/app/api/devices/device.service';
+import { Device } from 'src/app/api/devices/device';
 
 @Component({
   selector: 'app-control-center-sidebar-menu',
@@ -24,15 +26,16 @@ import {Params, Router} from '@angular/router';
   templateUrl: './control-center-sidebar-menu.component.html',
   styleUrls: ['./control-center-sidebar-menu.component.scss']
 })
-export class ControlCenterSidebarMenuComponent {
+export class ControlCenterSidebarMenuComponent implements OnInit {
   expanded = false;
+  devices: Device[];
 
   @Input() menu: SidebarMenu;
 
   @ViewChild('computerMenu') computerMenu: ElementRef;
   @ViewChild('button') button: ElementRef;
 
-  constructor(private router: Router, private renderer: Renderer2) {
+  constructor(private router: Router, private renderer: Renderer2, private deviceService: DeviceService) {
     this.renderer.listen('window', 'click',(e:Event) => {
       /**
        * Only run when toggleButton is not clicked
@@ -46,14 +49,23 @@ export class ControlCenterSidebarMenuComponent {
           this.expanded = false;
         }
       }
-      
     });
+  }
+  ngOnInit(): void {
+    //doing it here so the submenu doesn't make a request every time the menu is clicked
+    if (this.menu.items.length !== 0) {
+      this.deviceService.getDevices().subscribe(devices => {
+        this.devices = devices.devices;
+      });
+    } 
   }
 
   menuClicked() {
     if (this.menu.items.length !== 0 || this.menu.specialItems === 1) {
       this.expanded = !this.expanded;
     }
+
+    
 
 
     if (this.menu.routerLink) {

@@ -5,7 +5,7 @@
     <span>{{menu.title}}</span>
   </div>
   <div *ngIf="expanded" [@expandCollapse] class="children" #computerMenu>
-    <app-control-center-computer-menu [expanded]="expanded" (expandChange)="expanded=$event" [menu]="menu" class="computer-menu"></app-control-center-computer-menu>
+    <app-control-center-computer-menu [expanded]="expanded" (expandChange)="expanded=$event" [menu]="menu" [devices]="devices" class="computer-menu"></app-control-center-computer-menu>
   </div>
 
 </div>

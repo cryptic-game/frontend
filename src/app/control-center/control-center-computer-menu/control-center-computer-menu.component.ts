@@ -16,19 +16,16 @@ export class ControlCenterComputerMenuComponent {
   @Input() expanded!: boolean;
   @Output() expandChange = new EventEmitter<boolean>();
 
-  devices: Device[];
+  @Input() devices: Device[];
 
-  constructor(private router: Router,
-              private webSocket: WebsocketService,
-              private deviceService: DeviceService) {
+  constructor(private router: Router) {
     this.updatePowerState();
   }
 
   async updatePowerState() {
-    this.deviceService.getDevices().subscribe(devices => {
-      this.devices = devices.devices;
-      console.log(this.devices);
-    });
+    // this.deviceService.getDevices().subscribe(devices => {
+    //   this.devices = devices.devices;
+    // });
   }
 
   itemClicked(item: SidebarMenuItem) {
