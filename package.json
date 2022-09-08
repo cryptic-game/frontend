@@ -30,7 +30,6 @@
     "ng-particles": "^2.40.2",
     "prettier-eslint": "^15.0.1",
     "rxjs": "~7.5.0",
-    "save-dev": "^0.0.1-security",
     "tslib": "^2.3.0",
     "tsparticles": "^1.41.1",
     "uuid": "^8.3.2",
