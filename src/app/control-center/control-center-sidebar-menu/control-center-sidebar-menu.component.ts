@@ -1,8 +1,10 @@
-import {Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Params, Router} from '@angular/router';
 import { DeviceService } from 'src/app/api/devices/device.service';
 import { Device } from 'src/app/api/devices/device';
+import { Subscription } from 'rxjs';
+import { MessageService } from '../message-service.service';
 
 @Component({
   selector: 'app-control-center-sidebar-menu',
@@ -10,15 +12,13 @@ import { Device } from 'src/app/api/devices/device';
     trigger('expandCollapse', [
       transition('void => *', [
         style({
-          opacity: '0',
-          transform: 'translateX(-10%)'
+          opacity: '0'
         }),
-        animate('200ms')
+        animate('170ms')
       ]),
       transition('* => void', [
-        animate('200ms', style({
-          opacity: '0',
-          transform: 'translateX(-10%)'
+        animate('170ms', style({
+          opacity: '0'
         }))
       ])
     ])
@@ -26,16 +26,19 @@ import { Device } from 'src/app/api/devices/device';
   templateUrl: './control-center-sidebar-menu.component.html',
   styleUrls: ['./control-center-sidebar-menu.component.scss']
 })
-export class ControlCenterSidebarMenuComponent implements OnInit {
+export class ControlCenterSidebarMenuComponent implements OnInit, OnDestroy {
   expanded = false;
   devices: Device[];
+
+  messages: any[] = [];
+  subscription: Subscription;
 
   @Input() menu: SidebarMenu;
 
   @ViewChild('computerMenu') computerMenu: ElementRef;
   @ViewChild('button') button: ElementRef;
 
-  constructor(private router: Router, private renderer: Renderer2, private deviceService: DeviceService) {
+  constructor(private router: Router, private renderer: Renderer2, private deviceService: DeviceService, private messageService: MessageService) {
     this.renderer.listen('window', 'click',(e:Event) => {
       /**
        * Only run when toggleButton is not clicked
@@ -50,7 +53,25 @@ export class ControlCenterSidebarMenuComponent implements OnInit {
         }
       }
     });
+
+    this.subscription = this.messageService.onMessage().subscribe(message => {
+      var msg = this.messages.find((msg) => {
+        return msg.uuid === message.uuid;
+      })
+      if (msg !== undefined) {
+        this.messages.splice(this.messages.indexOf(msg), 1, message)
+      } else {
+        this.messages.push(message);
+      }
+
+
+    });
   }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
   ngOnInit(): void {
     //doing it here so the submenu doesn't make a request every time the menu is clicked
     if (this.menu.items.length !== 0) {

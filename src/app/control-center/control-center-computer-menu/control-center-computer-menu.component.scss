@@ -75,7 +75,7 @@
       color: $input-background;
 
       .state {
-        .online, .offline {
+        .online, .offline, .at_startup, .at_shutdown {
           color: $input-background;
         }
       }
@@ -98,6 +98,9 @@
 
       .offline {
         color: $danger-default;
+      }
+      .at_startup, .at_shutdown {
+        color: $warning-default;
       }
       
     }
