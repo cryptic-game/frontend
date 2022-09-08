@@ -29,6 +29,10 @@
   }
 }
 
+.dragging {
+  cursor: move;
+}
+
 .window-header {
   padding: 1px;
   display: flex;
