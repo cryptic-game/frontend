@@ -53,36 +53,38 @@ export class ControlCenterComputerMenuComponent implements OnInit, OnDestroy {
 
   updatePcState() {
 
-
-    this.devices.forEach(device => {
-      const msg = this.messages.find((msg) => {
-        return msg.uuid === device.uuid;
-      });
-      if (msg !== undefined) {
-        const pcItem = this.states.filter(
-          pc => pc.uuid === msg.uuid
-        );
-        const index = this.states.indexOf(pcItem[0]);
-        if (index !== -1) {
-          if (msg.text === "off") this.states[index] = ({uuid: msg.uuid, state: 0})
-          else if (msg.text === "on") this.states[index] = ({uuid: msg.uuid, state: 1})
-          else if (msg.text === "amoff") this.states[index] = ({uuid: msg.uuid, state: 2})
-          else if (msg.text === "amon") this.states[index] = ({uuid: msg.uuid, state: 3})
-          else console.warn("Can't read state of pc: " + msg.uuid)
+    if (this.devices !== undefined) {
+      this.devices.forEach(device => {
+        const msg = this.messages.find((msg) => {
+          return msg.uuid === device.uuid;
+        });
+        if (msg !== undefined) {
+          const pcItem = this.states.filter(
+            pc => pc.uuid === msg.uuid
+          );
+          const index = this.states.indexOf(pcItem[0]);
+          if (index !== -1) {
+            if (msg.text === "off") this.states[index] = ({uuid: msg.uuid, state: 0})
+            else if (msg.text === "on") this.states[index] = ({uuid: msg.uuid, state: 1})
+            else if (msg.text === "amoff") this.states[index] = ({uuid: msg.uuid, state: 2})
+            else if (msg.text === "amon") this.states[index] = ({uuid: msg.uuid, state: 3})
+            else console.warn("Can't read state of pc: " + msg.uuid)
+          } else {
+            if (msg.text === "off") this.states.push({uuid: msg.uuid, state: 0})
+            else if (msg.text === "on") this.states.push({uuid: msg.uuid, state: 1})
+            else if (msg.text === "amoff") this.states.push({uuid: msg.uuid, state: 2})
+            else if (msg.text === "amon") this.states.push({uuid: msg.uuid, state: 3})
+            else console.warn("Can't read state of pc: " + msg.uuid)
+          }
+  
+          
         } else {
-          if (msg.text === "off") this.states.push({uuid: msg.uuid, state: 0})
-          else if (msg.text === "on") this.states.push({uuid: msg.uuid, state: 1})
-          else if (msg.text === "amoff") this.states.push({uuid: msg.uuid, state: 2})
-          else if (msg.text === "amon") this.states.push({uuid: msg.uuid, state: 3})
-          else console.warn("Can't read state of pc: " + msg.uuid)
+          if (!device.powered_on) this.states.push({uuid: device.uuid, state: 0})
+          else this.states.push({uuid: device.uuid, state:1})
         }
+      });
+    } 
 
-        
-      } else {
-        if (!device.powered_on) this.states.push({uuid: device.uuid, state: 0})
-        else this.states.push({uuid: device.uuid, state:1})
-      }
-    });
     
   }
 
