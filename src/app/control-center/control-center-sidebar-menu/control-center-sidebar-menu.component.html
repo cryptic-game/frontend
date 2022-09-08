@@ -1,14 +1,11 @@
 <div class="sub-menu">
-  <div (click)="menuClicked()" class="title">
-    <img *ngIf="menu.icon" [src]="'assets/control-center/' + menu.icon" alt="" class="icon">
-    <span>{{menu.title}}{{menu.displayCount ? ' (' + menu.getDisplayCount() + ')' : ''}}</span>
-    <svg *ngIf="menu.items.length !== 0" [@arrowUpwardsDownwards]="expanded ? 'downwards' : 'upwards'" class="arrow"
-         height="25px" viewBox="0 0 15 15" width="25px" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 7 3 L 13 10 L 1 10 Z" fill="white"/>
-    </svg>
+  <!-- <div class="sub-menu-header" *ngIf="menu.header">{{menu.header}}</div> -->
+  <div (click)="menuClicked()" [class.active]="isItemActive(menu)" class="title" #button>
+    <i-tabler *ngIf="menu.icon" [name]="menu.icon" alt="" class="icon"></i-tabler>
+    <span>{{menu.title}}</span>
   </div>
-  <div *ngIf="expanded" [@expandCollapse] class="children">
-    <div (click)="itemClicked(item)" *ngFor="let item of menu.items" [class.active]="isItemActive(item)"
-         class="child">{{item.title}}</div>
+  <div *ngIf="expanded" [@expandCollapse] class="children" #computerMenu>
+    <app-control-center-computer-menu [expanded]="expanded" (expandChange)="expanded=$event" [messages]="messages" [menu]="menu" [devices]="devices" class="computer-menu"></app-control-center-computer-menu>
   </div>
+
 </div>

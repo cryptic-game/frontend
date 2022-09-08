@@ -1,64 +1,6 @@
 @import "../control-center-style";
-@import "variables";
 
 .sub-menu {
-  width: 100%;
-
-  .title {
-    display: flex;
-    align-items: center;
-
-    padding-left: 20px;
-    font-size: 16pt;
-    line-height: 3em;
-    vertical-align: middle;
-    border-bottom: 1px solid $button-border-color;
-
-    cursor: pointer;
-    user-select: none;
-    outline: none;
-
-    &:hover {
-      background-color: $button-hover-color;
-    }
-
-    .icon {
-      flex: 0 0 auto;
-      width: 2em;
-      height: 2em;
-    }
-
-    span {
-      flex: 1 1 auto;
-      margin-left: 1em;
-    }
-
-    .arrow {
-      flex: 0 0 auto;
-      margin-right: 15px;
-    }
-  }
-
-  .children {
-    border-bottom: 1px solid $gray;
-
-    .child {
-      font-size: 12pt;
-      line-height: 25pt;
-      padding-left: 20px;
-
-      cursor: pointer;
-      user-select: none;
-      outline: none;
-
-      &:hover {
-        background-color: $button-hover-color;
-      }
-
-      &.active {
-        background-color: $sidebar-active-color;
-      }
-
-    }
-  }
+  @include sidebar-menu-item;
 }
+// why?

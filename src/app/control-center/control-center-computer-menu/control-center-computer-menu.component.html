@@ -1,0 +1,43 @@
+<div class="computer-menu">
+  <div class="title-bar">
+    <div class="title">Computer</div>
+    <div class="add-computer" (click)="newPcClicked()">
+      <i-tabler name="plus" alt="" class="add-computer-icon"></i-tabler>
+    </div>
+  </div>
+
+
+  <div *ngIf="menu.items.length !== 0; then itemsThere else noItems"></div>
+
+  <ng-template #noItems>
+    <div class="no-items">
+      <div class="new-pc-indicator">
+        <div class="arrow">
+
+          <svg width="115" height="126" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 126 C50 117, 96 60, 105 0" stroke="white" fill="transparent"/>
+            <path d="M105 0 L115 30" stroke="white" fill="transparent"/>
+            <path d="M105 0 L82 27" stroke="white" fill="transparent"/>
+          </svg>
+
+        </div>
+        <div class="text">Create new<br>Computer</div>
+      </div>
+      <div class="no-pcs">You own no Computer</div>
+    </div>
+  </ng-template>
+  
+  <ng-template #itemsThere>
+    <div *ngFor="let item of menu.items; let i = index" (click)="itemClicked(item)" [class.active]="isItemActive(item)" class="item">
+    <div class="name">{{item.title}}</div>
+    <i-tabler name="power" alt="" class="power-icon"></i-tabler>
+    <div class="state">
+      <span *ngIf="states[i].state === 0" class="offline">Offline</span>
+      <span *ngIf="states[i].state === 1" class="online">Online</span>
+      <!-- <span *ngIf="states[i].state === 2" class="at_shutdown">at Shutdown</span>
+      <span *ngIf="states[i].state === 3" class="at_startup">at Startup</span> -->
+    </div>
+  </div>
+  </ng-template>
+  
+</div>

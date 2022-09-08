@@ -5,9 +5,10 @@ import {from} from 'rxjs';
 import {filter, mergeMap, map, switchMap, toArray} from 'rxjs/operators';
 import {Device, DeviceResources, ResourceUsage} from '../../api/devices/device';
 import {animate, animateChild, keyframes, query, state, style, transition, trigger} from '@angular/animations';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {DeviceHardware} from '../../api/hardware/device-hardware';
 import {ControlCenterService} from '../control-center.service';
+import { MessageService } from '../message-service.service';
 
 
 function powerButtonColorAnimation(triggerName: string, property: string) {
@@ -88,6 +89,7 @@ export class ControlCenterDevicePageComponent implements OnDestroy {
               private deviceService: DeviceService,
               private activatedRoute: ActivatedRoute,
               private controlCenterService: ControlCenterService,
+              private messageService: MessageService,
               private router: Router) {
     this.activatedRoute.data.subscribe(data => {
       this.hardware = data['hardware'];
@@ -99,7 +101,22 @@ export class ControlCenterDevicePageComponent implements OnDestroy {
     });
   }
 
+  //messaging
+  sendMessage(message: string): void {
+    // send message to subscribers via observable subject
+    this.messageService.sendMessage(this.device.uuid, message);
+  }
+
+
+
   ngOnDestroy() {
+    // send the right state to ComputerMenu
+    // console.log((this.powerButton.state === "on") ? "off" : "on");
+    // if (this.powerButton.animating) {
+    //   this.sendMessage((this.powerButton.state === "on") ? "off" : "on");
+    // } else {
+    //   this.sendMessage((this.powerButton.state === "on") ? "on" : "off");
+    // }
     this.powerButton.animating = false;
   }
 
@@ -194,6 +211,14 @@ export class ControlCenterDevicePageComponent implements OnDestroy {
   powerButtonClicked() {
     if (!this.powerButton.animating) {
       this.powerButton.animating = true;
+
+      // send "Am Auschalten" or "Am Einschalten" to ComputerMenu
+      // if (this.powerButton.state === 'off' || this.powerButton.state === 'fast-off') {        
+      //   this.sendMessage("amon");
+      // } else {        
+      //   this.sendMessage("amoff");
+      // }
+
       this.powerButton.state =
         (this.powerButton.state === 'fast-off' || this.powerButton.state === 'off') ? 'on' : 'off';
     }
@@ -202,6 +227,12 @@ export class ControlCenterDevicePageComponent implements OnDestroy {
   powerAnimationDone() {
     if (this.powerButton.animating) {
       this.powerButton.animating = false;
+
+      // send "Online" or "Offline" to ComputerMenu
+      // console.log(this.powerButton.state);
+      
+      this.sendMessage(this.powerButton.state);
+
       this.deviceService.togglePower(this.device.uuid).subscribe(device => {
         Object.assign(this.device, device);
         this.updateServices();

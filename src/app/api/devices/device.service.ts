@@ -11,7 +11,7 @@ export class DeviceService {
   constructor(private webSocket: WebsocketService) {
   }
 
-    getDeviceInfo(deviceUUID: string | null): Observable<DeviceWithHardware> {
+  getDeviceInfo(deviceUUID: string | null): Observable<DeviceWithHardware> {
     return this.deviceRequest(['device', 'info'], {device_uuid: deviceUUID});
   }
 

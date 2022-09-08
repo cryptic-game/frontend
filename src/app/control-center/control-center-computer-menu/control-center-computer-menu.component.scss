@@ -1,0 +1,113 @@
+@import "../control-center-style";
+
+.computer-menu {
+  background-color: #2a2a31;
+
+  padding: 50px 50px 0 50px;
+
+  width: 400px;
+  height: 100vh;
+
+  .title-bar {
+    display: flex;
+    align-items: center;
+
+    .title {
+      font-weight: 500;
+      font-size: 40px;
+    }
+
+    .add-computer {
+      margin-left: auto;
+      width: 50px;
+      height: 50px;
+      background-color: $input-background;
+      cursor: pointer;
+      border-radius: 16px;
+
+      &:hover {
+        background-color: $primary-default;
+        color: $input-background;
+      }
+
+      &-icon {
+        width: 24px;
+        height: 24px;
+        padding: 25% 0 0 25%;
+      }
+      
+    }
+  }
+
+  .no-items {
+    .new-pc-indicator {
+      .arrow {
+        text-align: right;
+        position: relative;
+        right: 15px;
+      }
+      .text {
+        font-family: "Nothing You Could Do";
+        text-align: center;
+        position: relative;
+        left: 50px;
+      }
+    }
+    .no-pcs {
+      text-align: center;
+      margin: 233px 0 0;
+    }
+  }
+
+  .item {
+    cursor: pointer;
+    padding: 13px 20px;
+    background-color: $input-background;
+    margin-top: 40px;
+    border-radius: 16px;
+    display: grid;
+    grid-template-areas:
+      "title icon" 
+      "state state";
+
+    &:hover, &.active {
+      background-color: $primary-default;
+      color: $input-background;
+
+      .state {
+        .online, .offline, .at_startup, .at_shutdown {
+          color: $input-background;
+        }
+      }
+    }
+
+    .name {
+      grid-area: title;
+      justify-self: start;
+      margin-bottom: 1px;
+    }
+
+    .state {
+      grid-area: state;
+      justify-self: start;
+      font-weight: 500;
+
+      .online {
+        color: $primary-default;
+      }
+
+      .offline {
+        color: $danger-default;
+      }
+      .at_startup, .at_shutdown {
+        color: $warning-default;
+      }
+      
+    }
+
+    .power-icon {
+      grid-area: icon;
+      justify-self: end;
+    }
+  }
+}

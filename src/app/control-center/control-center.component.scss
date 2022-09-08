@@ -30,12 +30,13 @@
     .sidebar {
       flex: 0 0 auto;
 
-      width: 20rem;
+      min-width: 350px;
+      max-width: 850px;
       height: 100%;
 
       overflow-y: auto;
 
-      background-color: $sidebar-background;
+      background-color: $input-background;
     }
 
     .main-page-container {
@@ -45,7 +46,7 @@
 
       overflow-y: auto;
 
-      background-color: $page-background;
+      background-color: $background;
 
       .main-page {
         padding: 1.5rem 3rem;
