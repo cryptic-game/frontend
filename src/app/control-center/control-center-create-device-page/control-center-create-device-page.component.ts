@@ -221,6 +221,7 @@ export class ControlCenterCreateDevicePageComponent {
 
     // @ts-ignore
     const disks: string[] = nonNullNames(data.disks).concat(
+      //@ts-ignore
       nonNullNames(data.expansions.filter((x) => x?.category === PartCategory.DISK))
     );
     // @ts-ignore

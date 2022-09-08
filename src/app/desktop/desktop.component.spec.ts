@@ -384,6 +384,7 @@ describe('DesktopComponent', () => {
     // @ts-ignore
     const spy = (document['msElementsFromPoint'] = jasmine.createSpy(
       'msElementsFromPoint',
+      //@ts-ignore
       document['msElementsFromPoint']
     ));
     document.elementsFromPoint = undefined!;
