@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SidebarMenu } from '../control-center-sidebar-menu/control-center-sidebar-menu.component';
 
 import { ControlCenterComputerMenuComponent } from './control-center-computer-menu.component';
 
@@ -18,6 +19,7 @@ describe('ControlCenterComputerMenuComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ControlCenterComputerMenuComponent);
     component = fixture.componentInstance;
+    component.menu = new SidebarMenu('', '');
     fixture.detectChanges();
   });
 

@@ -6,10 +6,7 @@
     </div>
   </div>
 
-
-  <div *ngIf="menu.items.length !== 0; then itemsThere else noItems"></div>
-
-  <ng-template #noItems>
+  <div *ngIf="menu.items.length === 0; else itemsThere">
     <div class="no-items">
       <div class="new-pc-indicator">
         <div class="arrow">
@@ -25,7 +22,7 @@
       </div>
       <div class="no-pcs">You own no Computer</div>
     </div>
-  </ng-template>
+  </div>
   
   <ng-template #itemsThere>
     <div *ngFor="let item of menu.items; let i = index" (click)="itemClicked(item)" [class.active]="isItemActive(item)" class="item">
