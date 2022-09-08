@@ -1,11 +1,11 @@
-import {inject, TestBed} from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
-import {WindowManagerService} from './window-manager.service';
+import { WindowManagerService } from './window-manager.service';
 
 describe('WindowManagerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [WindowManagerService]
+      providers: [WindowManagerService],
     });
   });
 

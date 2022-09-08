@@ -1,8 +1,8 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {ControlCenterInventoryPageComponent} from './control-center-inventory-page.component';
-import {ActivatedRoute} from '@angular/router';
-import {FormsModule} from '@angular/forms';
+import { ControlCenterInventoryPageComponent } from './control-center-inventory-page.component';
+import { ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 describe('ControlCenterInventoryPageComponent', () => {
   let component: ControlCenterInventoryPageComponent;
@@ -10,18 +10,13 @@ describe('ControlCenterInventoryPageComponent', () => {
   let activatedRoute;
 
   beforeEach(waitForAsync(() => {
-    activatedRoute = {queryParamMap: jasmine.createSpyObj(['subscribe']), data: jasmine.createSpyObj(['subscribe'])};
+    activatedRoute = { queryParamMap: jasmine.createSpyObj(['subscribe']), data: jasmine.createSpyObj(['subscribe']) };
 
     TestBed.configureTestingModule({
       declarations: [ControlCenterInventoryPageComponent],
-      providers: [
-        {provide: ActivatedRoute, useValue: activatedRoute}
-      ],
-      imports: [
-        FormsModule
-      ]
-    })
-      .compileComponents();
+      providers: [{ provide: ActivatedRoute, useValue: activatedRoute }],
+      imports: [FormsModule],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

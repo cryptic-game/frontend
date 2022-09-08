@@ -1,18 +1,17 @@
-import {Component, OnDestroy, OnInit, Type} from '@angular/core';
+import { Component, OnDestroy, OnInit, Type } from '@angular/core';
 
-import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/window-delegate';
-import {HardwareShopService} from './hardware-shop.service';
-import {HardwareShopCategory} from './hardware-shop-category';
-import {HardwareShopDelegate} from './hardware-shop.delegate';
-import {Subscription} from 'rxjs';
+import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
+import { HardwareShopService } from './hardware-shop.service';
+import { HardwareShopCategory } from './hardware-shop-category';
+import { HardwareShopDelegate } from './hardware-shop.delegate';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop',
   templateUrl: './hardware-shop.component.html',
-  styleUrls: ['./hardware-shop.component.scss']
+  styleUrls: ['./hardware-shop.component.scss'],
 })
 export class HardwareShopComponent extends WindowComponent implements HardwareShopDelegate, OnInit, OnDestroy {
-
   cartVisibility = false;
 
   selectedCategory: HardwareShopCategory;
@@ -59,5 +58,5 @@ export class HardwareShopWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/hardware-shop.svg';
   type: Type<any> = HardwareShopComponent;
 
-  override constraints = new WindowConstraints({minWidth: 485, minHeight: 325});
+  override constraints = new WindowConstraints({ minWidth: 485, minHeight: 325 });
 }

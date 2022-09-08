@@ -1,30 +1,30 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {DesktopComponent} from './desktop.component';
-import {DesktopMenuComponent} from './desktop-menu/desktop-menu.component';
-import {HttpClientModule} from '@angular/common/http';
-import {RouterTestingModule} from '@angular/router/testing';
-import {PXtoViewHeightPipe} from '../../core/px-to/pxto-view-height.pipe';
-import {PXtoViewWidthPipe} from '../../core/px-to/pxto-view-width.pipe';
-import {DesktopStartmenuComponent} from './desktop-startmenu/desktop-startmenu.component';
-import {FormsModule} from '@angular/forms';
-import {WindowManagerComponent} from './window-manager/window-manager.component';
-import {WindowFrameComponent} from './window/window-frame.component';
-import {WebsocketService} from '../websocket.service';
-import {ProgramService} from './program.service';
-import {of, Subject} from 'rxjs';
-import {Program} from '../../dataclasses/program';
-import {Position} from '../../dataclasses/position';
-import {By} from '@angular/platform-browser';
-import {WindowManagerService} from './window-manager/window-manager.service';
-import {WindowComponent, WindowDelegate} from './window/window-delegate';
-import {emptyDevice, FakePromise, webSocketMock, windowManagerMock} from '../test-utils';
-import {DeviceService} from '../api/devices/device.service';
-import {ActivatedRoute, RouteReuseStrategy} from '@angular/router';
-import {Type} from '@angular/core';
+import { DesktopComponent } from './desktop.component';
+import { DesktopMenuComponent } from './desktop-menu/desktop-menu.component';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterTestingModule } from '@angular/router/testing';
+import { PXtoViewHeightPipe } from '../../core/px-to/pxto-view-height.pipe';
+import { PXtoViewWidthPipe } from '../../core/px-to/pxto-view-width.pipe';
+import { DesktopStartmenuComponent } from './desktop-startmenu/desktop-startmenu.component';
+import { FormsModule } from '@angular/forms';
+import { WindowManagerComponent } from './window-manager/window-manager.component';
+import { WindowFrameComponent } from './window/window-frame.component';
+import { WebsocketService } from '../websocket.service';
+import { ProgramService } from './program.service';
+import { of, Subject } from 'rxjs';
+import { Program } from '../../dataclasses/program';
+import { Position } from '../../dataclasses/position';
+import { By } from '@angular/platform-browser';
+import { WindowManagerService } from './window-manager/window-manager.service';
+import { WindowComponent, WindowDelegate } from './window/window-delegate';
+import { emptyDevice, FakePromise, webSocketMock, windowManagerMock } from '../test-utils';
+import { DeviceService } from '../api/devices/device.service';
+import { ActivatedRoute, RouteReuseStrategy } from '@angular/router';
+import { Type } from '@angular/core';
 
 describe('DesktopComponent', () => {
-  const testDevice = {...emptyDevice({uuid: 'b8a67b5c-7aaa-4acb-805d-3d86af7a6fb7'})};
+  const testDevice = { ...emptyDevice({ uuid: 'b8a67b5c-7aaa-4acb-805d-3d86af7a6fb7' }) };
   let component: DesktopComponent;
   let fixture: ComponentFixture<DesktopComponent>;
   //TODO: Type me correct
@@ -36,7 +36,7 @@ describe('DesktopComponent', () => {
 
   beforeEach(waitForAsync(() => {
     const deviceService = jasmine.createSpyObj('DeviceService', ['getDevices']);
-    deviceService.getDevices.and.returnValue(of({'devices': [testDevice]}));
+    deviceService.getDevices.and.returnValue(of({ devices: [testDevice] }));
     activatedRouteDataSubject = new Subject<any>();
 
     windowManager = windowManagerMock();
@@ -56,18 +56,14 @@ describe('DesktopComponent', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        {provide: WebsocketService, useValue: webSocketMock()},
-        {provide: DeviceService, useValue: deviceService},
-        {provide: ActivatedRoute, useValue: {data: activatedRouteDataSubject}},
-        {provide: WindowManagerService, useValue: windowManagerService},
-        {provide: RouteReuseStrategy, useValue: {}},
-        {provide: ProgramService, useValue: programService}
+        { provide: WebsocketService, useValue: webSocketMock() },
+        { provide: DeviceService, useValue: deviceService },
+        { provide: ActivatedRoute, useValue: { data: activatedRouteDataSubject } },
+        { provide: WindowManagerService, useValue: windowManagerService },
+        { provide: RouteReuseStrategy, useValue: {} },
+        { provide: ProgramService, useValue: programService },
       ],
-      imports: [
-        HttpClientModule,
-        FormsModule,
-        RouterTestingModule
-      ],
+      imports: [HttpClientModule, FormsModule, RouterTestingModule],
       declarations: [
         DesktopComponent,
         DesktopMenuComponent,
@@ -75,15 +71,15 @@ describe('DesktopComponent', () => {
         PXtoViewHeightPipe,
         DesktopStartmenuComponent,
         WindowManagerComponent,
-        WindowFrameComponent
-      ]
+        WindowFrameComponent,
+      ],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DesktopComponent);
     component = fixture.componentInstance;
-    activatedRouteDataSubject.next({'device': testDevice});
+    activatedRouteDataSubject.next({ device: testDevice });
     fixture.detectChanges();
   });
 
@@ -116,7 +112,7 @@ describe('DesktopComponent', () => {
       new Program('testProgram4', null!, 'Test Program', '', true, new Position(0, 0, 0)),
       new Program('testProgram5', null!, 'Test Program', '', false, new Position(0, 0, 0)),
     ];
-    expect(component.onDesktop()).toEqual(component.linkages.filter(linkage => linkage.onDesktop));
+    expect(component.onDesktop()).toEqual(component.linkages.filter((linkage) => linkage.onDesktop));
   });
 
   it('#toggleStartMenu() should turn the start menu on if it was turned off', () => {
@@ -152,11 +148,11 @@ describe('DesktopComponent', () => {
 
   it('#openProgramWindow() should open a window using the window manager', () => {
     const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(0, 0, 0));
-    const testDelegate = new class extends WindowDelegate {
+    const testDelegate = new (class extends WindowDelegate {
       icon = '';
       title = 'This is a test window';
       type: Type<WindowComponent> = null!;
-    };
+    })();
     const newWindowSpy = spyOn(testProgram, 'newWindow').and.returnValue(testDelegate);
 
     component.openProgramWindow(testProgram);
@@ -169,16 +165,19 @@ describe('DesktopComponent', () => {
     expect(windowManager.unfocus).toHaveBeenCalled();
   });
 
-  it('#checkWindowUnfocus() should not call unfocus() from the window manager ' +
-    'when you put your mouse down on anything else but the desktop surface', () => {
-    component.checkWindowUnfocus(new MouseEvent('mousedown'));
-    expect(windowManager.unfocus).not.toHaveBeenCalled();
-  });
+  it(
+    '#checkWindowUnfocus() should not call unfocus() from the window manager ' +
+      'when you put your mouse down on anything else but the desktop surface',
+    () => {
+      component.checkWindowUnfocus(new MouseEvent('mousedown'));
+      expect(windowManager.unfocus).not.toHaveBeenCalled();
+    }
+  );
 
   it('should display programs from #onDesktop() as shortcuts', () => {
     const testPrograms = [
       new Program('testProgram', null!, 'Test Program', '', true, new Position(0, 0, 0)),
-      new Program('testProgram2', null!, 'Test Program 2', '', true, new Position(0, 100, 0))
+      new Program('testProgram2', null!, 'Test Program 2', '', true, new Position(0, 100, 0)),
     ];
     const onDesktopSpy = spyOn(component, 'onDesktop').and.returnValue(testPrograms);
     fixture.detectChanges();
@@ -195,75 +194,102 @@ describe('DesktopComponent', () => {
     component.linkages = [testProgram];
     fixture.detectChanges();
     const linkageElement: HTMLElement = fixture.debugElement.query(By.css('.linkage')).nativeElement;
-    const testDropPos = {x: 54, y: 11};
+    const testDropPos = { x: 54, y: 11 };
     simulateShortcutDrag(linkageElement, testDropPos);
 
-    expect({x: testProgram.position.x, y: testProgram.position.y})
-      .withContext('Shortcut was not dropped at the right position').toEqual(testDropPos);
+    expect({ x: testProgram.position.x, y: testProgram.position.y })
+      .withContext('Shortcut was not dropped at the right position')
+      .toEqual(testDropPos);
     expect(programService.save).toHaveBeenCalledWith(testProgram);
   });
 
-  it('#checkDropAllowed() should only allow dragging a shortcut ' +
-    'if the element under the dragging element is the desktop surface or the original linkage', () => {
-    const elementsFromPointSpy = spyOn(document, 'elementsFromPoint');
-    const movePosition = {x: 246, y: 315};
-    component.dragLinkageIndex = 0;
-    const originalLinkageElement = document.createElement('div');
-    const anotherLinkageElement = document.createElement('div');
-    spyOn(component.surface.nativeElement, 'querySelectorAll').and.returnValue([originalLinkageElement]);
+  it(
+    '#checkDropAllowed() should only allow dragging a shortcut ' +
+      'if the element under the dragging element is the desktop surface or the original linkage',
+    () => {
+      const elementsFromPointSpy = spyOn(document, 'elementsFromPoint');
+      const movePosition = { x: 246, y: 315 };
+      component.dragLinkageIndex = 0;
+      const originalLinkageElement = document.createElement('div');
+      const anotherLinkageElement = document.createElement('div');
+      spyOn(component.surface.nativeElement, 'querySelectorAll').and.returnValue([originalLinkageElement]);
 
-    elementsFromPointSpy.and.returnValue([null, component.surface.nativeElement]);
-    expect(component.checkDropAllowed(new MouseEvent('mousemove', {
-      clientX: movePosition.x,
-      clientY: movePosition.y
-    }))).toBeTruthy();
-    expect(elementsFromPointSpy).toHaveBeenCalledWith(movePosition.x, movePosition.y);
+      elementsFromPointSpy.and.returnValue([null, component.surface.nativeElement]);
+      expect(
+        component.checkDropAllowed(
+          new MouseEvent('mousemove', {
+            clientX: movePosition.x,
+            clientY: movePosition.y,
+          })
+        )
+      ).toBeTruthy();
+      expect(elementsFromPointSpy).toHaveBeenCalledWith(movePosition.x, movePosition.y);
 
-    elementsFromPointSpy.and.returnValue([null!, originalLinkageElement]);
-    expect(component.checkDropAllowed(new MouseEvent('mousemove', {
-      clientX: movePosition.x,
-      clientY: movePosition.y
-    }))).toBeTruthy();
-    expect(elementsFromPointSpy).toHaveBeenCalledWith(movePosition.x, movePosition.y);
+      elementsFromPointSpy.and.returnValue([null!, originalLinkageElement]);
+      expect(
+        component.checkDropAllowed(
+          new MouseEvent('mousemove', {
+            clientX: movePosition.x,
+            clientY: movePosition.y,
+          })
+        )
+      ).toBeTruthy();
+      expect(elementsFromPointSpy).toHaveBeenCalledWith(movePosition.x, movePosition.y);
 
-    elementsFromPointSpy.and.returnValue([null!, anotherLinkageElement]);
-    expect(component.checkDropAllowed(new MouseEvent('mousemove', {
-      clientX: movePosition.x,
-      clientY: movePosition.y
-    }))).toBeFalsy();
-    expect(elementsFromPointSpy).toHaveBeenCalledWith(movePosition.x, movePosition.y);
+      elementsFromPointSpy.and.returnValue([null!, anotherLinkageElement]);
+      expect(
+        component.checkDropAllowed(
+          new MouseEvent('mousemove', {
+            clientX: movePosition.x,
+            clientY: movePosition.y,
+          })
+        )
+      ).toBeFalsy();
+      expect(elementsFromPointSpy).toHaveBeenCalledWith(movePosition.x, movePosition.y);
 
-    elementsFromPointSpy.and.returnValue([null!]);
-    expect(component.checkDropAllowed(new MouseEvent('mousemove', {
-      clientX: movePosition.x,
-      clientY: movePosition.y
-    }))).toBeFalsy();
-  });
+      elementsFromPointSpy.and.returnValue([null!]);
+      expect(
+        component.checkDropAllowed(
+          new MouseEvent('mousemove', {
+            clientX: movePosition.x,
+            clientY: movePosition.y,
+          })
+        )
+      ).toBeFalsy();
+    }
+  );
 
   it('should not move a shortcut outside the bounds of the desktop surface area', () => {
     setAllowShortcutDropping(true);
-    const surfaceSize = {width: 200, height: 600};
+    const surfaceSize = { width: 200, height: 600 };
     pretendSurfaceSize(surfaceSize.width, surfaceSize.height);
     const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(0, 0, 0));
     component.linkages = [testProgram];
     fixture.detectChanges();
     const linkageElement: HTMLElement = fixture.debugElement.query(By.css('.linkage')).nativeElement;
-    const testDropPos = {x: 451, y: -15};
+    const testDropPos = { x: 451, y: -15 };
     simulateShortcutDrag(linkageElement, testDropPos);
 
-    expect({x: testProgram.position.x, y: testProgram.position.y})
+    expect({ x: testProgram.position.x, y: testProgram.position.y })
       .withContext('Shortcut was not dropped at the right position')
       .toEqual({
         x: surfaceSize.width - linkageElement.clientWidth,
-        y: 0
+        y: 0,
       });
   });
 
   it('should move a clone of the linkage along the mouse cursor when dragging', () => {
     pretendSurfaceSize();
-    const startPosition = {x: 12, y: 25};
-    const endPosition = {x: 150, y: 64};
-    const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(startPosition.x, startPosition.y, 0));
+    const startPosition = { x: 12, y: 25 };
+    const endPosition = { x: 150, y: 64 };
+    const testProgram = new Program(
+      'testProgram',
+      null!,
+      'Test Program',
+      '',
+      true,
+      new Position(startPosition.x, startPosition.y, 0)
+    );
     component.linkages = [testProgram];
     fixture.detectChanges();
     const linkageElement: HTMLElement = fixture.debugElement.query(By.css('.linkage')).nativeElement;
@@ -272,21 +298,28 @@ describe('DesktopComponent', () => {
 
     const linkageClone = component.dragElement;
     expect(linkageClone).toBeTruthy();
-    expect({x: linkageClone.offsetLeft, y: linkageClone.offsetTop}).toEqual(endPosition);
+    expect({ x: linkageClone.offsetLeft, y: linkageClone.offsetTop }).toEqual(endPosition);
   });
 
   it('should not drop a shortcut if checkDropAllowed() returns false', () => {
     setAllowShortcutDropping(false);
     pretendSurfaceSize();
-    const startPosition = {x: 78, y: 134};
-    const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(startPosition.x, startPosition.y, 0));
+    const startPosition = { x: 78, y: 134 };
+    const testProgram = new Program(
+      'testProgram',
+      null!,
+      'Test Program',
+      '',
+      true,
+      new Position(startPosition.x, startPosition.y, 0)
+    );
     component.linkages = [testProgram];
     fixture.detectChanges();
     const linkageElement: HTMLElement = fixture.debugElement.query(By.css('.linkage')).nativeElement;
 
-    simulateShortcutDrag(linkageElement, {x: 256, y: 37});
+    simulateShortcutDrag(linkageElement, { x: 256, y: 37 });
 
-    expect({x: testProgram.position.x, y: testProgram.position.y}).toEqual(startPosition);
+    expect({ x: testProgram.position.x, y: testProgram.position.y }).toEqual(startPosition);
   });
 
   it('should add the class "not-allowed" to the linkage clone when checkDropAllowed() returns false', () => {
@@ -295,7 +328,7 @@ describe('DesktopComponent', () => {
     component.linkages = [testProgram];
     fixture.detectChanges();
     const linkageElement: HTMLElement = fixture.debugElement.query(By.css('.linkage')).nativeElement;
-    simulateShortcutDrag(linkageElement, {x: 15, y: 26}, false);
+    simulateShortcutDrag(linkageElement, { x: 15, y: 26 }, false);
     fixture.detectChanges();
 
     const linkageClone = component.dragElement;
@@ -304,8 +337,15 @@ describe('DesktopComponent', () => {
 
   it('should also release the dragged shortcut if it was not moved', () => {
     pretendSurfaceSize();
-    const startPosition = {x: 25, y: 67};
-    const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(startPosition.x, startPosition.y, 0));
+    const startPosition = { x: 25, y: 67 };
+    const testProgram = new Program(
+      'testProgram',
+      null!,
+      'Test Program',
+      '',
+      true,
+      new Position(startPosition.x, startPosition.y, 0)
+    );
     component.linkages = [testProgram];
     fixture.detectChanges();
     const linkageElement: HTMLElement = fixture.debugElement.query(By.css('.linkage')).nativeElement;
@@ -313,7 +353,7 @@ describe('DesktopComponent', () => {
     linkageElement.dispatchEvent(new MouseEvent('mousedown'));
     document.dispatchEvent(new MouseEvent('mouseup'));
 
-    expect({x: testProgram.position.x, y: testProgram.position.y}).toEqual(startPosition);
+    expect({ x: testProgram.position.x, y: testProgram.position.y }).toEqual(startPosition);
     expect(component.dragLinkageIndex).toBeUndefined();
     expect(component.dragElement).toBeUndefined();
     expect(component.dragOffset).toBeUndefined();
@@ -322,20 +362,30 @@ describe('DesktopComponent', () => {
   it('should not do anything with a shortcut if you just move your mouse', () => {
     setAllowShortcutDropping(true);
     pretendSurfaceSize();
-    const startPosition = {x: 21, y: 258};
-    const testProgram = new Program('testProgram', null!, 'Test Program', '', true, new Position(startPosition.x, startPosition.y, 0));
+    const startPosition = { x: 21, y: 258 };
+    const testProgram = new Program(
+      'testProgram',
+      null!,
+      'Test Program',
+      '',
+      true,
+      new Position(startPosition.x, startPosition.y, 0)
+    );
     component.linkages = [testProgram];
 
-    document.dispatchEvent(new MouseEvent('mousemove', {clientX: 124, clientY: 56}));
-    document.dispatchEvent(new MouseEvent('mouseup', {clientX: 124, clientY: 56}));
-    expect({x: testProgram.position.x, y: testProgram.position.y}).toEqual(startPosition);
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 124, clientY: 56 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 124, clientY: 56 }));
+    expect({ x: testProgram.position.x, y: testProgram.position.y }).toEqual(startPosition);
   });
 
   it('#checkDropAllowed should use "msElementsFromPoint" if "elementsFromPoint" does not exist on document', () => {
     const elementsFromPoint = document.elementsFromPoint;
     // TODO:
     // @ts-ignore
-    const spy = document['msElementsFromPoint'] = jasmine.createSpy('msElementsFromPoint', document['msElementsFromPoint']);
+    const spy = (document['msElementsFromPoint'] = jasmine.createSpy(
+      'msElementsFromPoint',
+      document['msElementsFromPoint']
+    ));
     document.elementsFromPoint = undefined!;
     component.checkDropAllowed(new MouseEvent('mousemove'));
 
@@ -367,16 +417,20 @@ describe('DesktopComponent', () => {
   }
 
   function pretendSurfaceSize(width = 600, height = 400): jasmine.Spy {
-    return spyOn(component.surface.nativeElement, 'getBoundingClientRect').and.returnValue(new DOMRect(0, 0, width, height));
+    return spyOn(component.surface.nativeElement, 'getBoundingClientRect').and.returnValue(
+      new DOMRect(0, 0, width, height)
+    );
   }
 });
 
 function simulateShortcutDrag(linkageElement: HTMLElement, dropPos: { x: number; y: number }, release = true) {
   const linkageBounds = linkageElement.getBoundingClientRect();
-  linkageElement.dispatchEvent(new MouseEvent('mousedown', {clientX: linkageBounds.left, clientY: linkageBounds.top}));
-  document.dispatchEvent(new MouseEvent('mousemove', {clientX: linkageBounds.left, clientY: linkageBounds.top}));
-  document.dispatchEvent(new MouseEvent('mousemove', {clientX: dropPos.x, clientY: dropPos.y}));
+  linkageElement.dispatchEvent(
+    new MouseEvent('mousedown', { clientX: linkageBounds.left, clientY: linkageBounds.top })
+  );
+  document.dispatchEvent(new MouseEvent('mousemove', { clientX: linkageBounds.left, clientY: linkageBounds.top }));
+  document.dispatchEvent(new MouseEvent('mousemove', { clientX: dropPos.x, clientY: dropPos.y }));
   if (release) {
-    document.dispatchEvent(new MouseEvent('mouseup', {clientX: dropPos.x, clientY: dropPos.y}));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: dropPos.x, clientY: dropPos.y }));
   }
 }

@@ -1,22 +1,22 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {DesktopStartmenuComponent} from './desktop-startmenu.component';
-import {FormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
-import {RouterTestingModule} from '@angular/router/testing';
-import {DesktopComponent} from '../desktop.component';
-import {PXtoViewHeightPipe} from '../../../core/px-to/pxto-view-height.pipe';
-import {PXtoViewWidthPipe} from '../../../core/px-to/pxto-view-width.pipe';
-import {WindowManagerComponent} from '../window-manager/window-manager.component';
-import {WindowFrameComponent} from '../window/window-frame.component';
-import {DesktopMenuComponent} from '../desktop-menu/desktop-menu.component';
-import {emptyDevice, windowManagerMock} from '../../test-utils';
-import {RouteReuseStrategy} from '@angular/router';
+import { DesktopStartmenuComponent } from './desktop-startmenu.component';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterTestingModule } from '@angular/router/testing';
+import { DesktopComponent } from '../desktop.component';
+import { PXtoViewHeightPipe } from '../../../core/px-to/pxto-view-height.pipe';
+import { PXtoViewWidthPipe } from '../../../core/px-to/pxto-view-width.pipe';
+import { WindowManagerComponent } from '../window-manager/window-manager.component';
+import { WindowFrameComponent } from '../window/window-frame.component';
+import { DesktopMenuComponent } from '../desktop-menu/desktop-menu.component';
+import { emptyDevice, windowManagerMock } from '../../test-utils';
+import { RouteReuseStrategy } from '@angular/router';
 
 describe('DesktopStartmenuComponent', () => {
   let component: DesktopStartmenuComponent;
   let fixture: ComponentFixture<DesktopStartmenuComponent>;
-  let desktop: any;   //TODO: Type me correct
+  let desktop: any; //TODO: Type me correct
 
   beforeEach(waitForAsync(() => {
     desktop = jasmine.createSpyObj('DesktopComponent', ['openProgramWindow', 'hideStartMenu']);
@@ -26,9 +26,7 @@ describe('DesktopStartmenuComponent', () => {
     desktop.windowManager = windowManagerMock();
 
     TestBed.configureTestingModule({
-      providers: [
-        {provide: RouteReuseStrategy, useValue: {}}
-      ],
+      providers: [{ provide: RouteReuseStrategy, useValue: {} }],
       imports: [FormsModule, HttpClientModule, RouterTestingModule],
       declarations: [
         DesktopStartmenuComponent,
@@ -37,10 +35,9 @@ describe('DesktopStartmenuComponent', () => {
         PXtoViewHeightPipe,
         WindowManagerComponent,
         WindowFrameComponent,
-        DesktopMenuComponent
-      ]
-    })
-      .compileComponents();
+        DesktopMenuComponent,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

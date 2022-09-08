@@ -1,12 +1,11 @@
-import {SettingService} from '../../../api/setting/setting.service';
-import {Observable, of} from "rxjs";
-import {catchError, map} from "rxjs/operators";
+import { SettingService } from '../../../api/setting/setting.service';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 export abstract class SettingsEntry<T> {
   protected cached: T;
 
-  constructor(public key: string, public defaultValue: T, protected settingService: SettingService) {
-  }
+  constructor(public key: string, public defaultValue: T, protected settingService: SettingService) {}
 
   abstract serialize(value: T): string;
 
@@ -31,7 +30,7 @@ export abstract class SettingsEntry<T> {
   getFresh(): Observable<T> {
     return this.settingService.get(this.key).pipe(
       map((data: string) => {
-        return this.cached = this.deserialize(data);
+        return (this.cached = this.deserialize(data));
       }),
       catchError((e) => {
         // @ts-ignore
@@ -54,10 +53,9 @@ export abstract class SettingsEntry<T> {
     await this.settingService.set(this.key, this.serialize(this.defaultValue)).subscribe({
       error: (e: Error) => {
         console.warn(e);
-      }
+      },
     });
   }
-
 }
 
 export class BooleanSetting extends SettingsEntry<boolean> {

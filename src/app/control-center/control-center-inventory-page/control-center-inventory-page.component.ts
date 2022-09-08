@@ -1,14 +1,14 @@
-import {Component} from '@angular/core';
-import {InventoryItemWithHardware} from '../../api/inventory/inventory-item';
-import {ActivatedRoute} from '@angular/router';
-import {PartCategory} from '../../api/hardware/hardware-parts';
-import {InventoryService} from '../../api/inventory/inventory.service';
-import {WebsocketService} from '../../websocket.service';
+import { Component } from '@angular/core';
+import { InventoryItemWithHardware } from '../../api/inventory/inventory-item';
+import { ActivatedRoute } from '@angular/router';
+import { PartCategory } from '../../api/hardware/hardware-parts';
+import { InventoryService } from '../../api/inventory/inventory.service';
+import { WebsocketService } from '../../websocket.service';
 
 @Component({
   selector: 'app-control-center-inventory-page',
   templateUrl: './control-center-inventory-page.component.html',
-  styleUrls: ['./control-center-inventory-page.component.scss']
+  styleUrls: ['./control-center-inventory-page.component.scss'],
 })
 export class ControlCenterInventoryPageComponent {
   items: InventoryItemWithHardware[] = [];
@@ -26,8 +26,12 @@ export class ControlCenterInventoryPageComponent {
   };
   tradeErrorMessage = '';
 
-  constructor(private activatedRoute: ActivatedRoute, private inventoryService: InventoryService, public apiService: WebsocketService) {
-    activatedRoute.data.subscribe(data => {
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private inventoryService: InventoryService,
+    public apiService: WebsocketService
+  ) {
+    activatedRoute.data.subscribe((data) => {
       this.items = data['items'];
     });
   }
@@ -49,7 +53,7 @@ export class ControlCenterInventoryPageComponent {
   dragDrop(event: DragEvent) {
     event.preventDefault();
     const itemUUID = event.dataTransfer!.getData('text/plain');
-    this.tradeItem = this.items.find(item => item.element_uuid === itemUUID)!;
+    this.tradeItem = this.items.find((item) => item.element_uuid === itemUUID)!;
   }
 
   sendTradeItem(destination: HTMLInputElement) {
@@ -57,10 +61,9 @@ export class ControlCenterInventoryPageComponent {
       next: () => {
         this.tradeErrorMessage = '';
         this.tradeItem = undefined;
-        this.inventoryService.getInventoryItemsWithHardware().subscribe(items => {
+        this.inventoryService.getInventoryItemsWithHardware().subscribe((items) => {
           this.items = items;
         });
-
       },
       error: (err: Error) => {
         if (err.message === 'item_not_found') {
@@ -75,8 +78,7 @@ export class ControlCenterInventoryPageComponent {
         } else {
           this.tradeErrorMessage = err.message;
         }
-      }
+      },
     });
   }
-
 }

@@ -1,23 +1,23 @@
-import {SettingsService} from '../settings/settings.service';
-import {Component, ElementRef, Inject, LOCALE_ID, OnInit, SecurityContext, Type, ViewChild} from '@angular/core';
-import {WindowComponent, WindowDelegate} from '../../window/window-delegate';
-import {TerminalAPI, TerminalState} from './terminal-api';
-import {DefaultTerminalState} from './terminal-states';
-import {WebsocketService} from '../../../websocket.service';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {FileService} from '../../../api/files/file.service';
-import {WindowManager} from '../../window-manager/window-manager';
+import { SettingsService } from '../settings/settings.service';
+import { Component, ElementRef, Inject, LOCALE_ID, OnInit, SecurityContext, Type, ViewChild } from '@angular/core';
+import { WindowComponent, WindowDelegate } from '../../window/window-delegate';
+import { TerminalAPI, TerminalState } from './terminal-api';
+import { DefaultTerminalState } from './terminal-states';
+import { WebsocketService } from '../../../websocket.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { FileService } from '../../../api/files/file.service';
+import { WindowManager } from '../../window-manager/window-manager';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-terminal',
   templateUrl: './terminal.component.html',
-  styleUrls: ['./terminal.component.scss']
+  styleUrls: ['./terminal.component.scss'],
 })
 export class TerminalComponent extends WindowComponent implements OnInit, TerminalAPI {
-  @ViewChild('history', {static: true}) history: ElementRef;
-  @ViewChild('prompt', {static: true}) prompt: ElementRef;
-  @ViewChild('cmdLine', {static: true}) cmdLine: ElementRef;
+  @ViewChild('history', { static: true }) history: ElementRef;
+  @ViewChild('prompt', { static: true }) prompt: ElementRef;
+  @ViewChild('cmdLine', { static: true }) cmdLine: ElementRef;
 
   currentState: TerminalState[] = [];
   promptHtml: SafeHtml;
@@ -67,10 +67,7 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
 
     if (typeof prompt === 'string') {
       // @ts-ignore
-      this.promptHtml = this.domSanitizer.sanitize(
-        SecurityContext.HTML,
-        prompt
-      );
+      this.promptHtml = this.domSanitizer.sanitize(SecurityContext.HTML, prompt);
     } else {
       this.promptHtml = prompt;
     }
@@ -127,8 +124,7 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
   nextFromHistory() {
     if (this.historyIndex > -1) {
       this.historyIndex--;
-      this.cmdLine.nativeElement.value =
-        this.historyIndex > -1 ? this.getHistory()[this.historyIndex] : '';
+      this.cmdLine.nativeElement.value = this.historyIndex > -1 ? this.getHistory()[this.historyIndex] : '';
       this.cmdLine.nativeElement.scrollIntoView();
     }
   }
@@ -142,18 +138,12 @@ export class TerminalComponent extends WindowComponent implements OnInit, Termin
   }
 
   outputRaw(html: string) {
-    (this.history.nativeElement as HTMLElement).insertAdjacentHTML(
-      'beforeend',
-      html
-    );
+    (this.history.nativeElement as HTMLElement).insertAdjacentHTML('beforeend', html);
     this.cmdLine.nativeElement.scrollIntoView();
   }
 
   outputText(text: string) {
-    (this.history.nativeElement as HTMLElement).insertAdjacentText(
-      'beforeend',
-      text
-    );
+    (this.history.nativeElement as HTMLElement).insertAdjacentText('beforeend', text);
     this.outputRaw('<br>');
     this.cmdLine.nativeElement.scrollIntoView();
   }

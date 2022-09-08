@@ -74,6 +74,6 @@ export const desktopDefinition = {
       'assets/desktop/img/editor.svg',
       true,
       new Position(110, 30)
-    )
-  ]
+    ),
+  ],
 };

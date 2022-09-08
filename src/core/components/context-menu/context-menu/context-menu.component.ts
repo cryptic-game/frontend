@@ -11,14 +11,14 @@ import {
   Output,
   QueryList,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import {Subscription} from 'rxjs';
-import {first} from 'rxjs/operators';
-import {CloseContextMenuEvent, ContextMenuService, IContextMenuClickEvent} from "../context-menu.service";
-import {ContextMenuItemDirective} from "../directive/contextMenu.item.directive";
-import {CONTEXT_MENU_OPTIONS} from "../context-menu.tokens";
-import {IContextMenuOptions} from "../context-menu.options";
+import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
+import { CloseContextMenuEvent, ContextMenuService, IContextMenuClickEvent } from '../context-menu.service';
+import { ContextMenuItemDirective } from '../directive/contextMenu.item.directive';
+import { CONTEXT_MENU_OPTIONS } from '../context-menu.tokens';
+import { IContextMenuOptions } from '../context-menu.options';
 
 export interface ILinkConfig {
   click: (item: any, $event?: MouseEvent) => void;
@@ -40,8 +40,7 @@ export interface MouseLocation {
   encapsulation: ViewEncapsulation.None,
 })
 export class ContextMenuComponent implements OnDestroy {
-
-  @Input() public menuClass = "";
+  @Input() public menuClass = '';
   @Input() public autoFocus;
   @Input() public useBootstrap4;
   @Input() public disabled = false;
@@ -52,7 +51,7 @@ export class ContextMenuComponent implements OnDestroy {
   // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() public open = new EventEmitter<IContextMenuClickEvent>();
   @ContentChildren(ContextMenuItemDirective) public menuItems: QueryList<ContextMenuItemDirective>;
-  @ViewChild('menu', {static: false}) public menuElement: ElementRef;
+  @ViewChild('menu', { static: false }) public menuElement: ElementRef;
   public visibleMenuItems: ContextMenuItemDirective[] = [];
 
   public links: ILinkConfig[] = [];
@@ -65,13 +64,16 @@ export class ContextMenuComponent implements OnDestroy {
     private changeDetector: ChangeDetectorRef,
     private elementRef: ElementRef,
     @Optional()
-    @Inject(CONTEXT_MENU_OPTIONS) private options?: IContextMenuOptions,
+    @Inject(CONTEXT_MENU_OPTIONS)
+    private options?: IContextMenuOptions
   ) {
     this.autoFocus = options?.autoFocus ?? false;
     this.useBootstrap4 = options?.useBootstrap4 ?? false;
-    this.subscription.add(_contextMenuService.show.subscribe(menuEvent => {
-      this.onMenuEvent(menuEvent);
-    }));
+    this.subscription.add(
+      _contextMenuService.show.subscribe((menuEvent) => {
+        this.onMenuEvent(menuEvent);
+      })
+    );
   }
 
   public ngOnDestroy(): void {
@@ -82,7 +84,7 @@ export class ContextMenuComponent implements OnDestroy {
     if (this.disabled) {
       return;
     }
-    const {contextMenu, event, item} = menuEvent;
+    const { contextMenu, event, item } = menuEvent;
     if (contextMenu && contextMenu !== this) {
       return;
     }
@@ -93,9 +95,12 @@ export class ContextMenuComponent implements OnDestroy {
     this._contextMenuService.openContextMenu({
       ...menuEvent,
       menuItems: this.visibleMenuItems,
-      menuClass: this.menuClass
+      menuClass: this.menuClass,
     });
-    this._contextMenuService.close.asObservable().pipe(first()).subscribe(closeEvent => this.close.emit(closeEvent));
+    this._contextMenuService.close
+      .asObservable()
+      .pipe(first())
+      .subscribe((closeEvent) => this.close.emit(closeEvent));
     this.open.next(menuEvent);
   }
 
@@ -104,7 +109,7 @@ export class ContextMenuComponent implements OnDestroy {
   }
 
   public setVisibleMenuItems(): void {
-    this.visibleMenuItems = this.menuItems.filter(menuItem => this.isMenuItemVisible(menuItem));
+    this.visibleMenuItems = this.menuItems.filter((menuItem) => this.isMenuItemVisible(menuItem));
   }
 
   public evaluateIfFunction(value: any): any {

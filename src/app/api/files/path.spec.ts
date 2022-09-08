@@ -1,4 +1,4 @@
-import {Path} from './path';
+import { Path } from './path';
 
 describe('Path', () => {
   beforeAll(() => {
@@ -65,12 +65,12 @@ describe('Path', () => {
 
   it('#toString() should return the parts of the path joined by slashes', () => {
     expect(new Path(['1', '2', '3', '4']).toString()).toEqual('/1/2/3/4');
-    expect(new Path(['a', 'b', 'c', 'd'], '258dd223-8fa6-4bbc-9f88-b2593df6ca9f').toString())
-      .toEqual('258dd223-8fa6-4bbc-9f88-b2593df6ca9f/a/b/c/d');
+    expect(new Path(['a', 'b', 'c', 'd'], '258dd223-8fa6-4bbc-9f88-b2593df6ca9f').toString()).toEqual(
+      '258dd223-8fa6-4bbc-9f88-b2593df6ca9f/a/b/c/d'
+    );
   });
 
   it('should use Path.ROOT as the default parent in the constructor', () => {
     expect(new Path([]).parentUUID).toEqual(Path.ROOT!);
   });
-
 });

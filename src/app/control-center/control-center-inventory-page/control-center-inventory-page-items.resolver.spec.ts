@@ -1,7 +1,7 @@
-import {TestBed} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import {ControlCenterInventoryPageItemsResolver} from './control-center-inventory-page-items.resolver';
-import {InventoryService} from '../../api/inventory/inventory.service';
+import { ControlCenterInventoryPageItemsResolver } from './control-center-inventory-page-items.resolver';
+import { InventoryService } from '../../api/inventory/inventory.service';
 
 describe('ControlCenterInventoryPageItemsResolver', () => {
   let service: ControlCenterInventoryPageItemsResolver;
@@ -11,9 +11,7 @@ describe('ControlCenterInventoryPageItemsResolver', () => {
     inventoryService = jasmine.createSpyObj('InventoryService', ['getInventoryItemsWithHardware']);
 
     TestBed.configureTestingModule({
-      providers: [
-        {provide: InventoryService, useValue: inventoryService}
-      ]
+      providers: [{ provide: InventoryService, useValue: inventoryService }],
     });
     service = TestBed.inject(ControlCenterInventoryPageItemsResolver);
   });

@@ -1,6 +1,6 @@
-import {Component, Input} from '@angular/core';
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {Params, Router} from '@angular/router';
+import { Component, Input } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Params, Router } from '@angular/router';
 
 @Component({
   selector: 'app-control-center-sidebar-menu',
@@ -9,37 +9,40 @@ import {Params, Router} from '@angular/router';
       transition('void => *', [
         style({
           opacity: '0',
-          transform: 'scaleY(0.5) translateY(-10%)'
+          transform: 'scaleY(0.5) translateY(-10%)',
         }),
-        animate('200ms')
+        animate('200ms'),
       ]),
       transition('* => void', [
-        animate('200ms', style({
-          opacity: '0',
-          transform: 'scaleY(0.5) translateY(-10%)'
-        }))
-      ])
+        animate(
+          '200ms',
+          style({
+            opacity: '0',
+            transform: 'scaleY(0.5) translateY(-10%)',
+          })
+        ),
+      ]),
     ]),
     trigger('arrowUpwardsDownwards', [
       state('upwards', style({})),
-      state('downwards', style({
-        transform: 'rotateX(-180deg)'
-      })),
-      transition('upwards <=> downwards', [
-        animate('200ms')
-      ])
-    ])
+      state(
+        'downwards',
+        style({
+          transform: 'rotateX(-180deg)',
+        })
+      ),
+      transition('upwards <=> downwards', [animate('200ms')]),
+    ]),
   ],
   templateUrl: './control-center-sidebar-menu.component.html',
-  styleUrls: ['./control-center-sidebar-menu.component.scss']
+  styleUrls: ['./control-center-sidebar-menu.component.scss'],
 })
 export class ControlCenterSidebarMenuComponent {
   expanded = false;
 
   @Input() menu: SidebarMenu;
 
-  constructor(private router: Router) {
-  }
+  constructor(private router: Router) {}
 
   menuClicked() {
     if (this.menu.items.length !== 0) {
@@ -47,12 +50,12 @@ export class ControlCenterSidebarMenuComponent {
     }
 
     if (this.menu.routerLink) {
-      this.router.navigate([this.menu.routerLink], {queryParams: this.menu.queryParams}).then();
+      this.router.navigate([this.menu.routerLink], { queryParams: this.menu.queryParams }).then();
     }
   }
 
   itemClicked(item: SidebarMenuItem) {
-    this.router.navigate([item.routerLink], {queryParams: item.queryParams}).then();
+    this.router.navigate([item.routerLink], { queryParams: item.queryParams }).then();
   }
 
   isItemActive(item: SidebarMenuItem) {
@@ -60,9 +63,8 @@ export class ControlCenterSidebarMenuComponent {
     if (!item.routerLink) {
       return false;
     }
-    return this.router.isActive(this.router.createUrlTree([item.routerLink], {queryParams: item.queryParams}), false);
+    return this.router.isActive(this.router.createUrlTree([item.routerLink], { queryParams: item.queryParams }), false);
   }
-
 }
 
 export class SidebarMenu {
@@ -74,12 +76,17 @@ export class SidebarMenu {
   routerLink?: string;
   queryParams?: Params;
 
-  constructor(title: string,
-              icon: string,
-              options: {
-                items?: SidebarMenuItem[]; displayCount?: boolean; specialItems?: number;
-                routerLink?: string; queryParams?: Params;
-              } = {}) {
+  constructor(
+    title: string,
+    icon: string,
+    options: {
+      items?: SidebarMenuItem[];
+      displayCount?: boolean;
+      specialItems?: number;
+      routerLink?: string;
+      queryParams?: Params;
+    } = {}
+  ) {
     this.title = title;
     this.icon = icon;
     this.items = options.items ?? [];

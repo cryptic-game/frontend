@@ -1,20 +1,19 @@
-import {Component, ElementRef, OnDestroy, OnInit, Type, ViewChild} from '@angular/core';
-import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/window-delegate';
-import {WebsocketService} from '../../../websocket.service';
-import {FileService} from '../../../api/files/file.service';
-import {Path} from '../../../api/files/path';
-import {File} from '../../../api/files/file';
-import {Subscription} from 'rxjs';
-import {WindowManager} from '../../window-manager/window-manager';
+import { Component, ElementRef, OnDestroy, OnInit, Type, ViewChild } from '@angular/core';
+import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
+import { WebsocketService } from '../../../websocket.service';
+import { FileService } from '../../../api/files/file.service';
+import { Path } from '../../../api/files/path';
+import { File } from '../../../api/files/file';
+import { Subscription } from 'rxjs';
+import { WindowManager } from '../../window-manager/window-manager';
 
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.scss']
+  styleUrls: ['./editor.component.scss'],
 })
 export class EditorComponent extends WindowComponent implements OnInit, OnDestroy {
-
-  @ViewChild('fileInput', {static: true}) fileInput: ElementRef;
+  @ViewChild('fileInput', { static: true }) fileInput: ElementRef;
 
   override delegate: EditorWindowDelegate;
 
@@ -27,7 +26,11 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
   changed_popup: boolean;
   fileSubscription: Subscription;
 
-  constructor(private fileService: FileService, private websocket: WebsocketService, private windowManager: WindowManager) {
+  constructor(
+    private fileService: FileService,
+    private websocket: WebsocketService,
+    private windowManager: WindowManager
+  ) {
     super();
   }
 
@@ -39,7 +42,7 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
     if (this.delegate.openFile != null && !this.delegate.openFile.is_directory) {
       this.fileOpened = true;
       this.fileContent = this.delegate.openFile.content;
-      this.fileService.getAbsolutePath(this.delegate.device.uuid, this.delegate.openFile.uuid).subscribe(path => {
+      this.fileService.getAbsolutePath(this.delegate.device.uuid, this.delegate.openFile.uuid).subscribe((path) => {
         this.fileInput.nativeElement.value = '/' + path.join('/');
         this.filePath = Path.fromString('/' + path.join('/'));
         this.fileUUID = this.delegate.openFile?.uuid!;
@@ -63,7 +66,7 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
         }
         if (data.data.changed !== undefined) {
           if (data.data.changed.includes(this.fileUUID)) {
-            this.fileService.getFile(this.delegate.device.uuid, this.fileUUID).subscribe(file => {
+            this.fileService.getFile(this.delegate.device.uuid, this.fileUUID).subscribe((file) => {
               if (this.fileContent !== file.content) {
                 if (!this.deleted_popup) {
                   this.changed_popup = true;
@@ -106,21 +109,20 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
         } else {
           this.error = err.toString();
         }
-      }
+      },
     });
   }
 
   save() {
     this.fileService.getFromPath(this.delegate.device.uuid, this.filePath).subscribe((file) => {
       this.fileService.changeFileContent(this.delegate.device.uuid, file.uuid, this.fileContent).subscribe({
-        next: () => {
-        },
+        next: () => {},
         error: (err: string) => {
           console.error(err);
           if (err === 'invalid_input_data') {
             this.error = '';
           }
-        }
+        },
       });
     });
   }
@@ -130,7 +132,7 @@ export class EditorComponent extends WindowComponent implements OnInit, OnDestro
   }
 
   reload() {
-    this.fileService.getFile(this.delegate.device.uuid, this.fileUUID).subscribe(file => {
+    this.fileService.getFile(this.delegate.device.uuid, this.fileUUID).subscribe((file) => {
       if (this.fileContent !== file.content) {
         this.fileContent = file.content;
       }
@@ -144,7 +146,7 @@ export class EditorWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/editor.svg';
   type: Type<any> = EditorComponent;
 
-  override constraints = new WindowConstraints({minWidth: 300, minHeight: 200});
+  override constraints = new WindowConstraints({ minWidth: 300, minHeight: 200 });
 
   constructor(public openFile?: File) {
     super();

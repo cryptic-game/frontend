@@ -1,27 +1,23 @@
-import {Component} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AccountService} from '../account.service';
-import {LoginResponse} from "../interfaces/login-response";
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AccountService } from '../account.service';
+import { LoginResponse } from '../interfaces/login-response';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-
   form: FormGroup;
   error: string;
   errorLife = 0;
   errorLifeHandle: any;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private accountService: AccountService) {
-
+  constructor(private formBuilder: FormBuilder, private accountService: AccountService) {
     this.form = this.formBuilder.group({
       username: [history.state?.username ?? '', Validators.required],
-      password: [history.state?.password ?? '', Validators.required]
+      password: [history.state?.password ?? '', Validators.required],
     });
   }
 
@@ -40,7 +36,7 @@ export class LoginComponent {
             this.error = error.message;
           }
           this.decayError(10);
-        }
+        },
       });
     }
   }

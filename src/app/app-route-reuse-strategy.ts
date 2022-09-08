@@ -1,12 +1,10 @@
-import {ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy} from '@angular/router';
-import {Injectable} from '@angular/core';
-
+import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy } from '@angular/router';
+import { Injectable } from '@angular/core';
 
 interface StoredRoute {
   snapshot: ActivatedRouteSnapshot;
   handle: DetachedRouteHandle;
 }
-
 
 /**
  * The main purpose of this route reuse strategy is that the content of the desktop windows is preserved
@@ -44,7 +42,7 @@ export class AppRouteReuseStrategy implements RouteReuseStrategy {
   }
 
   store(route: ActivatedRouteSnapshot, handle: DetachedRouteHandle | null): void {
-    this.storedPaths[route.routeConfig?.path!] = {snapshot: route, handle: handle!};
+    this.storedPaths[route.routeConfig?.path!] = { snapshot: route, handle: handle! };
   }
 
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
@@ -71,7 +69,7 @@ export class AppRouteReuseStrategy implements RouteReuseStrategy {
    * @param b The second route to compare
    */
   childrenMatch(a: ActivatedRouteSnapshot, b: ActivatedRouteSnapshot): boolean {
-    if (!a || !b || (a.children.length !== b.children.length)) {
+    if (!a || !b || a.children.length !== b.children.length) {
       return false;
     }
 
@@ -83,5 +81,4 @@ export class AppRouteReuseStrategy implements RouteReuseStrategy {
 
     return true;
   }
-
 }

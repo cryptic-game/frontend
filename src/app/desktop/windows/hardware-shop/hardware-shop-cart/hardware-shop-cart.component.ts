@@ -1,16 +1,15 @@
-import {Component, OnDestroy} from '@angular/core';
-import {HardwareShopService} from '../hardware-shop.service';
-import {WalletAppService} from '../../wallet-app/wallet-app.service';
-import {HardwareShopCartItem} from '../hardware-shop-cart-item';
-import {Subscription} from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
+import { HardwareShopService } from '../hardware-shop.service';
+import { WalletAppService } from '../../wallet-app/wallet-app.service';
+import { HardwareShopCartItem } from '../hardware-shop-cart-item';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop-cart',
   templateUrl: './hardware-shop-cart.component.html',
-  styleUrls: ['./hardware-shop-cart.component.scss']
+  styleUrls: ['./hardware-shop-cart.component.scss'],
 })
 export class HardwareShopCartComponent implements OnDestroy {
-
   items: HardwareShopCartItem[];
   morphCoins: number;
   cartMorphCoins: string | number;
@@ -18,20 +17,17 @@ export class HardwareShopCartComponent implements OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private hardwareShopService: HardwareShopService,
-              private walletAppService: WalletAppService) {
+  constructor(private hardwareShopService: HardwareShopService, private walletAppService: WalletAppService) {
     this.items = this.hardwareShopService.getCartItems();
     this.cartMorphCoins = 0;
-    setTimeout(() => this.cartMorphCoins = this.getTotalPrice(), 250);
+    setTimeout(() => (this.cartMorphCoins = this.getTotalPrice()), 250);
     this.subscriptions.add(
       this.hardwareShopService.updateCartItems.subscribe(() => {
         this.items = this.hardwareShopService.getCartItems();
         this.cartMorphCoins = this.getTotalPrice();
       })
     );
-    this.subscriptions.add(
-      this.walletAppService.update.subscribe(wallet => this.morphCoins = wallet?.amount!)
-    );
+    this.subscriptions.add(this.walletAppService.update.subscribe((wallet) => (this.morphCoins = wallet?.amount!)));
     this.walletAppService.updateWallet().then();
     this.hardwareShopService.loadCartItems().then();
   }
@@ -53,7 +49,7 @@ export class HardwareShopCartComponent implements OnDestroy {
   }
 
   private getTotalPrice(): number {
-    const mc = this.items.reduce((acc, item) => acc + (item.shopItem.price * item.quantity), 0);
+    const mc = this.items.reduce((acc, item) => acc + item.shopItem.price * item.quantity, 0);
     this.hasEnoughMorphCoins = this.morphCoins >= mc && mc !== 0;
     return mc / 1000;
   }

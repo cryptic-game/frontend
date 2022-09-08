@@ -1,10 +1,10 @@
-import {TestBed} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import {DesktopGuard} from './desktop.guard';
-import {WebsocketService} from '../websocket.service';
-import {Observable, of} from 'rxjs';
-import {webSocketMock} from '../test-utils';
-import {Router} from '@angular/router';
+import { DesktopGuard } from './desktop.guard';
+import { WebsocketService } from '../websocket.service';
+import { Observable, of } from 'rxjs';
+import { webSocketMock } from '../test-utils';
+import { Router } from '@angular/router';
 
 describe('DesktopGuard', () => {
   //TODO: Type me correct
@@ -15,13 +15,13 @@ describe('DesktopGuard', () => {
   beforeEach(() => {
     webSocketService = webSocketMock();
     router = jasmine.createSpyObj('Router', ['navigateByUrl']);
-    router.navigateByUrl.and.returnValue(new Promise(resolve => resolve(true)));
+    router.navigateByUrl.and.returnValue(new Promise((resolve) => resolve(true)));
 
     TestBed.configureTestingModule({
       providers: [
-        {provide: WebsocketService, useValue: webSocketService},
-        {provide: Router, useValue: router}
-      ]
+        { provide: WebsocketService, useValue: webSocketService },
+        { provide: Router, useValue: router },
+      ],
     });
 
     guard = TestBed.inject(DesktopGuard);
@@ -43,7 +43,7 @@ describe('DesktopGuard', () => {
         expect(canActivate).toBeTrue();
         expect(router.navigateByUrl).not.toHaveBeenCalled();
       },
-      error: () => fail
+      error: () => fail,
     });
   });
 
@@ -59,8 +59,7 @@ describe('DesktopGuard', () => {
         expect(canActivate).toBeFalsy();
         expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
       },
-      error: () => fail
+      error: () => fail,
     });
   });
-
 });

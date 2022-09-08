@@ -1,23 +1,22 @@
-import {Injectable} from '@angular/core';
-import {webSocket, WebSocketSubject} from 'rxjs/webSocket';
-import {catchError, first, map, mergeMap, switchMap, tap} from 'rxjs/operators';
-import {firstValueFrom, interval, Observable, of, Subject, throwError} from 'rxjs';
-import {environment} from '../environments/environment';
-import {v4 as randomUUID} from 'uuid';
-import {Account} from '../dataclasses/account';
-import {setTag} from '@sentry/angular';
+import { Injectable } from '@angular/core';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import { catchError, first, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { firstValueFrom, interval, Observable, of, Subject, throwError } from 'rxjs';
+import { environment } from '../environments/environment';
+import { v4 as randomUUID } from 'uuid';
+import { Account } from '../dataclasses/account';
+import { setTag } from '@sentry/angular';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WebsocketService {
-
   onlinePlayers = 0;
   account: Account = {
     uuid: '',
     name: '',
     created: 0,
-    last: 0
+    last: 0,
   };
   loggedIn = false;
 
@@ -28,22 +27,20 @@ export class WebsocketService {
   private connectedOnce = false;
   private keepAliveHandle: any;
 
-  constructor() {
-  }
+  constructor() {}
 
   private static async getUrl(): Promise<string> {
     const response = await fetch('./assets/api.json');
 
     if (response.status === 200) {
       try {
-        const {url}: { url: string } = await response.json();
-        setTag("api", url);
+        const { url }: { url: string } = await response.json();
+        setTag('api', url);
         return url;
-      } catch (e) {
-      }
+      } catch (e) {}
     }
 
-    setTag("api", environment.api);
+    setTag('api', environment.api);
     return environment.api;
   }
 
@@ -64,7 +61,7 @@ export class WebsocketService {
             clearInterval(this.keepAliveHandle);
             this.keepAliveHandle = setInterval(() => {
               this.socketSubject.next({
-                'action': 'info'
+                action: 'info',
               });
             }, 1000 * 30);
 
@@ -72,7 +69,7 @@ export class WebsocketService {
             while (this.queue.length !== 0) {
               this.socketSubject.next(this.queue.shift());
             }
-          }
+          },
         },
         closeObserver: {
           next: (event) => {
@@ -83,19 +80,19 @@ export class WebsocketService {
               this.keepAliveHandle = null;
             }
             this.loggedIn = false;
-          }
-        }
+          },
+        },
       });
     }
 
     this.socketSubject.subscribe({
       next: this.handleMessage.bind(this),
-      error: console.error
+      error: console.error,
     });
   }
 
   close() {
-    this.socketSubject.error({code: 4000, reason: 'client-close'});
+    this.socketSubject.error({ code: 4000, reason: 'client-close' });
   }
 
   subscribeNotification<T>(notify_id: string): Subject<Notification<T>> {
@@ -109,13 +106,12 @@ export class WebsocketService {
   }
 
   requestMany(data: any): Observable<any> {
-    return interval(50)
-      .pipe(
-        first(() => Boolean(this.socketSubject)),
-        tap(() => this.socketSubject.next(data)),
-        switchMap(() => this.socketSubject),
-        map(checkResponseError),
-      );
+    return interval(50).pipe(
+      first(() => Boolean(this.socketSubject)),
+      tap(() => this.socketSubject.next(data)),
+      switchMap(() => this.socketSubject),
+      map(checkResponseError)
+    );
   }
 
   request(data: any): Observable<any> {
@@ -129,10 +125,10 @@ export class WebsocketService {
     }
 
     const d = {
-      'ms': name,
-      'endpoint': endpoint,
-      'data': data,
-      'tag': tag,
+      ms: name,
+      endpoint: endpoint,
+      data: data,
+      tag: tag,
     };
 
     if (this.socketSubject) {
@@ -141,7 +137,7 @@ export class WebsocketService {
       this.queue.push(d);
     }
 
-    return this.open[tag] = new Subject();
+    return (this.open[tag] = new Subject());
   }
 
   msPromise(name: string, endpoint: string[], data: any): Promise<any> {
@@ -149,14 +145,16 @@ export class WebsocketService {
   }
 
   refreshAccountInfo(): Observable<Account> {
-    return this.request({action: 'info'}).pipe(map(data => {
-      this.account.name = data['name'];
-      this.account.uuid = data['uuid'];
-      this.account.created = data['created'];
-      this.account.last = data['last'];
-      this.onlinePlayers = data['online'];
-      return this.account;
-    }));
+    return this.request({ action: 'info' }).pipe(
+      map((data) => {
+        this.account.name = data['name'];
+        this.account.uuid = data['uuid'];
+        this.account.created = data['created'];
+        this.account.last = data['last'];
+        this.onlinePlayers = data['online'];
+        return this.account;
+      })
+    );
   }
 
   trySession(): Observable<boolean> {
@@ -165,11 +163,15 @@ export class WebsocketService {
     } else if (localStorage.getItem('token') == null) {
       return of(false);
     } else {
-      return this.request({action: 'session', token: localStorage.getItem('token')}).pipe(
-        mergeMap(() => this.refreshAccountInfo().pipe(map(() => {
-          this.loggedIn = true;
-          return true;
-        }))),
+      return this.request({ action: 'session', token: localStorage.getItem('token') }).pipe(
+        mergeMap(() =>
+          this.refreshAccountInfo().pipe(
+            map(() => {
+              this.loggedIn = true;
+              return true;
+            })
+          )
+        ),
         catchError(() => {
           localStorage.removeItem('token');
           return of(false);
@@ -190,14 +192,12 @@ export class WebsocketService {
       const tag = message['tag'];
 
       if (this.open[tag] != null) {
-
         if (message['error']) {
           this.open[tag].error(new Error(message['error']));
 
-        // Workaround: (e.g.) bruteforce endpoint sends the error inside of data and not at the root
-        } else if (message["data"] && message["data"]["error"]) {
-          this.open[tag].error(new Error(message["data"]["error"]));
-
+          // Workaround: (e.g.) bruteforce endpoint sends the error inside of data and not at the root
+        } else if (message['data'] && message['data']['error']) {
+          this.open[tag].error(new Error(message['data']['error']));
         } else {
           this.open[tag].next(message['data']);
         }
@@ -209,7 +209,7 @@ export class WebsocketService {
       const subject = this.notification_subjects[message['notify-id']];
 
       if (subject != null) {
-        subject.next({data: message['data'], device_uuid: message['device_uuid'], origin: message['origin']});
+        subject.next({ data: message['data'], device_uuid: message['device_uuid'], origin: message['origin'] });
       }
     }
   }

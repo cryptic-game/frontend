@@ -40,7 +40,7 @@ export class DeviceResources {
       gpu: Math.min(this.usage_gpu / this.performance_gpu, 1),
       ram: Math.min(this.usage_ram / this.performance_ram, 1),
       disk: Math.min(this.usage_disk / this.performance_disk, 1),
-      network: Math.min(this.usage_network / this.performance_network, 1)
+      network: Math.min(this.usage_network / this.performance_network, 1),
     });
   }
 }
@@ -62,7 +62,7 @@ export class ResourceUsage {
       gpu: this.gpu / resources.performance_gpu,
       ram: this.ram / resources.performance_ram,
       disk: this.disk / resources.performance_disk,
-      network: this.network / resources.performance_network
+      network: this.network / resources.performance_network,
     });
   }
 

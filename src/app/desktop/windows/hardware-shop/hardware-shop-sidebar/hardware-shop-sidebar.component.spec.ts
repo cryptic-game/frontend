@@ -1,8 +1,8 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {HardwareShopSidebarComponent} from './hardware-shop-sidebar.component';
-import {WebsocketService} from '../../../../websocket.service';
-import {webSocketMock} from '../../../../test-utils';
+import { HardwareShopSidebarComponent } from './hardware-shop-sidebar.component';
+import { WebsocketService } from '../../../../websocket.service';
+import { webSocketMock } from '../../../../test-utils';
 
 describe('HardwareShopSidebarComponent', () => {
   let component: HardwareShopSidebarComponent;
@@ -10,8 +10,8 @@ describe('HardwareShopSidebarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: WebsocketService, useValue: webSocketMock()}],
-      declarations: [HardwareShopSidebarComponent]
+      providers: [{ provide: WebsocketService, useValue: webSocketMock() }],
+      declarations: [HardwareShopSidebarComponent],
     }).compileComponents();
   }));
 

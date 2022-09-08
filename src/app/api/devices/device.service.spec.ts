@@ -1,6 +1,6 @@
-import {TestBed} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import {DeviceService} from './device.service';
+import { DeviceService } from './device.service';
 
 describe('DeviceService', () => {
   let service: DeviceService;
@@ -13,5 +13,4 @@ describe('DeviceService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
 });

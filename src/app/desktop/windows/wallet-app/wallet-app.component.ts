@@ -1,17 +1,16 @@
-import {Component, OnDestroy, OnInit, Type} from '@angular/core';
-import {WindowComponent, WindowConstraints, WindowDelegate} from '../../window/window-delegate';
-import {WalletAppService} from './wallet-app.service';
-import {Wallet} from './wallet';
-import {Transaction} from './transaction';
-import {Subscription} from 'rxjs';
+import { Component, OnDestroy, OnInit, Type } from '@angular/core';
+import { WindowComponent, WindowConstraints, WindowDelegate } from '../../window/window-delegate';
+import { WalletAppService } from './wallet-app.service';
+import { Wallet } from './wallet';
+import { Transaction } from './transaction';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-wallet-app',
   templateUrl: './wallet-app.component.html',
-  styleUrls: ['./wallet-app.component.scss']
+  styleUrls: ['./wallet-app.component.scss'],
 })
 export class WalletAppComponent extends WindowComponent implements OnInit, OnDestroy {
-
   walletEdit = false;
   wallet: Wallet | null;
   transactions: Transaction[] = [];
@@ -27,7 +26,7 @@ export class WalletAppComponent extends WindowComponent implements OnInit, OnDes
 
     this.wallet = walletAppService.wallet;
 
-    this.updateSubscription = walletAppService.update.subscribe(wallet => {
+    this.updateSubscription = walletAppService.update.subscribe((wallet) => {
       if (wallet == null) {
         this.walletEdit = true;
         this.currentPage = 0;
@@ -83,7 +82,6 @@ export class WalletAppComponent extends WindowComponent implements OnInit, OnDes
       this.itemsPerPage
     );
   }
-
 }
 
 export class WalletAppWindowDelegate extends WindowDelegate {
@@ -91,5 +89,5 @@ export class WalletAppWindowDelegate extends WindowDelegate {
   icon = 'assets/desktop/img/wallet_app.svg';
   type: Type<any> = WalletAppComponent;
 
-  override constraints = new WindowConstraints({minWidth: 485, minHeight: 325});
+  override constraints = new WindowConstraints({ minWidth: 485, minHeight: 325 });
 }

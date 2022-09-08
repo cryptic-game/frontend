@@ -1,15 +1,13 @@
-import {Injectable} from '@angular/core';
-import {WebsocketService} from '../../websocket.service';
-import {Observable} from 'rxjs';
-import {first, map} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { WebsocketService } from '../../websocket.service';
+import { Observable } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SettingService {
-
-  constructor(private websocketService: WebsocketService) {
-  }
+  constructor(private websocketService: WebsocketService) {}
 
   /**
    * Returns the value of a setting.
@@ -21,9 +19,9 @@ export class SettingService {
    */
   public get(key: string): Observable<string> {
     // requestMany and key check because non-ms requests don't have tags yet
-    return this.websocketService.requestMany({action: 'setting', key: key}).pipe(
-      first(setting => setting.key === key && typeof setting.value === 'string'),
-      map(setting => setting.value),
+    return this.websocketService.requestMany({ action: 'setting', key: key }).pipe(
+      first((setting) => setting.key === key && typeof setting.value === 'string'),
+      map((setting) => setting.value)
     );
   }
 
@@ -36,7 +34,7 @@ export class SettingService {
    * @param value the value of the setting
    */
   public set(key: string, value: string): Observable<{ key: string; value: string }> {
-    return this.websocketService.request({action: 'setting', key: key, value: value});
+    return this.websocketService.request({ action: 'setting', key: key, value: value });
   }
 
   /**
@@ -47,6 +45,6 @@ export class SettingService {
    * @param key the name of a setting
    */
   public delete(key: string): Observable<{ success: boolean }> {
-    return this.websocketService.request({action: 'setting', key: key, delete: ''});
+    return this.websocketService.request({ action: 'setting', key: key, delete: '' });
   }
 }

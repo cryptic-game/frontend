@@ -1,9 +1,9 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {ControlCenterCreateDevicePageComponent} from './control-center-create-device-page.component';
-import {ReactiveFormsModule} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
-import {RouterTestingModule} from '@angular/router/testing';
+import { ControlCenterCreateDevicePageComponent } from './control-center-create-device-page.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ControlCenterCreateDevicePageComponent', () => {
   let component: ControlCenterCreateDevicePageComponent;
@@ -11,16 +11,13 @@ describe('ControlCenterCreateDevicePageComponent', () => {
   let activatedRoute;
 
   beforeEach(waitForAsync(() => {
-    activatedRoute = {data: jasmine.createSpyObj(['subscribe'])};
+    activatedRoute = { data: jasmine.createSpyObj(['subscribe']) };
 
     TestBed.configureTestingModule({
       declarations: [ControlCenterCreateDevicePageComponent],
       imports: [ReactiveFormsModule, RouterTestingModule],
-      providers: [
-        {provide: ActivatedRoute, useValue: activatedRoute}
-      ]
-    })
-      .compileComponents();
+      providers: [{ provide: ActivatedRoute, useValue: activatedRoute }],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,17 +1,16 @@
-import {Position} from '../../dataclasses/position';
-import {Program} from '../../dataclasses/program';
-import {Injectable} from '@angular/core';
-import {desktopDefinition} from '../../assets/desktop/definition';
-import {SettingService} from '../api/setting/setting.service';
+import { Position } from '../../dataclasses/position';
+import { Program } from '../../dataclasses/program';
+import { Injectable } from '@angular/core';
+import { desktopDefinition } from '../../assets/desktop/definition';
+import { SettingService } from '../api/setting/setting.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProgramService {
   programs: Program[] = [];
 
-  constructor(private settingService: SettingService) {
-  }
+  constructor(private settingService: SettingService) {}
 
   private static serializeProgramData(program: Program) {
     return JSON.stringify({
@@ -19,8 +18,8 @@ export class ProgramService {
       position: {
         x: program.position.x,
         y: program.position.y,
-        z: program.position.z
-      }
+        z: program.position.z,
+      },
     });
   }
 
@@ -31,9 +30,7 @@ export class ProgramService {
       definition.displayName,
       definition.icon,
       data?.onDesktop ?? definition.onDesktop,
-      data?.position ?
-        new Position(data.position.x, data.position.y, data.position.z) :
-        definition.position
+      data?.position ? new Position(data.position.x, data.position.y, data.position.z) : definition.position
     );
   }
 
@@ -46,14 +43,13 @@ export class ProgramService {
 
     try {
       savedProgram = JSON.parse(localStorage.getItem(`program_${definition.id}`)!);
-    } catch (e) {
-    }
+    } catch (e) {}
 
     return this.deserializeProgram(definition, savedProgram);
   }
 
   loadCached(): Program[] {
-    this.programs = desktopDefinition.programs.map(def => ProgramService.loadProgramFromCache(def));
+    this.programs = desktopDefinition.programs.map((def) => ProgramService.loadProgramFromCache(def));
     return this.programs;
   }
 
@@ -88,10 +84,14 @@ export class ProgramService {
 
   save(program: Program) {
     ProgramService.saveToCache(program);
-    this.settingService.set(`program_${program.id}`, JSON.stringify({
-      onDesktop: program.onDesktop,
-      position: program.position
-    })).subscribe();
+    this.settingService
+      .set(
+        `program_${program.id}`,
+        JSON.stringify({
+          onDesktop: program.onDesktop,
+          position: program.position,
+        })
+      )
+      .subscribe();
   }
-
 }
