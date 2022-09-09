@@ -21,7 +21,7 @@
   }
 
   .sidebar-items {
-    overflow: scroll;
+    overflow: auto;
 
     .sidebar-item {
       &:first-child {
