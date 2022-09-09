@@ -5,6 +5,7 @@
      class="window">
   <div (dblclick)="maximize()"
        (mousedown)=" asElement($event.target!).closest('.window-icons') || startDragging($event)"
+    [class.dragging]="dragging"
        class="window-header">
     <img [src]="delegate.icon" alt="" class="window-icon" draggable="false" height="25px" width="30px"/>
     <span class="window-title">{{delegate.title}}</span>
