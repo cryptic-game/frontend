@@ -1,6 +1,6 @@
 # Official Cryptic Frontend
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cryptic-game/frontend/Main?style=flat-square)
+![GitHub Build Action Workflow Status](https://img.shields.io/github/workflow/status/cryptic-game/frontend/Main?style=flat-square)
 
 This is the official [Cryptic frontend](https://play.cryptic-game.net/) (available on [Docker Hub](https://hub.docker.com/r/crypticcp/frontend/)). It has been created with the **Angular** framework using _TypeScript_, _HTML_ and [SASS](http://sass-lang.com/guide).  
 
