@@ -22,7 +22,6 @@ const icons = {
 
 
 @NgModule({
-  declarations: [],
   imports: [
     TablerIconsModule.pick(icons)
   ],

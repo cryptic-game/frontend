@@ -5,8 +5,11 @@
 
   padding: 50px 50px 0 50px;
 
-  width: 400px;
+  overflow: auto;
+
+  width: 500px;
   height: 100vh;
+  box-sizing: border-box;
 
   .title-bar {
     display: flex;
@@ -61,7 +64,10 @@
 
   .item {
     cursor: pointer;
+    box-sizing: border-box;
     padding: 13px 20px;
+    width: 400px;
+    height: 85px;
     background-color: $input-background;
     margin-top: 40px;
     border-radius: 16px;

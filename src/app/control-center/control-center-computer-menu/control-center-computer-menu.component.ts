@@ -1,9 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { SidebarMenu, SidebarMenuItem } from '../control-center-sidebar-menu/control-center-sidebar-menu.component';
-import {Params, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {Device} from 'src/app/api/devices/device';
-import { MessageService } from '../message-service.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-control-center-computer-menu',
@@ -11,10 +9,6 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./control-center-computer-menu.component.scss']
 })
 export class ControlCenterComputerMenuComponent implements OnInit, OnDestroy {
-
-  @Input() messages: any[];
-
-  subscription: Subscription;
 
   @Input() menu: SidebarMenu;
   @Input() expanded!: boolean;
@@ -26,25 +20,13 @@ export class ControlCenterComputerMenuComponent implements OnInit, OnDestroy {
   // 1: on = Online
   // 2: amoff = Am Einschalten
   // 3: amon = Am Ausschalten
+  // I know I just could have used an enum will probably change it => Todo
   states: any[] = [];
 
-  constructor(private router: Router, private messageService: MessageService, private cdRef: ChangeDetectorRef) {
-    this.subscription = this.messageService.onMessage().subscribe(message => {
-      var msg = this.messages.find((msg) => {
-        return msg.uuid === message.uuid;
-      })
-      if (msg !== undefined) {
-        this.messages.splice(this.messages.indexOf(msg), 1, message)
-      } else {
-        this.messages.push(message);
-      }
-      this.updatePcState();
-
-    });
+  constructor(private router: Router) {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -53,35 +35,10 @@ export class ControlCenterComputerMenuComponent implements OnInit, OnDestroy {
 
   updatePcState() {
 
-    if (this.devices !== undefined) {
+    if (this.devices != undefined) {
       this.devices.forEach(device => {
-        const msg = this.messages.find((msg) => {
-          return msg.uuid === device.uuid;
-        });
-        if (msg !== undefined) {
-          const pcItem = this.states.filter(
-            pc => pc.uuid === msg.uuid
-          );
-          const index = this.states.indexOf(pcItem[0]);
-          if (index !== -1) {
-            if (msg.text === "off") this.states[index] = ({uuid: msg.uuid, state: 0})
-            else if (msg.text === "on") this.states[index] = ({uuid: msg.uuid, state: 1})
-            else if (msg.text === "amoff") this.states[index] = ({uuid: msg.uuid, state: 2})
-            else if (msg.text === "amon") this.states[index] = ({uuid: msg.uuid, state: 3})
-            else console.warn("Can't read state of pc: " + msg.uuid)
-          } else {
-            if (msg.text === "off") this.states.push({uuid: msg.uuid, state: 0})
-            else if (msg.text === "on") this.states.push({uuid: msg.uuid, state: 1})
-            else if (msg.text === "amoff") this.states.push({uuid: msg.uuid, state: 2})
-            else if (msg.text === "amon") this.states.push({uuid: msg.uuid, state: 3})
-            else console.warn("Can't read state of pc: " + msg.uuid)
-          }
-  
-          
-        } else {
-          if (!device.powered_on) this.states.push({uuid: device.uuid, state: 0})
-          else this.states.push({uuid: device.uuid, state:1})
-        }
+        if (!device.powered_on) this.states.push({uuid: device.uuid, state: 0})
+        else this.states.push({uuid: device.uuid, state:1})
       });
     } 
 

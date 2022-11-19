@@ -109,6 +109,10 @@ export class ControlCenterSidebarMenuComponent implements OnInit, OnDestroy {
 
 }
 
+export enum SubMenuType {
+  Computer = "Computer"
+}
+
 export class SidebarMenu {
   title: string;
   icon: string;
@@ -119,11 +123,12 @@ export class SidebarMenu {
   specialItems: number;
   routerLink?: string;
   queryParams?: Params;
+  subMenuType?: SubMenuType;
 
   constructor(title: string,
               icon: string,
               options: {
-                items?: SidebarMenuItem[]; displayCount?: boolean; specialItems?: number;
+                items?: SidebarMenuItem[]; subMenuType?: SubMenuType; displayCount?: boolean; specialItems?: number;
                 routerLink?: string; queryParams?: Params; header?: string; link?: string;
               } = {}) {
     this.title = title;
@@ -135,6 +140,7 @@ export class SidebarMenu {
     this.specialItems = options.specialItems ?? 0;
     this.routerLink = options.routerLink;
     this.queryParams = options.queryParams;
+    this.subMenuType = options.subMenuType;
   }
 
   getDisplayCount(): number {

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {SidebarMenu} from './control-center-sidebar-menu/control-center-sidebar-menu.component';
+import {SidebarMenu, SubMenuType} from './control-center-sidebar-menu/control-center-sidebar-menu.component';
 import {ControlCenterService} from './control-center.service';
 
 @Component({
@@ -13,7 +13,7 @@ export class ControlCenterComponent {
     new SidebarMenu(
       $localize`Computer`,
       'device-desktop',
-      {items: this.controlCenterService.deviceSidebarMenuItems, displayCount: true, specialItems: 1, header: $localize`Game`}
+      {items: this.controlCenterService.deviceSidebarMenuItems, subMenuType: SubMenuType.Computer, displayCount: true, specialItems: 1, header: $localize`Game`}
     ),
     new SidebarMenu($localize`Inventory`, 'briefcase', { routerLink: '/inventory' }),
     new SidebarMenu($localize`Network`, 'affiliate', { routerLink: '/network' }),
