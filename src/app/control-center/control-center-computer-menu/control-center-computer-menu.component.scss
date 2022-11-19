@@ -3,7 +3,7 @@
 .computer-menu {
   background-color: #2a2a31;
 
-  padding: 50px 50px 0 50px;
+  padding: 50px;
 
   overflow: auto;
 
@@ -64,10 +64,8 @@
 
   .item {
     cursor: pointer;
-    box-sizing: border-box;
+    box-sizing: content-box;
     padding: 13px 20px;
-    width: 400px;
-    height: 85px;
     background-color: $input-background;
     margin-top: 40px;
     border-radius: 16px;
