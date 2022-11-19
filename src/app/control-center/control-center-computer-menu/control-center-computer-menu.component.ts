@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { SidebarMenu, SidebarMenuItem } from '../control-center-sidebar-menu/control-center-sidebar-menu.component';
 import {Router} from '@angular/router';
 import {Device} from 'src/app/api/devices/device';
@@ -8,7 +8,7 @@ import {Device} from 'src/app/api/devices/device';
   templateUrl: './control-center-computer-menu.component.html',
   styleUrls: ['./control-center-computer-menu.component.scss']
 })
-export class ControlCenterComputerMenuComponent implements OnInit, OnDestroy {
+export class ControlCenterComputerMenuComponent implements OnInit {
 
   @Input() menu: SidebarMenu;
   @Input() expanded!: boolean;
@@ -24,9 +24,6 @@ export class ControlCenterComputerMenuComponent implements OnInit, OnDestroy {
   states: any[] = [];
 
   constructor(private router: Router) {
-  }
-
-  ngOnDestroy(): void {
   }
 
   ngOnInit(): void {
