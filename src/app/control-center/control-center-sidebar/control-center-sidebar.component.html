@@ -1,8 +1,24 @@
 <div id="sidebar-container">
-  <app-control-center-sidebar-menu *ngFor="let menu of menus" [menu]="menu"></app-control-center-sidebar-menu>
+  <div class="lettering">Control<br>Center</div>
+  <div class="sidebar-items">
+    <div *ngFor="let menu of menus" class="sidebar-item" [class.has-header] = "menu.header"  >
+      <div *ngIf="menu.header" class="menu-header">{{menu.header}}</div>
+      <app-control-center-sidebar-menu [menu]="menu"></app-control-center-sidebar-menu>
+    </div>
+  </div>
   <div class="footer">
-    <button (click)="logout()" class="logout-button" i18n>Logout</button>
-    <p class="username" i18n>Logged in as {{apiService.account.name}}</p>
-    <p class="imprint"><a href="https://the-morpheus.de/#contact" i18n rel="noopener" target="_blank">Imprint</a></p>
+    <div class="pic-name">
+      <img src="assets/control-center/ph-profile-picture.jpg" alt="" class="profile-pic">
+      <div class="username"><span class="logged-in-as" i18n>Logged in as </span><br><span class="name">{{apiService.account.name}}</span></div>
+    </div>
+    
+
+    <div class="logout-button">
+      <div (click)="logout()" class="title">
+        <i-tabler name="logout" alt="" class="icon"></i-tabler>
+        <span i18n>Logout</span>
+      </div>
+    </div>
+
   </div>
 </div>

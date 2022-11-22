@@ -3,42 +3,92 @@
 #sidebar-container {
   display: flex;
   flex-direction: column;
+
   width: 100%;
   height: 100%;
 
+  user-select: none;
+
+  .lettering {
+    font-weight: 500;
+    font-size: 40px;
+    margin-left: 70px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    line-height: 38px;
+    background-color: $input-background;
+  }
+
+  .sidebar-items {
+    overflow: auto;
+
+    .sidebar-item {
+      &:first-child {
+        margin-top: 0 !important;
+      }
+
+      &:not(.has-header) {
+        margin-top: 2px;
+      }
+
+      &.has-header {
+        margin-top: 40px;
+      }
+
+      .menu-header {
+        margin-left: 70px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+
   .footer {
-    margin: auto 25px 15px;
+    margin: auto 0 0;
+    background: $input-background;
 
-    .logout-button {
-      margin-bottom: 25px;
-      padding: 0.75em;
-      color: white;
-      background-color: $sidebar-background;
-      font-size: 12pt;
-      cursor: pointer;
-      outline: none;
+    .pic-name {
+      display: flex;
+      margin-left: 50px;
+      margin-right: 50px;
+      margin-bottom: 30px;
+      margin-top: 10px;
 
-      border: 2px solid $button-border-color;
-      border-radius: 10px;
+      .username {
+        font-size: 16px;
+        margin: auto 0;
 
-      &:hover {
-        background-color: $button-hover-color;
+        font-weight: 700;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        .logged-in-as {
+          font-weight: 300;
+          color: $grey-font;
+        }
+
+        .name {
+          font-size: 20px;
+          color: white;
+
+          user-select: all;
+        }
+      }
+
+      .profile-pic {
+        margin-right: 30px;
+        width: 75px;
+        height: 75px;
+        border-radius: 15px;
       }
     }
+  }
 
-    .username {
-      font-size: 12pt;
-      margin: 0 0 5px;
-      overflow-wrap: break-word;
-    }
-
-    .imprint {
-      margin: 0;
-
-      a {
-        color: gray;
-      }
-    }
+  .logout-button {
+    margin-bottom: 30px;
+    @include sidebar-menu-item;
   }
 
 }

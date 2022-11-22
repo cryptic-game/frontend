@@ -1,0 +1,41 @@
+<div class="computer-menu">
+  <div class="title-bar">
+    <div class="title">Computer</div>
+    <div class="add-computer" (click)="newPcClicked()">
+      <i-tabler name="plus" alt="" class="add-computer-icon"></i-tabler>
+    </div>
+  </div>
+
+  <div *ngIf="menu.items.length === 0; else itemsThere">
+    <div class="no-items">
+      <div class="new-pc-indicator">
+        <div class="arrow">
+
+          <svg width="115" height="126" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 126 C50 117, 96 60, 105 0" stroke="white" fill="transparent"/>
+            <path d="M105 0 L115 30" stroke="white" fill="transparent"/>
+            <path d="M105 0 L82 27" stroke="white" fill="transparent"/>
+          </svg>
+
+        </div>
+        <div class="text">Create new<br>Computer</div>
+      </div>
+      <div class="no-pcs">You own no Computer</div>
+    </div>
+  </div>
+  
+  <ng-template #itemsThere>
+    <div *ngFor="let item of menu.items; let i = index" (click)="itemClicked(item)" [class.active]="isItemActive(item)" class="item">
+      <div class="name">{{item.title}}</div>
+      <i-tabler name="power" alt="" class="power-icon"></i-tabler>
+      <div class="state" [ngSwitch]="states[i].state">
+        <span *ngSwitchCase="computerState.Offline" class="offline">Offline</span>
+        <span *ngSwitchCase="computerState.Online" class="online">Online</span>
+        <!-- <span *ngSwitchCase="computerState.Stopping" class="stopping">at Shutdown</span>
+        <span *ngSwitchCase="computerState.Starting" class="starting">at Startup</span> -->
+        <span *ngSwitchDefault class="unknown">Unknown State</span>
+      </div>
+    </div>
+  </ng-template>
+  
+</div>
