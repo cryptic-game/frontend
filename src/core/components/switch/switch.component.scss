@@ -1,0 +1,60 @@
+@import "src/global-styles/theme-colors";
+
+.switch-comp {
+  display: flex;
+  align-items: center;
+  
+  label {
+    padding-right: 16px;
+  }
+  
+  .switch {
+    appearance: none;
+    box-sizing: border-box;
+    width: 44px;
+    height: 26px;
+    border-radius: 8px;
+    border: 2px solid white;
+    cursor: pointer;
+    padding: 2px 20px 2px 2px;
+    margin: 0;
+    transition: all 0.17s ease-in-out;
+  
+    &:checked {
+      padding: 2px 2px 2px 20px;
+      border-color: $primary-default;
+  
+      &.disabled {
+        border-color: $primary-disabled;
+  
+        &::after {
+          background-color: $primary-disabled;
+        }
+      }
+  
+      &::after {
+        background-color: $primary-default;
+      }
+    }
+  
+    &::after {
+      content: "";
+      transition: all 0.17s ease-in-out;
+      width: 18px;
+      height: 18px;
+      box-sizing: border-box;
+      border-radius: 4px;
+      display: block;
+      background: white;
+    }
+  
+    &.disabled {
+      cursor: default;
+      border-color: #748781;
+  
+      &::after {
+        background-color: #748781;
+      }
+    }
+  }
+}
