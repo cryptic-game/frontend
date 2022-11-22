@@ -79,7 +79,7 @@
       color: $input-background;
 
       .state {
-        .online, .offline, .at_startup, .at_shutdown {
+        .online, .offline, .stopping, .starting, .unknown {
           color: $input-background;
         }
       }
@@ -103,8 +103,13 @@
       .offline {
         color: $danger-default;
       }
-      .at_startup, .at_shutdown {
+
+      .at_startup, .at_shutdown, .unknown {
         color: $warning-default;
+      }
+
+      .unknown {
+        font-style: italic;
       }
       
     }

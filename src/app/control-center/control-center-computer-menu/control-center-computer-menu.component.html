@@ -28,11 +28,12 @@
     <div *ngFor="let item of menu.items; let i = index" (click)="itemClicked(item)" [class.active]="isItemActive(item)" class="item">
       <div class="name">{{item.title}}</div>
       <i-tabler name="power" alt="" class="power-icon"></i-tabler>
-      <div class="state">
-        <span *ngIf="states[i].state === 0" class="offline">Offline</span>
-        <span *ngIf="states[i].state === 1" class="online">Online</span>
-        <!-- <span *ngIf="states[i].state === 2" class="at_shutdown">at Shutdown</span>
-        <span *ngIf="states[i].state === 3" class="at_startup">at Startup</span> -->
+      <div class="state" [ngSwitch]="states[i].state">
+        <span *ngSwitchCase="computerState.Offline" class="offline">Offline</span>
+        <span *ngSwitchCase="computerState.Online" class="online">Online</span>
+        <!-- <span *ngSwitchCase="computerState.Stopping" class="stopping">at Shutdown</span>
+        <span *ngSwitchCase="computerState.Starting" class="starting">at Startup</span> -->
+        <span *ngSwitchDefault class="unknown">Unknown State</span>
       </div>
     </div>
   </ng-template>

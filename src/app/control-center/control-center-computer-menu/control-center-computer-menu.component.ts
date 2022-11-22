@@ -16,12 +16,8 @@ export class ControlCenterComputerMenuComponent implements OnInit {
 
   @Input() devices: Device[];
 
-  // 0: off = Offline
-  // 1: on = Online
-  // 2: amoff = Am Einschalten
-  // 3: amon = Am Ausschalten
-  // I know I just could have used an enum will probably change it => Todo
   states: any[] = [];
+  computerState = ComputerState;
 
   constructor(private router: Router) {
   }
@@ -34,12 +30,26 @@ export class ControlCenterComputerMenuComponent implements OnInit {
 
     if (this.devices != undefined) {
       this.devices.forEach(device => {
-        if (!device.powered_on) this.states.push({uuid: device.uuid, state: 0})
-        else this.states.push({uuid: device.uuid, state:1})
-      });
-    } 
 
-    
+        switch (device.powered_on) {
+          
+          case true:
+            this.states.push(ComputerState.Online);
+            break;
+
+          case false:
+            this.states.push(ComputerState.Offline);
+            break;
+
+          default:
+            this.states.push(ComputerState.Unknown);
+            break;
+        }
+
+      });
+
+    }
+
   }
 
   itemClicked(item: SidebarMenuItem) {
@@ -65,4 +75,12 @@ export class ControlCenterComputerMenuComponent implements OnInit {
      return false;
   }
 
+}
+
+enum ComputerState {
+  Online,
+  Offline,
+  Stopping,
+  Starting,
+  Unknown
 }
