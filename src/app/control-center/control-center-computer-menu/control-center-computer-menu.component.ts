@@ -17,7 +17,7 @@ export class ControlCenterComputerMenuComponent implements OnInit {
   @Input() devices: Device[];
 
   states: any[] = [];
-  computerState = ComputerState;
+  computerState = ComputerStateEnum;
 
   constructor(private router: Router) {
   }
@@ -32,17 +32,17 @@ export class ControlCenterComputerMenuComponent implements OnInit {
       this.devices.forEach(device => {
 
         switch (device.powered_on) {
-          
+
           case true:
-            this.states.push(ComputerState.Online);
+            this.states.push({uuid: device.uuid, state: ComputerStateEnum.Online});
             break;
 
           case false:
-            this.states.push(ComputerState.Offline);
+            this.states.push({uuid: device.uuid, state: ComputerStateEnum.Offline});
             break;
 
           default:
-            this.states.push(ComputerState.Unknown);
+            this.states.push({uuid: device.uuid, state: ComputerStateEnum.Unknown});
             break;
         }
 
@@ -77,7 +77,7 @@ export class ControlCenterComputerMenuComponent implements OnInit {
 
 }
 
-enum ComputerState {
+enum ComputerStateEnum {
   Online,
   Offline,
   Stopping,
