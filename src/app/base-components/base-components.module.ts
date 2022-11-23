@@ -9,6 +9,7 @@ import {ButtonOutlineModule} from "../../core/components/buttons/button-outline/
 import {ButtonTextModule} from "../../core/components/buttons/button-text/button-text.module";
 import { SwitchModule } from 'src/core/components/switch/switch.module';
 import { CheckboxModule } from 'src/core/components/checkbox/checkbox.module';
+import { RadiobuttonModule } from 'src/core/components/radiobutton/radiobutton.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { CheckboxModule } from 'src/core/components/checkbox/checkbox.module';
     ButtonTextModule,
     ProgressbarModule,
     SwitchModule,
-    CheckboxModule
+    CheckboxModule,
+    RadiobuttonModule
   ]
 })
 export class BaseComponentsModule { }
