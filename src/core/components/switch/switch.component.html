@@ -1,0 +1,14 @@
+<div class="switch-comp">
+  <label [for]="id">{{label}}</label>
+
+  <input
+    type="checkbox"
+    [id]="id"
+    [name]="name"
+    [class.disabled]="disabled"
+    [disabled]="disabled"
+    [checked]="checked"
+    (change)="onChange()"
+    class="switch"
+  >
+</div>

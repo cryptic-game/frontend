@@ -1,0 +1,39 @@
+@import "src/global-styles/theme-colors";
+
+.checkbox-comp {
+  display: flex;
+  align-items: center;
+  
+  label {
+    padding-right: 16px;
+  }
+  
+  .checkbox {
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    padding: 2px;
+    margin: 0;
+    box-sizing: border-box;
+    background-clip: content-box !important;
+    background: transparent;
+    border: 2px solid white;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:checked {
+      background: $primary-default;
+      border-color: $primary-default;
+    }
+
+    &.disabled {
+      cursor: default;
+      border-color: $white-disabled;
+
+      &:checked {
+        background: $primary-disabled;
+        border-color: $primary-disabled;
+      }
+    }
+  }
+}

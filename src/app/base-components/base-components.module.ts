@@ -7,6 +7,9 @@ import { BaseComponentsComponent } from './base-components.component';
 import {ButtonModule} from "../../core/components/buttons/button/button.module";
 import {ButtonOutlineModule} from "../../core/components/buttons/button-outline/button-outline.module";
 import {ButtonTextModule} from "../../core/components/buttons/button-text/button-text.module";
+import { SwitchModule } from 'src/core/components/switch/switch.module';
+import { CheckboxModule } from 'src/core/components/checkbox/checkbox.module';
+import { RadiobuttonModule } from 'src/core/components/radiobutton/radiobutton.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,10 @@ import {ButtonTextModule} from "../../core/components/buttons/button-text/button
     ButtonModule,
     ButtonOutlineModule,
     ButtonTextModule,
-    ProgressbarModule
+    ProgressbarModule,
+    SwitchModule,
+    CheckboxModule,
+    RadiobuttonModule
   ]
 })
 export class BaseComponentsModule { }
