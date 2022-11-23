@@ -8,7 +8,11 @@ import { Component, Input } from '@angular/core';
 export class RadiobuttonComponent {
 
   @Input() disabled: boolean = false;
+  
   @Input() checked: boolean = false;
+  
   @Input() label: string = '';
+  @Input() id: string;
+  @Input() name: string;
 
 }

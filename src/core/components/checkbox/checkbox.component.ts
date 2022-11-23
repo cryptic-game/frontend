@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'design-checkbox',
@@ -8,7 +8,11 @@ import { Component, Input } from '@angular/core';
 export class CheckboxComponent {
 
   @Input() disabled: boolean = false;
+
   @Input() checked: boolean = false;
+
   @Input() label: string = '';
+  @Input() id: string;
+  @Input() name: string;
 
 }

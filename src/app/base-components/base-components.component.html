@@ -110,24 +110,98 @@
 <div class="componentContainer">
   <h2>Switch, Checkbox & Radio Buttons</h2>
   <div class="switches">
-    <design-switch label="Default"></design-switch>
-    <design-switch label="Checked" [checked]="true"></design-switch>
-    <design-switch label="Disabled" [disabled]="true"></design-switch>
-    <design-switch label="Disabled Checked" [disabled]="true" [checked]="true"></design-switch>
+    <design-switch
+      label="Default"
+      [(checked)]="buttonStates.default_switch"
+      [id]="'default_switch'"
+      [name]="'default_switch'">
+    </design-switch>
+
+    <design-switch
+      label="Checked"
+      [(checked)]="buttonStates.checked_switch"
+      [id]="'checked_switch'"
+      [name]="'checked_switch'">
+    </design-switch>
+
+    <design-switch
+      label="Disabled"
+      [(checked)]="buttonStates.disabled_switch"
+      [disabled]="true"
+      [id]="'disabled_switch'"
+      [name]="'disabled_switch'">
+    </design-switch>
+
+    <design-switch
+      label="Disabled Checked"
+      [disabled]="true"
+      [(checked)]="buttonStates.disabled_checked_switch"
+      [id]="'disabled_checked_switch'"
+      [name]="'disabled_checked_switch'">
+    </design-switch>
+
+
   </div>
   <br>
   <div class="checkboxes">
-    <design-checkbox label="Default"></design-checkbox>
-    <design-checkbox label="Default" [checked]="true"></design-checkbox>
-    <design-checkbox label="Default" [disabled]="true"></design-checkbox>
-    <design-checkbox label="Default" [checked]="true" [disabled]="true"></design-checkbox>
+    <design-checkbox
+      label="Default"
+      [id]="'default_checkbox'"
+      [name]="'default_checkbox'">
+    </design-checkbox>
+
+    <design-checkbox
+      label="Checked"
+      [checked]="true"
+      [id]="'checked_checkbox'"
+      [name]="'checked_checkbox'">
+    </design-checkbox>
+
+    <design-checkbox
+      label="Disabled"
+      [disabled]="true"
+      [id]="'disabled_checkbox'"
+      [name]="'disabled_checkbox'">
+    </design-checkbox>
+
+    <design-checkbox
+      label="Disabled Checked"
+      [disabled]="true"
+      [checked]="true"
+      [id]="'disabled_checked_checkbox'"
+      [name]="'disabled_checked_checkbox'">
+    </design-checkbox>
   </div>
   <br>
-  <div class="checkboxes">
-    <design-radiobutton label="Default"></design-radiobutton>
-    <design-radiobutton label="Default" [checked]="true"></design-radiobutton>
-    <design-radiobutton label="Default" [disabled]="true"></design-radiobutton>
-    <design-radiobutton label="Default" [checked]="true" [disabled]="true"></design-radiobutton>
+
+  <div class="radiobutton">
+    <design-radiobutton
+      label="Default"
+      [id]="'default_radiobutton'"
+      [name]="'radiobutton'">
+    </design-radiobutton>
+
+    <design-radiobutton
+      label="Checked" 
+      [checked]="true"
+      [id]="'checked_radiobutton'"
+      [name]="'radiobutton'">
+    </design-radiobutton>
+
+    <design-radiobutton
+      label="Disabled" 
+      [disabled]="true"
+      [id]="'disabled_radiobutton'"
+      [name]="'radiobutton'">
+    </design-radiobutton>
+
+    <design-radiobutton
+      label="Disabled Checked" 
+      [disabled]="true"
+      [checked]="true"
+      [id]="'disabled_checked_radiobutton'"
+      [name]="'radiobutton'">
+    </design-radiobutton>
   </div>
-</div>
+</div> 
 <!-- Cloudflare trigger -->
