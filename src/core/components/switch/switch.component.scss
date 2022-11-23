@@ -50,10 +50,10 @@
   
     &.disabled {
       cursor: default;
-      border-color: #748781;
+      border-color: $white-disabled;
   
       &::after {
-        background-color: #748781;
+        background-color: $white-disabled;
       }
     }
   }
