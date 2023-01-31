@@ -1,15 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {HardwareShopService} from '../hardware-shop.service';
-import {HardwareShopCartItem} from '../hardware-shop-cart-item';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { HardwareShopService } from '../hardware-shop.service';
+import { HardwareShopCartItem } from '../hardware-shop-cart-item';
 
 @Component({
   selector: 'app-hardware-shop-cart-item',
   templateUrl: './hardware-shop-cart-item.component.html',
-  styleUrls: ['./hardware-shop-cart-item.component.scss']
+  styleUrls: ['./hardware-shop-cart-item.component.scss'],
 })
 export class HardwareShopCartItemComponent implements OnInit {
-
   @Input() item: HardwareShopCartItem;
 
   @Output() updateQuantity: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -18,15 +17,13 @@ export class HardwareShopCartItemComponent implements OnInit {
 
   formGroup: FormGroup;
 
-  constructor(private formBuilder: FormBuilder,
-              private hardwareShopService: HardwareShopService) {
-  }
+  constructor(private formBuilder: FormBuilder, private hardwareShopService: HardwareShopService) {}
 
   ngOnInit() {
     if (this.item.quantity == null) {
       this.item.quantity = 1;
     }
-    this.formGroup = this.formBuilder.group({quantity: this.item.quantity});
+    this.formGroup = this.formBuilder.group({ quantity: this.item.quantity });
 
     this.formGroup.valueChanges.subscribe(() => {
       const field = this.formGroup.get('quantity')!;

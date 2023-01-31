@@ -1,7 +1,7 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {HardwareShopService} from '../hardware-shop.service';
-import {HardwareShopItem} from '../hardware-shop-item';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { HardwareShopService } from '../hardware-shop.service';
+import { HardwareShopItem } from '../hardware-shop-item';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import {
   Case,
   CPU,
@@ -11,9 +11,9 @@ import {
   PartCategory,
   PowerPack,
   ProcessorCooler,
-  RAM
+  RAM,
 } from '../../../../api/hardware/hardware-parts';
-import {Subscription} from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-hardware-shop-item',
@@ -23,39 +23,46 @@ import {Subscription} from 'rxjs';
     trigger('expandCollapse', [
       transition('void => *', [
         style({
-          'opacity': '0',
-          'transform': 'translateY(-100px)',
-          'clip-path': 'inset(100px 0 0 0)'
+          opacity: '0',
+          transform: 'translateY(-100px)',
+          'clip-path': 'inset(100px 0 0 0)',
         }),
-        animate('200ms', style({
-          'opacity': '1',
-          'transform': 'translateY(0)',
-          'clip-path': 'inset(0 0 0 0)'
-        }))
+        animate(
+          '200ms',
+          style({
+            opacity: '1',
+            transform: 'translateY(0)',
+            'clip-path': 'inset(0 0 0 0)',
+          })
+        ),
       ]),
       transition('* => void', [
         style({
-          'opacity': '1',
-          'transform': 'translateY(0)',
-          'clip-path': 'inset(0 0 0 0)'
+          opacity: '1',
+          transform: 'translateY(0)',
+          'clip-path': 'inset(0 0 0 0)',
         }),
-        animate('200ms', style({
-          'opacity': '0',
-          'transform': 'translateY(-100px)',
-          'clip-path': 'inset(100px 0 0 0)'
-        }))
-      ])
+        animate(
+          '200ms',
+          style({
+            opacity: '0',
+            transform: 'translateY(-100px)',
+            'clip-path': 'inset(100px 0 0 0)',
+          })
+        ),
+      ]),
     ]),
     trigger('arrowUpwardsDownwards', [
       state('upwards', style({})),
-      state('downwards', style({
-        transform: 'rotateX(-180deg)'
-      })),
-      transition('upwards <=> downwards', [
-        animate('200ms')
-      ])
-    ])
-  ]
+      state(
+        'downwards',
+        style({
+          transform: 'rotateX(-180deg)',
+        })
+      ),
+      transition('upwards <=> downwards', [animate('200ms')]),
+    ]),
+  ],
 })
 export class HardwareShopItemComponent implements OnInit, OnDestroy {
   specifications: { [category: string]: { [property: string]: any } };
@@ -65,8 +72,8 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
 
   constructor(public hardwareShopService: HardwareShopService) {
     this.subscriptions.add(
-      hardwareShopService.updateCartItems.subscribe(() =>
-        this.inCart = this.hardwareShopService.cartContains(this.item)
+      hardwareShopService.updateCartItems.subscribe(
+        () => (this.inCart = this.hardwareShopService.cartContains(this.item))
       )
     );
   }
@@ -104,7 +111,7 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
   }
 
   getSpecificationsColumnCount(width: number) {
-    return Math.min(width > 500 ? width > 1000 ? 3 : 2 : 1, Object.keys(this.specifications).length);
+    return Math.min(width > 500 ? (width > 1000 ? 3 : 2) : 1, Object.keys(this.specifications).length);
   }
 
   private getSpecifications() {
@@ -118,32 +125,38 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
             'Power usage': `${mainboard.power} W`,
           },
           'Mainboard processor': {
-            'Socket': `${mainboard.cpuSlots}x ${mainboard.cpuSocket}`,
-            'Temperature control': mainboard.coreTemperatureControl ? 'yes' : 'no'
+            Socket: `${mainboard.cpuSlots}x ${mainboard.cpuSocket}`,
+            'Temperature control': mainboard.coreTemperatureControl ? 'yes' : 'no',
           },
           'Mainboard memory': {
-            'Slots': mainboard.ram.ramSlots,
+            Slots: mainboard.ram.ramSlots,
             'Maximum amount': `${mainboard.ram.maxRamSize} MB`,
-            'Type': mainboard.ram.ramTyp.map(type => type.join('')).join(', '),
-            'Frequencies': mainboard.ram.frequency.map(freq => `${freq} MHz`).join(', ')
+            Type: mainboard.ram.ramTyp.map((type) => type.join('')).join(', '),
+            Frequencies: mainboard.ram.frequency.map((freq) => `${freq} MHz`).join(', '),
           },
           'Mainboard graphics': {
             'Integrated graphics': mainboard.graphicUnitOnBoard?.name ?? 'no',
-            'Memory': mainboard.graphicUnitOnBoard ? `${mainboard.graphicUnitOnBoard.ramSize} MB` : undefined,
-            'Frequency': mainboard.graphicUnitOnBoard ? `${mainboard.graphicUnitOnBoard?.frequency} MHz` : undefined
+            Memory: mainboard.graphicUnitOnBoard ? `${mainboard.graphicUnitOnBoard.ramSize} MB` : undefined,
+            Frequency: mainboard.graphicUnitOnBoard ? `${mainboard.graphicUnitOnBoard?.frequency} MHz` : undefined,
           },
-          'Expansion slots': mainboard.expansionSlots
-            .reduce((acc, expansion) =>
-              ({...acc, [expansion.interface.join(' ').concat('.0')]: `${expansion.interfaceSlots}x`}), {}),
+          'Expansion slots': mainboard.expansionSlots.reduce(
+            (acc, expansion) => ({
+              ...acc,
+              [expansion.interface.join(' ').concat('.0')]: `${expansion.interfaceSlots}x`,
+            }),
+            {}
+          ),
           'Mainboard ports': {
-            [mainboard.diskStorage.interface.map(type => type.join(' ').concat('.0')).join(', ')]: `${mainboard.diskStorage.diskSlots}x (internal)`,
-            'USB': mainboard.usbPorts ? `${mainboard.usbPorts}x (external)` : undefined,
-            'Ethernet': '1x (external)'
+            [mainboard.diskStorage.interface
+              .map((type) => type.join(' ').concat('.0'))
+              .join(', ')]: `${mainboard.diskStorage.diskSlots}x (internal)`,
+            USB: mainboard.usbPorts ? `${mainboard.usbPorts}x (external)` : undefined,
+            Ethernet: '1x (external)',
           },
           'Mainboard network': {
             'LAN controller': mainboard.networkPort.name,
-            'Speed': `${mainboard.networkPort.speed} MBit/s`
-          }
+            Speed: `${mainboard.networkPort.speed} MBit/s`,
+          },
         };
 
       case PartCategory.CPU:
@@ -153,20 +166,20 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
           'Processor properties': {
             'Frequency min': `${cpu.frequencyMin} MHz`,
             'Frequency max': `${cpu.frequencyMax} MHz`,
-            'Socket': cpu.socket,
+            Socket: cpu.socket,
             'Number cores': cpu.cores,
             'Max. temperature': `${cpu.maxTemperature} °C`,
-            'Power usage': `${cpu.power} W`
+            'Power usage': `${cpu.power} W`,
           },
           'Processor specific power': {
             'Turbo speed': cpu.turboSpeed ? 'available' : 'not available',
-            'Overclock': cpu.overClock ? 'available' : 'not available'
+            Overclock: cpu.overClock ? 'available' : 'not available',
           },
           'Processor graphics': {
             'Integrated graphics': cpu.graphicUnit ? cpu.graphicUnit.name : 'not integrated',
-            'Memory': cpu.graphicUnit ? `${cpu.graphicUnit.ramSize} MB` : undefined,
-            'Frequency': cpu.graphicUnit ? `${cpu.graphicUnit.frequency} MHz` : undefined
-          }
+            Memory: cpu.graphicUnit ? `${cpu.graphicUnit.ramSize} MB` : undefined,
+            Frequency: cpu.graphicUnit ? `${cpu.graphicUnit.frequency} MHz` : undefined,
+          },
         };
 
       case PartCategory.PROCESSOR_COOLER:
@@ -175,9 +188,9 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
         return {
           'Cooler properties': {
             'Cooler speed': processorCooler.coolerSpeed,
-            'Socket': processorCooler.socket,
-            'Power usage': `${processorCooler.power} W`
-          }
+            Socket: processorCooler.socket,
+            'Power usage': `${processorCooler.power} W`,
+          },
         };
 
       case PartCategory.RAM:
@@ -186,10 +199,10 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
         return {
           'RAM properties': {
             'RAM size': `${ram.ramSize} MB`,
-            'Type': ram.ramTyp.join(''),
-            'Frequency': `${ram.frequency} MHz`,
+            Type: ram.ramTyp.join(''),
+            Frequency: `${ram.frequency} MHz`,
             'Power usage': `${ram.power} W`,
-          }
+          },
         };
 
       case PartCategory.GPU:
@@ -198,11 +211,11 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
         return {
           'Graphic cards properties': {
             'RAM size': `${gpu.ramSize} MB`,
-            'Type': gpu.ramTyp.join(''),
-            'Frequency': `${gpu.frequency} MHz`,
-            'Interface': `${gpu.interface.join(' ')}.0`,
-            'Power usage': `${gpu.power} W`
-          }
+            Type: gpu.ramTyp.join(''),
+            Frequency: `${gpu.frequency} MHz`,
+            Interface: `${gpu.interface.join(' ')}.0`,
+            'Power usage': `${gpu.power} W`,
+          },
         };
 
       case PartCategory.DISK:
@@ -210,13 +223,13 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
 
         return {
           'Disk properties': {
-            'Type': disk.diskTyp,
-            'Capacity': `${disk.capacity / 1000} GB`,
-            'Interface': `${disk.interface.join(' ')}.0`,
+            Type: disk.diskTyp,
+            Capacity: `${disk.capacity / 1000} GB`,
+            Interface: `${disk.interface.join(' ')}.0`,
             'Writing speed': `${disk.writingSpeed} MB/s`,
             'Reading speed': `${disk.readingSpeed} MB/s`,
-            'Power usage': `${disk.power} W`
-          }
+            'Power usage': `${disk.power} W`,
+          },
         };
 
       case PartCategory.POWER_PACK:
@@ -224,8 +237,8 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
 
         return {
           'Powerpack properties': {
-            'Total power': `${powerPack.totalPower} W`
-          }
+            'Total power': `${powerPack.totalPower} W`,
+          },
         };
 
       case PartCategory.CASE:
@@ -233,15 +246,13 @@ export class HardwareShopItemComponent implements OnInit, OnDestroy {
 
         return {
           'Case properties': {
-            'Name': _case.name,
-            'Size': _case.size
-          }
+            Name: _case.name,
+            Size: _case.size,
+          },
         };
 
       default:
         return {};
     }
   }
-
-
 }

@@ -1,10 +1,10 @@
-import {Overlay, OverlayRef, ScrollStrategyOptions} from '@angular/cdk/overlay';
-import {ComponentPortal} from '@angular/cdk/portal';
-import {ComponentRef, ElementRef, Injectable} from '@angular/core';
-import {Subject, Subscription} from 'rxjs';
-import {ContextMenuContentComponent} from "./context-menu-content/context-menu-content.component";
-import {ContextMenuItemDirective} from "./directive/contextMenu.item.directive";
-import {ContextMenuComponent} from "./context-menu/context-menu.component";
+import { Overlay, OverlayRef, ScrollStrategyOptions } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ComponentRef, ElementRef, Injectable } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { ContextMenuContentComponent } from './context-menu-content/context-menu-content.component';
+import { ContextMenuItemDirective } from './directive/contextMenu.item.directive';
+import { ContextMenuComponent } from './context-menu/context-menu.component';
 
 export interface IContextMenuClickEvent {
   anchorElement?: Element | EventTarget;
@@ -44,10 +44,9 @@ export interface ExecuteContextMenuEvent {
 export type CloseContextMenuEvent = ExecuteContextMenuEvent | CancelContextMenuEvent;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ContextMenuService {
-
   public isDestroyingLeafMenu = false;
 
   public show: Subject<IContextMenuClickEvent> = new Subject<IContextMenuClickEvent>();
@@ -64,17 +63,13 @@ export class ContextMenuService {
       right: 0,
       top: 0,
       width: 0,
-    })
+    }),
   };
 
-  constructor(
-    private overlay: Overlay,
-    private scrollStrategy: ScrollStrategyOptions,
-  ) {
-  }
+  constructor(private overlay: Overlay, private scrollStrategy: ScrollStrategyOptions) {}
 
   public openContextMenu(context: IContextMenuContext) {
-    const {anchorElement, event, parentContextMenu} = context;
+    const { anchorElement, event, parentContextMenu } = context;
 
     if (!parentContextMenu) {
       const mouseEvent = event as MouseEvent;
@@ -86,36 +81,38 @@ export class ContextMenuService {
         top: mouseEvent.clientY,
         width: 0,
       });
-      this.closeAllContextMenus({eventType: 'cancel', event});
+      this.closeAllContextMenus({ eventType: 'cancel', event });
       const positionStrategy = this.overlay
         .position()
         .flexibleConnectedTo(new ElementRef(anchorElement || this.fakeElement))
         .withPositions([
-          {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top',},
-          {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom',},
-          {originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top',},
-          {originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top',},
-          {originX: 'end', originY: 'center', overlayX: 'start', overlayY: 'center',},
-          {originX: 'end', originY: 'center', overlayX: 'start', overlayY: 'center',},
-          {originX: 'start', originY: 'center', overlayX: 'end', overlayY: 'center',},
+          { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top' },
+          { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom' },
+          { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' },
+          { originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top' },
+          { originX: 'end', originY: 'center', overlayX: 'start', overlayY: 'center' },
+          { originX: 'end', originY: 'center', overlayX: 'start', overlayY: 'center' },
+          { originX: 'start', originY: 'center', overlayX: 'end', overlayY: 'center' },
         ])
         .withFlexibleDimensions(false);
-      this.overlays = [this.overlay.create({
-        positionStrategy,
-        panelClass: 'ngx-contextmenu',
-        scrollStrategy: this.scrollStrategy.close(),
-      })];
+      this.overlays = [
+        this.overlay.create({
+          positionStrategy,
+          panelClass: 'ngx-contextmenu',
+          scrollStrategy: this.scrollStrategy.close(),
+        }),
+      ];
       this.attachContextMenu(this.overlays[0], context);
     } else {
       const positionStrategy = this.overlay
         .position()
         .flexibleConnectedTo(new ElementRef(anchorElement || this.fakeElement))
         .withPositions([
-          {originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top',},
-          {originX: 'end', originY: 'bottom', overlayX: 'start', overlayY: 'bottom',},
-          {originX: 'start', originY: 'bottom', overlayX: 'end', overlayY: 'bottom',},
+          { originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top' },
+          { originX: 'end', originY: 'bottom', overlayX: 'start', overlayY: 'bottom' },
+          { originX: 'start', originY: 'bottom', overlayX: 'end', overlayY: 'bottom' },
         ])
-        .withFlexibleDimensions(false)
+        .withFlexibleDimensions(false);
       const newOverlay = this.overlay.create({
         positionStrategy,
         panelClass: 'ngx-contextmenu',
@@ -128,9 +125,11 @@ export class ContextMenuService {
   }
 
   public attachContextMenu(overlay: OverlayRef, context: IContextMenuContext): void {
-    const {event, item, menuItems, menuClass} = context;
+    const { event, item, menuItems, menuClass } = context;
 
-    const contextMenuContent: ComponentRef<ContextMenuContentComponent> = overlay.attach(new ComponentPortal(ContextMenuContentComponent));
+    const contextMenuContent: ComponentRef<ContextMenuContentComponent> = overlay.attach(
+      new ComponentPortal(ContextMenuContentComponent)
+    );
     // @ts-expect-error TODO:
     contextMenuContent.instance.event = event;
     contextMenuContent.instance.item = item;
@@ -141,14 +140,23 @@ export class ContextMenuService {
     (<OverlayRefWithContextMenu>overlay).contextMenu = contextMenuContent.instance;
 
     const subscriptions: Subscription = new Subscription();
-    subscriptions.add(contextMenuContent.instance.execute.asObservable()
-      .subscribe((executeEvent) => this.closeAllContextMenus({eventType: 'execute', ...executeEvent})));
-    subscriptions.add(contextMenuContent.instance.closeAllMenus.asObservable()
-      .subscribe((closeAllEvent) => this.closeAllContextMenus({eventType: 'cancel', ...closeAllEvent})));
-    subscriptions.add(contextMenuContent.instance.closeLeafMenu.asObservable()
-      .subscribe(closeLeafMenuEvent => this.destroyLeafMenu(closeLeafMenuEvent)));
-    subscriptions.add(contextMenuContent.instance.openSubMenu.asObservable()
-      .subscribe((subMenuEvent: IContextMenuClickEvent) => {
+    subscriptions.add(
+      contextMenuContent.instance.execute
+        .asObservable()
+        .subscribe((executeEvent) => this.closeAllContextMenus({ eventType: 'execute', ...executeEvent }))
+    );
+    subscriptions.add(
+      contextMenuContent.instance.closeAllMenus
+        .asObservable()
+        .subscribe((closeAllEvent) => this.closeAllContextMenus({ eventType: 'cancel', ...closeAllEvent }))
+    );
+    subscriptions.add(
+      contextMenuContent.instance.closeLeafMenu
+        .asObservable()
+        .subscribe((closeLeafMenuEvent) => this.destroyLeafMenu(closeLeafMenuEvent))
+    );
+    subscriptions.add(
+      contextMenuContent.instance.openSubMenu.asObservable().subscribe((subMenuEvent: IContextMenuClickEvent) => {
         this.destroySubMenus(contextMenuContent.instance);
         if (!subMenuEvent.contextMenu) {
           contextMenuContent.instance.isLeaf = true;
@@ -156,9 +164,10 @@ export class ContextMenuService {
         }
         contextMenuContent.instance.isLeaf = false;
         this.show.next(subMenuEvent);
-      }));
+      })
+    );
     contextMenuContent.onDestroy(() => {
-      menuItems.forEach(menuItem => menuItem.isActive = false);
+      menuItems.forEach((menuItem) => (menuItem.isActive = false));
       subscriptions.unsubscribe();
     });
     contextMenuContent.changeDetectorRef.detectChanges();
@@ -186,7 +195,7 @@ export class ContextMenuService {
     return overlay;
   }
 
-  public destroyLeafMenu({exceptRootMenu, event}: CloseLeafMenuEvent = {}): void {
+  public destroyLeafMenu({ exceptRootMenu, event }: CloseLeafMenuEvent = {}): void {
     if (this.isDestroyingLeafMenu) {
       return;
     }
@@ -199,7 +208,7 @@ export class ContextMenuService {
         overlay.dispose();
       }
       if (!exceptRootMenu && this.overlays.length > 0 && overlay) {
-        this.close.next({eventType: 'cancel', event});
+        this.close.next({ eventType: 'cancel', event });
         overlay.detach();
         overlay.dispose();
       }
@@ -216,7 +225,7 @@ export class ContextMenuService {
   public destroySubMenus(contextMenu: ContextMenuContentComponent): void {
     const overlay = contextMenu.overlay;
     const index = this.overlays.indexOf(overlay);
-    this.overlays.slice(index + 1).forEach(subMenuOverlay => {
+    this.overlays.slice(index + 1).forEach((subMenuOverlay) => {
       subMenuOverlay.detach();
       subMenuOverlay.dispose();
     });

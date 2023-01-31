@@ -1,10 +1,10 @@
-import {TestBed} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import {InventoryService} from './inventory.service';
+import { InventoryService } from './inventory.service';
 import * as rxjs from 'rxjs';
-import {WebsocketService} from '../../websocket.service';
-import {HardwareService} from '../hardware/hardware.service';
-import {HardwareList} from '../hardware/hardware-list';
+import { WebsocketService } from '../../websocket.service';
+import { HardwareService } from '../hardware/hardware.service';
+import { HardwareList } from '../hardware/hardware-list';
 
 describe('InventoryService', () => {
   let service: InventoryService;
@@ -19,9 +19,9 @@ describe('InventoryService', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        {provide: WebsocketService, useValue: webSocket},
-        {provide: HardwareService, useValue: hardwareService}
-      ]
+        { provide: WebsocketService, useValue: webSocket },
+        { provide: HardwareService, useValue: hardwareService },
+      ],
     });
     service = TestBed.inject(InventoryService);
   });

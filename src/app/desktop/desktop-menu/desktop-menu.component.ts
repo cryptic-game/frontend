@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {WindowDelegate} from '../window/window-delegate';
-import {WindowManager} from '../window-manager/window-manager';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { WindowDelegate } from '../window/window-delegate';
+import { WindowManager } from '../window-manager/window-manager';
 
 @Component({
   selector: 'app-desktop-menu',
   templateUrl: './desktop-menu.component.html',
-  styleUrls: ['./desktop-menu.component.scss']
+  styleUrls: ['./desktop-menu.component.scss'],
 })
 export class DesktopMenuComponent implements OnInit, OnDestroy {
   @Input() windowManager: WindowManager;

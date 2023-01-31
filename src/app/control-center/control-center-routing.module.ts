@@ -1,28 +1,16 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {ControlCenterComponent} from "./control-center.component";
-import {ControlCenterGuard} from "./control-center.guard";
-import {ControlCenterService} from "./control-center.service";
-import {ControlCenterDevicePageComponent} from "./control-center-device-page/control-center-device-page.component";
-import {
-  ControlCenterDevicePageHardwareResolver
-} from "./control-center-device-page/control-center-device-page-hardware.resolver";
-import {
-  ControlCenterCreateDevicePageComponent
-} from "./control-center-create-device-page/control-center-create-device-page.component";
-import {
-  ControlCenterInventoryPageItemsResolver
-} from "./control-center-inventory-page/control-center-inventory-page-items.resolver";
-import {
-  ControlCenterInventoryPageComponent
-} from "./control-center-inventory-page/control-center-inventory-page.component";
-import {
-  ControlCenterSettingsPageComponent
-} from "./control-center-settings-page/control-center-settings-page.component";
-import {ControlCenterSoundPageComponent} from "./control-center-sound-page/control-center-sound-page.component";
-import {
-  ControlCenterChangelogPageComponent
-} from "./control-center-changelog-page/control-center-changelog-page.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { ControlCenterComponent } from './control-center.component';
+import { ControlCenterGuard } from './control-center.guard';
+import { ControlCenterService } from './control-center.service';
+import { ControlCenterDevicePageComponent } from './control-center-device-page/control-center-device-page.component';
+import { ControlCenterDevicePageHardwareResolver } from './control-center-device-page/control-center-device-page-hardware.resolver';
+import { ControlCenterCreateDevicePageComponent } from './control-center-create-device-page/control-center-create-device-page.component';
+import { ControlCenterInventoryPageItemsResolver } from './control-center-inventory-page/control-center-inventory-page-items.resolver';
+import { ControlCenterInventoryPageComponent } from './control-center-inventory-page/control-center-inventory-page.component';
+import { ControlCenterSettingsPageComponent } from './control-center-settings-page/control-center-settings-page.component';
+import { ControlCenterSoundPageComponent } from './control-center-sound-page/control-center-sound-page.component';
+import { ControlCenterChangelogPageComponent } from './control-center-changelog-page/control-center-changelog-page.component';
 
 const routes: Routes = [
   {
@@ -30,36 +18,35 @@ const routes: Routes = [
     component: ControlCenterComponent,
     canActivate: [ControlCenterGuard],
     resolve: {
-      devices: ControlCenterService
+      devices: ControlCenterService,
     },
-    data: {animation: 'control-center'},
+    data: { animation: 'control-center' },
     children: [
       {
         path: 'device',
         component: ControlCenterDevicePageComponent,
         runGuardsAndResolvers: 'paramsOrQueryParamsChange',
-        resolve: {hardware: ControlCenterDevicePageHardwareResolver}
+        resolve: { hardware: ControlCenterDevicePageHardwareResolver },
       },
       {
         path: 'create-device',
         component: ControlCenterCreateDevicePageComponent,
-        resolve: {inventoryItems: ControlCenterInventoryPageItemsResolver}
+        resolve: { inventoryItems: ControlCenterInventoryPageItemsResolver },
       },
       {
         path: 'inventory',
         component: ControlCenterInventoryPageComponent,
-        resolve: {items: ControlCenterInventoryPageItemsResolver}
+        resolve: { items: ControlCenterInventoryPageItemsResolver },
       },
-      {path: 'settings', component: ControlCenterSettingsPageComponent},
-      {path: 'sound', component: ControlCenterSoundPageComponent},
-      {path: 'changelog', component: ControlCenterChangelogPageComponent}
-    ]
-  }
+      { path: 'settings', component: ControlCenterSettingsPageComponent },
+      { path: 'sound', component: ControlCenterSoundPageComponent },
+      { path: 'changelog', component: ControlCenterChangelogPageComponent },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ControlCenterRoutingModule {
-}
+export class ControlCenterRoutingModule {}

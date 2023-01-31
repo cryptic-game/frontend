@@ -1,8 +1,8 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {DesktopMenuComponent} from './desktop-menu.component';
-import {windowManagerMock} from '../../test-utils';
-import {RouterTestingModule} from '@angular/router/testing';
+import { DesktopMenuComponent } from './desktop-menu.component';
+import { windowManagerMock } from '../../test-utils';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('DesktopMenuComponent', () => {
   let component: DesktopMenuComponent;
@@ -11,9 +11,8 @@ describe('DesktopMenuComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [DesktopMenuComponent],
-      imports: [RouterTestingModule]
-    })
-      .compileComponents();
+      imports: [RouterTestingModule],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

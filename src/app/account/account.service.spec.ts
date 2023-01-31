@@ -1,15 +1,15 @@
-import {AccountService} from './account.service';
-import {inject, TestBed} from '@angular/core/testing';
-import {WebsocketService} from '../websocket.service';
+import { AccountService } from './account.service';
+import { inject, TestBed } from '@angular/core/testing';
+import { WebsocketService } from '../websocket.service';
 import * as rxjs from 'rxjs';
-import {Subject} from 'rxjs';
-import {Router, RouteReuseStrategy} from '@angular/router';
-import {FakePromise, webSocketMock} from '../test-utils';
-import {Account} from '../../dataclasses/account';
-import {WindowManagerService} from '../desktop/window-manager/window-manager.service';
+import { Subject } from 'rxjs';
+import { Router, RouteReuseStrategy } from '@angular/router';
+import { FakePromise, webSocketMock } from '../test-utils';
+import { Account } from '../../dataclasses/account';
+import { WindowManagerService } from '../desktop/window-manager/window-manager.service';
 
 describe('AccountService', () => {
-  const testCredentials = {username: 'testUsername', password: 'testPassword', token: '1234567654321'};
+  const testCredentials = { username: 'testUsername', password: 'testPassword', token: '1234567654321' };
   //TODO: Type me correct
   let webSocket: any;
   let windowManagerService: any;
@@ -20,16 +20,16 @@ describe('AccountService', () => {
     webSocket = webSocketMock();
     windowManagerService = jasmine.createSpyObj('WindowManagerService', ['reset']);
     router = jasmine.createSpyObj('Router', ['navigateByUrl']);
-    router.navigateByUrl.and.returnValue(new Promise(resolve => resolve(true)));
+    router.navigateByUrl.and.returnValue(new Promise((resolve) => resolve(true)));
     routeReuseStrategy = jasmine.createSpyObj('AppRouteReuseStrategy', ['reset']);
 
     TestBed.configureTestingModule({
       providers: [
-        {provide: WebsocketService, useValue: webSocket},
-        {provide: WindowManagerService, useValue: windowManagerService},
-        {provide: Router, useValue: router},
-        {provide: RouteReuseStrategy, useValue: routeReuseStrategy}
-      ]
+        { provide: WebsocketService, useValue: webSocket },
+        { provide: WindowManagerService, useValue: windowManagerService },
+        { provide: Router, useValue: router },
+        { provide: RouteReuseStrategy, useValue: routeReuseStrategy },
+      ],
     });
   });
 
@@ -44,7 +44,7 @@ describe('AccountService', () => {
     expect(webSocket.request).toHaveBeenCalledWith({
       action: 'login',
       name: testCredentials.username,
-      password: testCredentials.password
+      password: testCredentials.password,
     });
   }));
 
@@ -55,12 +55,13 @@ describe('AccountService', () => {
     expect(webSocket.request).toHaveBeenCalledWith({
       action: 'register',
       name: testCredentials.username,
-      password: testCredentials.password
+      password: testCredentials.password,
     });
   }));
 
-  it('#finalLogin() should save the token to the localStorage and ' +
-    'navigate to the redirect url after updating the account information',
+  it(
+    '#finalLogin() should save the token to the localStorage and ' +
+      'navigate to the redirect url after updating the account information',
     inject([AccountService, Router], (service: AccountService) => {
       spyOn(localStorage, 'setItem');
       const refreshAccountInfoSubject = new Subject<Account>();
@@ -72,13 +73,14 @@ describe('AccountService', () => {
       expect(localStorage.setItem).toHaveBeenCalledWith('token', testCredentials.token);
       expect(router.navigateByUrl).not.toHaveBeenCalled();
 
-      refreshAccountInfoSubject.next({uuid: '', name: '', created: 0, last: 0});
+      refreshAccountInfoSubject.next({ uuid: '', name: '', created: 0, last: 0 });
       expect(router.navigateByUrl).toHaveBeenCalledWith(redirectURL);
     })
   );
 
-  it('#checkPassword() should give half a security point for each of the following that the given password contains: ' +
-    'number, lowercase letter, uppercase letter, special character',
+  it(
+    '#checkPassword() should give half a security point for each of the following that the given password contains: ' +
+      'number, lowercase letter, uppercase letter, special character',
     inject([AccountService], (service: AccountService) => {
       expect(service.checkPassword('123')).toEqual(0.5);
       expect(service.checkPassword('abc')).toEqual(0.5);
@@ -99,8 +101,9 @@ describe('AccountService', () => {
     })
   );
 
-  it('#checkPassword() should give 1 additional point if the password has at least 8 characters, ' +
-    '2 if it has at least 12 and 3 if is at least 16 characters long',
+  it(
+    '#checkPassword() should give 1 additional point if the password has at least 8 characters, ' +
+      '2 if it has at least 12 and 3 if is at least 16 characters long',
     inject([AccountService], (service: AccountService) => {
       expect(service.checkPassword('aaaaaaa')).toEqual(0.5);
       expect(service.checkPassword('aaaaaaaa')).toEqual(1.5);
@@ -112,16 +115,18 @@ describe('AccountService', () => {
     })
   );
 
-  it('#checkPassword should give at maximum 5 points for a password',
-    inject([AccountService], (service: AccountService) => {
+  it('#checkPassword should give at maximum 5 points for a password', inject(
+    [AccountService],
+    (service: AccountService) => {
       expect(service.checkPassword('8%MPOgltIN5Z2ln&ly^F')).toEqual(5);
       expect(service.checkPassword('OOj!tx$N9sC3GY96hkKUc4!XRi^XR6c52D4jb6JI')).toEqual(5);
       expect(service.checkPassword('4Rs0vb^TsymBTXr@#KmiR8sBWZA1Tyjmj1WV94BD3AhiU!i2n5')).toEqual(5);
-    })
-  );
+    }
+  ));
 
-  it('#logout() should clear local storage, reset all window managers, send a logout request, navigate to /login and reset the stored routes',
-    inject([AccountService], (service: AccountService) => {
+  it('#logout() should clear local storage, reset all window managers, send a logout request, navigate to /login and reset the stored routes', inject(
+    [AccountService],
+    (service: AccountService) => {
       spyOn(localStorage, 'clear');
       webSocket.loggedIn = true;
       const navigateByUrlPromise = new FakePromise();
@@ -131,7 +136,7 @@ describe('AccountService', () => {
       expect(localStorage.clear).toHaveBeenCalled();
       expect(windowManagerService.reset).toHaveBeenCalled();
 
-      expect(webSocket.request).toHaveBeenCalledWith({action: 'logout'});
+      expect(webSocket.request).toHaveBeenCalledWith({ action: 'logout' });
       expect(webSocket.loggedIn).toBeFalse();
 
       expect(routeReuseStrategy.reset).not.toHaveBeenCalled();
@@ -139,7 +144,6 @@ describe('AccountService', () => {
 
       navigateByUrlPromise.resolve(true);
       expect(routeReuseStrategy.reset).toHaveBeenCalled();
-    })
-  );
-
+    }
+  ));
 });

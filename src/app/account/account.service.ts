@@ -1,30 +1,30 @@
-import {Injectable} from '@angular/core';
-import {WebsocketService} from '../websocket.service';
-import {Observable} from 'rxjs';
-import {LoginResponse} from './interfaces/login-response';
-import {SignUpResponse} from './interfaces/sign-up-response';
-import {Router, RouteReuseStrategy} from '@angular/router';
-import {WindowManagerService} from '../desktop/window-manager/window-manager.service';
-import {AppRouteReuseStrategy} from '../app-route-reuse-strategy';
-import {mergeMap} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { WebsocketService } from '../websocket.service';
+import { Observable } from 'rxjs';
+import { LoginResponse } from './interfaces/login-response';
+import { SignUpResponse } from './interfaces/sign-up-response';
+import { Router, RouteReuseStrategy } from '@angular/router';
+import { WindowManagerService } from '../desktop/window-manager/window-manager.service';
+import { AppRouteReuseStrategy } from '../app-route-reuse-strategy';
+import { mergeMap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccountService {
-
-  constructor(private websocket: WebsocketService,
-              private router: Router,
-              private routeReuseStrategy: RouteReuseStrategy,
-              private windowManagerService: WindowManagerService) {
-  }
+  constructor(
+    private websocket: WebsocketService,
+    private router: Router,
+    private routeReuseStrategy: RouteReuseStrategy,
+    private windowManagerService: WindowManagerService
+  ) {}
 
   login(username: string, password: string): Observable<LoginResponse> {
-    return this.websocket.request({action: 'login', name: username, password: password});
+    return this.websocket.request({ action: 'login', name: username, password: password });
   }
 
   signUp(username: string, password: string): Observable<SignUpResponse> {
-    return this.websocket.request({action: 'register', name: username, password: password});
+    return this.websocket.request({ action: 'register', name: username, password: password });
   }
 
   finalLogin(token: string, redirect: string): void {
@@ -36,8 +36,8 @@ export class AccountService {
   }
 
   changePassword(oldPassword: string, newPassword: string) {
-    return this.websocket.request({action: 'password', password: oldPassword, new: newPassword}).pipe(
-      mergeMap(({token}) => {
+    return this.websocket.request({ action: 'password', password: oldPassword, new: newPassword }).pipe(
+      mergeMap(({ token }) => {
         localStorage.setItem('token', token);
         return this.websocket.refreshAccountInfo();
       })
@@ -78,12 +78,11 @@ export class AccountService {
     localStorage.clear();
     this.windowManagerService.reset();
 
-    this.websocket.request({action: 'logout'});
+    this.websocket.request({ action: 'logout' });
     this.websocket.loggedIn = false;
 
     this.router.navigateByUrl('/login').then(() => {
       (this.routeReuseStrategy as AppRouteReuseStrategy).reset();
     });
   }
-
 }

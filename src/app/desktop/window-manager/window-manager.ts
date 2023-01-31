@@ -1,5 +1,5 @@
-import {WindowDelegate} from '../window/window-delegate';
-import {Device} from '../../api/devices/device';
+import { WindowDelegate } from '../window/window-delegate';
+import { Device } from '../../api/devices/device';
 
 /**
  * The window manager maintains the open windows of a specific device.
@@ -9,13 +9,12 @@ export class WindowManager {
   taskList: WindowDelegate[] = [];
   activeWindow: WindowDelegate;
 
-  constructor(public device: Device) {
-  }
+  constructor(public device: Device) {}
 
   openWindow(win: WindowDelegate) {
     win.device = this.device;
     if (win.constraints.singleInstance) {
-      const instance = this.windows.find(win_ => win_.type === win.type);
+      const instance = this.windows.find((win_) => win_.type === win.type);
       if (instance) {
         this.focusWindow(instance);
         return;
@@ -53,8 +52,14 @@ export class WindowManager {
   closeWindow(window: WindowDelegate) {
     window.component.events.next('close');
 
-    this.windows.splice(this.windows.findIndex(win => win === window), 1);
-    this.taskList.splice(this.taskList.findIndex(win => win === window), 1);
+    this.windows.splice(
+      this.windows.findIndex((win) => win === window),
+      1
+    );
+    this.taskList.splice(
+      this.taskList.findIndex((win) => win === window),
+      1
+    );
     this.sortWindows();
   }
 

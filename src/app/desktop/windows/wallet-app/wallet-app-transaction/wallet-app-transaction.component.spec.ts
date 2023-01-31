@@ -1,8 +1,8 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {WalletAppTransactionComponent} from './wallet-app-transaction.component';
-import {WebsocketService} from '../../../../websocket.service';
-import {webSocketMock} from '../../../../test-utils';
+import { WalletAppTransactionComponent } from './wallet-app-transaction.component';
+import { WebsocketService } from '../../../../websocket.service';
+import { webSocketMock } from '../../../../test-utils';
 
 describe('WalletAppTransactionComponent', () => {
   let component: WalletAppTransactionComponent;
@@ -10,10 +10,9 @@ describe('WalletAppTransactionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: WebsocketService, useValue: webSocketMock()}],
-      declarations: [WalletAppTransactionComponent]
-    })
-      .compileComponents();
+      providers: [{ provide: WebsocketService, useValue: webSocketMock() }],
+      declarations: [WalletAppTransactionComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -26,7 +25,7 @@ describe('WalletAppTransactionComponent', () => {
       send_amount: 0,
       source_uuid: '',
       time_stamp: '',
-      usage: ''
+      usage: '',
     };
     component['walletAppService'].wallet = {
       amount: 0,
@@ -34,7 +33,7 @@ describe('WalletAppTransactionComponent', () => {
       source_uuid: '',
       time_stamp: new Date(),
       transactions: 0,
-      user_uuid: ''
+      user_uuid: '',
     };
     fixture.detectChanges();
   });

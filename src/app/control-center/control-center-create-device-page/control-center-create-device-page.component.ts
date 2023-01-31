@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {DeviceHardwareSpec, DeviceService} from '../../api/devices/device.service';
+import { Component } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { DeviceHardwareSpec, DeviceService } from '../../api/devices/device.service';
 import {
   Case,
   CPU,
@@ -11,21 +11,19 @@ import {
   PartCategory,
   PowerPack,
   ProcessorCooler,
-  RAM
+  RAM,
 } from '../../api/hardware/hardware-parts';
-import {ActivatedRoute, Data, Router} from '@angular/router';
-import {InventoryItemWithHardware} from '../../api/inventory/inventory-item';
-import {ControlCenterService} from '../control-center.service';
-import {Device} from "../../api/devices/device";
-
+import { ActivatedRoute, Data, Router } from '@angular/router';
+import { InventoryItemWithHardware } from '../../api/inventory/inventory-item';
+import { ControlCenterService } from '../control-center.service';
+import { Device } from '../../api/devices/device';
 
 @Component({
   selector: 'app-control-center-create-device-page',
   templateUrl: './control-center-create-device-page.component.html',
-  styleUrls: ['./control-center-create-device-page.component.scss']
+  styleUrls: ['./control-center-create-device-page.component.scss'],
 })
 export class ControlCenterCreateDevicePageComponent {
-
   form: FormGroup;
   info: string;
   error: string;
@@ -61,9 +59,9 @@ export class ControlCenterCreateDevicePageComponent {
       powerSupply: [null, Validators.required],
     });
 
-    this.form.get('mainboard')!.valueChanges.subscribe(data => this.updateFields(data));
+    this.form.get('mainboard')!.valueChanges.subscribe((data) => this.updateFields(data));
 
-    this.form.get('case')!.valueChanges.subscribe(data => {
+    this.form.get('case')!.valueChanges.subscribe((data) => {
       // reset the mainboard when the case changes and is not compatible with the mainboard
       if (data == null || this.form.get('mainboard')!.value?.case !== data.name) {
         this.form.get('mainboard')!.setValue(null);
@@ -72,7 +70,8 @@ export class ControlCenterCreateDevicePageComponent {
 
     this.activatedRoute.data.subscribe((items: Data) =>
       // @ts-ignore
-      this.updateAvailableParts(items.inventoryItems));
+      this.updateAvailableParts(items.inventoryItems)
+    );
   }
 
   updateAvailableParts(items: InventoryItemWithHardware[]): any {
@@ -85,7 +84,7 @@ export class ControlCenterCreateDevicePageComponent {
     this.disks = [];
     this.powerSupplies = [];
 
-    items.forEach(item => {
+    items.forEach((item) => {
       const part = item.properties;
 
       switch (item.properties.category) {
@@ -130,8 +129,10 @@ export class ControlCenterCreateDevicePageComponent {
 
   getFormArrayControls(name: string): { control: FormControl; props: ControlProperties }[] {
     // @ts-ignore
-    return (this.getFormArray(name).controls as FormControl[])
-      .map(control => ({control: control, props: this.controlProperties.get(control)}));
+    return (this.getFormArray(name).controls as FormControl[]).map((control) => ({
+      control: control,
+      props: this.controlProperties.get(control),
+    }));
   }
 
   findControl(properties: ControlProperties): FormControl | null {
@@ -149,8 +150,8 @@ export class ControlCenterCreateDevicePageComponent {
    */
   updateFields(mainboard: Mainboard) {
     ['cpus', 'processorCoolers', 'ramSticks', 'expansions', 'disks']
-      .map(name => this.getFormArray(name))
-      .forEach(formArray => formArray.clear());
+      .map((name) => this.getFormArray(name))
+      .forEach((formArray) => formArray.clear());
 
     this.info = '';
     this.error = '';
@@ -160,22 +161,22 @@ export class ControlCenterCreateDevicePageComponent {
     }
 
     const newControl = (options: Part[], category: string, index: number, required: boolean, description?: string) => {
-      const properties = {options, category, index, description};
-      const control = this.findControl(properties) ??
-        this.formBuilder.control(null, required ? Validators.required : null);
+      const properties = { options, category, index, description };
+      const control =
+        this.findControl(properties) ?? this.formBuilder.control(null, required ? Validators.required : null);
       this.controlProperties.set(control, properties);
       return control;
     };
 
-    const compatibleCPUs = this.cpus.filter(cpu => cpu.socket === mainboard.cpuSocket);
-    const compatibleCoolers = this.processorCoolers.filter(cooler => cooler.socket === mainboard.cpuSocket);
+    const compatibleCPUs = this.cpus.filter((cpu) => cpu.socket === mainboard.cpuSocket);
+    const compatibleCoolers = this.processorCoolers.filter((cooler) => cooler.socket === mainboard.cpuSocket);
 
     const compatibleRAM = this.ramSticks
-      .filter(ramStick => mainboard.ram.ramTyp.some(type => arraysEqual(type, ramStick.ramTyp)))
-      .filter(ramStick => mainboard.ram.frequency.includes(ramStick.frequency));
+      .filter((ramStick) => mainboard.ram.ramTyp.some((type) => arraysEqual(type, ramStick.ramTyp)))
+      .filter((ramStick) => mainboard.ram.frequency.includes(ramStick.frequency));
 
-    const compatibleDisks = this.disks.filter(disk =>
-      mainboard.diskStorage.interface.some(supported => arraysEqual(disk.interface, supported))
+    const compatibleDisks = this.disks.filter((disk) =>
+      mainboard.diskStorage.interface.some((supported) => arraysEqual(disk.interface, supported))
     );
 
     for (let i = 0; i < mainboard.cpuSlots; i++) {
@@ -192,23 +193,21 @@ export class ControlCenterCreateDevicePageComponent {
     }
 
     for (const expansionInterface of mainboard.expansionSlots) {
-      const compatibleExpansions = this.expansions
-        .filter(expansion => arraysEqual(expansion.interface, expansionInterface.interface));
+      const compatibleExpansions = this.expansions.filter((expansion) =>
+        arraysEqual(expansion.interface, expansionInterface.interface)
+      );
 
       for (let i = 0; i < expansionInterface.interfaceSlots; i++) {
-        this.getFormArray('expansions').push(newControl(
-          compatibleExpansions, 'expansions', i,
-          false, expansionInterface.interface.join(' ')
-        ));
+        this.getFormArray('expansions').push(
+          newControl(compatibleExpansions, 'expansions', i, false, expansionInterface.interface.join(' '))
+        );
       }
     }
   }
 
   getSelectedHardware(): DeviceHardwareSpec {
     const data = this.form.value;
-    const nonNullNames = (parts: Part[]) => parts
-      .filter(part => part != null)
-      .map(part => part.name);
+    const nonNullNames = (parts: Part[]) => parts.filter((part) => part != null).map((part) => part.name);
 
     if (data.case == null) {
       throw new Error('missing_case');
@@ -221,29 +220,32 @@ export class ControlCenterCreateDevicePageComponent {
     }
 
     // @ts-ignore
-    const disks: string[] = nonNullNames(data.disks).concat(nonNullNames(data.expansions.filter(x => x?.category === PartCategory.DISK)));
+    const disks: string[] = nonNullNames(data.disks).concat(
+      //@ts-ignore
+      nonNullNames(data.expansions.filter((x) => x?.category === PartCategory.DISK))
+    );
     // @ts-ignore
-    const gpus: string[] = nonNullNames(data.expansions.filter(x => x?.category === PartCategory.GPU));
+    const gpus: string[] = nonNullNames(data.expansions.filter((x) => x?.category === PartCategory.GPU));
 
     return {
-      'case': data.case?.name,
-      'mainboard': data.mainboard?.name,
+      case: data.case?.name,
+      mainboard: data.mainboard?.name,
       // @ts-ignore
-      'cpu': nonNullNames(data.cpus),
+      cpu: nonNullNames(data.cpus),
       // @ts-ignore
-      'processorCooler': nonNullNames(data.processorCoolers),
+      processorCooler: nonNullNames(data.processorCoolers),
       // @ts-ignore
-      'ram': nonNullNames(data.ramSticks),
-      'gpu': gpus,
-      'disk': disks,
-      'powerPack': data.powerSupply?.name
+      ram: nonNullNames(data.ramSticks),
+      gpu: gpus,
+      disk: disks,
+      powerPack: data.powerSupply?.name,
     };
   }
 
   buildStarterDevice() {
-    this.deviceService.createStarterDevice().subscribe(device => {
+    this.deviceService.createStarterDevice().subscribe((device) => {
       this.controlCenterService.refreshDevices().subscribe(() => {
-        this.router.navigate(['/device'], {queryParams: {device: device.uuid}}).then();
+        this.router.navigate(['/device'], { queryParams: { device: device.uuid } }).then();
       });
     });
   }
@@ -252,24 +254,24 @@ export class ControlCenterCreateDevicePageComponent {
     this.info = '';
 
     const message = {
-      'missing_case': $localize`Missing case`,
-      'missing_mainboard': $localize`Missing mainboard`,
-      'missing_power_supply': $localize`Missing power supply`,
+      missing_case: $localize`Missing case`,
+      missing_mainboard: $localize`Missing mainboard`,
+      missing_power_supply: $localize`Missing power supply`,
 
-      'missing_cpu': $localize`Missing CPU`,
-      'missing_ram': $localize`Missing RAM`,
-      'missing_disk': $localize`Missing disk`,
-      'invalid_amount_of_cpu_coolers': $localize`A CPU is missing a cooler`,
-      'insufficient_power_pack': $localize`The specified power supply is too weak for your configuration`,
+      missing_cpu: $localize`Missing CPU`,
+      missing_ram: $localize`Missing RAM`,
+      missing_disk: $localize`Missing disk`,
+      invalid_amount_of_cpu_coolers: $localize`A CPU is missing a cooler`,
+      insufficient_power_pack: $localize`The specified power supply is too weak for your configuration`,
 
-      'cpu_not_in_inventory': $localize`You specified a CPU item multiple times`,
-      'processorCooler_not_in_inventory': $localize`You specified a cooler item multiple times`,
-      'gpu_not_in_inventory': $localize`You specified a GPU item multiple times`,
-      'ram_not_in_inventory': $localize`You specified a RAM item multiple times`,
-      'disk_not_in_inventory': $localize`You specified a disk item multiple times`,
+      cpu_not_in_inventory: $localize`You specified a CPU item multiple times`,
+      processorCooler_not_in_inventory: $localize`You specified a cooler item multiple times`,
+      gpu_not_in_inventory: $localize`You specified a GPU item multiple times`,
+      ram_not_in_inventory: $localize`You specified a RAM item multiple times`,
+      disk_not_in_inventory: $localize`You specified a disk item multiple times`,
 
-      'missing_external_gpu': $localize`Your configuration requires an external GPU`,
-      'maximum_devices_reached': $localize`You already own the maximum number of devices`,
+      missing_external_gpu: $localize`Your configuration requires an external GPU`,
+      maximum_devices_reached: $localize`You already own the maximum number of devices`,
     }[error.message];
 
     if (message == null) {
@@ -290,10 +292,11 @@ export class ControlCenterCreateDevicePageComponent {
           this.info = $localize`The configuration is compatible`;
         },
         error: (err: Error) => {
-          this.displayError(err)
-        }
+          this.displayError(err);
+        },
       });
-    } catch (error) {// @ts-ignore
+    } catch (error) {
+      // @ts-ignore
       this.displayError(error);
     }
   }
@@ -305,14 +308,15 @@ export class ControlCenterCreateDevicePageComponent {
       this.deviceService.createDevice(selectedHardware).subscribe({
         next: (device: Device) => {
           this.controlCenterService.refreshDevices().subscribe(() => {
-            this.router.navigate(['/device'], {queryParams: {device: device.uuid}}).then();
+            this.router.navigate(['/device'], { queryParams: { device: device.uuid } }).then();
           });
           this.error = '';
           this.info = $localize`You successfully built a new device`;
         },
-        error: (err: Error) => this.displayError(err)
+        error: (err: Error) => this.displayError(err),
       });
-    } catch (error) {// @ts-ignore
+    } catch (error) {
+      // @ts-ignore
       this.displayError(error);
     }
   }
@@ -321,7 +325,6 @@ export class ControlCenterCreateDevicePageComponent {
     return obj.control;
   }
 }
-
 
 /**
  * Returns whether two arrays contain the same elements in the same order
@@ -353,22 +356,21 @@ function controlPropertiesEqual(a: ControlProperties, b: ControlProperties) {
     return false;
   }
 
-  return arraysEqual(a.options, b.options)
-    && a.category === b.category
-    && a.description === b.description
-    && a.index === b.index;
+  return (
+    arraysEqual(a.options, b.options) &&
+    a.category === b.category &&
+    a.description === b.description &&
+    a.index === b.index
+  );
 }
 
 interface Expansion extends Part {
-  'interface': [
-    string /* name */,
-    number /* version */
-  ];
+  interface: [string /* name */, number /* version */];
 }
 
 interface ControlProperties {
   options: Part[];
   category: string;
   index: number;
-  description?: string;  // name of an expansion interface
+  description?: string; // name of an expansion interface
 }

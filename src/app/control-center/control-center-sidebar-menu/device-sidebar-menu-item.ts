@@ -1,6 +1,6 @@
-import {SidebarMenuItem} from './control-center-sidebar-menu.component';
-import {Params} from '@angular/router';
-import {Device} from '../../api/devices/device';
+import { SidebarMenuItem } from './control-center-sidebar-menu.component';
+import { Params } from '@angular/router';
+import { Device } from '../../api/devices/device';
 
 export class DeviceSidebarMenuItem implements SidebarMenuItem {
   routerLink = '/device';
@@ -15,6 +15,6 @@ export class DeviceSidebarMenuItem implements SidebarMenuItem {
   }
 
   get queryParams(): Params {
-    return {device: this.device.uuid};
+    return { device: this.device.uuid };
   }
 }

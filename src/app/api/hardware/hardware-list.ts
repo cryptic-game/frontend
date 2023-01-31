@@ -1,8 +1,7 @@
 import * as Parts from './hardware-parts';
-import {Part} from './hardware-parts';
+import { Part } from './hardware-parts';
 
 export class HardwareList {
-
   'mainboard': { [name: string]: Parts.Mainboard } = {};
 
   'cpu': { [name: string]: Parts.CPU } = {};
@@ -19,15 +18,20 @@ export class HardwareList {
 
   'case': { [name: string]: Parts.Case } = {};
 
-
   constructor(availableParts: Partial<HardwareList> = {}) {
     Object.assign(this, availableParts);
   }
 
   getAllParts(): { [name: string]: Part } {
     return {
-      ...this.case, ...this.powerPack, ...this.disk, ...this.gpu,
-      ...this.ram, ...this.processorCooler, ...this.cpu, ...this.mainboard
+      ...this.case,
+      ...this.powerPack,
+      ...this.disk,
+      ...this.gpu,
+      ...this.ram,
+      ...this.processorCooler,
+      ...this.cpu,
+      ...this.mainboard,
     };
   }
 
@@ -36,7 +40,6 @@ export class HardwareList {
   }
 
   getByID(id: number): Part {
-    return Object.values(this.getAllParts()).find(part => part.id === id)!;
+    return Object.values(this.getAllParts()).find((part) => part.id === id)!;
   }
-
 }

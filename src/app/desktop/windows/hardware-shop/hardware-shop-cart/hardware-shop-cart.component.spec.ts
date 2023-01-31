@@ -1,8 +1,8 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {HardwareShopCartComponent} from './hardware-shop-cart.component';
-import {WebsocketService} from '../../../../websocket.service';
-import {webSocketMock} from '../../../../test-utils';
+import { HardwareShopCartComponent } from './hardware-shop-cart.component';
+import { WebsocketService } from '../../../../websocket.service';
+import { webSocketMock } from '../../../../test-utils';
 
 describe('HardwareShopCartComponent', () => {
   let component: HardwareShopCartComponent;
@@ -10,10 +10,9 @@ describe('HardwareShopCartComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [{provide: WebsocketService, useValue: webSocketMock()}],
-      declarations: [HardwareShopCartComponent]
-    })
-      .compileComponents();
+      providers: [{ provide: WebsocketService, useValue: webSocketMock() }],
+      declarations: [HardwareShopCartComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

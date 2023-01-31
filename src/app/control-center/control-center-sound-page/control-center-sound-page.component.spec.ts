@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {ControlCenterSoundPageComponent} from './control-center-sound-page.component';
+import { ControlCenterSoundPageComponent } from './control-center-sound-page.component';
 
 describe('ControlCenterSoundPageComponent', () => {
   let component: ControlCenterSoundPageComponent;
@@ -8,9 +8,8 @@ describe('ControlCenterSoundPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ControlCenterSoundPageComponent]
-    })
-      .compileComponents();
+      declarations: [ControlCenterSoundPageComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,5 +1,5 @@
-import {WindowManager} from './window-manager';
-import {emptyDevice} from '../../test-utils';
+import { WindowManager } from './window-manager';
+import { emptyDevice } from '../../test-utils';
 
 describe('WindowManager', () => {
   it('should create an instance', () => {

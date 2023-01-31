@@ -1,4 +1,4 @@
-import {SafeHtml} from '@angular/platform-browser';
+import { SafeHtml } from '@angular/platform-browser';
 
 export interface TerminalAPI {
   /**
@@ -41,7 +41,6 @@ export interface TerminalAPI {
 
   popState(): TerminalState;
 }
-
 
 export interface TerminalState {
   execute(command: string): void;

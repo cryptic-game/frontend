@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {HardwareShopItemListComponent} from './hardware-shop-item-list.component';
+import { HardwareShopItemListComponent } from './hardware-shop-item-list.component';
 
 describe('HardwareShopItemGridComponent', () => {
   let component: HardwareShopItemListComponent;
@@ -8,9 +8,8 @@ describe('HardwareShopItemGridComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [HardwareShopItemListComponent]
-    })
-      .compileComponents();
+      declarations: [HardwareShopItemListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

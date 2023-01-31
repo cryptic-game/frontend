@@ -1,15 +1,14 @@
-import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {WalletAppService} from '../wallet-app.service';
-import {Wallet} from '../wallet';
-import {Subscription} from 'rxjs';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { WalletAppService } from '../wallet-app.service';
+import { Wallet } from '../wallet';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-wallet-app-header',
   templateUrl: './wallet-app-header.component.html',
-  styleUrls: ['./wallet-app-header.component.scss']
+  styleUrls: ['./wallet-app-header.component.scss'],
 })
 export class WalletAppHeaderComponent implements OnDestroy {
-
   wallet: Wallet | null;
 
   @Input() walletEdit: boolean;

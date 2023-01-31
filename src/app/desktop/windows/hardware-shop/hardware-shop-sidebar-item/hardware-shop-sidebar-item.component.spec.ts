@@ -1,7 +1,7 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {HardwareShopSidebarItemComponent} from './hardware-shop-sidebar-item.component';
-import {HardwareShopDelegate} from '../hardware-shop.delegate';
+import { HardwareShopSidebarItemComponent } from './hardware-shop-sidebar-item.component';
+import { HardwareShopDelegate } from '../hardware-shop.delegate';
 
 describe('HardwareShopSidebarItemComponent', () => {
   let component: HardwareShopSidebarItemComponent;
@@ -10,16 +10,16 @@ describe('HardwareShopSidebarItemComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [HardwareShopSidebarItemComponent]
+      declarations: [HardwareShopSidebarItemComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(HardwareShopSidebarItemComponent);
     component = fixture.componentInstance;
-    shopDelegate = {selectedCategory: null};
+    shopDelegate = { selectedCategory: null };
     component.delegate = shopDelegate;
-    component.category = {name: '', items: [], categories: [], index: 0};
+    component.category = { name: '', items: [], categories: [], index: 0 };
     fixture.detectChanges();
   });
 

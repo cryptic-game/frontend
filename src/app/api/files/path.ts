@@ -1,5 +1,5 @@
 export class Path {
-  static ROOT: string|null = null;
+  static ROOT: string | null = null;
 
   path: string[];
   parentUUID: string;
@@ -36,5 +36,4 @@ export class Path {
   toString(): string {
     return (this.parentUUID !== Path.ROOT ? this.parentUUID : '') + '/' + this.path.join('/');
   }
-
 }

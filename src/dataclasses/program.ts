@@ -1,6 +1,6 @@
-import {Position} from './position';
-import {WindowDelegate} from '../app/desktop/window/window-delegate';
-import {Type} from '@angular/core';
+import { Position } from './position';
+import { WindowDelegate } from '../app/desktop/window/window-delegate';
+import { Type } from '@angular/core';
 
 export class Program {
   constructor(
@@ -10,8 +10,7 @@ export class Program {
     public icon: string,
     public onDesktop: boolean,
     public position: Position
-  ) {
-  }
+  ) {}
 
   public newWindow(): WindowDelegate {
     return new this.windowDelegate();
