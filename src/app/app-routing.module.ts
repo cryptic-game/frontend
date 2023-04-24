@@ -5,6 +5,7 @@ const routes: Routes = [
   {path: '', loadChildren: () => import('./control-center/control-center.module').then(m => m.ControlCenterModule)},
   {path: 'desktop', loadChildren: () => import('./desktop/desktop.module').then(m => m.DesktopModule)},
   {path: '', loadChildren: () => import('./account/account.module').then(m => m.AccountModule)},
+  { path: 'design', loadChildren: () => import('./base-components/base-components.module').then(m => m.BaseComponentsModule) },
   {path: '**', redirectTo: '/'}
 ];
 
